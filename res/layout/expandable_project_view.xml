@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:orientation="horizontal"
+    android:layout_width="fill_parent" 
+	android:layout_height="?android:attr/listPreferredItemHeight"
+	android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+	android:gravity="center_vertical"
+	android:baselineAligned="false"
+    >
+    
+  <TextView android:id="@+id/name" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:paddingRight="5px"
+    style="@style/text"
+    />
+
+ </LinearLayout>
+ 

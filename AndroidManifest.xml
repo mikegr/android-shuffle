@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.dodgybits.android.shuffle">
+    
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    
+    <application android:icon="@drawable/icon" android:theme="@android:style/Theme.Dark">
+    
+        <provider android:name=".provider.ShuffleProvider"
+            android:authorities="org.dodgybits.android.shuffle.provider.Shuffle" />
+    
+        <activity android:name=".activity.BootstrapActivity" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    
+        <activity android:name=".activity.WelcomeActivity" android:label="@string/app_name">
+        </activity>
+            
+        <activity android:name=".activity.TopLevelActivity" android:label="@string/app_name">
+        </activity>
+
+        <activity android:name=".activity.CalendarActivity" android:label="@string/title_calendar">
+        </activity>
+
+        <activity android:name=".activity.TabbedDueActionsActivity" android:label="@string/title_calendar">
+        </activity>
+
+        <activity android:name=".activity.InboxActivity" android:label="@string/title_inbox">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+            </intent-filter>            
+        </activity>
+
+        <activity android:name=".activity.TopTasksActivity" android:label="@string/title_due_tasks">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+            </intent-filter>            
+        </activity>
+
+        <activity android:name=".activity.ProjectTasksActivity" android:label="@string/title_project">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.ContextTasksActivity" android:label="@string/title_inbox">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+            </intent-filter>            
+        </activity>
+
+        <activity android:name=".activity.ExpandableProjectsActivity" android:label="@string/title_project">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.project" />
+            </intent-filter>            
+        </activity>
+        
+        
+        <activity android:name=".activity.ProjectsActivity" android:label="@string/title_project">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.project" />
+            </intent-filter>            
+        </activity>
+        
+        <activity android:name=".activity.ExpandableContextsActivity" android:label="@string/title_context">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <type android:name="vnd.android.cursor.dir/vnd.dodgybits.context" />
+            </intent-filter>            
+        </activity>
+        
+        <activity android:name=".activity.ContextsActivity" android:label="@string/title_context">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+                <type android:name="vnd.android.cursor.dir/vnd.dodgybits.context" />
+            </intent-filter>            
+        </activity>
+        
+        <activity android:name=".activity.TaskEditorActivity" android:label="@string/title_new_task">
+            <!-- This filter says that we can edit the data of a single task -->
+            <intent-filter android:label="@string/title_edit_task">
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="org.dodgybits.android.shuffle.action.EDIT_TASK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.task" />
+            </intent-filter>
+
+            <!-- This filter says that we can create a new note inside
+                 of a directory of tasks. -->
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+            </intent-filter>
+        </activity>
+		
+        <activity android:name=".activity.TaskViewActivity" android:label="@string/title_view_task">
+            <!-- This filter says that we can view the data of a single task -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.task" />
+            </intent-filter>
+        </activity>
+
+        
+        <activity android:name=".activity.ProjectEditorActivity" android:label="@string/title_new_project">
+            <!-- This filter says that we can view or edit the data of
+                 a single project -->
+            <intent-filter android:label="@string/title_edit_project">
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="org.dodgybits.android.shuffle.action.EDIT_PROJECT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.project" />
+            </intent-filter>
+
+            <!-- This filter says that we can create a new project inside
+                 of a directory of projects. -->
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.project" />
+            </intent-filter>
+        </activity>        
+
+        <activity android:name=".activity.ContextEditorActivity" android:label="@string/title_new_context">
+            <!-- This filter says that we can view or edit the data of
+                 a single context -->
+            <intent-filter android:label="@string/title_edit_context">
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="org.dodgybits.android.shuffle.action.EDIT_CONTEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.context" />
+            </intent-filter>
+
+            <!-- This filter says that we can create a new context inside
+                 of a directory of contexts. -->
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.context" />
+            </intent-filter>
+        </activity>        
+
+        
+        <activity android:name=".activity.PreferencesActivity" android:label="@string/title_preferences">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.preferences" />
+            </intent-filter>            
+        </activity>
+
+        <activity android:name=".activity.PreferencesAppearanceActivity" android:label="@string/title_preferences_appearance">
+        </activity>
+
+        <activity android:name=".activity.PreferencesLayoutActivity" android:label="@string/title_preferences_layout">
+        </activity>
+
+        <activity android:name=".activity.PreferencesCleanActivity" android:label="@string/title_preferences_clean">
+        </activity>
+
+        <activity android:name=".activity.HelpActivity" android:label="@string/title_help">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.help" />
+            </intent-filter>            
+        </activity>
+
+        <activity android:name=".activity.IconPickerActivity" android:label="@string/title_icon_picker">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.icons" />
+            </intent-filter>            
+        </activity>
+        
+        <activity android:name=".activity.ColourPickerActivity" android:label="@string/title_icon_picker">
+        	<!--  android:theme="@android:style/Theme.Dialog" -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.colours" />
+            </intent-filter>            
+        </activity>
+        
+        <activity android:name=".activity.TabbedActivity" android:label="@string/app_name">
+        </activity>
+        
+    </application>
+    
+</manifest> 

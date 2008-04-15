@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android" 
+        android:orientation="vertical"
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent">
+
+    <TextView android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="@string/welcome1"
+              style="@style/text"                
+              />
+              
+    <Button android:id="@+id/sample_data_button"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:text="@string/sample_data_title">
+        <requestFocus/>
+    </Button>
+              
+
+    <TextView android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="@string/welcome2"
+              style="@style/text"                
+              />
+
+    <Button android:id="@+id/clean_slate_button"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:text="@string/clean_slate_title"
+           />	
+
+    <TextView android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="@string/welcome3"
+              style="@style/text"                
+              />
+              
+</LinearLayout>

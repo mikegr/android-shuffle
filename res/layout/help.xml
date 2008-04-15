@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+
+
+<LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent">
+
+    <Spinner android:id="@+id/help_screen"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+    />
+
+    <TextView android:id="@+id/help_text" 
+		android:layout_width="fill_parent" 
+        android:layout_height="fill_parent"
+        android:autoLink="web"
+        style="@style/text"                
+        />
+        
+	<TableLayout android:id="@+id/help_shortcuts" 
+	    android:orientation="vertical" android:padding="4dip"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:stretchColumns="1"
+	    android:visibility="gone"
+	    >
+              
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="n/m"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="flip between perspective"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="c"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="create a new action"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="v"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="view selected action"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="e"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="edit selected action"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="x"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="mark selected action as complete"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="d"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="delete/discard selection whether\nit be a project, context or action"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="a"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="create a new project or context\n(depending on perspective)"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="j/k"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="move action down/up in \nthe Projects view"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="h"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="Help screen"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	<TableRow
+        style="@style/top_row">
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="p"
+	        style="@style/label" 
+	        />
+   	    <TextView android:id="@+id/help_text" 
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="Preference screen"
+	        style="@style/text" 
+	        />
+    </TableRow>	
+
+	</TableLayout>
+        
+</LinearLayout>
+
+</ScrollView>

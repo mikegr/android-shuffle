@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="clean">
+        <item>Never</item>
+        <item>Hourly</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+    </array>
+    <array name="perspectives">
+        <item>Inbox</item>
+        <item>Due actions</item>
+        <item>Next actions</item>
+        <item>Projects</item>
+        <item>Contexts</item>
+    </array>
+    <array name="view_types">
+        <item>Expandable list</item>
+        <item>Drill-down list</item>
+    </array>
+    <array name="help_screens">
+        <item>Introduction</item>
+        <item>Inbox</item>
+        <item>Projects</item>
+        <item>Contexts</item>
+        <item>Next actions</item>
+        <item>Due actions</item>
+        <item>Preferences</item>
+        <item>Keyboard shortcuts</item>
+        <item>Acknowledgements</item>
+    </array>
+    <array name="preference_screens">
+        <item>Action appearance</item>
+        <item>List layout</item>
+        <item>Clean up</item>
+    </array>
+	    
+    <array name="text_colours">
+    	<item>c5b6985</item>
+    	<item>c2c6cfc</item>
+    	<item>c1800c9</item>
+    	<item>c5528a1</item>
+    	<item>c854f61</item>
+    	<item>cca000f</item>
+
+    	<item>cdee5f2</item>
+    	<item>ce1ecfe</item>
+    	<item>ce0e2fe</item>
+    	<item>ce1d5f8</item>
+    	<item>cfde9f4</item>
+    	<item>cffe3e3</item>
+
+    	<item>cea7015</item>
+    	<item>cb16d12</item>
+    	<item>ca98b13</item>
+    	<item>c626332</item>
+    	<item>c639930</item>
+    	<item>c006634</item>
+    	
+    	<item>cfef0e2</item>
+    	<item>cf9dcb4</item>
+    	<item>cf2e7b4</item>
+    	<item>cfeffd5</item>
+    	<item>cf9ffef</item>
+    	<item>cf1f5ec</item>
+    </array>
+    <array name="background_colours">
+    	<item>cdee5f2</item>
+    	<item>ce1ecfe</item>
+    	<item>ce0e2fe</item>
+    	<item>ce1d5f8</item>
+    	<item>cfde9f4</item>
+    	<item>cffe3e3</item>
+
+    	<item>c5b6985</item>
+    	<item>c2c6cfc</item>
+    	<item>c1800c9</item>
+    	<item>c5528a1</item>
+    	<item>c854f61</item>
+    	<item>cca000f</item>
+
+    	<item>cfef0e2</item>
+    	<item>cf9dcb4</item>
+    	<item>cf2e7b4</item>
+		<item>cfeffd5</item>
+    	<item>cf9ffef</item>
+    	<item>cf1f5ec</item>
+
+    	<item>cea7015</item>
+    	<item>cb16d12</item>
+    	<item>ca98b13</item>
+    	<item>c626332</item>
+    	<item>c639930</item>
+    	<item>c006634</item>
+    </array>
+</resources>

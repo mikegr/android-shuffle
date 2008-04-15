@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<drawable name="even_stripe">#e5edfa</drawable>
+	<drawable name="odd_stripe">#ffffffff</drawable>
+
+	<drawable name="date_blue">#6f84b3</drawable>	
+	<drawable name="light_blue">#80d0ff</drawable>
+	<drawable name="light_yellow">#ffffe0</drawable>
+	<drawable name="green">#39939b</drawable>
+	<drawable name="transparent_blue">#8080d0ff</drawable>
+</resources>

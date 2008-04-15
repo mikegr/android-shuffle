@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="label" parent="text">
+        <item name="android:typeface">normal</item>
+        <item name="android:textScaleX">0.8</item>
+        <item name="android:textAlign">start</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/light_blue</item>
+        <item name="android:paddingRight">5px</item>
+    </style>
+
+    <style name="list">
+    <!-- 
+    	<item name="android:background">@drawable/light_yellow</item>
+        <item name="android:textColor">@drawable/green</item>
+         -->
+	</style>
+
+	<style name="image">
+    	<item name="android:scaleType">fitCenter</item>
+	</style>
+
+    <style name="text">
+        <item name="android:textScaleX">0.9</item>
+    	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+	</style>
+	    
+    <style name="editable_text" parent="text">
+    	<item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+	<style name="context" parent="text">
+    	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+		<item name="android:textScaleX">0.8</item>
+        <item name="android:textAlign">center</item>
+	</style>
+
+    <style name="autocomplete_text" parent="editable_text">
+    </style>
+
+    <style name="detail_label" parent="label">
+    	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+	<style name="sub_text_1" parent="text">
+    	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="sub_text_2" parent="text">
+    	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+	</style>
+
+	<style name="view_text" parent="text">
+		<item name="android:textScaleX">0.8</item>
+	</style>
+
+	<style name="view_label" parent="view_text">
+        <item name="android:textColor">@drawable/light_blue</item>
+	</style>
+
+	<style name="due_date" parent="text">
+    	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textAlign">end</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textColor">@drawable/date_blue</item>
+	</style>
+
+    <style name="centered_row">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:baselineAligned">false</item>
+    </style>
+    
+    <style name="top_row">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">top</item>
+        <item name="android:baselineAligned">false</item>
+    </style>
+    
+</resources>

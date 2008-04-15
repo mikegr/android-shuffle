@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:orientation="vertical"
+    android:padding="4dip"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingRight="5px"
+		android:paddingBottom="5px"
+		>
+  
+		<LinearLayout android:id="@+id/contextDisplay" 
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+	        android:layout_alignParentLeft="true"
+			android:gravity="center">
+			<ImageView android:id="@+id/context_icon"
+				android:layout_width="36px"
+				android:layout_height="wrap_content"
+				android:scaleType="center" 
+				android:paddingLeft="4px"
+				android:paddingRight="4px" 
+				android:paddingBottom="2px"
+				style="@style/image" />
+			<org.dodgybits.android.shuffle.view.LabelView
+				android:id="@+id/context" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:paddingLeft="5px"
+				android:paddingRight="5px" style="@style/context" />
+		</LinearLayout>
+
+	    <TextView android:id="@+id/description"
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"	        
+			android:layout_weight="1"
+			android:paddingLeft="5px"
+			android:gravity="center_horizontal"
+	        android:lines="2"
+            style="@style/text"
+            />
+            
+    </LinearLayout>
+
+	<LinearLayout android:id="@+id/contextDisplay" 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		>
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingTop="20px"
+	        android:paddingRight="5px"
+	        android:text="@string/project_title"
+            style="@style/view_label"
+           />
+
+	    <TextView android:id="@+id/project"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+            style="@style/view_text"
+           />
+           
+	</LinearLayout>
+
+	<LinearLayout android:id="@+id/contextDisplay" 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		>
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingRight="5px"
+	        android:text="@string/contact_title"
+            style="@style/view_label"
+           />
+
+	    <TextView android:id="@+id/contact"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+            style="@style/view_text"
+           />
+           
+	</LinearLayout>
+
+	<LinearLayout android:id="@+id/contextDisplay" 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		>
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingRight="5px"
+	        android:text="@string/details_title"
+            style="@style/view_label"
+           />
+
+	    <TextView android:id="@+id/details"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:lines="2"
+            style="@style/view_text"
+           />
+           
+	</LinearLayout>
+
+	<RelativeLayout 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="5px"
+		android:gravity="center">
+
+		<LinearLayout android:id="@+id/contextDisplay" 
+			android:orientation="horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+		    android:layout_below="@id/context_icon"
+		    android:layout_alignParentLeft="true"
+			>
+
+		    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:paddingRight="5px"
+		        android:text="@string/due_date_title"
+	            style="@style/view_label"
+	           />
+
+	        <TextView android:id="@+id/due_date_display"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+		        android:text="@string/undefined"
+	            style="@style/view_text"            
+	            />
+	            
+		</LinearLayout>
+
+	    <TextView android:id="@+id/completed"
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+		    android:layout_below="@id/context_icon"
+		    android:layout_alignParentRight="true"
+	        style="@style/view_text"
+            />			
+
+	</RelativeLayout>
+          	        
+    <Button android:id="@+id/edit_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_button_title">
+        <requestFocus/>
+	</Button>
+	
+</LinearLayout>
+
