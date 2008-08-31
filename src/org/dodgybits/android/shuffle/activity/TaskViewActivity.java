@@ -56,7 +56,7 @@ public class TaskViewActivity extends Activity {
         mEditButton = (Button) findViewById(R.id.edit_button);
         mEditButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	startActivity(new Intent(Intent.EDIT_ACTION, getIntent().getData()));
+            	startActivity(new Intent(Intent.ACTION_EDIT, getIntent().getData()));
             	finish();
             }
         });        
@@ -70,7 +70,7 @@ public class TaskViewActivity extends Activity {
 		
         if (mCursor != null) {
             // Make sure we are at the one and only row in the cursor.
-            mCursor.first();
+            mCursor.moveToFirst();
             Task task = BindingUtils.readTask(mCursor);
             mDescriptionWidget.setText(task.description);
             if (TextUtils.isEmpty(task.details)) {

@@ -12,8 +12,9 @@ import org.dodgybits.android.shuffle.model.Preferences;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Resources;
+import android.content.Context;
 import android.content.UriMatcher;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,8 +30,6 @@ import android.util.Log;
  */
 public class ShuffleProvider extends ContentProvider {
     private static final String cTag = "ShuffleProvider";
-
-    private SQLiteDatabase mDB;
 
     public static final String cDatabaseName = "shuffle.db";
     private static final int cDatabaseVersion = 8;
@@ -67,6 +66,10 @@ public class ShuffleProvider extends ContentProvider {
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
+        DatabaseHelper(Context context) {
+            super(context, cDatabaseName, null, cDatabaseVersion);
+        }
+    	
         @Override
         public void onCreate(SQLiteDatabase db) {
         	Log.i(cTag, "Creating shuffle DB");
@@ -116,18 +119,21 @@ public class ShuffleProvider extends ContentProvider {
         }
     }
     
+    private DatabaseHelper mOpenHelper;
+    
     @Override
     public boolean onCreate() {
     	Log.i(cTag, "+onCreate");
-        DatabaseHelper dbHelper = new DatabaseHelper();
-        mDB = dbHelper.openDatabase(getContext(), cDatabaseName, null, cDatabaseVersion);
-        return (mDB == null) ? false : true;
+    	mOpenHelper = new DatabaseHelper(getContext());
+        return true;
     }
     
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
             String[] selectionArgs, String sort) {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
         switch (cUriMatcher.match(uri)) {
         case TASKS:
@@ -178,7 +184,7 @@ public class ShuffleProvider extends ContentProvider {
             qb.appendWhere("_id=" + uri.getPathSegments().get(1));
             break;
         case CONTEXT_TASKS:
-        	return mDB.rawQuery("select c._id, count(*) count from context c, task t where t.contextId = c._id group by c._id" , null);
+        	return db.rawQuery("select c._id, count(*) count from context c, task t where t.contextId = c._id group by c._id" , null);
         case PROJECTS:
             qb.setTables(cProjectTableName);
             qb.setProjectionMap(sProjectListProjectMap);
@@ -188,7 +194,7 @@ public class ShuffleProvider extends ContentProvider {
             qb.appendWhere("_id=" + uri.getPathSegments().get(1));
             break;
         case PROJECT_TASKS:
-        	return mDB.rawQuery("select p._id, count(*) from project p, task t where t.projectId = p._id group by p._id" , null);
+        	return db.rawQuery("select p._id, count(*) from project p, task t where t.projectId = p._id group by p._id" , null);
         default:
             throw new IllegalArgumentException("Unknown URL " + uri);
         }
@@ -230,7 +236,7 @@ public class ShuffleProvider extends ContentProvider {
         			" ORDER BY " + orderBy);
         }
         
-        Cursor c = qb.query(mDB, projection, selection, selectionArgs, null, null, orderBy);
+        Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
     }
@@ -300,6 +306,8 @@ public class ShuffleProvider extends ContentProvider {
             values = new ContentValues();
         }
 
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
         switch (cUriMatcher.match(url)) {
         case TASKS:
         case DUE_TASKS:
@@ -327,7 +335,7 @@ public class ShuffleProvider extends ContentProvider {
             	values.put(Shuffle.Tasks.COMPLETE, 0);
             }
 
-            rowID = mDB.insert(cTaskTableName, sTaskListProjectMap.get(Shuffle.Tasks.DESCRIPTION), values);
+            rowID = db.insert(cTaskTableName, sTaskListProjectMap.get(Shuffle.Tasks.DESCRIPTION), values);
             if (rowID > 0) {
                 Uri uri = ContentUris.withAppendedId(Shuffle.Tasks.CONTENT_URI, rowID);
                 getContext().getContentResolver().notifyChange(uri, null);
@@ -338,7 +346,7 @@ public class ShuffleProvider extends ContentProvider {
         case TASK_CONTACTS:
         	String taskId = url.getPathSegments().get(1);
             values.put(Shuffle.TaskContacts.TASK_ID, taskId);
-            rowID = mDB.insert(cTaskContactTableName, sTaskContactListProjectMap.get(Shuffle.TaskContacts.TASK_ID), values);
+            rowID = db.insert(cTaskContactTableName, sTaskContactListProjectMap.get(Shuffle.TaskContacts.TASK_ID), values);
             if (rowID > 0) {
                 Uri uri = ContentUris.withAppendedId(Shuffle.TaskContacts.CONTENT_URI, rowID);
                 getContext().getContentResolver().notifyChange(uri, null);
@@ -348,12 +356,12 @@ public class ShuffleProvider extends ContentProvider {
         	
         	
         case PROJECTS:
-            r = Resources.getSystem();
+            r = android.content.res.Resources.getSystem();
             if (values.containsKey(Shuffle.Projects.NAME) == false) {
                 values.put(Shuffle.Projects.NAME, r.getString(android.R.string.untitled));
             }
             
-            rowID = mDB.insert(cProjectTableName, sProjectListProjectMap.get(Shuffle.Projects.NAME), values);
+            rowID = db.insert(cProjectTableName, sProjectListProjectMap.get(Shuffle.Projects.NAME), values);
             if (rowID > 0) {
                 Uri uri = ContentUris.withAppendedId(Shuffle.Projects.CONTENT_URI, rowID);
                 getContext().getContentResolver().notifyChange(uri, null);
@@ -367,7 +375,7 @@ public class ShuffleProvider extends ContentProvider {
                 values.put(Shuffle.Contexts.NAME, r.getString(android.R.string.untitled));
             }
             
-            rowID = mDB.insert(cContextTableName, sContextListProjectMap.get(Shuffle.Contexts.NAME), values);
+            rowID = db.insert(cContextTableName, sContextListProjectMap.get(Shuffle.Contexts.NAME), values);
             if (rowID > 0) {
                 Uri uri = ContentUris.withAppendedId(Shuffle.Contexts.CONTENT_URI, rowID);
                 getContext().getContentResolver().notifyChange(uri, null);
@@ -385,17 +393,19 @@ public class ShuffleProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String where, String[] whereArgs) {
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+    	
         int count;
         String segment;
         switch (cUriMatcher.match(uri)) {
         case TASKS:
         case DUE_TASKS:
         case INBOX_TASKS:
-            count = mDB.delete(cTaskTableName, where, whereArgs);
+            count = db.delete(cTaskTableName, where, whereArgs);
             break;
         case TASK_ID:
             segment = uri.getPathSegments().get(1);
-            count = mDB
+            count = db
                     .delete(cTaskTableName, "_id="
                             + segment
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
@@ -404,7 +414,7 @@ public class ShuffleProvider extends ContentProvider {
         case TASK_CONTACTS:
         	long id = ContentUris.parseId(uri);
             Log.d(cTag, "Deleting task contacts for task " + id);
-            count = mDB
+            count = db
                     .delete(cTaskContactTableName,
                     		(id > 0 ? "taskId = " + id : "")
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
@@ -412,22 +422,22 @@ public class ShuffleProvider extends ContentProvider {
             Log.d(cTag, "Deleted " + count + " task contacts");
     		break;
         case CONTEXTS:
-            count = mDB.delete(cContextTableName, where, whereArgs);
+            count = db.delete(cContextTableName, where, whereArgs);
             break;
         case CONTEXT_ID:
             segment = uri.getPathSegments().get(1);
-            count = mDB
+            count = db
                     .delete(cContextTableName, "_id="
                             + segment
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
                                     + ')' : ""), whereArgs);
             break;
         case PROJECTS:
-            count = mDB.delete(cProjectTableName, where, whereArgs);
+            count = db.delete(cProjectTableName, where, whereArgs);
             break;
         case PROJECT_ID:
             segment = uri.getPathSegments().get(1);
-            count = mDB
+            count = db
                     .delete(cProjectTableName, "_id="
                             + segment
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
@@ -444,39 +454,40 @@ public class ShuffleProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count;
         String segment;
         switch (cUriMatcher.match(uri)) {
         case TASKS:
         case DUE_TASKS:
         case INBOX_TASKS:
-            count = mDB.update(cTaskTableName, values, where, whereArgs);
+            count = db.update(cTaskTableName, values, where, whereArgs);
             break;
         case TASK_ID:
             segment = uri.getPathSegments().get(1);
-            count = mDB
+            count = db
                     .update(cTaskTableName, values, "_id="
                             + segment
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
                                     + ')' : ""), whereArgs);
             break;
         case CONTEXTS:
-            count = mDB.update(cContextTableName, values, where, whereArgs);
+            count = db.update(cContextTableName, values, where, whereArgs);
             break;
         case CONTEXT_ID:
             segment = uri.getPathSegments().get(1);
-            count = mDB
+            count = db
                     .update(cContextTableName, values, "_id="
                             + segment
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
                                     + ')' : ""), whereArgs);
             break;
         case PROJECTS:
-            count = mDB.update(cProjectTableName, values, where, whereArgs);
+            count = db.update(cProjectTableName, values, where, whereArgs);
             break;
         case PROJECT_ID:
             segment = uri.getPathSegments().get(1);
-            count = mDB
+            count = db
                     .update(cProjectTableName, values, "_id="
                             + segment
                             + (!TextUtils.isEmpty(where) ? " AND (" + where

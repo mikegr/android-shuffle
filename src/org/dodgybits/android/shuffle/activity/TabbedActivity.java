@@ -16,7 +16,6 @@ public class TabbedActivity extends Activity {
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setContentView(android.R.layout.tab_content);
         
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -33,7 +34,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(getContentViewResId());
-        setDefaultKeyMode(SHORTCUT_DEFAULT_KEYS);
+        setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         Cursor groupCursor = createGroupQuery();
         // Set up our adapter
         mAdapter = createExpandableListAdapter(groupCursor); 
@@ -264,17 +265,17 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
             // ... and ends with the delete command.
             MenuUtils.addDeleteMenuItem(menu);
         } else {
-            menu.removeGroup(Menu.SELECTED_ALTERNATIVE);
+            menu.removeGroup(Menu.CATEGORY_ALTERNATIVE);
         }
 
         // Make sure the delete action is disabled if there are no items.
-        menu.setItemShown(MenuUtils.DELETE_ID, haveItems);
+        menu.findItem(MenuUtils.DELETE_ID).setVisible(haveItems);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(Menu.Item item) {
-        switch (item.getId()) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
 	        case MenuUtils.DELETE_ID:
 	            deleteItem();
 	            return true;
@@ -343,7 +344,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     
     private final void insertItem(Uri uri) {
         // Launch activity to insert a new item
-    	Intent intent =  new Intent(Intent.INSERT_ACTION, uri);
+    	Intent intent =  new Intent(Intent.ACTION_INSERT, uri);
         startActivity(intent);
     }
 

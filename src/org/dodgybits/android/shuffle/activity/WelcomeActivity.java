@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -29,7 +30,7 @@ public class WelcomeActivity extends Activity {
 		super.onCreate(icicle);
 		Log.d(cTag, "onCreate");
 		
-        setDefaultKeyMode(SHORTCUT_DEFAULT_KEYS);
+        setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         requestWindowFeature(Window.FEATURE_PROGRESS);
         setProgressBarIndeterminate(true);
         setContentView(R.layout.welcome);
@@ -92,7 +93,7 @@ public class WelcomeActivity extends Activity {
     }
     
     @Override
-    public boolean onOptionsItemSelected(Menu.Item item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (MenuUtils.checkCommonItemsSelected(item, this, MenuUtils.INBOX_ID)) {
         	return true;
         }

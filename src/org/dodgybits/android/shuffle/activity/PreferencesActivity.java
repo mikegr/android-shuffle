@@ -6,6 +6,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -16,8 +17,7 @@ public class PreferencesActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-        setContentView(android.R.layout.list_content);
-        setDefaultKeyMode(SHORTCUT_DEFAULT_KEYS);
+        setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         
         String[] prefScreens = getResources().getStringArray(R.array.preference_screens);
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, R.layout.list_item_view, R.id.name, prefScreens);
@@ -33,7 +33,7 @@ public class PreferencesActivity extends ListActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(Menu.Item item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
 //        if (MenuUtils.checkCommonItemsSelected(item, this, -1)) {
 //        	return true;
 //        }

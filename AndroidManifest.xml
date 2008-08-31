@@ -4,7 +4,7 @@
     
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     
-    <application android:icon="@drawable/icon" android:theme="@android:style/Theme.Dark">
+    <application android:icon="@drawable/icon">
     
         <provider android:name=".provider.ShuffleProvider"
             android:authorities="org.dodgybits.android.shuffle.provider.Shuffle" />

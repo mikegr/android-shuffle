@@ -8,8 +8,8 @@ import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.view.TaskView;
 import org.xmlpull.v1.XmlPullParser;
 
-import android.content.Resources;
-import android.content.Resources.NotFoundException;
+import android.content.res.Resources;
+import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +23,10 @@ public class Test {
 	private static final String cTag = "Test";
 	
 	private static Context[] sContexts = {
-			new Context("Home", 3, android.R.drawable.contact_home_location),
-			new Context("Work", 4, android.R.drawable.contact_work_location),
-			new Context("Town", 1, android.R.drawable.sym_action_map),
-			new Context("Online", 6, android.R.drawable.stat_notify_browser),
+			new Context("Home", 3, android.R.drawable.ic_menu_gallery),
+			new Context("Work", 4, android.R.drawable.ic_dialog_dialer),
+			new Context("Town", 1, null),
+			new Context("Online", 6, null),
 	};
 	
 	private static Project[] sProjects = {

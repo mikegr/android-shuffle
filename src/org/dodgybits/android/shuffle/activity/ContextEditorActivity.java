@@ -56,9 +56,9 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
 
             public void onClick(View v) {
             	// Launch activity to pick colour
-            	Intent intent = new Intent(Intent.PICK_ACTION);
+            	Intent intent = new Intent(Intent.ACTION_PICK);
             	intent.setType(ColourPickerActivity.TYPE);
-            	startSubActivity(intent, COLOUR_PICKER);
+            	startActivityForResult(intent, COLOUR_PICKER);
             }
         });
         mSetIconButton = (Button) findViewById(R.id.icon_set_button);
@@ -66,9 +66,9 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
 
             public void onClick(View v) {
             	// Launch activity to pick icon
-            	Intent intent = new Intent(Intent.PICK_ACTION);
+            	Intent intent = new Intent(Intent.ACTION_PICK);
             	intent.setType(IconPickerActivity.TYPE);
-            	startSubActivity(intent, ICON_PICKER);
+            	startActivityForResult(intent, ICON_PICKER);
             }
         });
         mClearIconButton = (Button) findViewById(R.id.icon_clear_button);
@@ -108,7 +108,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         // time to get at the stuff.
         if (mCursor != null) {
             // Make sure we are at the one and only row in the cursor.
-            mCursor.first();
+            mCursor.moveToFirst();
 
             // Modify our overall title depending on the mode we are running in.
             if (mState == State.STATE_EDIT) {
@@ -154,13 +154,13 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     
     @Override
 	protected void onActivityResult(int requestCode, int resultCode,
-			String data, Bundle extras) {
+			Intent data) {
     	Log.d(cTag, "Got resultCode " + resultCode + " with data " + data);		
     	switch (requestCode) {
     	case COLOUR_PICKER:
         	if (resultCode == Activity.RESULT_OK) {
     			if (data != null) {
-    				mColourIndex = Integer.parseInt(data);
+    				mColourIndex = Integer.parseInt(data.getStringExtra("colour"));
     				displayIcon();
     			}
     		}
@@ -168,7 +168,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     	case ICON_PICKER:
         	if (resultCode == Activity.RESULT_OK) {
     			if (data != null) {
-    				mIconId = Integer.parseInt(data);
+    				mIconId = Integer.parseInt(data.getStringExtra("icon"));
     				displayIcon();
     			}
     		}

@@ -196,7 +196,7 @@ public class BindingUtils {
 			Uri uri = ContentUris.withAppendedId(Shuffle.Projects.CONTENT_URI, projectId);			
 			Cursor projectCursor = androidContext.getContentResolver().query(uri, 
 					Shuffle.Projects.cFullProjection, null, null, null);
-			if (projectCursor.first()) {
+			if (projectCursor.moveToFirst()) {
 				project = readProject(projectCursor);
 			}
 			projectCursor.close();
@@ -209,7 +209,7 @@ public class BindingUtils {
 		if (contextId != null) {
 			Uri uri = ContentUris.withAppendedId(Shuffle.Contexts.CONTENT_URI, contextId);			
 			Cursor contextCursor = androidContext.getContentResolver().query(uri, Shuffle.Contexts.cFullProjection, null, null, null);
-			if (contextCursor.first()) {
+			if (contextCursor.moveToFirst()) {
 				context = readContext(contextCursor);
 			}
 			contextCursor.close();
@@ -228,7 +228,7 @@ public class BindingUtils {
 			Uri uri = ContentUris.withAppendedId(Shuffle.TaskContacts.CONTENT_URI, taskId);			
 			Cursor contactCursor = androidContext.getContentResolver().query(uri, 
 					Shuffle.TaskContacts.cFullProjection, null, null, null);
-			while (contactCursor.next()) {
+			while (contactCursor.moveToNext()) {
 				ids.add(contactCursor.getLong(CONTACT_ID_INDEX));
 			}
 			contactCursor.close();
@@ -261,7 +261,7 @@ public class BindingUtils {
 			String idList = toIdListString(ids);
 			Cursor contactCursor = androidContext.getContentResolver().query(uri, new String[] {Contacts.People._ID, Contacts.People.NAME}, 
 			"people._id in (" + idList + ")", null, Contacts.People.NAME + " DESC");
-			while (contactCursor.next()) {
+			while (contactCursor.moveToNext()) {
 				names.add(contactCursor.getString(1));
 			}
 			contactCursor.close();
@@ -289,12 +289,12 @@ public class BindingUtils {
 	 * The cursor is committed and re-queried after the update.
 	 */
 	public static void swapTaskPositions(Cursor cursor, int pos1, int pos2) {
-        cursor.moveTo(pos1);
+        cursor.moveToPosition(pos1);
         int positionValue1 = cursor.getInt(DISPLAY_ORDER_INDEX);
-        cursor.moveTo(pos2);
+        cursor.moveToPosition(pos2);
         int positionValue2 = cursor.getInt(DISPLAY_ORDER_INDEX);
         cursor.updateInt(DISPLAY_ORDER_INDEX, positionValue1);
-        cursor.moveTo(pos1);
+        cursor.moveToPosition(pos1);
         cursor.updateInt(DISPLAY_ORDER_INDEX, positionValue2);
 		cursor.commitUpdates();
 		cursor.requery();
@@ -359,7 +359,7 @@ public class BindingUtils {
 	public static SparseIntArray readCountArray(Cursor cursor) {
 		
 		SparseIntArray countMap = new SparseIntArray();
-		while (cursor.next()) {
+		while (cursor.moveToNext()) {
 			countMap.put(cursor.getInt(ID_INDEX), cursor.getInt(TASK_COUNT_INDEX));
 		}
 		return countMap;

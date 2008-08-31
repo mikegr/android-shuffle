@@ -1,10 +1,9 @@
 package org.dodgybits.android.shuffle.view;
 
-import java.util.Map;
-
 import org.dodgybits.android.shuffle.util.TextColours;
 
 import android.content.Context;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.PaintDrawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -22,15 +21,14 @@ public class LabelView extends TextView {
 	}
 	
 	@SuppressWarnings("unchecked")
-    public LabelView(Context context, AttributeSet attrs, Map inflateParams) {
-		super(context, attrs, inflateParams);
+    public LabelView(Context context, AttributeSet attrs) {
+		super(context, attrs);
 		init(context);
 	}
 
 	@SuppressWarnings("unchecked")
-	public LabelView(Context context, AttributeSet attrs, Map inflateParams,
-			int defStyle) {
-		super(context, attrs, inflateParams, defStyle);
+	public LabelView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
 		init(context);
 	}
 
@@ -38,7 +36,7 @@ public class LabelView extends TextView {
     	mBackground = new PaintDrawable();
     	mBackground.setCornerRadius(4.0f);
 		//mBackground.setAlpha(240);
-    	setBackground(mBackground);
+    	setBackgroundDrawable(mBackground);
 		mTextColours = TextColours.getInstance(context);
     }
     
@@ -46,7 +44,7 @@ public class LabelView extends TextView {
 		int textColour = mTextColours.getTextColour(colourIndex);
 		int bgColour = mTextColours.getBackgroundColours(colourIndex);
 		setTextColor(isSelected ? bgColour : textColour);
-		mBackground.setColor(isSelected ? textColour : bgColour);
+		mBackground.setColorFilter(isSelected ? textColour : bgColour, Mode.SRC);
 
     }
 }

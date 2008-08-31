@@ -4,6 +4,7 @@ import org.dodgybits.android.shuffle.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,11 @@ public class IconPickerActivity extends Activity implements OnItemClickListener 
 
     @SuppressWarnings("unchecked")
 	public void onItemClick(AdapterView parent, View v, int position, long id) {
-		setResult(Activity.RESULT_OK, String.valueOf(mGrid.getAdapter().getItem(position)));
+		Bundle bundle = new Bundle();
+	    bundle.putString("icon", String.valueOf(mGrid.getAdapter().getItem(position)));
+	    Intent mIntent = new Intent();
+	    mIntent.putExtras(bundle);
+	    setResult(RESULT_OK, mIntent);
 		finish();
     }
     
@@ -47,10 +52,6 @@ public class IconPickerActivity extends Activity implements OnItemClickListener 
         
         private void loadIcons() {
         	mIconIds = new int[] {
-    			android.R.drawable.contact_home_location,
-    			android.R.drawable.contact_mobile_phone,
-    			android.R.drawable.contact_telephone,
-    			android.R.drawable.contact_work_location,    			
     			android.R.drawable.stat_sys_phone_call,
     			R.drawable.applications_accessories,
     			R.drawable.applications_development,

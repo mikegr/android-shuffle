@@ -11,8 +11,8 @@ import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewInflate;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,10 +32,10 @@ public class TaskView extends ItemView<Task> {
 	public TaskView(Context androidContext, boolean showContext) {
 		super(androidContext);
 		
-        ViewInflate vi = (ViewInflate) 
-        androidContext.getSystemService(Context.INFLATE_SERVICE); 
-                vi.inflate(getViewResourceId(),this,true, null); 
-
+        LayoutInflater vi = (LayoutInflater)androidContext.
+			getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        vi.inflate(getViewResourceId(), this, true); 
+		
 		mContext = (LabelView) findViewById(R.id.context);
 		mDescription = (TextView) findViewById(R.id.description);
 		mIcon = (ImageView) findViewById(R.id.icon);

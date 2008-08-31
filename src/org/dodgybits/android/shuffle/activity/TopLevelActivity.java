@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -30,8 +31,7 @@ public class TopLevelActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setContentView(android.R.layout.list_content);
-        setDefaultKeyMode(SHORTCUT_DEFAULT_KEYS);
+        setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
     }
 	
 	@Override
@@ -50,20 +50,20 @@ public class TopLevelActivity extends ListActivity {
 		Cursor cursor;
 		String[] projection = new String[] {"_id"};
 		cursor = getContentResolver().query(Shuffle.Tasks.cInboxTasksContentURI, projection, null, null, null);
-		int inboxCount = cursor.count();
+		int inboxCount = cursor.getCount();
 		cursor.close();
 		Uri dueTaskUri = Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(Shuffle.Tasks.DAY_MODE)).build();
 		cursor = getContentResolver().query(dueTaskUri, projection, null, null, null);
-		int dueTasksCount = cursor.count();
+		int dueTasksCount = cursor.getCount();
 		cursor.close();
 		cursor = getContentResolver().query(Shuffle.Tasks.cTopTasksContentURI, projection, null, null, null);
-		int topTasksCount = cursor.count();
+		int topTasksCount = cursor.getCount();
 		cursor.close();
 		cursor = getContentResolver().query(Shuffle.Projects.CONTENT_URI, projection, null, null, null);
-		int projectCount = cursor.count();
+		int projectCount = cursor.getCount();
 		cursor.close();
 		cursor = getContentResolver().query(Shuffle.Contexts.CONTENT_URI, projection, null, null, null);
-		int contextCount = cursor.count();
+		int contextCount = cursor.getCount();
 		cursor.close();
 
 		Log.d(cTag, 
@@ -86,7 +86,7 @@ public class TopLevelActivity extends ListActivity {
 	}
 
     @Override
-    public boolean onOptionsItemSelected(Menu.Item item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (MenuUtils.checkCommonItemsSelected(item, this, -1)) {
         	return true;
         }

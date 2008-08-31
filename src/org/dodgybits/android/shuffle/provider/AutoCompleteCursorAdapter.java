@@ -28,9 +28,9 @@ public class AutoCompleteCursorAdapter extends SimpleCursorAdapter {
 	}
 	
 	@Override
-	protected Cursor runQuery(CharSequence constraint) {
+	public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
 		if (constraint == null || constraint.length() == 0) {
-			return super.runQuery(constraint);
+			return super.runQueryOnBackgroundThread(constraint);
 		}
         StringBuilder buffer = null; 
         String[] args = null; 
@@ -47,7 +47,7 @@ public class AutoCompleteCursorAdapter extends SimpleCursorAdapter {
 	}
 
     @Override 
-    protected String convertToString(Cursor cursor) { 
+    public CharSequence convertToString(Cursor cursor) { 
     	// assuming name is first entry in cursor....
         return cursor.getString(0); 
     } 

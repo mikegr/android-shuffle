@@ -43,7 +43,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 		Log.d(cTag, "Fetching context " + mContextId);
 		Cursor cursor = getContentResolver().query(Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection,
 				Shuffle.Contexts._ID + " = ?", new String[] {String.valueOf(mContextId)}, null);
-		if (cursor.next()) {
+		if (cursor.moveToNext()) {
 			mContext = BindingUtils.readContext(cursor);
 		}
 		cursor.close();
@@ -70,7 +70,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     protected Intent getClickIntent(Uri uri) {
     	long taskId = ContentUris.parseId(uri);
     	Uri taskURI = ContentUris.withAppendedId(Shuffle.Tasks.CONTENT_URI, taskId);
-    	return new Intent(Intent.VIEW_ACTION, taskURI);
+    	return new Intent(Intent.ACTION_VIEW, taskURI);
     }
 
     /**

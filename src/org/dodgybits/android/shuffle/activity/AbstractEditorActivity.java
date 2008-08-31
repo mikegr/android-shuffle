@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -36,15 +37,15 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         Log.d(cTag, "onCreate+");
         super.onCreate(icicle);
         final Intent intent = getIntent();
-        setDefaultKeyMode(SHORTCUT_DEFAULT_KEYS);
+        setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 
         // Do some setup based on the action being performed.
         final String action = intent.getAction();
-        if (action.equals(Intent.EDIT_ACTION)) {
+        if (action.equals(Intent.ACTION_EDIT)) {
             // Requested to edit: set that state, and the data being edited.
             mState = State.STATE_EDIT;
             mURI = intent.getData();
-        } else if (action.equals(Intent.INSERT_ACTION)) {
+        } else if (action.equals(Intent.ACTION_INSERT)) {
             // Requested to insert: set that state, and create a new entry
             // in the container.
             mState = State.STATE_INSERT;
@@ -61,7 +62,11 @@ public abstract class AbstractEditorActivity<T> extends Activity {
             }
             // The new entry was created, so assume all will end well and
             // set the result to be returned.
-            setResult(RESULT_OK, mURI.toString());
+    		Bundle bundle = new Bundle();
+    	    bundle.putString(AbstractListActivity.cSelectedItem, mURI.toString());
+    	    Intent mIntent = new Intent();
+    	    mIntent.putExtras(bundle);
+    	    setResult(RESULT_OK, mIntent);
         } else {
             // Whoops, unknown action!  Bail.
             Log.e(cTag, "Unknown action " + action + ", exiting");
@@ -101,8 +106,8 @@ public abstract class AbstractEditorActivity<T> extends Activity {
     abstract void saveItem(Bundle outState, T item);
     
     @Override
-    protected void onFreeze(Bundle outState) {
-        Log.d(cTag, "onFreeze+");
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.d(cTag, "onSaveInstanceState+");
 
         // Save away the original item, so we still have it if the activity
         // needs to be killed while paused
@@ -121,9 +126,9 @@ public abstract class AbstractEditorActivity<T> extends Activity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(Menu.Item item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle all of the possible menu actions.
-        switch (item.getId()) {
+        switch (item.getItemId()) {
         case MenuUtils.DELETE_ID:
             deleteItem();
             finish();

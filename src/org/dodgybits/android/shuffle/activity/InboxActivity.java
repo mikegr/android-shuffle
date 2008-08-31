@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class InboxActivity extends AbstractTaskListActivity {
 
@@ -38,8 +39,8 @@ public class InboxActivity extends AbstractTaskListActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(Menu.Item item) {
-        switch (item.getId()) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
         case MenuUtils.CLEAN_INBOX_ID:
         	Preferences.cleanUpInbox(this);
         	// need to restart the activity since the query has changed

@@ -15,7 +15,7 @@
   <TextView android:id="@+id/name" 
     android:layout_width="wrap_content" 
     android:layout_height="fill_parent"
-    android:layout_toRight="@id/icon"
+    android:layout_toRightOf="@id/icon"
 	android:gravity="center_horizontal"
     android:paddingLeft="5px" 
     android:paddingRight="5px"

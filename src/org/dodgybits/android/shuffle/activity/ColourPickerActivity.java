@@ -6,8 +6,9 @@ import org.dodgybits.android.shuffle.view.LabelView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout.Alignment;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -37,7 +38,11 @@ public class ColourPickerActivity extends Activity implements
 
 	@SuppressWarnings("unchecked")
 	public void onItemClick(AdapterView parent, View v, int position, long id) {
-		setResult(Activity.RESULT_OK, String.valueOf(position));
+		Bundle bundle = new Bundle();
+	    bundle.putString("colour", String.valueOf(position));
+	    Intent mIntent = new Intent();
+	    mIntent.putExtras(bundle);
+	    setResult(RESULT_OK, mIntent);
 		finish();
 	}
 
@@ -56,7 +61,7 @@ public class ColourPickerActivity extends Activity implements
 			} else {
 				view = new LabelView(ColourPickerActivity.this);
 				view.setText("Abc");
-				view.setAlignment(Alignment.ALIGN_CENTER);
+				view.setGravity(Gravity.CENTER);
 			}
 			view.setColourIndex(position, false);
 			return view;

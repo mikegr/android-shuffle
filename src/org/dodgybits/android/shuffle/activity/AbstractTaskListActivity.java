@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -82,7 +83,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     }
     
     protected final void toggleComplete() {
-        mCursor.moveTo(getSelectedItemPosition());
+        mCursor.moveToPosition(getSelectedItemPosition());
         BindingUtils.toggleTaskComplete(this, mCursor);
     }
     
@@ -113,8 +114,8 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     }
 
     @Override
-    public boolean onOptionsItemSelected(Menu.Item item) {
-        switch (item.getId()) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
         case MenuUtils.COMPLETE_ID:
             toggleComplete();
             return true;
@@ -123,7 +124,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     }
     
     protected Intent getClickIntent(Uri uri) {
-    	return new Intent(Intent.VIEW_ACTION, uri);
+    	return new Intent(Intent.ACTION_VIEW, uri);
     }
 
 }

@@ -33,13 +33,13 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         mDefaultContextSpinner = (Spinner) findViewById(R.id.default_context);
 
         Cursor contactCursor = getContentResolver().query(Shuffle.Contexts.CONTENT_URI, new String[] {Shuffle.Contexts._ID, Shuffle.Contexts.NAME}, null, null, null);
-        int size = contactCursor.count() + 1;
+        int size = contactCursor.getCount() + 1;
         mContextIds = new int[size];
         mContextIds[0] = 0;
         mContextNames = new String[size];
         mContextNames[0] = "None";
         for (int i = 1; i < size; i++) {
-        	contactCursor.next();
+        	contactCursor.moveToNext();
         	mContextIds[i] = contactCursor.getInt(0);
         	mContextNames[i] = contactCursor.getString(1);
         }
@@ -76,7 +76,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         // time to get at the stuff.
         if (mCursor != null) {
             // Make sure we are at the one and only row in the cursor.
-            mCursor.first();
+            mCursor.moveToFirst();
 
             // Modify our overall title depending on the mode we are running in.
             if (mState == State.STATE_EDIT) {

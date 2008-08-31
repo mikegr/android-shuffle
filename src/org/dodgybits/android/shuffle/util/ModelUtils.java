@@ -27,7 +27,7 @@ public class ModelUtils {
 	
 	public static final Context[] cPresetContexts = new Context[] {
 		new Context("At home", 11, R.drawable.go_home), //0
-		new Context("At work", 1, android.R.drawable.contact_work_location), //1
+		new Context("At work", 1, R.drawable.applications_internet), //1
 		new Context("Online", 7, R.drawable.applications_internet), //2
 		new Context("Errands", 14, R.drawable.applications_development), //3
 		new Context("Contact", 22, android.R.drawable.stat_sys_phone_call), //4
@@ -135,7 +135,7 @@ public class ModelUtils {
         context.id = id;
         Cursor cursor = androidContext.getContentResolver().query(uri, 
         		Shuffle.Contexts.cFullProjection, null, null, null);
-        cursor.next();
+        cursor.moveToNext();
         BindingUtils.writeContext(cursor, context);
         boolean success = cursor.commitUpdates();
         cursor.close();
@@ -149,7 +149,7 @@ public class ModelUtils {
         project.id = id;
         Cursor cursor = androidContext.getContentResolver().query(uri, 
         		Shuffle.Projects.cFullProjection, null, null, null);
-        cursor.next();
+        cursor.moveToNext();
         BindingUtils.writeProject(cursor, project);
         boolean success = cursor.commitUpdates();
         cursor.close();
@@ -163,7 +163,7 @@ public class ModelUtils {
         task.id = id;
         Cursor cursor = androidContext.getContentResolver().query(uri, 
         		Shuffle.Tasks.cExpandedProjection, null, null, null);
-        cursor.next();
+        cursor.moveToNext();
         BindingUtils.writeTask(cursor, task);
         boolean success = cursor.commitUpdates();
         cursor.close();

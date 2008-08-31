@@ -2,7 +2,7 @@ package org.dodgybits.android.shuffle.util;
 
 import org.dodgybits.android.shuffle.R;
 
-import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -28,10 +28,12 @@ public class AlertUtils {
 				Log.d(cTag, "Cancelled delete. Do nothing.");
 			}
 		};
-		AlertDialog.show(context, title, R.drawable.dialog_warning, message, 
-				cancelButtonText, buttonListener, 
-				deleteButtonText, buttonListener, 
-				true, cancelListener);
+		Builder builder = new Builder(context);
+		builder.setTitle(title).setIcon(R.drawable.dialog_warning)
+			.setMessage(message).setNeutralButton(cancelButtonText, buttonListener)
+			.setPositiveButton(deleteButtonText, buttonListener)
+			.setOnCancelListener(cancelListener);
+		builder.create().show();
 	}
 	
 	public static void showCleanSlateWarning(final Context context, final OnClickListener buttonListener) {
@@ -44,24 +46,34 @@ public class AlertUtils {
 				Log.d(cTag, "Cancelled delete. Do nothing.");
 			}
 		};
-		AlertDialog.show(context, title, R.drawable.dialog_warning, message, 
-				cancelButtonText, buttonListener, 
-				deleteButtonText, buttonListener, 
-				true, cancelListener);
+		Builder builder = new Builder(context);
+		builder.setTitle(title).setIcon(R.drawable.dialog_warning)
+			.setMessage(message).setNeutralButton(cancelButtonText, buttonListener)
+			.setPositiveButton(deleteButtonText, buttonListener)
+			.setOnCancelListener(cancelListener);
+		builder.create().show();
 	}
 	
 	public static void showDeletedTasksMessage(final Context context, int deletedTasks) {
 		CharSequence title = context.getString(R.string.info_title);
 		CharSequence message = context.getString(R.string.clean_task_message, new Object[] {deletedTasks});
 		CharSequence buttonText = context.getString(R.string.done_button_title);
-		AlertDialog.show(context, title, R.drawable.dialog_information, message, buttonText, false);
+		Builder builder = new Builder(context);
+		builder.setTitle(title).setIcon(R.drawable.dialog_information)
+			.setMessage(message)
+			.setPositiveButton(buttonText, null);
+		builder.create().show();
 	}
 	
 	public static void showCleanUpInboxMessage(final Context context) {
 		CharSequence title = context.getString(R.string.info_title);
 		CharSequence message = context.getString(R.string.clean_inbox_message);
 		CharSequence buttonText = context.getString(R.string.done_button_title);
-		AlertDialog.show(context, title, R.drawable.dialog_information, message, buttonText, false);
+		Builder builder = new Builder(context);
+		builder.setTitle(title).setIcon(R.drawable.dialog_information)
+			.setMessage(message)
+			.setPositiveButton(buttonText, null);
+		builder.create().show();
 	}
 	
 }

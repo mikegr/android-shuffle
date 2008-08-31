@@ -47,8 +47,38 @@ public class DateUtils {
 		if (ourDate.after(now) && ourDate.before(cal)) {
 			// date is within a week - show day of week
 			int dayOfWeek = ourDate.get(Calendar.DAY_OF_WEEK);
-			return android.util.DateUtils.getDayOfWeekStr(dayOfWeek, false);
+			return getDayOfWeekStr(dayOfWeek);
 		}
 		return formatDate(date);
 	}
+	
+	private static String getDayOfWeekStr(int dayOfWeek) {
+		String result = "";
+		switch (dayOfWeek) {
+		case Calendar.MONDAY:
+			result = "Monday";
+			break;
+		case Calendar.TUESDAY:
+			result = "Tuesday";
+			break;
+		case Calendar.WEDNESDAY:
+			result = "Wednesday";
+			break;
+		case Calendar.THURSDAY:
+			result = "Thursday";
+			break;
+		case Calendar.FRIDAY:
+			result = "Friday";
+			break;
+		case Calendar.SATURDAY:
+			result = "Saturday";
+			break;
+		case Calendar.SUNDAY:
+			result = "Sunday";
+			break;
+			
+		}
+		return result;
+	}
+	
 }

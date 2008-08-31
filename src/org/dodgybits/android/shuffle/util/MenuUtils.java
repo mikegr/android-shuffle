@@ -21,8 +21,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.SubMenu;
-import android.view.Menu.Item;
 
 public class MenuUtils {
 	private static final String cTag = "MenuUtils";
@@ -57,7 +57,7 @@ public class MenuUtils {
     
 	public static void addInsertMenuItems(Menu menu, String itemName, boolean isTaskList, Context context) {
 		String menuName = context.getResources().getString(R.string.menu_insert, itemName);
-        Item item = menu.add(0, INSERT_ID, menuName, R.drawable.list_add);
+		MenuItem item = menu.add(0, INSERT_ID, 0, menuName).setIcon(R.drawable.list_add);
         item.setAlphabeticShortcut(isTaskList ? 'c' : 'a');
 	}
 
@@ -66,44 +66,50 @@ public class MenuUtils {
 //		menuName = context.getResources().getString(R.string.menu_insert, childName);
 //        menu.add(0, INSERT_CHILD_ID, menuName, R.drawable.list_add).setAlphabeticShortcut('c');
 		menuName = context.getResources().getString(R.string.menu_insert, groupName);
-        menu.add(0, INSIDE_GROUP_ID, menuName, R.drawable.folder_new).setAlphabeticShortcut('a');
+        menu.add(0, INSIDE_GROUP_ID, 0, menuName).setIcon(R.drawable.folder_new).setAlphabeticShortcut('a');
 	}
 
 	public static void addViewMenuItems(Menu menu, int currentViewMenuId) {
-        SubMenu viewMenu  = menu.addSubMenu(0, 0, R.string.menu_view, R.drawable.preferences_system_windows);
-        Item item;
-        item = viewMenu.add(0, INBOX_ID, R.string.title_inbox);
-        item.setChecked(INBOX_ID == currentViewMenuId);
-        item.setShortcut('1','1');
-        item = viewMenu.add(0, CALENDAR_ID, R.string.title_due_tasks);
-        item.setChecked(INBOX_ID == currentViewMenuId);
-        item.setShortcut('2','2');
-        item = viewMenu.add(0, TOP_TASKS_ID, R.string.title_next_tasks);
-        item.setChecked(TOP_TASKS_ID == currentViewMenuId);
-        item.setShortcut('3','3');
-        item = viewMenu.add(0, PROJECT_ID, R.string.title_project);
-        item.setChecked(PROJECT_ID == currentViewMenuId);
-        item.setShortcut('4','4');
-        item = viewMenu.add(0, CONTEXT_ID, R.string.title_context);
-        item.setChecked(CONTEXT_ID == currentViewMenuId);
-        item.setShortcut('5','5');
+        SubMenu viewMenu  = menu.addSubMenu(0, 0, 0, R.string.menu_view)
+        	.setIcon(R.drawable.preferences_system_windows);
+        MenuItem item;
+        item = viewMenu.add(0, INBOX_ID, 0, R.string.title_inbox)
+        	.setChecked(INBOX_ID == currentViewMenuId)
+        	.setShortcut('1','1');
+        item = viewMenu.add(0, CALENDAR_ID, 0, R.string.title_due_tasks)
+        	.setChecked(INBOX_ID == currentViewMenuId)
+        	.setShortcut('2','2');
+        item = viewMenu.add(0, TOP_TASKS_ID, 0, R.string.title_next_tasks)
+        	.setChecked(TOP_TASKS_ID == currentViewMenuId)
+        	.setShortcut('3','3');
+        item = viewMenu.add(0, PROJECT_ID, 0, R.string.title_project)
+        	.setChecked(PROJECT_ID == currentViewMenuId)
+        	.setShortcut('4','4');
+        item = viewMenu.add(0, CONTEXT_ID, 0, R.string.title_context)
+        	.setChecked(CONTEXT_ID == currentViewMenuId)
+        	.setShortcut('5','5');
 	}
 	
 	public static void addEditorMenuItems(Menu menu, int state) {
         // Build the menus that are shown when editing.
         if (state == State.STATE_EDIT) {
-            menu.add(0, REVERT_ID, R.string.menu_revert, R.drawable.edit_undo).setAlphabeticShortcut('r');
-            menu.add(0, DELETE_ID, R.string.menu_delete, R.drawable.edit_delete).setAlphabeticShortcut('d');
+            menu.add(0, REVERT_ID, 0, R.string.menu_revert)
+            	.setIcon(R.drawable.edit_undo).setAlphabeticShortcut('r');
+            menu.add(0, DELETE_ID, 0, R.string.menu_delete)
+            	.setIcon(R.drawable.edit_delete).setAlphabeticShortcut('d');
 
         // Build the menus that are shown when inserting.
         } else {
-            menu.add(0, DISCARD_ID, R.string.menu_discard, R.drawable.edit_delete).setAlphabeticShortcut('d');
+            menu.add(0, DISCARD_ID, 0, R.string.menu_discard)
+            	.setIcon(R.drawable.edit_delete).setAlphabeticShortcut('d');
         }
 	}
 	
 	public static void addPrefsHelpMenuItems(Menu menu) {
-        menu.add(0, PREFERENCE_ID, R.string.menu_preferences, R.drawable.preferences_desktop).setAlphabeticShortcut('p');
-        menu.add(0, HELP_ID, R.string.menu_help, R.drawable.help_browser).setAlphabeticShortcut('h');
+        menu.add(0, PREFERENCE_ID, 0, R.string.menu_preferences)
+        	.setIcon(R.drawable.preferences_desktop).setAlphabeticShortcut('p');
+        menu.add(0, HELP_ID, 0, R.string.menu_help)
+        	.setIcon(R.drawable.help_browser).setAlphabeticShortcut('h');
 	}
 		
 	public static void addAlternativeMenuItems(Menu menu, Uri uri, Activity activity) {
@@ -127,16 +133,16 @@ public class MenuUtils {
         int viewIndex = 0;
         int editIndex = (includeView ? 1 : 0);
         Intent[] specifics = new Intent[editIndex + 1];
-        Menu.Item[] items = new Menu.Item[editIndex + 1];
+        MenuItem[] items = new MenuItem[editIndex + 1];
         if (includeView) {
-	        specifics[viewIndex] = new Intent(Intent.VIEW_ACTION, uri);
+	        specifics[viewIndex] = new Intent(Intent.ACTION_VIEW, uri);
         }
-        specifics[editIndex] = new Intent(Intent.EDIT_ACTION, uri);
+        specifics[editIndex] = new Intent(Intent.ACTION_EDIT, uri);
 
         // ... is followed by whatever other actions are available...
         Intent intent = new Intent(null, uri);
-        intent.addCategory(Intent.SELECTED_ALTERNATIVE_CATEGORY);
-        menu.addIntentOptions(Menu.SELECTED_ALTERNATIVE, 0, null, specifics,
+        intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
+        menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0, null, specifics,
                               intent, 0, items);
 
         // Give a shortcut to the edit action.
@@ -151,24 +157,24 @@ public class MenuUtils {
 	}
 	
 	public static void addDeleteMenuItem(Menu menu) {
-        menu.add(Menu.SELECTED_ALTERNATIVE, DELETE_ID, R.string.menu_delete, R.drawable.edit_delete).setAlphabeticShortcut('d');
+        menu.add(Menu.CATEGORY_ALTERNATIVE, DELETE_ID, 0, R.string.menu_delete).setIcon(R.drawable.edit_delete).setAlphabeticShortcut('d');
     }
 
 	public static void addCompleteMenuItem(Menu menu) {
-        menu.add(Menu.SELECTED_ALTERNATIVE, COMPLETE_ID, R.string.menu_complete, android.R.drawable.panel_checkbox_on_background_focus_blue).setAlphabeticShortcut('x');
+        menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, 0, R.string.menu_complete).setAlphabeticShortcut('x');
     }
 
 	public static void addCleanInboxMenuItem(Menu menu) {
-        menu.add(0, CLEAN_INBOX_ID, R.string.clean_inbox_button_title, R.drawable.edit_clear).setAlphabeticShortcut('i');
+        menu.add(0, CLEAN_INBOX_ID, 0, R.string.clean_inbox_button_title).setIcon(R.drawable.edit_clear).setAlphabeticShortcut('i');
     }
 
 	public static void addMoveMenuItems(Menu menu) {
-        menu.add(Menu.SELECTED_ALTERNATIVE, MOVE_UP_ID, R.string.menu_move_up, R.drawable.go_up).setAlphabeticShortcut('k');
-        menu.add(Menu.SELECTED_ALTERNATIVE, MOVE_DOWN_ID, R.string.menu_move_down, R.drawable.go_down).setAlphabeticShortcut('j');
+        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_UP_ID, 0, R.string.menu_move_up).setIcon(R.drawable.go_up).setAlphabeticShortcut('k');
+        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_DOWN_ID, 0, R.string.menu_move_down).setIcon(R.drawable.go_down).setAlphabeticShortcut('j');
     }
 
-	public static boolean checkCommonItemsSelected(Menu.Item item, Activity activity, int currentViewMenuId) {
-		return checkCommonItemsSelected(item.getId(), activity, currentViewMenuId, true);
+	public static boolean checkCommonItemsSelected(MenuItem item, Activity activity, int currentViewMenuId) {
+		return checkCommonItemsSelected(item.getItemId(), activity, currentViewMenuId, true);
 	}
 	
 	public static boolean checkCommonItemsSelected(int menuItemId, Activity activity, int currentViewMenuId) {

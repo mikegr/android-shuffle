@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class ProjectTasksActivity extends AbstractTaskListActivity {
 
@@ -41,7 +42,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 		Log.d(cTag, "Fetching project " + mProjectId);
 		Cursor cursor = getContentResolver().query(Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection,
 				Shuffle.Projects._ID + " = ?", new String[] {String.valueOf(mProjectId)}, null);
-		if (cursor.next()) {
+		if (cursor.moveToNext()) {
 			mProject = BindingUtils.readProject(cursor);
 		}
 		cursor.close();
@@ -67,7 +68,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     protected Intent getClickIntent(Uri uri) {
     	long taskId = ContentUris.parseId(uri);
     	Uri taskUri = ContentUris.appendId(Shuffle.Tasks.CONTENT_URI.buildUpon(), taskId).build();
-    	return new Intent(Intent.VIEW_ACTION, taskUri);
+    	return new Intent(Intent.ACTION_VIEW, taskUri);
     }
     
     /**
@@ -106,8 +107,8 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(Menu.Item item) {
-        switch (item.getId()) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
         case MenuUtils.MOVE_UP_ID:
             moveUp();
             return true;

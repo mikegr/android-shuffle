@@ -5,7 +5,7 @@ import org.dodgybits.android.shuffle.model.Project;
 
 import android.content.Context;
 import android.util.SparseIntArray;
-import android.view.ViewInflate;
+import android.view.LayoutInflater;
 import android.widget.TextView;
 
 public class ProjectView extends ItemView<Project> {
@@ -15,9 +15,10 @@ public class ProjectView extends ItemView<Project> {
 	public ProjectView(Context androidContext) {
 		super(androidContext);
 		
-        ViewInflate vi = (ViewInflate)androidContext.getSystemService(Context.INFLATE_SERVICE); 
-        vi.inflate(getViewResourceId(), this, true, null); 
-
+        LayoutInflater vi = (LayoutInflater)androidContext.
+			getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        vi.inflate(getViewResourceId(), this, true); 
+		
 		mName = (TextView) findViewById(R.id.name);
 	}
 	

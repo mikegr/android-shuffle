@@ -18,6 +18,7 @@ import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 
 import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
@@ -102,13 +103,13 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         mProjectView.setAdapter(new AutoCompleteCursorAdapter(this, mProjectCursor, cProjectProjection, Shuffle.Projects.CONTENT_URI));
         
         Cursor peopleCursor = getContentResolver().query(People.CONTENT_URI, new String[] {People._ID, People.NAME}, null, null, null);
-        int size = peopleCursor.count() + 1;
+        int size = peopleCursor.getCount() + 1;
         mContactIds = new long[size];
         mContactIds[0] = 0L;
         mContactNames = new String[size];
         mContactNames[0] = "None";
         for (int i = 1; i < size; i++) {
-        	peopleCursor.next();
+        	peopleCursor.moveToNext();
         	mContactIds[i] = peopleCursor.getLong(0);
         	mContactNames[i] = peopleCursor.getString(1);
         }
@@ -128,8 +129,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
                         mDateSetListener,
                         defaults.get(Calendar.YEAR),
                         defaults.get(Calendar.MONTH),
-                        defaults.get(Calendar.DAY_OF_MONTH),
-                        Calendar.SUNDAY).show();
+                        defaults.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
         mClearDueDateButton.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +180,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         // time to get at the stuff.
         if (mCursor != null) {
             // Make sure we are at the one and only row in the cursor.
-            mCursor.first();
+            mCursor.moveToFirst();
             // Modify our overall title depending on the mode we are running in.
             if (mState == State.STATE_EDIT) {
                 setTitle(R.string.title_edit_task);
@@ -194,7 +194,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             // position.  This trick accomplishes that.  In the future we
             // should have a better API for doing this...
             Task task = BindingUtils.readTask(mCursor);
-            mDetailsWidget.setTextKeepState(task.details);
+            mDetailsWidget.setTextKeepState(task.details == null ? "" : task.details);
             
             Collection<Long> contactIds = BindingUtils.fetchContactIds(this, task.id);
             List<String> names = BindingUtils.fetchContactNames(this, contactIds);
@@ -240,10 +240,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         mDescriptionWidget.selectAll();
     }
     
-    private DatePicker.OnDateSetListener mDateSetListener =
-        new DatePicker.OnDateSetListener() {
+    private OnDateSetListener mDateSetListener =
+        new OnDateSetListener() {
 
-            public void dateSet(DatePicker view, int year, int monthOfYear,
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
                     int dayOfMonth) {
             	mDueDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
             	drawDateWidget();
@@ -329,14 +329,14 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     				Shuffle.Contexts.CONTENT_URI, 
     				Shuffle.Contexts.cFullProjection, 
     				"name = ?", new String[] {contextName}, null);
-    		if (!cursor.first()) {
+    		if (!cursor.moveToFirst()) {
     			cursor.close();
     			// context didn't exist - create a new one
     			ContentValues values = new ContentValues(1);
     			values.put(Shuffle.Contexts.NAME, contextName);
     			Uri uri = getContentResolver().insert(Shuffle.Contexts.CONTENT_URI, values);
     			cursor = getContentResolver().query(uri, Shuffle.Contexts.cFullProjection, null, null, null);
-        		cursor.first();
+        		cursor.moveToFirst();
     		}
 			context = BindingUtils.readContext(cursor);
 			cursor.close();
@@ -352,14 +352,14 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     				Shuffle.Projects.CONTENT_URI, 
     				Shuffle.Projects.cFullProjection, 
     				"name = ?", new String[] {projectName}, null);
-    		if (!cursor.first()) {
+    		if (!cursor.moveToFirst()) {
     			cursor.close();
     			// context didn't exist - create a new one
     			ContentValues values = new ContentValues(1);
     			values.put(Shuffle.Projects.NAME, projectName);
     			Uri uri = getContentResolver().insert(Shuffle.Projects.CONTENT_URI, values);
     			cursor = getContentResolver().query(uri, Shuffle.Projects.cFullProjection, null, null, null);
-        		cursor.first();
+        		cursor.moveToFirst();
     		}
 			project = BindingUtils.readProject(cursor);
 			cursor.close();
@@ -389,7 +389,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     				Shuffle.Tasks.PROJECT_ID + " = ?", 
     				new String[] {newProject.id.toString()}, 
     				Shuffle.Tasks.DISPLAY_ORDER + " desc");
-    		if (cursor.first()) {
+    		if (cursor.moveToFirst()) {
     			// first entry is current highest value
     			int highest = cursor.getInt(1);
     			order =  highest + 1;

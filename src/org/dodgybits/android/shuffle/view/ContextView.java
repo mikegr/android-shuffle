@@ -4,8 +4,8 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 
 import android.util.SparseIntArray;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewInflate;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,11 +17,10 @@ public class ContextView extends ItemView<Context> {
 	public ContextView(android.content.Context androidContext) {
 		super(androidContext);
 		
-        ViewInflate vi = (ViewInflate) 
-        androidContext.getSystemService(
-        		android.content.Context.INFLATE_SERVICE); 
-                vi.inflate(getViewResourceId(), this, true, null); 
-
+        LayoutInflater vi = (LayoutInflater)androidContext.
+        		getSystemService(android.content.Context.LAYOUT_INFLATER_SERVICE);
+        vi.inflate(getViewResourceId(), this, true); 
+        
 		mName = (TextView) findViewById(R.id.name);
 		mIcon = (ImageView) findViewById(R.id.icon);
 	}
