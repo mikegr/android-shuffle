@@ -10,7 +10,7 @@ import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 
 import android.content.ContentUris;
-import android.database.Cursor;
+import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
@@ -133,13 +133,10 @@ public class ModelUtils {
         int id = (int)ContentUris.parseId(uri);
         Log.d(cTag, "Created context id=" + id + " uri=" + uri);
         context.id = id;
-        Cursor cursor = androidContext.getContentResolver().query(uri, 
-        		Shuffle.Contexts.cFullProjection, null, null, null);
-        cursor.moveToNext();
-        BindingUtils.writeContext(cursor, context);
-        boolean success = cursor.commitUpdates();
-        cursor.close();
-        return success;
+        ContentValues values = new ContentValues();
+        BindingUtils.writeContext(values, context);
+        int updatedRows = androidContext.getContentResolver().update(uri, values, null, null);
+        return (updatedRows == 1);
     }
     
     private static boolean insertProject(android.content.Context androidContext, Project project) {
@@ -147,13 +144,10 @@ public class ModelUtils {
         int id = (int)ContentUris.parseId(uri);
         Log.d(cTag, "Created context id=" + id + " uri=" + uri);
         project.id = id;
-        Cursor cursor = androidContext.getContentResolver().query(uri, 
-        		Shuffle.Projects.cFullProjection, null, null, null);
-        cursor.moveToNext();
-        BindingUtils.writeProject(cursor, project);
-        boolean success = cursor.commitUpdates();
-        cursor.close();
-        return success;
+        ContentValues values = new ContentValues();
+        BindingUtils.writeProject(values, project);
+        int updatedRows = androidContext.getContentResolver().update(uri, values, null, null);
+        return (updatedRows == 1);
     }
     
     private static boolean insertTask(android.content.Context androidContext, Task task) {
@@ -161,13 +155,10 @@ public class ModelUtils {
         int id = (int)ContentUris.parseId(uri);
         Log.d(cTag, "Created task id=" + id);
         task.id = id;
-        Cursor cursor = androidContext.getContentResolver().query(uri, 
-        		Shuffle.Tasks.cExpandedProjection, null, null, null);
-        cursor.moveToNext();
-        BindingUtils.writeTask(cursor, task);
-        boolean success = cursor.commitUpdates();
-        cursor.close();
-        return success;
+        ContentValues values = new ContentValues();
+        BindingUtils.writeTask(values, task);
+        int updatedRows = androidContext.getContentResolver().update(uri, values, null, null);
+        return (updatedRows == 1);
     }
     	
 }

@@ -23,7 +23,7 @@ public class InboxActivity extends AbstractTaskListActivity {
 	@Override
 	protected Cursor createItemQuery() {
 		Log.d(cTag, "Creating a cursor to find tasks with no projects or created since last clean");
-		return managedQuery(Shuffle.Tasks.cInboxTasksContentURI, Shuffle.Tasks.cExpandedProjection, null, null);
+		return managedQuery(Shuffle.Tasks.cInboxTasksContentURI, Shuffle.Tasks.cExpandedProjection, null, null, null);
 	}
 
 	@Override

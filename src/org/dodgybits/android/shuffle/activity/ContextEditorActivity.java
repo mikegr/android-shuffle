@@ -8,8 +8,8 @@ import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.view.LabelView;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -81,7 +81,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         });        
         
         // Get the context!
-        mCursor = managedQuery(mURI, Shuffle.Contexts.cFullProjection, null, null, null);
+        mCursor = managedQuery(mUri, Shuffle.Contexts.cFullProjection, null, null, null);
     }
     
     /**
@@ -222,19 +222,19 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
             } else {
             	String name = mNameWidget.getText().toString();
             	Context context  = new Context(name, mColourIndex, mIconId);
-            	writeItem(mCursor, context);
+                ContentValues values = new ContentValues();
+            	writeItem(values, context);
 
-                // Commit all of our changes to persistent storage.  Note the
-                // use of managedCommitUpdates() instead of
-                // mCursor.commitUpdates() -- this lets Activity take care of
-                // requerying the new data if needed.
-            	managedCommitUpdates(mCursor);
+                // Commit all of our changes to persistent storage. When the update completes
+                // the content provider will notify the cursor of the change, which will
+                // cause the UI to be updated.
+                getContentResolver().update(mUri, values, null, null);    	
             }
         }
     }
     
-    protected void writeItem(Cursor cursor, Context context) {
-    	BindingUtils.writeContext(cursor, context);
+    protected void writeItem(ContentValues values, Context context) {
+    	BindingUtils.writeContext(values, context);
     }
 
     /**

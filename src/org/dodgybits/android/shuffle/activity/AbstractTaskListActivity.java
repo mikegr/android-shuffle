@@ -3,8 +3,8 @@ package org.dodgybits.android.shuffle.activity;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
-import org.dodgybits.android.shuffle.util.MenuUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
+import org.dodgybits.android.shuffle.util.MenuUtils;
 import org.dodgybits.android.shuffle.view.TaskView;
 
 import android.content.Intent;
@@ -84,7 +84,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     
     protected final void toggleComplete() {
         mCursor.moveToPosition(getSelectedItemPosition());
-        BindingUtils.toggleTaskComplete(this, mCursor);
+        BindingUtils.toggleTaskComplete(this, mCursor, getSelectedItemId());
     }
     
     @Override

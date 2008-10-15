@@ -219,31 +219,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         
         return true;
     }
-    
-    /**
-     * Overriding, since parent version is buggy.
-     * @see http://code.google.com/p/android/issues/detail?id=308
-     */
-    @Override 
-    public long getSelectedId() {
-    	long packedPosition = getSelectedPosition();
-    	int type = ExpandableListView.getPackedPositionType(packedPosition);
-    	int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
-    	int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
-    	long result = -1;
-    	switch (type) {
-    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
-        	Log.d(cTag, "Getting child id for position " + groupPosition + "," + childPosition);
-    		result =  5;//mAdapter.getChildId(groupPosition, childPosition);
-    		break;
-    	case ExpandableListView.PACKED_POSITION_TYPE_GROUP:
-    		Log.d(cTag, "Getting group id for position " + groupPosition);
-    		result = mAdapter.getGroupId(groupPosition);
-        	break;
-    	}
-    	return result;
-    }
-    
+        
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -322,8 +298,8 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 	    				if (which == DialogInterface.BUTTON2) {
 	    					final long groupId = getSelectedId();
 	    			    	Log.i(cTag, "Deleting group id " + groupId);
-	    		    		final Cursor groupCursor = (Cursor) getExpandableListAdapter().getGroup(groupPosition);
-	    		    		groupCursor.deleteRow();
+	    					Uri uri = ContentUris.withAppendedId(getGroupContentUri(), groupId);			
+	    			        getContentResolver().delete(uri, null, null);
 	    			    	Log.i(cTag, "Deleting all child for group id " + groupId);
 	    					getContentResolver().delete(getChildContentUri(), getGroupIdColumnName() + " = ?", new String[] {String.valueOf(groupId)});
 	    				} else {
@@ -334,8 +310,10 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     			AlertUtils.showDeleteGroupWarning(this, getGroupName(), getChildName(), childCount, buttonListener);    		
     		} else {
 		    	Log.i(cTag, "Deleting childless group at position " + groupPosition);
-	    		Cursor groupCursor = (Cursor) getExpandableListAdapter().getGroup(groupPosition);
-	    		groupCursor.deleteRow();
+				final long groupId = getSelectedId();
+		    	Log.i(cTag, "Deleting group id " + groupId);
+				Uri uri = ContentUris.withAppendedId(getGroupContentUri(), groupId);			
+		        getContentResolver().delete(uri, null, null);		    	
     		}
         	break;
     	}

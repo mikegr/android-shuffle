@@ -5,6 +5,7 @@ import org.dodgybits.android.shuffle.model.State;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,7 +26,7 @@ public abstract class AbstractEditorActivity<T> extends Activity {
     private static final String cTag = "AbstractEditorActivity";
 
     protected int mState;
-    protected Uri mURI;
+    protected Uri mUri;
     protected Cursor mCursor;
     protected Button mSaveButton;
     protected Button mCancelButton;
@@ -44,17 +45,17 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         if (action.equals(Intent.ACTION_EDIT)) {
             // Requested to edit: set that state, and the data being edited.
             mState = State.STATE_EDIT;
-            mURI = intent.getData();
+            mUri = intent.getData();
         } else if (action.equals(Intent.ACTION_INSERT)) {
             // Requested to insert: set that state, and create a new entry
             // in the container.
             mState = State.STATE_INSERT;
-            mURI = getContentResolver().insert(intent.getData(), null);
+            mUri = getContentResolver().insert(intent.getData(), null);
 
             // If we were unable to create a new item, then just finish
             // this activity.  A RESULT_CANCELED will be sent back to the
             // original activity if they requested a result.
-            if (mURI == null) {
+            if (mUri == null) {
                 Log.e(cTag, "Failed to insert new item into "
                         + getIntent().getData());
                 finish();
@@ -63,7 +64,7 @@ public abstract class AbstractEditorActivity<T> extends Activity {
             // The new entry was created, so assume all will end well and
             // set the result to be returned.
     		Bundle bundle = new Bundle();
-    	    bundle.putString(AbstractListActivity.cSelectedItem, mURI.toString());
+    	    bundle.putString(AbstractListActivity.cSelectedItem, mUri.toString());
     	    Intent mIntent = new Intent();
     	    mIntent.putExtras(bundle);
     	    setResult(RESULT_OK, mIntent);
@@ -146,7 +147,7 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    abstract void writeItem(Cursor cursor, T item);
+    abstract void writeItem(ContentValues values, T item);
     
     /**
      * Take care of canceling work on a item.  Deletes the item if we
@@ -155,10 +156,12 @@ public abstract class AbstractEditorActivity<T> extends Activity {
     protected void cancelItem() {
         if (mCursor != null) {
             if (mState == State.STATE_EDIT) {
-            	writeItem(mCursor, mOriginalItem);
-                mCursor.commitUpdates();
-                mCursor.deactivate();
+                // Put the original note text back into the database
+                mCursor.close();
                 mCursor = null;
+                ContentValues values = new ContentValues();
+            	writeItem(values, mOriginalItem);
+                getContentResolver().update(mUri, values, null, null);
             } else if (mState == State.STATE_INSERT) {
                 deleteItem();
             }
@@ -172,9 +175,9 @@ public abstract class AbstractEditorActivity<T> extends Activity {
      */
     protected void deleteItem() {
         if (mCursor != null) {
-            mCursor.deleteRow();
-            mCursor.deactivate();
+            mCursor.close();
             mCursor = null;
+            getContentResolver().delete(mUri, null, null);
         }
     }
     

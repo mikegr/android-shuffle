@@ -92,7 +92,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         mContactSpinner = (Spinner) findViewById(R.id.contact);
         
         // Get the task!
-        mCursor = managedQuery(mURI, Shuffle.Tasks.cExpandedProjection, null, null, null);
+        mCursor = managedQuery(mUri, Shuffle.Tasks.cExpandedProjection, null, null, null);
         // Get the context and project lists for our pulldown lists
         mContextCursor = managedQuery(Shuffle.Contexts.CONTENT_URI, cContextProjection, null, null, null);
         mProjectCursor = managedQuery(Shuffle.Projects.CONTENT_URI, cProjectProjection, null, null, null);
@@ -304,7 +304,8 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
                 }
 
             	Task task  = new Task(description, details, context, project, created, modified, dueDate, order, complete);
-            	writeItem(mCursor, task);
+                ContentValues values = new ContentValues();
+            	writeItem(values, task);
             	Collection<Long> contactIds = new ArrayList<Long>();
             	int selectionPos = mContactSpinner.getSelectedItemPosition();
             	if (selectionPos > 0) {
@@ -312,11 +313,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             	}
             	BindingUtils.updateContactIds(this, mOriginalItem.id, contactIds);
             	
-                // Commit all of our changes to persistent storage.  Note the
-                // use of managedCommitUpdates() instead of
-                // mCursor.commitUpdates() -- this lets Activity take care of
-                // requerying the new data if needed.
-                managedCommitUpdates(mCursor);
+                // Commit all of our changes to persistent storage. When the update completes
+                // the content provider will notify the cursor of the change, which will
+                // cause the UI to be updated.
+                getContentResolver().update(mUri, values, null, null);    	
             }
         }
     }
@@ -405,8 +405,8 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     }
 
     @Override
-    protected void writeItem(Cursor cursor, Task task) {
-    	BindingUtils.writeTask(cursor, task);
+    protected void writeItem(ContentValues values, Task task) {
+    	BindingUtils.writeTask(values, task);
     }
 
     /**

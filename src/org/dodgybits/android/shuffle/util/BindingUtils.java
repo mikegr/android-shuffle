@@ -3,8 +3,8 @@ package org.dodgybits.android.shuffle.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.dodgybits.android.shuffle.model.Context;
@@ -12,7 +12,6 @@ import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -277,10 +276,12 @@ public class BindingUtils {
 	 * @param cursor cursor positions at task to update
 	 * @return new value of task completeness
 	 */
-	public static boolean toggleTaskComplete(Activity activity, Cursor cursor) {
+	public static boolean toggleTaskComplete(android.content.Context androidContext, Cursor cursor, long taskId) {
 		Boolean newValue = !readBoolean(cursor, COMPLETE_INDEX);
-		writeBoolean(cursor, COMPLETE_INDEX, newValue);
-		activity.managedCommitUpdates(cursor);
+        ContentValues values = new ContentValues();
+		writeBoolean(values, Shuffle.Tasks.COMPLETE, newValue);
+        Uri selectedUri = ContentUris.withAppendedId(Shuffle.Tasks.CONTENT_URI, taskId);
+        androidContext.getContentResolver().update(selectedUri, values, null, null);
 		return newValue;
 	}
 	
@@ -288,33 +289,40 @@ public class BindingUtils {
 	 * Swap the display order of two tasks at the given cursor positions. 
 	 * The cursor is committed and re-queried after the update.
 	 */
-	public static void swapTaskPositions(Cursor cursor, int pos1, int pos2) {
+	public static void swapTaskPositions(android.content.Context androidContext, Cursor cursor, int pos1, int pos2) {
         cursor.moveToPosition(pos1);
         int positionValue1 = cursor.getInt(DISPLAY_ORDER_INDEX);
+		Integer id1 = readInteger(cursor, ID_INDEX);
         cursor.moveToPosition(pos2);
         int positionValue2 = cursor.getInt(DISPLAY_ORDER_INDEX);
-        cursor.updateInt(DISPLAY_ORDER_INDEX, positionValue1);
-        cursor.moveToPosition(pos1);
-        cursor.updateInt(DISPLAY_ORDER_INDEX, positionValue2);
-		cursor.commitUpdates();
-		cursor.requery();
+		Integer id2 = readInteger(cursor, ID_INDEX);
+        
+        Uri uri = ContentUris.withAppendedId(Shuffle.Tasks.CONTENT_URI, id1);
+        ContentValues values = new ContentValues();
+        writeInteger(values, Shuffle.Tasks.DISPLAY_ORDER, positionValue2);
+        androidContext.getContentResolver().update(uri, values, null, null);
+
+        uri = ContentUris.withAppendedId(Shuffle.Tasks.CONTENT_URI, id2);
+        values = new ContentValues();
+        writeInteger(values, Shuffle.Tasks.DISPLAY_ORDER, positionValue1);
+        androidContext.getContentResolver().update(uri, values, null, null);
 	}
 	
-	public static void writeTask(Cursor cursor, Task task) {
+	public static void writeTask(ContentValues values, Task task) {
 		// never write id since it's auto generated
-		writeString(cursor, DESCRIPTION_INDEX, task.description);
-		writeString(cursor, DETAILS_INDEX, task.details);
+		writeString(values, Shuffle.Tasks.DESCRIPTION, task.description);
+		writeString(values, Shuffle.Tasks.DETAILS, task.details);
 		if (task.project != null) {
-			writeInteger(cursor, PROJECT_INDEX, task.project.id);
+			writeInteger(values, Shuffle.Tasks.PROJECT_ID, task.project.id);
 		}
 		if (task.context != null) {
-			writeInteger(cursor, CONTEXT_INDEX, task.context.id);
+			writeInteger(values, Shuffle.Tasks.CONTEXT_ID, task.context.id);
 		}
-		writeDate(cursor, CREATED_INDEX, task.created);
-		writeDate(cursor, MODIFIED_INDEX, task.modified);
-		writeDate(cursor, DUE_INDEX, task.dueDate);
-		writeInteger(cursor, DISPLAY_ORDER_INDEX, task.order);
-		writeBoolean(cursor, COMPLETE_INDEX, task.complete);
+		writeDate(values, Shuffle.Tasks.CREATED_DATE, task.created);
+		writeDate(values, Shuffle.Tasks.MODIFIED_DATE, task.modified);
+		writeDate(values, Shuffle.Tasks.DUE_DATE, task.dueDate);
+		writeInteger(values, Shuffle.Tasks.DISPLAY_ORDER, task.order);
+		writeBoolean(values, Shuffle.Tasks.COMPLETE, task.complete);
 	}
 	
 	private static final int NAME_INDEX = 1;
@@ -329,11 +337,11 @@ public class BindingUtils {
 		return new Context(id, name, colour, iconResourceId);
 	}
 	
-	public static void writeContext(Cursor cursor, Context context) {
+	public static void writeContext(ContentValues values, Context context) {
 		// never write id since it's auto generated
-		writeString(cursor, NAME_INDEX, context.name);
-		cursor.updateInt(COLOUR_INDEX, context.colourIndex);
-		writeInteger(cursor, ICON_INDEX, context.iconResource);
+		writeString(values, Shuffle.Contexts.NAME, context.name);
+		writeInteger(values, Shuffle.Contexts.COLOUR, context.colourIndex);
+		writeInteger(values, Shuffle.Contexts.ICON, context.iconResource);
 	}
 	
 	private static final int DEFAULT_CONTEXT_INDEX = 2;
@@ -347,11 +355,11 @@ public class BindingUtils {
 		return new Project(id, name, defaultContextId, archived);
 	}
 	
-	public static void writeProject(Cursor cursor, Project project) {
+	public static void writeProject(ContentValues values, Project project) {
 		// never write id since it's auto generated
-		writeString(cursor, NAME_INDEX, project.name);
-		writeInteger(cursor, DEFAULT_CONTEXT_INDEX, project.defaultContextId);
-		writeBoolean(cursor, ARCHIVED_INDEX, project.archived);
+		writeString(values, Shuffle.Projects.NAME, project.name);
+		writeInteger(values, Shuffle.Projects.DEFAULT_CONTEXT_ID, project.defaultContextId);
+		writeBoolean(values, Shuffle.Projects.ARCHIVED, project.archived);
 	}
 	
 	private static final int TASK_COUNT_INDEX = 1;
@@ -381,31 +389,31 @@ public class BindingUtils {
 		return (cursor.isNull(index) ? null : cursor.getString(index));
 	}
 	
-	private static void writeDate(Cursor cursor, int index, Date date) {
+	private static void writeDate(ContentValues values, String key, Date date) {
 		if (date == null) {
-			cursor.updateToNull(index);
+			values.putNull(key);
 		} else {
-			cursor.updateLong(index, date.getTime());
+			values.put(key, date.getTime());
 		}
 	}
 	
-	private static void writeInteger(Cursor cursor, int index, Integer value) {
+	private static void writeInteger(ContentValues values, String key, Integer value) {
 		if (value == null) {
-			cursor.updateToNull(index);
+			values.putNull(key);
 		} else {
-			cursor.updateInt(index, value);
+			values.put(key, value);
 		}
 	}
 	
-	private static void writeBoolean(Cursor cursor, int index, boolean value) {
-		cursor.updateInt(index, value ? 1 : 0);
+	private static void writeBoolean(ContentValues values, String key, boolean value) {
+		values.put(key, value ? 1 : 0);
 	}
 	
-	private static void writeString(Cursor cursor, int index, String value) {
+	private static void writeString(ContentValues values, String key, String value) {
 		if (value == null) {
-			cursor.updateToNull(index);
+			values.putNull(key);
 		} else {
-			cursor.updateString(index, value);
+			values.put(key, value);
 		}
 		
 	}

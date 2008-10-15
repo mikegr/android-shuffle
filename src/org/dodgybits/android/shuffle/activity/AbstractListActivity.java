@@ -1,5 +1,6 @@
 package org.dodgybits.android.shuffle.activity;
 
+import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.Activity;
@@ -128,8 +129,8 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	 * Permanently delete the selected item.
 	 */
 	protected void deleteItem() {
-		mCursor.moveToPosition(getSelectedItemPosition());
-		mCursor.deleteRow();
+		Uri uri = ContentUris.withAppendedId(Shuffle.Contexts.CONTENT_URI, getSelectedItemId());			
+        getContentResolver().delete(uri, null, null);
 	}
 
 	/**

@@ -6,6 +6,7 @@ import org.dodgybits.android.shuffle.model.State;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,7 +50,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         mDefaultContextSpinner.setAdapter(adapter);
 
         // Get the project!
-        mCursor = managedQuery(mURI, Shuffle.Projects.cFullProjection, null, null, null);
+        mCursor = managedQuery(mUri, Shuffle.Projects.cFullProjection, null, null, null);
     }
     
     /**
@@ -147,19 +148,19 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
             	}
             	boolean archived = false;
             	Project project  = new Project(name, defaultContextId, archived);
-            	writeItem(mCursor, project);
+                ContentValues values = new ContentValues();
+            	writeItem(values, project);
 
-                // Commit all of our changes to persistent storage.  Note the
-                // use of managedCommitUpdates() instead of
-                // mCursor.commitUpdates() -- this lets Activity take care of
-                // requerying the new data if needed.
-                managedCommitUpdates(mCursor);
+                // Commit all of our changes to persistent storage. When the update completes
+                // the content provider will notify the cursor of the change, which will
+                // cause the UI to be updated.
+                getContentResolver().update(mUri, values, null, null);    	
             }
         }
     }
     
-    protected void writeItem(Cursor cursor, Project project) {
-    	BindingUtils.writeProject(cursor, project);
+    protected void writeItem(ContentValues values, Project project) {
+    	BindingUtils.writeProject(values, project);
     }
 
     /**
