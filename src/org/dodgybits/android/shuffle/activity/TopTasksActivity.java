@@ -4,12 +4,9 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
-import android.database.Cursor;
-import android.util.Log;
+import android.net.Uri;
 
 public class TopTasksActivity extends AbstractTaskListActivity {
-
-	private static final String cTag = "TopTasksActivity";
 
 	@Override
 	protected CharSequence createTitle() {
@@ -17,15 +14,10 @@ public class TopTasksActivity extends AbstractTaskListActivity {
 	}
 
 	@Override
-	protected Cursor createItemQuery() {
-		Log.d(cTag, "Creating a cursor to find top tasks");
-		return managedQuery(Shuffle.Tasks.cTopTasksContentURI,
-				Shuffle.Tasks.cExpandedProjection,
-				null,
-				null, 
-				"project.name ASC");
+	protected Uri getListContentUri() {
+		return Shuffle.Tasks.cTopTasksContentURI;
 	}
-
+	
 	@Override
     protected int getCurrentViewMenuId() {
     	return MenuUtils.TOP_TASKS_ID;

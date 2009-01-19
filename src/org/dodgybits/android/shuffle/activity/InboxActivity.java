@@ -6,24 +6,21 @@ import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.util.Log;
+import android.net.Uri;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class InboxActivity extends AbstractTaskListActivity {
 
-	private static final String cTag = "InboxActivity";
-	
 	@Override
 	protected CharSequence createTitle() {
 		return getResources().getString(R.string.title_inbox);
 	}
 
 	@Override
-	protected Cursor createItemQuery() {
-		Log.d(cTag, "Creating a cursor to find tasks with no projects or created since last clean");
-		return managedQuery(Shuffle.Tasks.cInboxTasksContentURI, Shuffle.Tasks.cExpandedProjection, null, null, null);
+	protected Uri getListContentUri() {
+		// Tasks with no projects or created since last clean
+		return Shuffle.Tasks.cInboxTasksContentURI;
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     @Override
 	protected Cursor createItemQuery() {
 		Log.d(cTag, "Creating a cursor to find tasks for the given context");
-		return managedQuery(Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cExpandedProjection,
+		return managedQuery(getListContentUri(), Shuffle.Tasks.cExpandedProjection,
 					Shuffle.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(mContextId)}, 
 					Shuffle.Tasks.CREATED_DATE + " ASC");
 	}
@@ -38,6 +38,11 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 		return false;
 	}
 
+	@Override
+	protected Uri getListContentUri() {
+		return Shuffle.Tasks.CONTENT_URI;
+	}
+	
 	@Override
 	protected void onResume() {
 		Log.d(cTag, "Fetching context " + mContextId);

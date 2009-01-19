@@ -50,6 +50,11 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 	}
 	
 	@Override
+	protected Cursor createItemQuery() {
+		return managedQuery(getListContentUri(), Shuffle.Tasks.cExpandedProjection, null, null, null);
+	}
+	
+	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
 		ListAdapter adapter = new SimpleCursorAdapter(this,
 						R.layout.task_view, cursor,
@@ -83,8 +88,8 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     }
     
     protected final void toggleComplete() {
-        mCursor.moveToPosition(getSelectedItemPosition());
-        BindingUtils.toggleTaskComplete(this, mCursor, getSelectedItemId());
+    	Cursor c = (Cursor) getListAdapter().getItem(getSelectedItemPosition());
+        BindingUtils.toggleTaskComplete(this, c, getListContentUri(), getSelectedItemId());
     }
     
     @Override

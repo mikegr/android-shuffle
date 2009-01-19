@@ -40,7 +40,7 @@ public abstract class AbstractDrilldownListActivity<T> extends AbstractListActiv
     			public void onClick(DialogInterface dialog, int which) {
     				if (which == DialogInterface.BUTTON2) {
     			    	Log.i(cTag, "Deleting group id " + groupId);
-    			    	AbstractDrilldownListActivity.super.deleteItem();
+    			    	AbstractDrilldownListActivity.super.deleteItem(groupId);
     			    	Log.i(cTag, "Deleting all child for group id " + groupId);
     			    	deleteChildren(groupId);
     				} else {
@@ -50,7 +50,7 @@ public abstract class AbstractDrilldownListActivity<T> extends AbstractListActiv
     		};
 			AlertUtils.showDeleteGroupWarning(this, getItemName(), getChildName(), childCount, buttonListener);
 		} else {
-			super.deleteItem();
+			super.deleteItem(getSelectedItemId());
 		}
     }
 

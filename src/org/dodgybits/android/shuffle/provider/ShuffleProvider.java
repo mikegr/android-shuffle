@@ -8,6 +8,9 @@ import java.util.Map;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Preferences;
+import org.dodgybits.android.shuffle.provider.Shuffle.Contexts;
+import org.dodgybits.android.shuffle.provider.Shuffle.Projects;
+import org.dodgybits.android.shuffle.provider.Shuffle.Tasks;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -205,9 +208,11 @@ public class ShuffleProvider extends ContentProvider {
             switch (cUriMatcher.match(uri)) {
             case TASKS:
             case TASK_ID:
-            case TOP_TASKS:
             case INBOX_TASKS:
             	orderBy = Shuffle.Tasks.DEFAULT_SORT_ORDER;
+            	break;
+            case TOP_TASKS:
+            	orderBy = sTaskListProjectMap.get(Shuffle.Tasks.PROJECT_NAME) + " ASC";
             	break;
             case DUE_TASKS:
             	orderBy = Shuffle.Tasks.DUE_DATE + " ASC";
@@ -311,6 +316,7 @@ public class ShuffleProvider extends ContentProvider {
         switch (cUriMatcher.match(url)) {
         case TASKS:
         case DUE_TASKS:
+        case TOP_TASKS:
         case INBOX_TASKS:
             Long now = Long.valueOf(System.currentTimeMillis());
             r = getContext().getResources();
@@ -396,18 +402,18 @@ public class ShuffleProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
     	
         int count;
-        String segment;
         switch (cUriMatcher.match(uri)) {
         case TASKS:
         case DUE_TASKS:
+        case TOP_TASKS:
         case INBOX_TASKS:
             count = db.delete(cTaskTableName, where, whereArgs);
             break;
         case TASK_ID:
-            segment = uri.getPathSegments().get(1);
+            String taskId = uri.getPathSegments().get(1);
             count = db
-                    .delete(cTaskTableName, "_id="
-                            + segment
+                    .delete(cTaskTableName, Tasks._ID + "="
+                            + taskId
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
                                     + ')' : ""), whereArgs);
             break;
@@ -425,10 +431,10 @@ public class ShuffleProvider extends ContentProvider {
             count = db.delete(cContextTableName, where, whereArgs);
             break;
         case CONTEXT_ID:
-            segment = uri.getPathSegments().get(1);
+            String contextId = uri.getPathSegments().get(1);
             count = db
-                    .delete(cContextTableName, "_id="
-                            + segment
+                    .delete(cContextTableName, Contexts._ID + "="
+                            + contextId
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
                                     + ')' : ""), whereArgs);
             break;
@@ -436,10 +442,10 @@ public class ShuffleProvider extends ContentProvider {
             count = db.delete(cProjectTableName, where, whereArgs);
             break;
         case PROJECT_ID:
-            segment = uri.getPathSegments().get(1);
+            String projectId = uri.getPathSegments().get(1);
             count = db
-                    .delete(cProjectTableName, "_id="
-                            + segment
+                    .delete(cProjectTableName, Projects._ID + "="
+                            + projectId
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
                                     + ')' : ""), whereArgs);
             break;
@@ -460,7 +466,8 @@ public class ShuffleProvider extends ContentProvider {
         switch (cUriMatcher.match(uri)) {
         case TASKS:
         case DUE_TASKS:
-        case INBOX_TASKS:
+        case TOP_TASKS:
+       	case INBOX_TASKS:
             count = db.update(cTaskTableName, values, where, whereArgs);
             break;
         case TASK_ID:

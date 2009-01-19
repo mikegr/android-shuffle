@@ -4,7 +4,6 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,16 +15,12 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	private static final String cTag = "TabbedDueActionsActivity";
 
 	private TabHost mTabHost;
-	private int mMode;
+	private int mMode = Shuffle.Tasks.DAY_MODE;
 	
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.tabbed_due_tasks);
-        
-        mMode = Shuffle.Tasks.DAY_MODE;
-        mCursor = createItemQuery(); 
-        setListAdapter(createListAdapter(mCursor));
         
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
@@ -44,7 +39,6 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         	
         });
         
-        mTabHost.setCurrentTab(0); 
     }
     
     private TabSpec createTabSpec(int tabTitleRes, String tagId) {
@@ -62,14 +56,9 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
     	setTitle(createTitle());
 	}    
 
-	protected Cursor createItemQuery() {
-		Uri calUri = Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(mMode)).build();
-		return managedQuery(
-				calUri,
-				Shuffle.Tasks.cExpandedProjection,
-				null,
-				null,
-				null);
+	@Override
+	protected Uri getListContentUri() {
+		return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(mMode)).build();
 	}
 	
 	@Override
@@ -92,13 +81,10 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 		}
 		return result;
 	}
-
 	
 	@Override
 	protected int getCurrentViewMenuId() {
 		return MenuUtils.CALENDAR_ID;
 	}
-    
-    
 
 }

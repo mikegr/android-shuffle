@@ -273,15 +273,15 @@ public class BindingUtils {
 	 * Toggle whether the task at the given cursor position is complete.
 	 * The cursor is committed and re-queried after the update.
 	 * 
-	 * @param cursor cursor positions at task to update
+	 * @param cursor cursor positioned at task to update
 	 * @return new value of task completeness
 	 */
-	public static boolean toggleTaskComplete(android.content.Context androidContext, Cursor cursor, long taskId) {
+	public static boolean toggleTaskComplete(android.content.Context androidContext, Cursor cursor, Uri listUri, long taskId  ) {
 		Boolean newValue = !readBoolean(cursor, COMPLETE_INDEX);
         ContentValues values = new ContentValues();
 		writeBoolean(values, Shuffle.Tasks.COMPLETE, newValue);
-        Uri selectedUri = ContentUris.withAppendedId(Shuffle.Tasks.CONTENT_URI, taskId);
-        androidContext.getContentResolver().update(selectedUri, values, null, null);
+        androidContext.getContentResolver().update(listUri, values, 
+        		Shuffle.Tasks._ID + "=?", new String[] { String.valueOf(taskId) });
 		return newValue;
 	}
 	

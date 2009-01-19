@@ -1,6 +1,5 @@
 package org.dodgybits.android.shuffle.activity;
 
-import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.Activity;
@@ -10,16 +9,20 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -53,6 +56,10 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		if (intent.getData() == null) {
 			intent.setData(getContentUri());
 		}
+
+		// Inform the list we provide context menus for items
+        getListView().setOnCreateContextMenuListener(this);
+		
 		mCursor = createItemQuery();
 		setListAdapter(createListAdapter(mCursor));
 
@@ -110,6 +117,11 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	abstract Uri getContentUri();
 
 	/**
+	 * Content type of list.
+	 */
+	abstract Uri getListContentUri();
+	
+	/**
 	 * @return a cursor selecting the items to display in the list.
 	 */
 	abstract Cursor createItemQuery();
@@ -128,9 +140,9 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	/**
 	 * Permanently delete the selected item.
 	 */
-	protected void deleteItem() {
-		Uri uri = ContentUris.withAppendedId(Shuffle.Contexts.CONTENT_URI, getSelectedItemId());			
-        getContentResolver().delete(uri, null, null);
+	protected void deleteItem(long id) {
+        getContentResolver().delete(getListContentUri(), 
+        		BaseColumns._ID + "=?", new String[] { String.valueOf(id) });
 	}
 
 	/**
@@ -230,26 +242,62 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 					getSelectedItemId());
 			MenuUtils.addSelectedAlternativeMenuItems(menu, uri, this,
 					supportsViewAction());
-			// ... and ends with the delete command.
-			MenuUtils.addDeleteMenuItem(menu);
 		} else {
 			menu.removeGroup(Menu.CATEGORY_ALTERNATIVE);
 		}
 
-		// Make sure the delete action is disabled if there are no items.
-        menu.findItem(MenuUtils.DELETE_ID).setVisible(haveItems);
 		return true;
 	}
+	
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+        AdapterView.AdapterContextMenuInfo info;
+        try {
+             info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        } catch (ClassCastException e) {
+            Log.e(cTag, "bad menuInfo", e);
+            return;
+        }
+
+        Cursor cursor = (Cursor) getListAdapter().getItem(info.position);
+        if (cursor == null) {
+            // For some reason the requested item isn't available, do nothing
+            return;
+        }
+
+        // Setup the menu header
+        menu.setHeaderTitle(cursor.getString(1));
+
+		// ... and ends with the delete command.
+		MenuUtils.addDeleteMenuItem(menu);
+    }
+        
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info;
+        try {
+             info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        } catch (ClassCastException e) {
+            Log.e(cTag, "bad menuInfo", e);
+            return false;
+        }
+
+        switch (item.getItemId()) {
+            case MenuUtils.DELETE_ID: {
+                // Delete the item that the context menu is for
+    			deleteItem(info.id);
+                return true;
+            }
+        }
+        return false;
+    }	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MenuUtils.DELETE_ID:
-			deleteItem();
-			return true;
-		case MenuUtils.INSERT_ID:
-			insertItem();
-			return true;
+			case MenuUtils.INSERT_ID:
+				insertItem();
+				return true;
 		}
 		if (MenuUtils.checkCommonItemsSelected(item, this,
 				getCurrentViewMenuId())) {

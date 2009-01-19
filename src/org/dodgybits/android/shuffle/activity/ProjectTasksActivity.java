@@ -32,9 +32,14 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected Cursor createItemQuery() {
 		Log.d(cTag, "Creating a cursor to find tasks for the given context");
-		return managedQuery(Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cExpandedProjection,
+		return managedQuery(getListContentUri(), Shuffle.Tasks.cExpandedProjection,
 					Shuffle.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(mProjectId)}, 
 					Shuffle.Tasks.DISPLAY_ORDER + " ASC");
+	}
+
+	@Override
+	protected Uri getListContentUri() {
+		return Shuffle.Tasks.CONTENT_URI;
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 
 /**
- * Display list of projects.
+ * Display list of projects with task children.
  */
 public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 
@@ -27,11 +27,12 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	protected void onResume() {
 		super.onResume();
 		
-		Cursor cursor = getContentResolver().query(Shuffle.Projects.cProjectTasksContentURI, Shuffle.Projects.cFullTaskProjection, null, null, null);
+		Cursor cursor = getContentResolver().query(getListContentUri(), Shuffle.Projects.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();
 	}
 
+	
 	@Override
 	protected int getContentViewResId() {
 		return R.layout.projects;
@@ -40,6 +41,11 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	@Override
 	protected Uri getContentUri() {
 		return Shuffle.Projects.CONTENT_URI;
+	}
+
+	@Override
+	protected Uri getListContentUri() {
+		return Shuffle.Projects.cProjectTasksContentURI;
 	}
 	
 	@Override

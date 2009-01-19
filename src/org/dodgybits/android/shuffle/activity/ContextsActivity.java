@@ -17,7 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 
 /**
- * Display list of contexts.
+ * Display list of contexts with task children.
  */
 public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 
@@ -27,7 +27,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	protected void onResume() {
 		super.onResume();
 		
-		Cursor cursor = getContentResolver().query(Shuffle.Contexts.cContextTasksContentURI, Shuffle.Contexts.cFullTaskProjection, null, null, null);
+		Cursor cursor = getContentResolver().query(getListContentUri(), Shuffle.Contexts.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();
 	}
@@ -40,6 +40,11 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	@Override
 	protected Uri getContentUri() {
 		return Shuffle.Contexts.CONTENT_URI;
+	}
+	
+	@Override
+	protected Uri getListContentUri() {
+		return Shuffle.Contexts.cContextTasksContentURI;
 	}
 	
 	@Override

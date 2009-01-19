@@ -136,20 +136,6 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         	Log.d(cTag, "getChildrenCursor for groupId " + groupId);
     		return createChildQuery(groupId);
         }
-        
-        @Override
-        public long getGroupId(int groupPosition) {
-        	Log.d(cTag, "getGroupId " + groupPosition);
-        	Cursor groupCursor = (Cursor) getGroup(groupPosition);
-        	return groupCursor.getLong(getGroupIdColumnIndex());
-        }
-        
-        @Override
-        public long getChildId(int groupPosition, int childPosition) {
-        	Log.d(cTag, "getChildId " + groupPosition + "," + childPosition);
-        	Cursor childCursor = (Cursor) getChild(groupPosition, childPosition);
-        	return childCursor.getLong(getChildIdColumnIndex());
-        }
 
     }
 
@@ -233,8 +219,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         
     	Uri selectedContentUri = getSelectedContentUri();
     	// while bug 308 exists, don't add menu items for child selections
-    	Boolean childSelected = isChildSelected();
-        if (haveItems && childSelected != null && !childSelected && (selectedContentUri != null)) {
+        if (haveItems && (selectedContentUri != null)) {
         	long selectedId = getSelectedId();
             Uri selectedUri = ContentUris.withAppendedId(selectedContentUri, selectedId);
             MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, this, false);
@@ -275,47 +260,42 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     	final int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
     	final int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
     	switch (type) {
-    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
-        	Log.d(cTag, "Deleting child at position " + groupPosition + "," + childPosition);
-    		// TODO do delete
-        	// Can't delete due to Android issue 308
-//        	Cursor childCursor = (Cursor) getExpandableListAdapter().getChild(groupPosition, childPosition);
-//        	childCursor.deleteRow();
-    		break;
-    	case ExpandableListView.PACKED_POSITION_TYPE_GROUP:
-        	Log.d(cTag, "Deleting parent at position " + groupPosition);
-	    	// Following loop is an attempt to alleviate Android issue 553
-	    	int groupCount = getExpandableListAdapter().getGroupCount();
-	    	for (int i = groupCount - 1; i >= 0 ; i--) {
-	    		Log.d(cTag, "Collapsing group pos " + i);
-	    		getExpandableListView().collapseGroup(i);
-	    	}
-        	// first check if there's any children...
-    		int childCount = getExpandableListAdapter().getChildrenCount(groupPosition);
-    		if (childCount > 0) {
-	    		OnClickListener buttonListener = new OnClickListener() {
-	    			public void onClick(DialogInterface dialog, int which) {
-	    				if (which == DialogInterface.BUTTON2) {
-	    					final long groupId = getSelectedId();
-	    			    	Log.i(cTag, "Deleting group id " + groupId);
-	    					Uri uri = ContentUris.withAppendedId(getGroupContentUri(), groupId);			
-	    			        getContentResolver().delete(uri, null, null);
-	    			    	Log.i(cTag, "Deleting all child for group id " + groupId);
-	    					getContentResolver().delete(getChildContentUri(), getGroupIdColumnName() + " = ?", new String[] {String.valueOf(groupId)});
-	    				} else {
-	    					Log.d(cTag, "Hit Cancel button. Do nothing.");
-	    				}
-	    			}
-	    		};
-    			AlertUtils.showDeleteGroupWarning(this, getGroupName(), getChildName(), childCount, buttonListener);    		
-    		} else {
-		    	Log.i(cTag, "Deleting childless group at position " + groupPosition);
-				final long groupId = getSelectedId();
-		    	Log.i(cTag, "Deleting group id " + groupId);
-				Uri uri = ContentUris.withAppendedId(getGroupContentUri(), groupId);			
-		        getContentResolver().delete(uri, null, null);		    	
-    		}
-        	break;
+	    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
+	        	Log.d(cTag, "Deleting child at position " + groupPosition + "," + childPosition);
+				final long childId = getSelectedId();
+		    	Log.i(cTag, "Deleting child id " + childId);
+				Uri childUri = ContentUris.withAppendedId(getChildContentUri(), childId);			
+		        getContentResolver().delete(childUri, null, null);		    	
+	    		break;
+	    		
+	    	case ExpandableListView.PACKED_POSITION_TYPE_GROUP:
+	        	Log.d(cTag, "Deleting parent at position " + groupPosition);
+	        	// first check if there's any children...
+	    		int childCount = getExpandableListAdapter().getChildrenCount(groupPosition);
+	    		if (childCount > 0) {
+		    		OnClickListener buttonListener = new OnClickListener() {
+		    			public void onClick(DialogInterface dialog, int which) {
+		    				if (which == DialogInterface.BUTTON2) {
+		    					final long groupId = getSelectedId();
+		    			    	Log.i(cTag, "Deleting group id " + groupId);
+		    					Uri uri = ContentUris.withAppendedId(getGroupContentUri(), groupId);			
+		    			        getContentResolver().delete(uri, null, null);
+		    			    	Log.i(cTag, "Deleting all child for group id " + groupId);
+		    					getContentResolver().delete(getChildContentUri(), getGroupIdColumnName() + " = ?", new String[] {String.valueOf(groupId)});
+		    				} else {
+		    					Log.d(cTag, "Hit Cancel button. Do nothing.");
+		    				}
+		    			}
+		    		};
+	    			AlertUtils.showDeleteGroupWarning(this, getGroupName(), getChildName(), childCount, buttonListener);    		
+	    		} else {
+			    	Log.i(cTag, "Deleting childless group at position " + groupPosition);
+					final long groupId = getSelectedId();
+			    	Log.i(cTag, "Deleting group id " + groupId);
+					Uri groupUri = ContentUris.withAppendedId(getGroupContentUri(), groupId);			
+			        getContentResolver().delete(groupUri, null, null);		    	
+	    		}
+	        	break;
     	}
     }
 

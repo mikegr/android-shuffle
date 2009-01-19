@@ -63,8 +63,8 @@ public class MenuUtils {
 
 	public static void addExpandableInsertMenuItems(Menu menu, String groupName, String childName, Context context) {
 		String menuName;
-//		menuName = context.getResources().getString(R.string.menu_insert, childName);
-//        menu.add(0, INSERT_CHILD_ID, menuName, R.drawable.list_add).setAlphabeticShortcut('c');
+		menuName = context.getResources().getString(R.string.menu_insert, childName);
+        menu.add(0, INSERT_CHILD_ID, 0, menuName).setIcon(R.drawable.list_add).setAlphabeticShortcut('c');
 		menuName = context.getResources().getString(R.string.menu_insert, groupName);
         menu.add(0, INSIDE_GROUP_ID, 0, menuName).setIcon(R.drawable.folder_new).setAlphabeticShortcut('a');
 	}
@@ -72,22 +72,21 @@ public class MenuUtils {
 	public static void addViewMenuItems(Menu menu, int currentViewMenuId) {
         SubMenu viewMenu  = menu.addSubMenu(0, 0, 0, R.string.menu_view)
         	.setIcon(R.drawable.preferences_system_windows);
-        MenuItem item;
-        item = viewMenu.add(0, INBOX_ID, 0, R.string.title_inbox)
-        	.setChecked(INBOX_ID == currentViewMenuId)
-        	.setShortcut('1','1');
-        item = viewMenu.add(0, CALENDAR_ID, 0, R.string.title_due_tasks)
-        	.setChecked(INBOX_ID == currentViewMenuId)
-        	.setShortcut('2','2');
-        item = viewMenu.add(0, TOP_TASKS_ID, 0, R.string.title_next_tasks)
-        	.setChecked(TOP_TASKS_ID == currentViewMenuId)
-        	.setShortcut('3','3');
-        item = viewMenu.add(0, PROJECT_ID, 0, R.string.title_project)
-        	.setChecked(PROJECT_ID == currentViewMenuId)
-        	.setShortcut('4','4');
-        item = viewMenu.add(0, CONTEXT_ID, 0, R.string.title_context)
-        	.setChecked(CONTEXT_ID == currentViewMenuId)
-        	.setShortcut('5','5');
+        viewMenu.add(0, INBOX_ID, 0, R.string.title_inbox)
+        	.setChecked(INBOX_ID == currentViewMenuId);
+        	//.setShortcut('1','1');
+        viewMenu.add(0, CALENDAR_ID, 0, R.string.title_due_tasks)
+        	.setChecked(CALENDAR_ID == currentViewMenuId);
+        	//.setShortcut('2','2');
+        viewMenu.add(0, TOP_TASKS_ID, 0, R.string.title_next_tasks)
+        	.setChecked(TOP_TASKS_ID == currentViewMenuId);
+        	//.setShortcut('3','3');
+        viewMenu.add(0, PROJECT_ID, 0, R.string.title_project)
+        	.setChecked(PROJECT_ID == currentViewMenuId);
+        	//.setShortcut('4','4');
+        viewMenu.add(0, CONTEXT_ID, 0, R.string.title_context)
+        	.setChecked(CONTEXT_ID == currentViewMenuId);
+        	//.setShortcut('5','5');
 	}
 	
 	public static void addEditorMenuItems(Menu menu, int state) {

@@ -4,7 +4,6 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 
 public class CalendarActivity extends AbstractTaskListActivity {
-	private static final String cTag = "CalendarActivity";
 
 	private int mMode;
     private Button mDayButton;
@@ -81,16 +79,10 @@ public class CalendarActivity extends AbstractTaskListActivity {
 	}
 	
 	@Override
-	protected Cursor createItemQuery() {
-		Uri calUri = Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(mMode)).build();
-		return managedQuery(
-				calUri,
-				Shuffle.Tasks.cExpandedProjection,
-				null,
-				null,
-				null);
+	protected Uri getListContentUri() {
+		return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(mMode)).build();
 	}
-
+	
 	@Override
 	protected int getCurrentViewMenuId() {
 		return MenuUtils.CALENDAR_ID;
