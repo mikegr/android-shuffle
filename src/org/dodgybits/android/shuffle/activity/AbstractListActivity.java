@@ -38,11 +38,6 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	@SuppressWarnings("unused")
 	private static final String cTag = "AbstractListActivity";
 
-	/**
-	 * Cursor to select for list of items
-	 */
-	protected Cursor mCursor;
-
 	/** Called when the activity is first created. */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -60,8 +55,8 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		// Inform the list we provide context menus for items
         getListView().setOnCreateContextMenuListener(this);
 		
-		mCursor = createItemQuery();
-		setListAdapter(createListAdapter(mCursor));
+		Cursor cursor = createItemQuery();
+		setListAdapter(createListAdapter(cursor));
 
 		animateList();
 	}
@@ -149,7 +144,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	 * @return Number of items in the list.
 	 */
 	protected final int getItemCount() {
-		return mCursor.getCount();
+		return getListAdapter().getCount();
 	}
 
 	/**
@@ -227,28 +222,6 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 
 	abstract boolean supportsViewAction();
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		super.onPrepareOptionsMenu(menu);
-		final boolean haveItems = getItemCount() > 0;
-
-		// If there are any selected items we need to generate the actions that
-		// can be performed on the current selection. This will be a combination
-		// of our own specific actions along with any extensions that can be
-		// found.
-		if (haveItems && getSelectedItemPosition() > -1) {
-			// This is the selected item.
-			Uri uri = ContentUris.withAppendedId(getContentUri(),
-					getSelectedItemId());
-			MenuUtils.addSelectedAlternativeMenuItems(menu, uri, this,
-					supportsViewAction());
-		} else {
-			menu.removeGroup(Menu.CATEGORY_ALTERNATIVE);
-		}
-
-		return true;
-	}
-	
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info;
@@ -268,6 +241,9 @@ public abstract class AbstractListActivity<T> extends ListActivity {
         // Setup the menu header
         menu.setHeaderTitle(cursor.getString(1));
 
+    	Uri selectedUri = ContentUris.withAppendedId(getContentUri(), info.id);
+        MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, this, false);
+        
 		// ... and ends with the delete command.
 		MenuUtils.addDeleteMenuItem(menu);
     }

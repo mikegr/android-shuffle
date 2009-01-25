@@ -30,7 +30,7 @@ public class AlertUtils {
 		};
 		Builder builder = new Builder(context);
 		builder.setTitle(title).setIcon(R.drawable.dialog_warning)
-			.setMessage(message).setNeutralButton(cancelButtonText, buttonListener)
+			.setMessage(message).setNegativeButton(cancelButtonText, buttonListener)
 			.setPositiveButton(deleteButtonText, buttonListener)
 			.setOnCancelListener(cancelListener);
 		builder.create().show();

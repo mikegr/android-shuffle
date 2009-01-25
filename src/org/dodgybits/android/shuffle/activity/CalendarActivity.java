@@ -4,6 +4,7 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -46,9 +47,9 @@ public class CalendarActivity extends AbstractTaskListActivity {
 	}
 	
 	private void updateCursor() {
-    	mCursor = createItemQuery();
+    	Cursor cursor = createItemQuery();
     	SimpleCursorAdapter adapter = (SimpleCursorAdapter)getListAdapter();
-    	adapter.changeCursor(mCursor);
+    	adapter.changeCursor(cursor);
     	setTitle(createTitle());
 	}
 

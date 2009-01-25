@@ -155,13 +155,14 @@ public class MenuUtils {
         }		
 	}
 	
-	public static void addDeleteMenuItem(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, DELETE_ID, 0, R.string.menu_delete).setIcon(R.drawable.edit_delete).setAlphabeticShortcut('d');
+	public static void addCompleteMenuItem(Menu menu) {
+        menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, 5, R.string.menu_complete).setAlphabeticShortcut('x');
     }
 
-	public static void addCompleteMenuItem(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, 0, R.string.menu_complete).setAlphabeticShortcut('x');
+	public static void addDeleteMenuItem(Menu menu) {
+        menu.add(Menu.CATEGORY_ALTERNATIVE, DELETE_ID, 10, R.string.menu_delete).setIcon(R.drawable.edit_delete).setAlphabeticShortcut('d');
     }
+
 
 	public static void addCleanInboxMenuItem(Menu menu) {
         menu.add(0, CLEAN_INBOX_ID, 0, R.string.clean_inbox_button_title).setIcon(R.drawable.edit_clear).setAlphabeticShortcut('i');

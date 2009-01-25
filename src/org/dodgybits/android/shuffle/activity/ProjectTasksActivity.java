@@ -127,7 +127,8 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     protected final void moveUp() {
     	int selection = getSelectedItemPosition();
     	if (selection > 0) {
-    		BindingUtils.swapTaskPositions(this, mCursor, selection - 1, selection);
+    		Cursor cursor = (Cursor) getListAdapter().getItem(selection);
+    		BindingUtils.swapTaskPositions(this, cursor, selection - 1, selection);
     		setSelection(selection - 1);
     	}
     }
@@ -135,7 +136,8 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     protected final void moveDown() {
     	int selection = getSelectedItemPosition();
     	if (selection < getItemCount() - 1) {
-    		BindingUtils.swapTaskPositions(this, mCursor, selection, selection + 1);
+    		Cursor cursor = (Cursor) getListAdapter().getItem(selection);
+    		BindingUtils.swapTaskPositions(this, cursor, selection, selection + 1);
     		setSelection(selection + 1);
     	}
     }

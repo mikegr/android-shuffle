@@ -27,9 +27,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	private SparseIntArray mTaskCountArray;
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		
+	protected void refreshChildCount() {
 		Cursor cursor = getContentResolver().query(Shuffle.Projects.cProjectTasksContentURI, Shuffle.Projects.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();

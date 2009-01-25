@@ -22,17 +22,16 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
     private int mChildIdColumnIndex; 
     private int mGroupIdColumnIndex; 
 	private SparseIntArray mTaskCountArray;
-
+	
 	@Override
-	protected void onResume() {
-		super.onResume();
-		
+	protected void refreshChildCount() {
 		Cursor cursor = getContentResolver().query(
 				Shuffle.Contexts.cContextTasksContentURI, 
 				Shuffle.Contexts.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();
 	}
+	
 
 	@Override
 	protected int getContentViewResId() {

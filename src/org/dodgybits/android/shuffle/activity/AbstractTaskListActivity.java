@@ -11,10 +11,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
-import android.view.Menu;
+import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 
@@ -88,8 +90,12 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     }
     
     protected final void toggleComplete() {
-    	Cursor c = (Cursor) getListAdapter().getItem(getSelectedItemPosition());
-        BindingUtils.toggleTaskComplete(this, c, getListContentUri(), getSelectedItemId());
+    	toggleComplete(getSelectedItemPosition(), getSelectedItemId());
+    }
+
+    protected final void toggleComplete(int position, long id) {
+    	Cursor c = (Cursor) getListAdapter().getItem(position);
+        BindingUtils.toggleTaskComplete(this, c, getListContentUri(), id);
     }
     
     @Override
@@ -103,30 +109,30 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        
-        final boolean haveItems = getItemCount() > 0;
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+    	super.onCreateContextMenu(menu, view, menuInfo);
 
-        // If there are any selected tasks we need to generate the actions that
-        // can be performed on the current selection.  This will be a combination
-        // of our own specific actions along with any extensions that can be
-        // found.
-        if (haveItems && getSelectedItemPosition() > -1) {
-        	MenuUtils.addCompleteMenuItem(menu);
-        }
-        return true;
+		// ... add complete command.
+    	MenuUtils.addCompleteMenuItem(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case MenuUtils.COMPLETE_ID:
-            toggleComplete();
-            return true;
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info;
+        try {
+             info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        } catch (ClassCastException e) {
+            Log.e(cTag, "bad menuInfo", e);
+            return false;
         }
-        return super.onOptionsItemSelected(item);
-    }
+
+        switch (item.getItemId()) {
+	        case MenuUtils.COMPLETE_ID:
+	            toggleComplete(info.position, info.id);
+	            return true;
+        }
+        return super.onContextItemSelected(item);
+    }	
     
     protected Intent getClickIntent(Uri uri) {
     	return new Intent(Intent.ACTION_VIEW, uri);

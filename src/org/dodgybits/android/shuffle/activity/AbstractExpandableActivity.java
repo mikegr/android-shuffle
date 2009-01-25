@@ -1,6 +1,7 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.util.AlertUtils;
+import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.ExpandableListActivity;
@@ -13,9 +14,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -35,12 +39,25 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         super.onCreate(icicle);
         setContentView(getContentViewResId());
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
+        
+		// Inform the list we provide context menus for items
+        getExpandableListView().setOnCreateContextMenuListener(this);
+        
         Cursor groupCursor = createGroupQuery();
         // Set up our adapter
         mAdapter = createExpandableListAdapter(groupCursor); 
         setListAdapter(mAdapter);
         animateList();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		refreshChildCount();
+	}
+	
+	abstract void refreshChildCount();
 	
     protected void animateList() {
         AnimationSet set = new AnimationSet(true);
@@ -139,6 +156,13 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 
     }
 
+    protected final void toggleComplete(long packedPosition, long id) {
+        int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+        int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+    	Cursor c = (Cursor) getExpandableListAdapter().getChild(groupPosition, childPosition);
+        BindingUtils.toggleTaskComplete(this, c, getChildContentUri(), id);
+    }
+    
 
     /**
      * @return Number of items in the list.
@@ -149,7 +173,11 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 
     protected Boolean isChildSelected() {
     	long packed = this.getSelectedPosition();
-    	int type = ExpandableListView.getPackedPositionType(packed);
+    	return isChild(packed);
+    }
+    
+    protected Boolean isChild(long packedPosition) {
+    	int type = ExpandableListView.getPackedPositionType(packedPosition);
     	Boolean isChild = null;
     	switch (type) {
     	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
@@ -207,39 +235,8 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     }
         
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        final boolean haveItems = getItemCount() > 0;
-
-        // If there are any items in the list (which implies that one of
-        // them is selected), then we need to generate the actions that
-        // can be performed on the current selection.  This will be a combination
-        // of our own specific actions along with any extensions that can be
-        // found.
-        
-    	Uri selectedContentUri = getSelectedContentUri();
-    	// while bug 308 exists, don't add menu items for child selections
-        if (haveItems && (selectedContentUri != null)) {
-        	long selectedId = getSelectedId();
-            Uri selectedUri = ContentUris.withAppendedId(selectedContentUri, selectedId);
-            MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, this, false);
-            // ... and ends with the delete command.
-            MenuUtils.addDeleteMenuItem(menu);
-        } else {
-            menu.removeGroup(Menu.CATEGORY_ALTERNATIVE);
-        }
-
-        // Make sure the delete action is disabled if there are no items.
-        menu.findItem(MenuUtils.DELETE_ID).setVisible(haveItems);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-	        case MenuUtils.DELETE_ID:
-	            deleteItem();
-	            return true;
 	        case MenuUtils.INSERT_CHILD_ID:
 	            insertItem(getChildContentUri());
 	            return true;
@@ -250,12 +247,83 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         if (MenuUtils.checkCommonItemsSelected(item, this, getCurrentViewMenuId())) return true;
         return super.onOptionsItemSelected(item);
     }
+    
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+    	ExpandableListView.ExpandableListContextMenuInfo info;
+        try {
+             info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
+        } catch (ClassCastException e) {
+            Log.e(cTag, "bad menuInfo", e);
+            return;
+        }
+        long packedPosition = info.packedPosition;
+        int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+        int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+        boolean isChild = isChild(packedPosition); 
+        Cursor cursor;
+        if (isChild) {
+        	cursor = (Cursor)(getExpandableListAdapter().getChild(groupPosition, childPosition));
+        } else {
+        	cursor = (Cursor)(getExpandableListAdapter().getGroup(groupPosition));
+        }
+        if (cursor == null) {
+            // For some reason the requested item isn't available, do nothing
+            return;
+        }
+
+        // Setup the menu header
+        menu.setHeaderTitle(cursor.getString(1));
+
+        if (isChild)
+        {
+        	long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
+            Uri selectedUri = ContentUris.withAppendedId(getChildContentUri(), childId);
+            MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, this, false);
+        	MenuUtils.addCompleteMenuItem(menu);
+        }
+        else
+        {
+        	long groupId = getExpandableListAdapter().getGroupId(groupPosition);
+            Uri selectedUri = ContentUris.withAppendedId(getGroupContentUri(), groupId);
+            MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, this, false);
+        }
+		// ... and ends with the delete command.
+		MenuUtils.addDeleteMenuItem(menu);
+    }
+        
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+    	ExpandableListView.ExpandableListContextMenuInfo info;
+        try {
+             info = (ExpandableListView.ExpandableListContextMenuInfo) item.getMenuInfo();
+        } catch (ClassCastException e) {
+            Log.e(cTag, "bad menuInfo", e);
+            return false;
+        }
+
+        switch (item.getItemId()) {
+	        case MenuUtils.COMPLETE_ID:
+	            toggleComplete(info.packedPosition, info.id);
+	            return true;
+
+	        case MenuUtils.DELETE_ID: {
+	                // Delete the item that the context menu is for
+	    			deleteItem(info.packedPosition);
+	                return true;
+	            }
+        }
+        return false;
+    }	    
 
     /**
      * Permanently delete the selected item.
      */
     protected final void deleteItem() {
-    	final long packedPosition = getSelectedPosition();
+    	deleteItem(getSelectedPosition());
+    }
+    
+    protected final void deleteItem(final long packedPosition) {
     	final int type = ExpandableListView.getPackedPositionType(packedPosition);
     	final int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
     	final int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
@@ -265,7 +333,9 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 				final long childId = getSelectedId();
 		    	Log.i(cTag, "Deleting child id " + childId);
 				Uri childUri = ContentUris.withAppendedId(getChildContentUri(), childId);			
-		        getContentResolver().delete(childUri, null, null);		    	
+		        getContentResolver().delete(childUri, null, null);		    
+		        refreshChildCount();
+		        getExpandableListView().invalidate();
 	    		break;
 	    		
 	    	case ExpandableListView.PACKED_POSITION_TYPE_GROUP:
@@ -275,8 +345,8 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 	    		if (childCount > 0) {
 		    		OnClickListener buttonListener = new OnClickListener() {
 		    			public void onClick(DialogInterface dialog, int which) {
-		    				if (which == DialogInterface.BUTTON2) {
-		    					final long groupId = getSelectedId();
+		    				if (which == DialogInterface.BUTTON1) {
+		    					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 		    			    	Log.i(cTag, "Deleting group id " + groupId);
 		    					Uri uri = ContentUris.withAppendedId(getGroupContentUri(), groupId);			
 		    			        getContentResolver().delete(uri, null, null);
