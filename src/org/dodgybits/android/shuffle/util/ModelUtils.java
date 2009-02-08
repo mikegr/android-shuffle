@@ -115,9 +115,6 @@ public class ModelUtils {
     public static void cleanSlate(android.content.Context androidContext, Handler handler) {
     	int deletedRows = androidContext.getContentResolver().delete(Shuffle.Tasks.CONTENT_URI, null, null);
 		Log.d(cTag, "Deleted " + deletedRows + " tasks.");
-		Uri uri = ContentUris.withAppendedId(Shuffle.TaskContacts.CONTENT_URI, 0);			
-    	deletedRows = androidContext.getContentResolver().delete(uri, null, null);
-		Log.d(cTag, "Deleted " + deletedRows + " task contacts.");
 		deletedRows = androidContext.getContentResolver().delete(Shuffle.Projects.CONTENT_URI, null, null);
 		Log.d(cTag, "Deleted " + deletedRows + " projects.");
     	deletedRows = androidContext.getContentResolver().delete(Shuffle.Contexts.CONTENT_URI, null, null);

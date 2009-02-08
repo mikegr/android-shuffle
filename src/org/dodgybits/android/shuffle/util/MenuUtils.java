@@ -1,7 +1,5 @@
 package org.dodgybits.android.shuffle.util;
 
-import static org.dodgybits.android.shuffle.model.Preferences.EXPANDABLE_VIEW;
-
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.activity.ContextsActivity;
 import org.dodgybits.android.shuffle.activity.ExpandableContextsActivity;
@@ -32,12 +30,13 @@ public class MenuUtils {
 	}
 	
     // Identifiers for our menu items.
-    public static final int REVERT_ID = Menu.FIRST;
-    public static final int DISCARD_ID = Menu.FIRST + 1;
-    public static final int DELETE_ID = Menu.FIRST + 2;
-    public static final int INSERT_ID = Menu.FIRST + 3;
-    public static final int INSERT_CHILD_ID = Menu.FIRST + 3;
-    public static final int INSIDE_GROUP_ID = Menu.FIRST + 4;
+    public static final int SAVE_ID = Menu.FIRST;
+    public static final int REVERT_ID = Menu.FIRST + 1;
+    public static final int DISCARD_ID = Menu.FIRST + 2;
+    public static final int DELETE_ID = Menu.FIRST + 3;
+    public static final int INSERT_ID = Menu.FIRST + 4;
+    public static final int INSERT_CHILD_ID = Menu.FIRST + 5;
+    public static final int INSERT_GROUP_ID = Menu.FIRST + 6;
     
     public static final int INBOX_ID = Menu.FIRST + 10;
     public static final int CALENDAR_ID = Menu.FIRST + 11;
@@ -66,7 +65,7 @@ public class MenuUtils {
 		menuName = context.getResources().getString(R.string.menu_insert, childName);
         menu.add(0, INSERT_CHILD_ID, 0, menuName).setIcon(R.drawable.list_add).setAlphabeticShortcut('c');
 		menuName = context.getResources().getString(R.string.menu_insert, groupName);
-        menu.add(0, INSIDE_GROUP_ID, 0, menuName).setIcon(R.drawable.folder_new).setAlphabeticShortcut('a');
+        menu.add(0, INSERT_GROUP_ID, 0, menuName).setIcon(R.drawable.folder_new).setAlphabeticShortcut('a');
 	}
 
 	public static void addViewMenuItems(Menu menu, int currentViewMenuId) {
@@ -92,6 +91,7 @@ public class MenuUtils {
 	public static void addEditorMenuItems(Menu menu, int state) {
         // Build the menus that are shown when editing.
         if (state == State.STATE_EDIT) {
+            menu.add(0, SAVE_ID, 0, R.string.menu_save).setAlphabeticShortcut('s');
             menu.add(0, REVERT_ID, 0, R.string.menu_revert)
             	.setIcon(R.drawable.edit_undo).setAlphabeticShortcut('r');
             menu.add(0, DELETE_ID, 0, R.string.menu_delete)
@@ -209,7 +209,7 @@ public class MenuUtils {
         	if (currentViewMenuId != PROJECT_ID) {
             	Log.d(cTag, "Switching to project list");
                 Class<? extends Activity> activityClass = null;
-            	if (Preferences.getProjectView(activity) == EXPANDABLE_VIEW) {
+            	if (Preferences.isProjectViewExpandable(activity)) {
                 	activityClass = ExpandableProjectsActivity.class;
             	} else {
                 	activityClass = ProjectsActivity.class;
@@ -222,7 +222,7 @@ public class MenuUtils {
         	if (currentViewMenuId != CONTEXT_ID) {
             	Log.d(cTag, "Switching to context list");
                 Class<? extends Activity> activityClass = null;
-            	if (Preferences.getContextView(activity) == EXPANDABLE_VIEW) {
+            	if (Preferences.isContextViewExpandable(activity)) {
                 	activityClass = ExpandableContextsActivity.class;
             	} else {
                 	activityClass = ContextsActivity.class;

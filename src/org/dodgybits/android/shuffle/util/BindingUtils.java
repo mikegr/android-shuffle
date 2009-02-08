@@ -3,9 +3,7 @@ package org.dodgybits.android.shuffle.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
@@ -17,9 +15,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Contacts;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseIntArray;
 
 /**
@@ -91,15 +87,6 @@ public class BindingUtils {
 		putDate(icicle, Shuffle.Tasks.DUE_DATE, task.dueDate);
 		putInteger(icicle, Shuffle.Tasks.DISPLAY_ORDER, task.order);
 		icicle.putBoolean(Shuffle.Tasks.COMPLETE, task.complete);
-		return icicle;
-	}
-	
-	public static Collection<Long> restoreContactIds(Bundle icicle) {
-		return toIdCollection(icicle.getString(Shuffle.TaskContacts.CONTACT_ID));
-	}
-	
-	public static Bundle saveContactIds(Bundle icicle, Collection<Long> ids) {
-		icicle.putString(Shuffle.TaskContacts.CONTACT_ID, toIdListString(ids));
 		return icicle;
 	}
 	
@@ -215,59 +202,7 @@ public class BindingUtils {
 		}
 		return context;
 	}
-	
-    @SuppressWarnings("unused")
-	private static final int TASK_ID_INDEX = 1;
-    private static final int CONTACT_ID_INDEX = 2;
-
-	public static Collection<Long> fetchContactIds(android.content.Context androidContext, Integer taskId) {
-		Log.d(cTag, "Fetching contacts for task " + taskId);
-		Collection<Long> ids = new HashSet<Long>();
-		if (taskId != null) {
-			Uri uri = ContentUris.withAppendedId(Shuffle.TaskContacts.CONTENT_URI, taskId);			
-			Cursor contactCursor = androidContext.getContentResolver().query(uri, 
-					Shuffle.TaskContacts.cFullProjection, null, null, null);
-			while (contactCursor.moveToNext()) {
-				ids.add(contactCursor.getLong(CONTACT_ID_INDEX));
-			}
-			contactCursor.close();
-		}
-		Log.d(cTag, "Contacts found " + ids);
-		return ids;
-	}
-	
-	public static void updateContactIds(android.content.Context androidContext, Integer taskId, Collection<Long> ids) {
-		// delete old ones first
-		Log.d(cTag, "Updating contacts for task " + taskId);
-		Uri uri = ContentUris.withAppendedId(Shuffle.TaskContacts.CONTENT_URI, taskId);			
-		androidContext.getContentResolver().delete(uri, null, null);
-		int count = ids.size();
-		ContentValues[] values = new ContentValues[count];
-		int i = 0;
-		for (Long id : ids) {
-			values[i] = new ContentValues();
-			values[i].put(Shuffle.TaskContacts.TASK_ID, taskId);
-			values[i].put(Shuffle.TaskContacts.CONTACT_ID, id);
-			i++;
-		}
-		androidContext.getContentResolver().bulkInsert(uri, values);
-	}
-	
-	public static List<String> fetchContactNames(android.content.Context androidContext, Collection<Long> ids) {
-		List<String> names = new ArrayList<String>(ids.size());
-		if (!ids.isEmpty()) {
-			Uri uri = Contacts.People.CONTENT_URI;
-			String idList = toIdListString(ids);
-			Cursor contactCursor = androidContext.getContentResolver().query(uri, new String[] {Contacts.People._ID, Contacts.People.NAME}, 
-			"people._id in (" + idList + ")", null, Contacts.People.NAME + " DESC");
-			while (contactCursor.moveToNext()) {
-				names.add(contactCursor.getString(1));
-			}
-			contactCursor.close();
-		}
-		return names;
-	}
-	
+		
 	
 	/**
 	 * Toggle whether the task at the given cursor position is complete.

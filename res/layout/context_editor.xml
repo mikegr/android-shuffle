@@ -1,151 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:orientation="vertical" android:padding="4dip"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    android:stretchColumns="1">
 
-	<TableLayout  
-	    android:orientation="vertical" android:padding="4dip"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content"
-	    android:stretchColumns="1">
+    <TableRow
+        style="@style/centered_row"
+        android:paddingTop="5px"
+        >
+	    <TextView
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="@string/name_title"
+            style="@style/label"
+	        />
+	    <EditText android:id="@+id/name"
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content"	        
+	        android:hint="@string/initial_text"
+            android:maxLength="20"
+            style="@style/editable_text"
+            >
+	        <requestFocus />
+	    </EditText>
+	</TableRow>
 	
-	    <TableRow
-	        style="@style/centered_row"
-	        android:paddingTop="5px"
-	        >
+	<TableRow
+        style="@style/centered_row"
+        android:paddingTop="8px"
+        >
+	    <TextView
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="@string/colour_title"
+            style="@style/label"
+	        />
+           
+
+		<LinearLayout 
+			android:orientation="horizontal" 
+	        style="@style/centered_row">
+
+	        <org.dodgybits.android.shuffle.view.LabelView android:id="@+id/colour_display"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:paddingLeft="5px"
+	            android:paddingRight="5px"
+	            android:text="Abc"
+		        style="@style/context"
+	            />
+	
 		    <TextView
 		        android:layout_width="wrap_content" 
 		        android:layout_height="wrap_content"
-		        android:text="@string/name_title"
-	            style="@style/label"
-		        />
-		    <EditText android:id="@+id/name"
-		        android:layout_width="fill_parent" 
-		        android:layout_height="wrap_content"	        
-		        android:hint="@string/initial_text"
-	            android:maxLength="20"
-	            style="@style/editable_text"
-	            >
-		        <requestFocus />
-		    </EditText>
-		</TableRow>
-		
-		<TableRow
-	        style="@style/centered_row"
-	        android:paddingTop="8px"
-	        >
-		    <TextView
-		        android:layout_width="wrap_content" 
-		        android:layout_height="wrap_content"
-		        android:text="@string/colour_title"
-	            style="@style/label"
-		        />
-	           
-	
-			<LinearLayout 
-				android:orientation="horizontal" 
-		        style="@style/centered_row">
-	
-		        <org.dodgybits.android.shuffle.view.LabelView android:id="@+id/colour_display"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:paddingLeft="5px"
-		            android:paddingRight="5px"
-		            android:text="Abc"
-			        style="@style/context"
-		            />
-		
-			    <TextView
-			        android:layout_width="wrap_content" 
-			        android:layout_height="wrap_content"
-		            android:paddingLeft="20px"
-				/>
-				
-			    <Button android:id="@+id/colour_change_button"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_weight="2"
-		            android:text="@string/edit_button_title"
-		            />	
-		            
-			</LinearLayout>           
-	    </TableRow>
-	
-		<TableRow
-	        style="@style/centered_row"
-	        android:paddingTop="8px"
-	        >
+	            android:paddingLeft="20px"
+			/>
+			
+		    <Button android:id="@+id/colour_change_button"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="2"
+	            android:text="@string/edit_button_title"
+	            />	
+	            
+		</LinearLayout>           
+    </TableRow>
+
+	<TableRow
+        style="@style/centered_row"
+        android:paddingTop="8px"
+        >
+        
+        <TextView
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:text="@string/icon_title"
+            style="@style/label"
+	        />
 	        
-	        <TextView
-		        android:layout_width="wrap_content" 
-		        android:layout_height="wrap_content"
-		        android:text="@string/icon_title"
-	            style="@style/label"
-		        />
+		<LinearLayout 
+			android:orientation="horizontal" 
+	        style="@style/centered_row">
 		        
-			<LinearLayout 
-				android:orientation="horizontal" 
-		        style="@style/centered_row">
-			        
-		        <ImageView android:id="@+id/icon_display"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_weight="1"
-		            android:paddingLeft="5px"
-		            android:paddingRight="5px"
-		            />
-		
-		        <TextView android:id="@+id/icon_none"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_weight="1"
-		            android:paddingLeft="5px"
-		            android:paddingRight="5px"
-		            android:text="@string/undefined"
-		            />
-		
-			    <Button android:id="@+id/icon_set_button"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_weight="1"
-		            android:text="@string/set_button_title"
-			        android:nextFocusDown="@+id/save_button"
-		            />
-		
-			    <Button android:id="@+id/icon_clear_button"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_weight="1"
-		            android:text="@string/clear_button_title"
-			        android:nextFocusDown="@+id/save_button"
-		            />
-	    	</LinearLayout>
-				
-	    </TableRow>
-		
-	</TableLayout>
-
-	<LinearLayout 
-	  	android:orientation="horizontal"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    >
+	        <ImageView android:id="@+id/icon_display"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:paddingLeft="5px"
+	            android:paddingRight="5px"
+	            />
 	
-	    <Button android:id="@+id/cancel_button"
-	           android:layout_width="wrap_content"
-	           android:layout_height="wrap_content"
-	           android:layout_weight="1"
-	           android:text="@string/cancel_button_title"
-	           />
+	        <TextView android:id="@+id/icon_none"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:paddingLeft="5px"
+	            android:paddingRight="5px"
+	            android:text="@string/undefined"
+	            />
 	
-	    <Button android:id="@+id/save_button"
-	           android:layout_width="wrap_content"
-	           android:layout_height="wrap_content"
-	           android:layout_weight="1"
-	           android:text="@string/save_button_title"
-	           />
-	           
-  	</LinearLayout>			
-
-</RelativeLayout>
+		    <Button android:id="@+id/icon_set_button"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:text="@string/set_button_title"
+		        android:nextFocusDown="@+id/save_button"
+	            />
+	
+		    <Button android:id="@+id/icon_clear_button"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:text="@string/clear_button_title"
+		        android:nextFocusDown="@+id/save_button"
+	            />
+    	</LinearLayout>
+			
+    </TableRow>
+	
+</TableLayout>

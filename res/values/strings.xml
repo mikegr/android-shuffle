@@ -15,10 +15,9 @@
     <string name="title_new_context">New context</string>
     <string name="title_edit_context">Edit context</string>
     <string name="title_task_extras">Action extras</string>
-    <string name="title_preferences">Preferences</string>
-    <string name="title_preferences_appearance">Preferences > Action appearance</string>
-    <string name="title_preferences_layout">Preferences > List layout</string>
-    <string name="title_preferences_clean">Preferences > Clean up</string>
+    <string name="title_preferences">General Settings</string>
+    <string name="title_preferences_appearance">General Settings > Action appearance</string>
+    <string name="title_preferences_clean">General Settings > Clean up</string>
     <string name="title_help">Help</string>
     <string name="title_icon_picker">Choose icon</string>
     <string name="title_calendar">Actions due %s</string>
@@ -26,6 +25,7 @@
     <string name="title_context_tasks">Contexts > \'%s\' actions</string>
 
 	<!--  Option menu -->
+    <string name="menu_save">Save</string>
     <string name="menu_delete">Delete</string>
     <string name="menu_complete">Toggle complete</string>
     <string name="menu_move_up">Move up</string>
@@ -40,7 +40,6 @@
     <!--  general purpose -->
     <string name="project_title">Project</string>
     <string name="context_title">Context</string>
-    <string name="contact_title">Contact</string>
     <string name="details_title">Details</string>
     <string name="set_button_title">Set</string>
     <string name="clear_button_title">Clear</string>
@@ -86,13 +85,28 @@
     <string name="context_icon_title">Context Icon</string>
     <string name="context_name_title">Context Name</string>
 
-	<string name="project_view_title">Project View</string>
-	<string name="context_view_title">Context View</string>
+	<string name="layout_preferences">Layout</string>
+
+	<string name="title_project_view_preference">Project View</string>
+	<string name="summary_project_view_preference">Display project actions on separate screen</string>
+
+	<string name="title_context_view_preference">Context View</string>
+	<string name="summary_context_view_preference">Display context actions on separate screen</string>
+
+	<string name="title_action_appearance_preference">Action appearance</string>
+	<string name="summary_action_appearance_preference">Customize display of actions in lists</string>
+
+	<string name="cleanup_preferences">Clean up</string>
+
+	<string name="title_cleanup_preference">Delete completed actions</string>
+	<string name="summary_cleanup_preference">Schedule deletion of completed actions</string>
+	<string name="dialog_title_cleanup_preference">Delete completed actions</string>
 
     <string name="delete_completed_title">Delete completed\nactions...</string>
     <string name="delete_completed_button_title">Delete completed actions</string>
     <string name="clean_inbox_button_title">Clean up Inbox</string>
     <string name="clean_slate_button_title">Delete everything!</string>
+
 
 	<!--  messages -->
     <string name="no_tasks">There are no actions to display. Get started by selecting \"Add action\" from the menu.</string>

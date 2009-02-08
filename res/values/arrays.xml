@@ -6,6 +6,12 @@
         <item>Daily</item>
         <item>Weekly</item>
     </array>
+    <array name="clean_keys">
+        <item>never</item>
+        <item>hourly</item>
+        <item>daily</item>
+        <item>weekly</item>
+    </array>
     <array name="perspectives">
         <item>Inbox</item>
         <item>Due actions</item>

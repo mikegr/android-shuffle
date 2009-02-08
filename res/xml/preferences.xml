@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            android:title="@string/layout_preferences">
+            
+        <CheckBoxPreference
+                android:key="project_view"
+                android:title="@string/title_project_view_preference"
+                android:summary="@string/summary_project_view_preference" />
+
+        <CheckBoxPreference
+                android:key="context_view"
+                android:title="@string/title_context_view_preference"
+                android:summary="@string/summary_context_view_preference" />
+            
+        <PreferenceScreen
+                android:title="@string/title_action_appearance_preference"
+                android:summary="@string/summary_action_appearance_preference">
+
+            <intent android:action="android.intent.action.MAIN" 
+                android:targetPackage="org.dodgybits.android.shuffle" 
+            	android:targetClass="org.dodgybits.android.shuffle.activity.PreferencesAppearanceActivity" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/cleanup_preferences">
+
+        <ListPreference
+                android:key="delete_complete_period_str"
+                android:title="@string/title_cleanup_preference"
+                android:summary="@string/summary_cleanup_preference"
+                android:entries="@array/clean"
+                android:entryValues="@array/clean_keys"
+                android:dialogTitle="@string/dialog_title_cleanup_preference" />
+
+    </PreferenceCategory>
+    
+</PreferenceScreen>

@@ -1,12 +1,9 @@
 package org.dodgybits.android.shuffle.activity;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
@@ -23,20 +20,15 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Contacts.People;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.TabHost.TabSpec;
 
 /**
  * A generic activity for editing a task in the database.  This can be used
@@ -56,8 +48,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     	Shuffle.Projects._ID
     };
 
-	private TabHost mTabHost;
-
     private Cursor mProjectCursor;
     private Cursor mContextCursor;
     
@@ -70,10 +60,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     private CheckBox mCompletedCheckBox;
     private TextView mDueDateWidget;
     private EditText mDetailsWidget;
-    private Spinner mContactSpinner;    
-    
-    private String[] mContactNames;
-    private long[] mContactIds;
     
     @Override
     protected void onCreate(Bundle icicle) {
@@ -89,7 +75,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         mDueDateWidget = (TextView) findViewById(R.id.due_date_display);
         mCompletedCheckBox = (CheckBox) findViewById(R.id.completed_checkbox);
         mDetailsWidget = (EditText) findViewById(R.id.details);
-        mContactSpinner = (Spinner) findViewById(R.id.contact);
         
         // Get the task!
         mCursor = managedQuery(mUri, Shuffle.Tasks.cExpandedProjection, null, null, null);
@@ -101,23 +86,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         mContextView.setAdapter(new AutoCompleteCursorAdapter(this, mContextCursor, cContextProjection, Shuffle.Contexts.CONTENT_URI));
         //mContextView.setAdapter(Test.createContextAdapter(this));
         mProjectView.setAdapter(new AutoCompleteCursorAdapter(this, mProjectCursor, cProjectProjection, Shuffle.Projects.CONTENT_URI));
-        
-        Cursor peopleCursor = getContentResolver().query(People.CONTENT_URI, new String[] {People._ID, People.NAME}, null, null, null);
-        int size = peopleCursor.getCount() + 1;
-        mContactIds = new long[size];
-        mContactIds[0] = 0L;
-        mContactNames = new String[size];
-        mContactNames[0] = "None";
-        for (int i = 1; i < size; i++) {
-        	peopleCursor.moveToNext();
-        	mContactIds[i] = peopleCursor.getLong(0);
-        	mContactNames[i] = peopleCursor.getString(1);
-        }
-        peopleCursor.close();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mContactNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mContactSpinner.setAdapter(adapter);
-        
+                
         mSetDueDateButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -138,18 +107,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             	drawDateWidget();
             }
         });
-        
-        mTabHost = (TabHost) findViewById(android.R.id.tabhost);
-        mTabHost.setup();
-        TabSpec tabSpec = mTabHost.newTabSpec("Main");
-        tabSpec.setContent(R.id.main);
-        tabSpec.setIndicator("Main");
-        mTabHost.addTab(tabSpec);
-        tabSpec = mTabHost.newTabSpec("Extras");
-        tabSpec.setContent(R.id.extras);
-        tabSpec.setIndicator("Extras");
-        mTabHost.addTab(tabSpec);
-        mTabHost.setCurrentTab(0); 
     }
     
     /**
@@ -195,21 +152,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             // should have a better API for doing this...
             Task task = BindingUtils.readTask(mCursor);
             mDetailsWidget.setTextKeepState(task.details == null ? "" : task.details);
-            
-            Collection<Long> contactIds = BindingUtils.fetchContactIds(this, task.id);
-            List<String> names = BindingUtils.fetchContactNames(this, contactIds);
-            Log.d(cTag, "For contact ids " + contactIds + " got names " + names);
-            if (names.isEmpty()) {
-            	mContactSpinner.setSelection(0);
-            } else {
-            	Long contactId = contactIds.iterator().next();
-            	for (int i = 1; i < mContactIds.length; i++) {
-            		if (mContactIds[i] == contactId) {
-            			mContactSpinner.setSelection(i);
-            			break;
-            		}
-            	}
-            }
             
             mDescriptionWidget.setTextKeepState(task.description);
             if (task.context != null) {
@@ -306,12 +248,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             	Task task  = new Task(description, details, context, project, created, modified, dueDate, order, complete);
                 ContentValues values = new ContentValues();
             	writeItem(values, task);
-            	Collection<Long> contactIds = new ArrayList<Long>();
-            	int selectionPos = mContactSpinner.getSelectedItemPosition();
-            	if (selectionPos > 0) {
-            		contactIds.add(mContactIds[selectionPos]);
-            	}
-            	BindingUtils.updateContactIds(this, mOriginalItem.id, contactIds);
             	
                 // Commit all of our changes to persistent storage. When the update completes
                 // the content provider will notify the cursor of the change, which will

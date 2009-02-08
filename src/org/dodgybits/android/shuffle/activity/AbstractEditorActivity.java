@@ -1,6 +1,5 @@
 package org.dodgybits.android.shuffle.activity;
 
-import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.State;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
@@ -13,8 +12,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 /**
  * A generic activity for editing an item in a database.  This can be used
@@ -28,9 +25,6 @@ public abstract class AbstractEditorActivity<T> extends Activity {
     protected int mState;
     protected Uri mUri;
     protected Cursor mCursor;
-    protected Button mSaveButton;
-    protected Button mCancelButton;
-        
     protected T mOriginalItem;
 
     @Override
@@ -83,18 +77,6 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         }
 
         setContentView(getContentViewResId());
-        mSaveButton = (Button) findViewById(R.id.save_button);
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	finish();
-        	}
-        });        
-        mCancelButton = (Button) findViewById(R.id.cancel_button);
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	cancelItem();
-        	}
-        });
     }
     
     /**
@@ -130,6 +112,9 @@ public abstract class AbstractEditorActivity<T> extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle all of the possible menu actions.
         switch (item.getItemId()) {
+        case MenuUtils.SAVE_ID:
+            finish();
+            break;
         case MenuUtils.DELETE_ID:
             deleteItem();
             finish();

@@ -240,7 +240,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 	        case MenuUtils.INSERT_CHILD_ID:
 	            insertItem(getChildContentUri());
 	            return true;
-	        case MenuUtils.INSIDE_GROUP_ID:
+	        case MenuUtils.INSERT_GROUP_ID:
 	            insertItem(getGroupContentUri());
 	            return true;
         }
@@ -314,8 +314,25 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 	            }
         }
         return false;
-    }	    
+    }	 
+    
+    @Override
+    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+   		Uri url = ContentUris.withAppendedId(getChildContentUri(), id);
+		// Launch activity to view/edit the currently selected item
+		startActivity(getClickIntent(url));
+		return true;
+	}
 
+	/**
+	 * Return the intent generated when a list item is clicked.
+	 * 
+	 * @param url type of data selected
+	 */
+	protected Intent getClickIntent(Uri uri) {
+		return new Intent(Intent.ACTION_VIEW, uri);
+	}
+	
     /**
      * Permanently delete the selected item.
      */

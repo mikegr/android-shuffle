@@ -2,11 +2,12 @@ package org.dodgybits.android.shuffle.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class Preferences {
 	public static final String FIRST_TIME = "first_time";
 	public static final String SCREEN_KEY = "screen";
-	public static final String DELETE_COMPLETED_PERIOD_KEY = "delete_complete_period";
+	public static final String DELETE_COMPLETED_PERIOD_KEY = "delete_complete_period_str";
 	public static final String LAST_DELETE_COMPLETED_KEY = "last_delete_completed";
 	public static final String LAST_INBOX_CLEAN_KEY = "last_inbox_clean";
 	
@@ -19,25 +20,15 @@ public class Preferences {
 	public static final String PROJECT_VIEW_KEY = "project_view";
 	public static final String CONTEXT_VIEW_KEY = "context_view";
 	
-	public static final int SCREEN_INBOX = 0;
-	public static final int SCREEN_TOP_TASKS = 1;
-	public static final int SCREEN_CALENDAR = 2;
-	public static final int SCREEN_PROJECTS = 3;
-	public static final int SCREEN_CONTEXTS = 4;
-
-	public static final int HOURLY = 0;
-	public static final int DAILY = 1;
-	public static final int WEEKLY = 2;
-	public static final int NEVER = 3;
-	
-	public static final int EXPANDABLE_VIEW = 0;
-	public static final int DRILLDOWN_VIEW = 1;
+	public enum DeleteCompletedPeriod {
+		hourly, daily, weekly, never
+	}
 	
 	private static SharedPreferences sPrefs = null;
 	
 	private static SharedPreferences getSharedPreferences(Context context) {
 		if (sPrefs == null) {
-			sPrefs = context.getSharedPreferences("Shuffle", Context.MODE_PRIVATE);
+			sPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		}
 		return sPrefs;
 	}
@@ -47,14 +38,9 @@ public class Preferences {
 		return sPrefs.getBoolean(FIRST_TIME, true);
 	}
 	
-	public static int getSavedScreen(Context context) {
+	public static String getDeleteCompletedPeriod(Context context) {
 		getSharedPreferences(context);
-		return sPrefs.getInt(SCREEN_KEY, SCREEN_PROJECTS);
-	}
-	
-	public static int getDeleteCompletedPeriod(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getInt(DELETE_COMPLETED_PERIOD_KEY, NEVER);
+		return sPrefs.getString(DELETE_COMPLETED_PERIOD_KEY, DeleteCompletedPeriod.never.name());
 	}
 
 	public static long getLastDeleteCompleted(Context context) {
@@ -67,14 +53,14 @@ public class Preferences {
 		return sPrefs.getLong(LAST_INBOX_CLEAN_KEY, 0L);
 	}
 
-	public static int getProjectView(Context context) {
+	public static Boolean isProjectViewExpandable(Context context) {
 		getSharedPreferences(context);
-		return sPrefs.getInt(PROJECT_VIEW_KEY, DRILLDOWN_VIEW);
+		return sPrefs.getBoolean(PROJECT_VIEW_KEY, false);
 	}
 
-	public static int getContextView(Context context) {
+	public static Boolean isContextViewExpandable(Context context) {
 		getSharedPreferences(context);
-		return sPrefs.getInt(CONTEXT_VIEW_KEY, EXPANDABLE_VIEW);
+		return sPrefs.getBoolean(CONTEXT_VIEW_KEY, true);
 	}
 
 	public static boolean displayContextIcon(Context context) {

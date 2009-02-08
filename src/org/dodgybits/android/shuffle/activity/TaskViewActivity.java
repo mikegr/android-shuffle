@@ -1,10 +1,7 @@
 package org.dodgybits.android.shuffle.activity;
 
 import java.text.DateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.regex.Pattern;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Task;
@@ -26,14 +23,11 @@ import android.widget.TextView;
 public class TaskViewActivity extends Activity {
     private static final String cTag = "TaskViewActivity";
 	
-    private static final Pattern CONTACT_MATCHER = Pattern.compile(".*");
-    
     private TextView mDescriptionWidget;
     private TextView mDetailsWidget;
     private LabelView mContextView;
     private ImageView mContextIcon;
     private TextView mProjectView;
-    private TextView mContactView;
     private TextView mDueDateView;
     private TextView mCompletedView;
     private Button mEditButton;
@@ -50,7 +44,6 @@ public class TaskViewActivity extends Activity {
         mContextView = (LabelView) findViewById(R.id.context);
         mContextIcon = (ImageView) findViewById(R.id.context_icon);
         mProjectView = (TextView) findViewById(R.id.project);
-        mContactView = (TextView) findViewById(R.id.contact);
         mDueDateView = (TextView) findViewById(R.id.due_date_display);
         mCompletedView = (TextView) findViewById(R.id.completed);
         mEditButton = (Button) findViewById(R.id.edit_button);
@@ -89,30 +82,6 @@ public class TaskViewActivity extends Activity {
             }
             if (task.project != null) {
                 mProjectView.setText(task.project.name);
-            }
-            Collection<Long> contactIds = BindingUtils.fetchContactIds(this, task.id);
-            if (contactIds.isEmpty()) {
-            	mContactView.setText(R.string.undefined);
-            } else {
-            	final long contactId = contactIds.iterator().next();
-            	List<String> names = BindingUtils.fetchContactNames(this, contactIds);
-            	final String contactName = names.get(0);
-            	mContactView.setText(contactName);
-            	
-//            	// TODO enable Linkify when can link to contact view
-//                Linkify.addLinks(mContactView, CONTACT_MATCHER, Contacts.People.CONTENT_URI.toString() + "/", 
-//            		new Linkify.MatchFilter() {
-//						public boolean acceptMatch(CharSequence arg0,
-//								int arg1, int arg2) {
-//							return true;
-//						}
-//	                },		
-//	                new Linkify.TransformFilter() {
-//						public String transformUrl(Matcher arg0, String arg1) {
-//							return String.valueOf(contactId);
-//						}
-//	                }
-//                );
             }
             
     		DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM);

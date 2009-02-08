@@ -24,7 +24,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.provider.Contacts;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -35,10 +34,9 @@ public class ShuffleProvider extends ContentProvider {
     private static final String cTag = "ShuffleProvider";
 
     public static final String cDatabaseName = "shuffle.db";
-    private static final int cDatabaseVersion = 8;
+    private static final int cDatabaseVersion = 9;
     
     static final String cTaskTableName = "task";
-    static final String cTaskContactTableName = "task_contact";
     static final String cProjectTableName = "project";
     static final String cContextTableName = "context";
     /* load task along with its optional project and context all in one query */
@@ -46,7 +44,6 @@ public class ShuffleProvider extends ContentProvider {
     		                                       "left outer join context on task.contextId = context._id";
     
     private static Map<String, String> sTaskListProjectMap;
-    private static Map<String, String> sTaskContactListProjectMap;
     private static Map<String, String> sContextListProjectMap;
     private static Map<String, String> sProjectListProjectMap;
 	
@@ -55,7 +52,6 @@ public class ShuffleProvider extends ContentProvider {
     private static final int TOP_TASKS = 3;
     private static final int INBOX_TASKS = 4;
     private static final int DUE_TASKS = 5;
-    private static final int TASK_CONTACTS = 10;
     
     private static final int CONTEXTS = 101;
     private static final int CONTEXT_ID = 102;
@@ -102,12 +98,6 @@ public class ShuffleProvider extends ContentProvider {
                     + "complete INTEGER"
                     + ");");
             
-            db.execSQL("CREATE TABLE " + cTaskContactTableName + " (" 
-            		+ "_id INTEGER PRIMARY KEY,"
-            		+ "taskId INTEGER,"
-                    + "contactId INTEGER" 
-                    + ");");
-
         }
 
         @Override
@@ -117,7 +107,6 @@ public class ShuffleProvider extends ContentProvider {
             db.execSQL("DROP TABLE IF EXISTS " + cContextTableName);
             db.execSQL("DROP TABLE IF EXISTS " + cProjectTableName);
             db.execSQL("DROP TABLE IF EXISTS " + cTaskTableName);
-            db.execSQL("DROP TABLE IF EXISTS " + cTaskContactTableName);
             onCreate(db);
         }
     }
@@ -173,11 +162,6 @@ public class ShuffleProvider extends ContentProvider {
             qb.appendWhere("  projectId not null and");
             qb.appendWhere("  displayOrder = (select min(t2.displayOrder) from task t2 where task.projectId = t2.projectId and t2.complete = 0))");
             break;
-        case TASK_CONTACTS:
-            qb.setTables(cTaskContactTableName);
-            qb.setProjectionMap(sTaskContactListProjectMap);
-            qb.appendWhere(cTaskContactTableName + ".taskId=" + uri.getPathSegments().get(1));
-            break;
         case CONTEXTS:
             qb.setTables(cContextTableName);
             qb.setProjectionMap(sContextListProjectMap);
@@ -216,9 +200,6 @@ public class ShuffleProvider extends ContentProvider {
             	break;
             case DUE_TASKS:
             	orderBy = Shuffle.Tasks.DUE_DATE + " ASC";
-            	break;
-            case TASK_CONTACTS:
-            	orderBy = Shuffle.TaskContacts.DEFAULT_SORT_ORDER;
             	break;
             case CONTEXTS:
             case CONTEXT_ID:
@@ -284,8 +265,6 @@ public class ShuffleProvider extends ContentProvider {
             return Shuffle.Tasks.CONTENT_TYPE;
         case TASK_ID:
             return Shuffle.Tasks.CONTENT_ITEM_TYPE;
-        case TASK_CONTACTS:
-            return Contacts.People.CONTENT_TYPE;
         case CONTEXTS:
             return Shuffle.Contexts.CONTENT_TYPE;
         case CONTEXT_ID:
@@ -348,19 +327,7 @@ public class ShuffleProvider extends ContentProvider {
                 return uri;
             }
         	break;
-        	
-        case TASK_CONTACTS:
-        	String taskId = url.getPathSegments().get(1);
-            values.put(Shuffle.TaskContacts.TASK_ID, taskId);
-            rowID = db.insert(cTaskContactTableName, sTaskContactListProjectMap.get(Shuffle.TaskContacts.TASK_ID), values);
-            if (rowID > 0) {
-                Uri uri = ContentUris.withAppendedId(Shuffle.TaskContacts.CONTENT_URI, rowID);
-                getContext().getContentResolver().notifyChange(uri, null);
-                return uri;
-            }
-    		break;
-        	
-        	
+        	        	
         case PROJECTS:
             r = android.content.res.Resources.getSystem();
             if (values.containsKey(Shuffle.Projects.NAME) == false) {
@@ -417,16 +384,6 @@ public class ShuffleProvider extends ContentProvider {
                             + (!TextUtils.isEmpty(where) ? " AND (" + where
                                     + ')' : ""), whereArgs);
             break;
-        case TASK_CONTACTS:
-        	long id = ContentUris.parseId(uri);
-            Log.d(cTag, "Deleting task contacts for task " + id);
-            count = db
-                    .delete(cTaskContactTableName,
-                    		(id > 0 ? "taskId = " + id : "")
-                            + (!TextUtils.isEmpty(where) ? " AND (" + where
-                                    + ')' : ""), whereArgs);
-            Log.d(cTag, "Deleted " + count + " task contacts");
-    		break;
         case CONTEXTS:
             count = db.delete(cContextTableName, where, whereArgs);
             break;
@@ -516,7 +473,6 @@ public class ShuffleProvider extends ContentProvider {
         cUriMatcher.addURI(Shuffle.PACKAGE, "inboxTasks", INBOX_TASKS);
         cUriMatcher.addURI(Shuffle.PACKAGE, "dueTasks/#", DUE_TASKS);
         cUriMatcher.addURI(Shuffle.PACKAGE, "topTasks", TOP_TASKS);
-        cUriMatcher.addURI(Shuffle.PACKAGE, "taskContacts/#", TASK_CONTACTS);
         cUriMatcher.addURI(Shuffle.PACKAGE, "contexts", CONTEXTS);
         cUriMatcher.addURI(Shuffle.PACKAGE, "contexts/#", CONTEXT_ID);
         cUriMatcher.addURI(Shuffle.PACKAGE, "contextTasks", CONTEXT_TASKS);
@@ -543,11 +499,6 @@ public class ShuffleProvider extends ContentProvider {
         sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_COLOUR, cContextTableName + ".colour");
         sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_ICON, cContextTableName + ".iconId");
 
-        sTaskContactListProjectMap = new HashMap<String, String>();
-        sTaskContactListProjectMap.put(Shuffle.TaskContacts._ID, cTaskContactTableName + "._id");
-        sTaskContactListProjectMap.put(Shuffle.TaskContacts.TASK_ID, cTaskContactTableName + ".taskId");
-        sTaskContactListProjectMap.put(Shuffle.TaskContacts.CONTACT_ID, cTaskContactTableName + ".contactId");
-        
         sContextListProjectMap = new HashMap<String, String>();
         sContextListProjectMap.put(Shuffle.Contexts._ID, cContextTableName + "._id");
         sContextListProjectMap.put(Shuffle.Contexts.NAME, cContextTableName + ".name");

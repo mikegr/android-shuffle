@@ -8,11 +8,8 @@ import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.util.ModelUtils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.IBinder;
 import android.util.Log;
-
 
 /**
  * Periodically delete completed tasks and remove tasks with projects from Inbox. 
@@ -36,21 +33,22 @@ public class TaskCleaner
     }
     
     public void schedule() {
-    	int deletePeriod = Preferences.getDeleteCompletedPeriod(mContext);
+    	String deletePeriodStr = Preferences.getDeleteCompletedPeriod(mContext);
+    	Preferences.DeleteCompletedPeriod deletePeriod = Preferences.DeleteCompletedPeriod.valueOf(deletePeriodStr);
     	long lastClean = Preferences.getLastDeleteCompleted(mContext);
     	long timeSinceLastClean = System.currentTimeMillis() - lastClean;
     	long period;
     	switch (deletePeriod) {
-    	case Preferences.HOURLY:
+    	case hourly:
     		period = 1000L * 60L * 60L;
     		break;
-    	case Preferences.DAILY:
+    	case daily:
     		period = 1000L * 60L * 60L * 24L;
     		break;
-    	case Preferences.WEEKLY:
+    	case weekly:
     		period = 1000L * 60L * 60L * 24L * 7L;
     		break;
-    	case Preferences.NEVER:
+    	case never:
     		// nothing to do
     		return;
     	default:

@@ -90,34 +90,6 @@ public class Shuffle {
         };
         
     }
-
-	/**
-     * Projects table
-     */
-    public static final class TaskContacts implements BaseColumns {
-        /**
-         * The content:// style URL for this table
-         */
-        public static final Uri CONTENT_URI = Uri.parse("content://" + PACKAGE + "/taskContacts");
-        
-        /**
-         * The default sort order for this table
-         */
-        public static final String DEFAULT_SORT_ORDER = "contactId DESC";
-        
-        public static final String TASK_ID = "taskId";
-        public static final String CONTACT_ID = "contactId";
-
-        /**
-         * Projection for all the columns of a project.
-         */
-        public static final String[] cFullProjection = new String[] {
-                _ID,
-                TASK_ID,
-                CONTACT_ID,
-        };
-
-    }    
     
 	/**
      * Projects table

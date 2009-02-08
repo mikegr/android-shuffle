@@ -107,7 +107,7 @@ public class PreferencesCleanActivity extends Activity {
     
 	private void readPrefs() {
 		Log.d(cTag, "Settings prefs controls");
-		mDeleteCompletedSpinner.setSelection(Preferences.getDeleteCompletedPeriod(this));
+//		mDeleteCompletedSpinner.setSelection(Preferences.getDeleteCompletedPeriod(this));
 	}
 	
 	private void savePrefs() {
