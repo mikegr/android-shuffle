@@ -30,6 +30,7 @@ public class TopLevelActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        setContentView(R.layout.top_level);
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
     }
 	

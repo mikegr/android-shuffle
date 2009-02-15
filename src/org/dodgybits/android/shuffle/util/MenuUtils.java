@@ -106,7 +106,7 @@ public class MenuUtils {
 	
 	public static void addPrefsHelpMenuItems(Menu menu) {
         menu.add(0, PREFERENCE_ID, 0, R.string.menu_preferences)
-        	.setIcon(R.drawable.preferences_desktop).setAlphabeticShortcut('p');
+        	.setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('p');
         menu.add(0, HELP_ID, 0, R.string.menu_help)
         	.setIcon(R.drawable.help_browser).setAlphabeticShortcut('h');
 	}

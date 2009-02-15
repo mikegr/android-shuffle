@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<style name="ShuffleTheme" parent="@android:Theme" >        
+    </style>
+
     <style name="label" parent="text">
         <item name="android:typeface">normal</item>
         <item name="android:textScaleX">0.8</item>
@@ -12,7 +15,7 @@
 
     <style name="list">
     <!-- 
-    	<item name="android:background">@drawable/light_yellow</item>
+    	<item name="android:background">@drawable/dark_brown</item> 
         <item name="android:textColor">@drawable/green</item>
          -->
 	</style>
@@ -22,11 +25,13 @@
 	</style>
 
     <style name="text">
+     	<item name="android:textColor">@drawable/light_brown</item>
         <item name="android:textScaleX">0.9</item>
     	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
 	</style>
 	    
     <style name="editable_text" parent="text">
+     	<item name="android:textColor">@drawable/black</item>
     	<item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
         <item name="android:typeface">sans</item>
     </style>

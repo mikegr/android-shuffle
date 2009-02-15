@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/relLayout"
+	android:orientation="horizontal" 
+	android:layout_width="fill_parent"
+	android:layout_height="?android:attr/listPreferredItemHeight"
+	android:paddingLeft="3px" 
+	android:gravity="center_vertical"
+	android:baselineAligned="false">
+
+	<LinearLayout android:id="@+id/contextDisplay" 
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+		android:gravity="center">
+
+		<ImageView android:id="@+id/icon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:scaleType="center" 
+			android:paddingLeft="4px"
+			android:paddingRight="10px" 
+			android:paddingBottom="2px"
+			style="@style/image" />
+
+		<org.dodgybits.android.shuffle.view.LabelView
+			android:id="@+id/context" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:paddingLeft="5px"
+			android:paddingRight="5px" style="@style/context" />
+
+	</LinearLayout>
+
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+        android:layout_toRightOf="@id/contextDisplay"
+		android:gravity="center_vertical"
+		>
+
+		<TextView android:id="@+id/description"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+			android:paddingLeft="5px" android:paddingRight="5px"
+			android:lines="1" android:maxLength="45" style="@style/text" />
+		
+		<TextView android:id="@+id/project"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="5px" 
+			android:lines="1" style="@style/sub_text_1" />
+
+		<TextView android:id="@+id/details"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:maxLength="45"
+			android:paddingLeft="5px" 
+			android:lines="1" style="@style/sub_text_2" />
+		
+	</LinearLayout>
+	
+	<TextView android:id="@+id/due_date"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent" 
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+		android:gravity="top"
+		android:paddingLeft="5px" 
+		android:paddingRight="10px"
+		style="@style/due_date" />
+	
+	
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+		android:scaleType="center" 
+		android:paddingLeft="5px"
+		android:paddingRight="5px" 
+		android:gravity="center_horizontal"
+		android:src="@drawable/arrow_right_float"
+		style="@style/image" 
+		/>
+	
+
+</RelativeLayout>

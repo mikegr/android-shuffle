@@ -34,7 +34,7 @@
     <string name="menu_revert">Revert</string>
     <string name="menu_discard">Discard</string>
     <string name="menu_view">Perspectives</string>
-    <string name="menu_preferences">Preferences</string>
+    <string name="menu_preferences">Settings</string>
     <string name="menu_help">Help</string>
 
     <!--  general purpose -->

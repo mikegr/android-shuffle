@@ -33,8 +33,10 @@ public final class R {
         public static final int applications_office=0x7f020005;
         public static final int appointment_new=0x7f020006;
         public static final int arrow_right_float=0x7f020007;
+        public static final int black=0x7f020034;
         public static final int box=0x7f020008;
         public static final int computer=0x7f020009;
+        public static final int dark_brown=0x7f020032;
         public static final int date_blue=0x7f02002c;
         public static final int dialog_error=0x7f02000a;
         public static final int dialog_information=0x7f02000b;
@@ -57,6 +59,7 @@ public final class R {
         public static final int help_browser=0x7f02001a;
         public static final int icon=0x7f02001b;
         public static final int light_blue=0x7f02002d;
+        public static final int light_brown=0x7f020033;
         public static final int light_yellow=0x7f02002e;
         public static final int list_add=0x7f02001c;
         public static final int list_remove=0x7f02001d;
@@ -73,6 +76,7 @@ public final class R {
         public static final int transparent_blue=0x7f020030;
         public static final int utilities_terminal=0x7f020027;
         public static final int video_x_generic=0x7f020028;
+        public static final int white=0x7f020031;
         public static final int x_office_address_book=0x7f020029;
     }
     public static final class id {
@@ -143,7 +147,8 @@ public final class R {
         public static final int task_editor=0x7f030012;
         public static final int task_list=0x7f030013;
         public static final int task_view=0x7f030014;
-        public static final int welcome=0x7f030015;
+        public static final int top_level=0x7f030015;
+        public static final int welcome=0x7f030016;
     }
     public static final class string {
         /**   Activity titles 
@@ -272,26 +277,27 @@ public final class R {
         public static final int yesterday=0x7f070033;
     }
     public static final class style {
-        public static final int autocomplete_text=0x7f080006;
-        public static final int centered_row=0x7f08000d;
-        public static final int context=0x7f080005;
-        public static final int detail_label=0x7f080007;
-        public static final int due_date=0x7f08000c;
-        public static final int editable_text=0x7f080004;
-        public static final int image=0x7f080002;
-        public static final int label=0x7f080000;
+        public static final int ShuffleTheme=0x7f080000;
+        public static final int autocomplete_text=0x7f080007;
+        public static final int centered_row=0x7f08000e;
+        public static final int context=0x7f080006;
+        public static final int detail_label=0x7f080008;
+        public static final int due_date=0x7f08000d;
+        public static final int editable_text=0x7f080005;
+        public static final int image=0x7f080003;
+        public static final int label=0x7f080001;
         /**  
-    	<item name="android:background">@drawable/light_yellow</item>
+    	<item name="android:background">@drawable/dark_brown</item> 
         <item name="android:textColor">@drawable/green</item>
          
          */
-        public static final int list=0x7f080001;
-        public static final int sub_text_1=0x7f080008;
-        public static final int sub_text_2=0x7f080009;
-        public static final int text=0x7f080003;
-        public static final int top_row=0x7f08000e;
-        public static final int view_label=0x7f08000b;
-        public static final int view_text=0x7f08000a;
+        public static final int list=0x7f080002;
+        public static final int sub_text_1=0x7f080009;
+        public static final int sub_text_2=0x7f08000a;
+        public static final int text=0x7f080004;
+        public static final int top_row=0x7f08000f;
+        public static final int view_label=0x7f08000c;
+        public static final int view_text=0x7f08000b;
     }
     public static final class xml {
         public static final int preferences=0x7f050000;

@@ -8,4 +8,10 @@
 	<drawable name="light_yellow">#ffffe0</drawable>
 	<drawable name="green">#39939b</drawable>
 	<drawable name="transparent_blue">#8080d0ff</drawable>
+
+	<drawable name="white">#ffffff</drawable>
+	<drawable name="dark_brown">#312f28</drawable>
+	<drawable name="light_brown">#dadabe</drawable>
+	<drawable name="black">#000000</drawable>
+
 </resources>
