@@ -1,50 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" 
     android:padding="4dip"
     android:layout_width="fill_parent" 
-    android:layout_height="fill_parent"
-    android:stretchColumns="1"
+    android:layout_height="wrap_content"
+    style="@style/dialog_editor"  
     >
 
-    <TableRow
-        style="@style/centered_row"
-        android:paddingTop="5px"
-        >
-	    <TextView
-	        android:layout_width="wrap_content" android:layout_height="wrap_content"
-	        android:layout_weight="0"
-            style="@style/label"
-	        android:text="@string/name_title"
-	        />
-	    <EditText android:id="@+id/name"
-	        android:layout_width="fill_parent" android:layout_height="wrap_content"	        
-	        android:layout_weight="1"
-	        android:hint="@string/initial_text"
-            style="@style/editable_text"
-            android:maxLength="20"
-            >
-	        <requestFocus />
-	    </EditText>
-	</TableRow>
+   <EditText android:id="@+id/name"
+       android:layout_width="fill_parent" android:layout_height="wrap_content"	        
+       android:layout_weight="1"
+       android:hint="@string/name_title"
+          style="@style/editable_text"
+          android:maxLength="20"
+          >
+       <requestFocus />
+   </EditText>
 
-	<TableRow
-        style="@style/centered_row"
-        android:paddingTop="12px"
-        >
-        
-	    <TextView
-	        android:layout_width="wrap_content" 
-	        android:layout_height="wrap_content"
-            style="@style/label"
-	        android:text="@string/default_context_title"/>
+   <TextView
+       android:layout_width="wrap_content" 
+       android:layout_height="wrap_content"
+          style="@style/label"
+       android:text="@string/default_context_title"/>
 
-	    <Spinner android:id="@+id/default_context"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:drawSelectorOnTop="true"
-	        android:nextFocusDown="@+id/save_button"
-	    />
-    </TableRow>
+   <Spinner android:id="@+id/default_context"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:drawSelectorOnTop="true"
+   />
 			
-</TableLayout>
+</LinearLayout>

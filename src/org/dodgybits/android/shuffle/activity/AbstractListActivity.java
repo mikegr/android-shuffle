@@ -1,5 +1,6 @@
 package org.dodgybits.android.shuffle.activity;
 
+import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.Activity;
@@ -30,40 +31,50 @@ import android.widget.ListView;
 public abstract class AbstractListActivity<T> extends ListActivity {
 
 	public static final String cSelectedItem = "SELECTED_ITEM";
-	
+
+	private static final String cTag = "AbstractListActivity";
+
 	protected final int NEW_ITEM = 1;
 	// after a new item is added, select it
 	private Long mItemIdToSelect = null;
 
-	@SuppressWarnings("unused")
-	private static final String cTag = "AbstractListActivity";
+	private ListConfig<T> mConfig;
 
+	public AbstractListActivity()
+	{
+		mConfig = createListConfig();
+	}
+	
 	/** Called when the activity is first created. */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		setContentView(getContentViewResId());
+		
+		setContentView(getListConfig().getContentViewResId());
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 		// If no data was given in the intent (because we were started
 		// as a MAIN activity), then use our default content provider.
 		Intent intent = getIntent();
 		if (intent.getData() == null) {
-			intent.setData(getContentUri());
+			intent.setData(getListConfig().getContentUri());
 		}
 
-		// Inform the list we provide context menus for items
+		// Inform the view we provide context menus for items
         getListView().setOnCreateContextMenuListener(this);
 		
 		Cursor cursor = createItemQuery();
 		setListAdapter(createListAdapter(cursor));
 
-		animateList();
+		//animateList();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+        setTitle(getListConfig().createTitle(this));
+		
+		// attempt to select newly created item (if any)
 		if (mItemIdToSelect != null) {
 			Log.d(cTag, "New item id = " + mItemIdToSelect);
 			// see if list contains the new item
@@ -80,84 +91,6 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 			}
 			mItemIdToSelect = null;
 		}
-	}
-
-	protected void animateList() {
-		AnimationSet set = new AnimationSet(true);
-
-		Animation animation = new AlphaAnimation(0.0f, 1.0f);
-		animation.setDuration(50);
-		set.addAnimation(animation);
-
-		animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				-1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-		animation.setDuration(100);
-		set.addAnimation(animation);
-
-		LayoutAnimationController controller = new LayoutAnimationController(
-				set, 0.5f);
-		ListView listView = getListView();
-		listView.setLayoutAnimation(controller);
-	}
-
-	/**
-	 * @return id of layout for this view
-	 */
-	abstract int getContentViewResId();
-
-	/**
-	 * Content type of list items.
-	 */
-	abstract Uri getContentUri();
-
-	/**
-	 * Content type of list.
-	 */
-	abstract Uri getListContentUri();
-	
-	/**
-	 * @return a cursor selecting the items to display in the list.
-	 */
-	abstract Cursor createItemQuery();
-
-	abstract ListAdapter createListAdapter(Cursor cursor);
-
-	/**
-	 * Generate a model object for the item at the current cursor position.
-	 */
-	abstract T readItem(Cursor cursor);
-
-	abstract int getCurrentViewMenuId();
-
-	abstract String getItemName();
-
-	/**
-	 * Permanently delete the selected item.
-	 */
-	protected void deleteItem(long id) {
-        getContentResolver().delete(getListContentUri(), 
-        		BaseColumns._ID + "=?", new String[] { String.valueOf(id) });
-	}
-
-	/**
-	 * @return Number of items in the list.
-	 */
-	protected final int getItemCount() {
-		return getListAdapter().getCount();
-	}
-
-	/**
-	 * The intent to insert a new item in this list. Default to an insert action
-	 * on the list type which is all you need most of the time.
-	 */
-	protected Intent getInsertIntent() {
-		return new Intent(Intent.ACTION_INSERT, getContentUri());
-	}
-
-	private final void insertItem() {
-		// Launch activity to insert a new item
-		startActivityForResult(getInsertIntent(), NEW_ITEM);
 	}
 
 	@Override
@@ -186,41 +119,39 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		switch (event.getKeyCode()) {
 		case KeyEvent.KEYCODE_N:
 			// go to previous view
-			int prevView = getCurrentViewMenuId() - 1;
+			int prevView = getListConfig().getCurrentViewMenuId() - 1;
 			if (prevView < MenuUtils.INBOX_ID) {
 				prevView = MenuUtils.CONTEXT_ID;
 			}
 			MenuUtils.checkCommonItemsSelected(prevView, this,
-					getCurrentViewMenuId());
+					getListConfig().getCurrentViewMenuId());
 			return true;
 		case KeyEvent.KEYCODE_M:
 			// go to previous view
-			int nextView = getCurrentViewMenuId() + 1;
+			int nextView = getListConfig().getCurrentViewMenuId() + 1;
 			if (nextView > MenuUtils.CONTEXT_ID) {
 				nextView = MenuUtils.INBOX_ID;
 			}
 			MenuUtils.checkCommonItemsSelected(nextView, this,
-					getCurrentViewMenuId());
+					getListConfig().getCurrentViewMenuId());
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
-	protected abstract boolean isTaskList();
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
-		MenuUtils.addInsertMenuItems(menu, getItemName(), isTaskList(), this);
-		MenuUtils.addAlternativeMenuItems(menu, getContentUri(), this);
-		MenuUtils.addViewMenuItems(menu, getCurrentViewMenuId());
+		MenuUtils.addInsertMenuItems(menu, getListConfig().getItemName(this), getListConfig().isTaskList(), this);
+		MenuUtils.addAlternativeMenuItems(menu, getListConfig().getContentUri(), this);
+		MenuUtils.addViewMenuItems(menu, getListConfig().getCurrentViewMenuId());
 		MenuUtils.addPrefsHelpMenuItems(menu);
 
 		return true;
 	}
 
-	abstract boolean supportsViewAction();
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
@@ -241,7 +172,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
         // Setup the menu header
         menu.setHeaderTitle(cursor.getString(1));
 
-    	Uri selectedUri = ContentUris.withAppendedId(getContentUri(), info.id);
+    	Uri selectedUri = ContentUris.withAppendedId(getListConfig().getContentUri(), info.id);
         MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, this, false);
         
 		// ... and ends with the delete command.
@@ -272,11 +203,12 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case MenuUtils.INSERT_ID:
-				insertItem();
+				// Launch activity to insert a new item
+				startActivityForResult(getInsertIntent(), NEW_ITEM);
 				return true;
 		}
 		if (MenuUtils.checkCommonItemsSelected(item, this,
-				getCurrentViewMenuId())) {
+				getListConfig().getCurrentViewMenuId())) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -284,7 +216,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Uri url = ContentUris.withAppendedId(getContentUri(), id);
+		Uri url = ContentUris.withAppendedId(getListConfig().getContentUri(), id);
 
 		String action = getIntent().getAction();
 		if (Intent.ACTION_PICK.equals(action)
@@ -302,6 +234,65 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		}
 	}
 
+	abstract protected ListConfig<T> createListConfig();
+	
+	/**
+	 * @return a cursor selecting the items to display in the list.
+	 */
+	abstract protected Cursor createItemQuery();
+
+	abstract protected ListAdapter createListAdapter(Cursor cursor);
+	
+	// custom helper methods
+	
+	protected final ListConfig<T> getListConfig()
+	{
+		return mConfig;
+	}
+		
+	protected void animateList() {
+		AnimationSet set = new AnimationSet(true);
+
+		Animation animation = new AlphaAnimation(0.0f, 1.0f);
+		animation.setDuration(50);
+		set.addAnimation(animation);
+
+		animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+				-1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+		animation.setDuration(100);
+		set.addAnimation(animation);
+
+		LayoutAnimationController controller = new LayoutAnimationController(
+				set, 0.5f);
+		ListView listView = getListView();
+		listView.setLayoutAnimation(controller);
+	}
+
+
+	/**
+	 * Permanently delete the given list item.
+	 */
+	protected void deleteItem(long id) {
+        getContentResolver().delete(getListConfig().getListContentUri(), 
+        		BaseColumns._ID + "=?", new String[] { String.valueOf(id) });
+	}
+
+	/**
+	 * @return Number of items in the list.
+	 */
+	protected final int getItemCount() {
+		return getListAdapter().getCount();
+	}
+	
+	/**
+	 * The intent to insert a new item in this list. Default to an insert action
+	 * on the list type which is all you need most of the time.
+	 */
+	protected Intent getInsertIntent() {
+		return new Intent(Intent.ACTION_INSERT, getListConfig().getContentUri());
+	}
+	
 	/**
 	 * Return the intent generated when a list item is clicked.
 	 * 
@@ -312,4 +303,5 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		return new Intent(Intent.ACTION_EDIT, uri);
 	}
 
+	
 }

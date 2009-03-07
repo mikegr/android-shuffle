@@ -1,13 +1,17 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.config.AbstractTaskListConfig;
+import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
+import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 
 import android.content.ContentUris;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -32,16 +36,34 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected Cursor createItemQuery() {
 		Log.d(cTag, "Creating a cursor to find tasks for the given context");
-		return managedQuery(getListContentUri(), Shuffle.Tasks.cExpandedProjection,
-					Shuffle.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(mProjectId)}, 
-					Shuffle.Tasks.DISPLAY_ORDER + " ASC");
+		return managedQuery(getListConfig().getListContentUri(), 
+				Shuffle.Tasks.cExpandedProjection,
+				Shuffle.Tasks.PROJECT_ID + " = ?", 
+				new String[] {String.valueOf(mProjectId)}, 
+				Shuffle.Tasks.DISPLAY_ORDER + " ASC");
 	}
 
 	@Override
-	protected Uri getListContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
+	protected ListConfig<Task> createListConfig()
+	{
+		return new AbstractTaskListConfig() {
 
+			public Uri getListContentUri() {
+				return Shuffle.Tasks.CONTENT_URI;
+			}
+
+		    public int getCurrentViewMenuId() {
+		    	return 0;
+		    }
+		    
+		    public String createTitle(ContextWrapper context)
+		    {
+		    	return context.getString(R.string.title_project_tasks, mProject.name);
+		    }
+			
+		};
+	}
+	
 	@Override
 	protected void onResume() {
 		Log.d(cTag, "Fetching project " + mProjectId);
@@ -54,16 +76,6 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 		
 		super.onResume();
 	}
-
-	@Override
-	protected CharSequence createTitle() {
-		return getResources().getString(R.string.title_project_tasks, mProject.name);
-	}
-	
-	@Override
-    protected int getCurrentViewMenuId() {
-    	return 0;
-    }
 
     /**
      * Return the intent generated when a list item is clicked.

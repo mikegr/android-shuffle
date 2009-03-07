@@ -4,20 +4,24 @@
 	<style name="ShuffleTheme" parent="@android:Theme" >        
     </style>
 
-    <style name="label" parent="text">
-        <item name="android:typeface">normal</item>
-        <item name="android:textScaleX">0.8</item>
-        <item name="android:gravity">left</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@drawable/light_blue</item>
-        <item name="android:paddingRight">5px</item>
-    </style>
+    <style name="activity">
+    	<item name="android:background">@drawable/pale_weak_cyan</item> 
+    	<item name="android:cacheColorHint">@drawable/pale_weak_cyan</item>
+	</style>
 
-    <style name="list">
-    <!-- 
-    	<item name="android:background">@drawable/dark_brown</item> 
-        <item name="android:textColor">@drawable/green</item>
-         -->
+
+    <style name="dialog_editor" parent="activity">
+	</style>
+    
+
+    <style name="editor" parent="activity">
+	</style>
+
+    <style name="viewer" parent="activity">
+	</style>
+
+    <style name="list" parent="activity">
+    	<item name="android:divider">@android:drawable/divider_horizontal_bright</item> 
 	</style>
 
 	<style name="image">
@@ -25,7 +29,7 @@
 	</style>
 
     <style name="text">
-     	<item name="android:textColor">@drawable/light_brown</item>
+        <item name="android:textColor">@drawable/dark_gray</item>
         <item name="android:textScaleX">0.9</item>
     	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
 	</style>
@@ -42,6 +46,22 @@
         <item name="android:gravity">center</item>
 	</style>
 
+    <style name="label" parent="text">
+        <item name="android:typeface">normal</item>
+        <item name="android:textScaleX">0.8</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/dark_blue</item>
+        <item name="android:paddingRight">5px</item>
+    </style>
+
+    <style name="preference_label" parent="label">
+        <item name="android:textColor">@drawable/white</item>
+    </style>
+    
+    <style name="preference_checkbox">
+    </style>
+    
     <style name="autocomplete_text" parent="editable_text">
     </style>
 
@@ -63,16 +83,15 @@
 	</style>
 
 	<style name="view_label" parent="view_text">
-        <item name="android:textColor">@drawable/light_blue</item>
+        <item name="android:textColor">@drawable/dark_blue</item>
 	</style>
 
 	<style name="due_date" parent="text">
     	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:gravity">right</item>
-        <item name="android:textColor">@drawable/date_blue</item>
 	</style>
 
-    <style name="centered_row">
+    <style name="centered_row" parent="activity">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>

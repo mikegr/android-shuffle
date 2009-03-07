@@ -1,6 +1,7 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
@@ -24,90 +25,6 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 
 	private static final String cTag = "AbstractTaskListActivity";
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
-        setTitle(createTitle());
-	}
-
-	abstract CharSequence createTitle();
-	
-	@Override
-	protected int getContentViewResId() {
-		return R.layout.task_list;
-	}
-
-	@Override
-	protected Uri getContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
-	
-	protected boolean showTaskContext() {
-		return true;
-	}
-	
-	@Override
-	protected final String getItemName() {
-		return getString(R.string.task_name);
-	}
-	
-	@Override
-	protected Cursor createItemQuery() {
-		return managedQuery(getListContentUri(), Shuffle.Tasks.cExpandedProjection, null, null, null);
-	}
-	
-	@Override
-	protected ListAdapter createListAdapter(Cursor cursor) {
-		ListAdapter adapter = new SimpleCursorAdapter(this,
-						R.layout.task_view, cursor,
-						new String[] { Shuffle.Tasks.DESCRIPTION },
-						new int[] { R.id.description }) {
-
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				Log.d(cTag, "getView position=" + position + ". Old view=" + convertView);
-				Cursor cursor = (Cursor)getItem(position);
-				Task task = readItem(cursor);
-				TaskView taskView;
-				if (convertView instanceof TaskView) {
-					taskView = (TaskView) convertView;
-				} else {
-					taskView = new TaskView(parent.getContext(), showTaskContext());
-				}
-				boolean isSelected = false;
-				taskView.updateView(task, isSelected);
-				return taskView;
-			}
-
-		};
-//		ListAdapter adapter = Test.createTaskListAdapter(this);
-		return adapter;
-	}
-
-	@Override
-    protected Task readItem(Cursor c) {
-        return BindingUtils.readTask(c);
-    }
-    
-    protected final void toggleComplete() {
-    	toggleComplete(getSelectedItemPosition(), getSelectedItemId());
-    }
-
-    protected final void toggleComplete(int position, long id) {
-    	Cursor c = (Cursor) getListAdapter().getItem(position);
-        BindingUtils.toggleTaskComplete(this, c, getListContentUri(), id);
-    }
-    
-    @Override
-	protected boolean supportsViewAction() {
-		return true;
-	}
-    
-    @Override
-    protected boolean isTaskList() {
-    	return true;
-    }
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
     	super.onCreateContextMenu(menu, view, menuInfo);
@@ -134,10 +51,58 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
         return super.onContextItemSelected(item);
     }	
     
+	@Override
     protected Intent getClickIntent(Uri uri) {
     	return new Intent(Intent.ACTION_VIEW, uri);
     }
+    
+	@Override
+	protected Cursor createItemQuery() {
+		return managedQuery(getListConfig().getListContentUri(), 
+				Shuffle.Tasks.cExpandedProjection, null, null, null);
+	}
+	
+	@Override
+	protected ListAdapter createListAdapter(Cursor cursor) {
+		ListAdapter adapter = new SimpleCursorAdapter(this,
+						R.layout.task_view, cursor,
+						new String[] { Shuffle.Tasks.DESCRIPTION },
+						new int[] { R.id.description }) {
 
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				Log.d(cTag, "getView position=" + position + ". Old view=" + convertView);
+				Cursor cursor = (Cursor)getItem(position);
+				Task task = getListConfig().readItem(cursor);
+				TaskView taskView;
+				if (convertView instanceof TaskView) {
+					taskView = (TaskView) convertView;
+				} else {
+					taskView = new TaskView(parent.getContext(), showTaskContext());
+				}
+				taskView.updateView(task);
+				return taskView;
+			}
+
+		};
+//		ListAdapter adapter = Test.createTaskListAdapter(this);
+		return adapter;
+	}
+
+	
+	protected final void toggleComplete() {
+    	toggleComplete(getSelectedItemPosition(), getSelectedItemId());
+    }
+
+    protected final void toggleComplete(int position, long id) {
+    	Cursor c = (Cursor) getListAdapter().getItem(position);
+        BindingUtils.toggleTaskComplete(this, c, getListConfig().getListContentUri(), id);
+    }
+	
+	protected boolean showTaskContext() {
+		return true;
+	}
+	
 }
 
     

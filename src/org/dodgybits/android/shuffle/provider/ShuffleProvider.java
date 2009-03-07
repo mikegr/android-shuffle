@@ -308,7 +308,7 @@ public class ShuffleProvider extends ContentProvider {
                 values.put(Shuffle.Tasks.MODIFIED_DATE, now);
             }
             if (! values.containsKey(Shuffle.Tasks.DESCRIPTION)) {
-                values.put(Shuffle.Tasks.DESCRIPTION, r.getString(R.string.initial_text));
+                values.put(Shuffle.Tasks.DESCRIPTION, "");
             }
             if (! values.containsKey(Shuffle.Tasks.DETAILS)) {
                 values.put(Shuffle.Tasks.DETAILS, "");
@@ -331,7 +331,7 @@ public class ShuffleProvider extends ContentProvider {
         case PROJECTS:
             r = android.content.res.Resources.getSystem();
             if (values.containsKey(Shuffle.Projects.NAME) == false) {
-                values.put(Shuffle.Projects.NAME, r.getString(android.R.string.untitled));
+                values.put(Shuffle.Projects.NAME, "");
             }
             
             rowID = db.insert(cProjectTableName, sProjectListProjectMap.get(Shuffle.Projects.NAME), values);
@@ -345,7 +345,7 @@ public class ShuffleProvider extends ContentProvider {
         case CONTEXTS:
             r = Resources.getSystem();
             if (values.containsKey(Shuffle.Contexts.NAME) == false) {
-                values.put(Shuffle.Contexts.NAME, r.getString(android.R.string.untitled));
+                values.put(Shuffle.Contexts.NAME, "");
             }
             
             rowID = db.insert(cContextTableName, sContextListProjectMap.get(Shuffle.Contexts.NAME), values);
@@ -385,6 +385,7 @@ public class ShuffleProvider extends ContentProvider {
                                     + ')' : ""), whereArgs);
             break;
         case CONTEXTS:
+        case CONTEXT_TASKS:
             count = db.delete(cContextTableName, where, whereArgs);
             break;
         case CONTEXT_ID:
@@ -396,6 +397,7 @@ public class ShuffleProvider extends ContentProvider {
                                     + ')' : ""), whereArgs);
             break;
         case PROJECTS:
+        case PROJECT_TASKS:
             count = db.delete(cProjectTableName, where, whereArgs);
             break;
         case PROJECT_ID:

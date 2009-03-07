@@ -1,9 +1,13 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.config.AbstractTaskListConfig;
+import org.dodgybits.android.shuffle.activity.config.ListConfig;
+import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
+import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,9 +29,18 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
-        mTabHost.addTab(createTabSpec(R.string.day_button_title, String.valueOf(Shuffle.Tasks.DAY_MODE)));
-        mTabHost.addTab(createTabSpec(R.string.week_button_title, String.valueOf(Shuffle.Tasks.WEEK_MODE)));
-        mTabHost.addTab(createTabSpec(R.string.month_button_title, String.valueOf(Shuffle.Tasks.MONTH_MODE)));
+        mTabHost.addTab(createTabSpec(
+        			R.string.day_button_title, 
+        			String.valueOf(Shuffle.Tasks.DAY_MODE),
+        			android.R.drawable.ic_menu_day));
+        mTabHost.addTab(createTabSpec(
+        			R.string.week_button_title, 
+        			String.valueOf(Shuffle.Tasks.WEEK_MODE),
+        			android.R.drawable.ic_menu_week));
+        mTabHost.addTab(createTabSpec(
+        			R.string.month_button_title, 
+        			String.valueOf(Shuffle.Tasks.MONTH_MODE),
+        			android.R.drawable.ic_menu_month));
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 
 			public void onTabChanged(String tabId) {
@@ -42,11 +55,32 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         
     }
     
-    private TabSpec createTabSpec(int tabTitleRes, String tagId) {
+	@Override
+	protected ListConfig<Task> createListConfig()
+	{
+		return new AbstractTaskListConfig() {
+
+			public Uri getListContentUri() {
+				return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(mMode)).build();
+			}
+
+		    public int getCurrentViewMenuId() {
+				return MenuUtils.CALENDAR_ID;
+		    }
+		    
+		    public String createTitle(ContextWrapper context)
+		    {
+				return context.getString(R.string.title_calendar, getSelectedPeriod());
+		    }
+			
+		};
+	}
+    	
+    private TabSpec createTabSpec(int tabTitleRes, String tagId, int iconId) {
         TabSpec tabSpec = mTabHost.newTabSpec(tagId);
         tabSpec.setContent(R.id.task_list);
         String tabName = getString(tabTitleRes);
-        tabSpec.setIndicator(tabName);
+        tabSpec.setIndicator(tabName, this.getResources().getDrawable(iconId));
         return tabSpec;
     }
     
@@ -54,18 +88,8 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
     	Cursor cursor = createItemQuery();
     	SimpleCursorAdapter adapter = (SimpleCursorAdapter)getListAdapter();
     	adapter.changeCursor(cursor);
-    	setTitle(createTitle());
+    	setTitle(getListConfig().createTitle(this));
 	}    
-
-	@Override
-	protected Uri getListContentUri() {
-		return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(mMode)).build();
-	}
-	
-	@Override
-	protected CharSequence createTitle() {
-		return getString(R.string.title_calendar, getSelectedPeriod());
-	}
 	
 	private String getSelectedPeriod() {
 		String result = null;
@@ -83,9 +107,5 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 		return result;
 	}
 	
-	@Override
-	protected int getCurrentViewMenuId() {
-		return MenuUtils.CALENDAR_ID;
-	}
 
 }

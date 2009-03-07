@@ -116,8 +116,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 				} else {
 					taskView = new ExpandableTaskView(parent.getContext(), false);
 				}
-				boolean isSelected = false;
-				taskView.updateView(task, isSelected);
+				taskView.updateView(task);
 				return taskView;
 	        }
 
@@ -131,8 +130,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 					contextView = new ExpandableContextView(parent.getContext());
 				}
 				contextView.setTaskCountArray(mTaskCountArray);
-				boolean isSelected = false;
-				contextView.updateView(context, isSelected);
+				contextView.updateView(context);
 				return contextView;
 	        }
 			

@@ -116,8 +116,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 				} else {
 					taskView = new ExpandableTaskView(parent.getContext(), true);
 				}
-				boolean isSelected = false;
-				taskView.updateView(task, isSelected);
+				taskView.updateView(task);
 				return taskView;
 	        }
 
@@ -131,8 +130,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 					projectView = new ExpandableProjectView(parent.getContext());
 				}
 				projectView.setTaskCountArray(mTaskCountArray);
-				boolean isSelected = false;
-				projectView.updateView(project, isSelected);
+				projectView.updateView(project);
 				return projectView;
 	        }
 			

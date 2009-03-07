@@ -21,8 +21,8 @@
     <string name="title_help">Help</string>
     <string name="title_icon_picker">Choose icon</string>
     <string name="title_calendar">Actions due %s</string>
-    <string name="title_project_tasks">Projects > \'%s\' actions</string>
-    <string name="title_context_tasks">Contexts > \'%s\' actions</string>
+    <string name="title_project_tasks">Projects > %s</string>
+    <string name="title_context_tasks">Contexts > %s</string>
 
 	<!--  Option menu -->
     <string name="menu_save">Save</string>
@@ -63,7 +63,6 @@
     <string name="clean_slate_title">Clean slate</string>
 
 	<!--  task edit screen -->
-    <string name="initial_text">Untitled...</string>
     <string name="description_title">Description</string>
     <string name="due_date_title">Due date</string>
     <string name="completed_title">Completed</string>
@@ -73,7 +72,7 @@
     <string name="archived_title">Archived</string>
     <string name="icon_title">Icon</string>
     <string name="name_title">Name</string>
-    <string name="default_context_title">Default\ncontext</string>
+    <string name="default_context_title">Default context</string>
 
 	<!--  Calendar screen -->
     <string name="day_button_title">Today</string>
@@ -109,6 +108,8 @@
 
 
 	<!--  messages -->
+    <string name="no_due_date">No due date</string>
+    <string name="no_icon">No icon</string>
     <string name="no_tasks">There are no actions to display. Get started by selecting \"Add action\" from the menu.</string>
     <string name="no_due_tasks">There are no actions due.</string>
     <string name="no_projects">There are no projects to display. Get started by creating actions in the Inbox and assigning them to projects.</string>

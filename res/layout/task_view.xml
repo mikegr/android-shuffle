@@ -4,6 +4,7 @@
     android:padding="4dip"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    style="@style/viewer"  
     >
     
 	<LinearLayout

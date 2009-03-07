@@ -1,10 +1,10 @@
 package org.dodgybits.android.shuffle.activity;
 
-import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.config.ListConfig;
+import org.dodgybits.android.shuffle.activity.config.ProjectListConfig;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.android.shuffle.util.MenuUtils;
 import org.dodgybits.android.shuffle.view.ProjectView;
 
 import android.content.Intent;
@@ -27,40 +27,24 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	protected void onResume() {
 		super.onResume();
 		
-		Cursor cursor = getContentResolver().query(getListContentUri(), Shuffle.Projects.cFullTaskProjection, null, null, null);
+		Cursor cursor = getContentResolver().query(
+				getDrilldownListConfig().getListContentUri(), 
+				Shuffle.Projects.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();
 	}
 
-	
 	@Override
-	protected int getContentViewResId() {
-		return R.layout.projects;
-	}
-
-	@Override
-	protected Uri getContentUri() {
-		return Shuffle.Projects.CONTENT_URI;
-	}
-
-	@Override
-	protected Uri getListContentUri() {
-		return Shuffle.Projects.cProjectTasksContentURI;
-	}
-	
-	@Override
-	protected Uri getChildContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
-	
-	@Override
-	protected String getChildName() {
-		return getString(R.string.task_name);
+	protected ListConfig<Project> createListConfig()
+	{
+		return new ProjectListConfig();
 	}
 
 	@Override
 	protected void deleteChildren(int groupId) {
-		getContentResolver().delete(getChildContentUri(), Shuffle.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(groupId)});
+		getContentResolver().delete(
+				getDrilldownListConfig().getChildContentUri(), 
+				Shuffle.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(groupId)});
 	}
 	
 	@Override
@@ -89,8 +73,7 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 					projectView = new ProjectView(parent.getContext());
 				}
 				projectView.setTaskCountArray(mTaskCountArray);
-				boolean isSelected = false;
-				projectView.updateView(project, isSelected);
+				projectView.updateView(project);
 				return projectView;
 			}
 
@@ -110,25 +93,5 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
     	intent.setData(uri);
     	return intent;
     }
-
-	@Override
-    protected Project readItem(Cursor c) {
-        return BindingUtils.readProject(c);
-    }
-
-	@Override
-    protected int getCurrentViewMenuId() {
-    	return MenuUtils.PROJECT_ID;
-    }
-	@Override
-	protected String getItemName() {
-		return getString(R.string.project_name);
-	}
-	
-    @Override
-    protected boolean isTaskList() {
-    	return false;
-    }
-
 
 }

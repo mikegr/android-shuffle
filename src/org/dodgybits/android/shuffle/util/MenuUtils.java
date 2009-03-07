@@ -56,16 +56,19 @@ public class MenuUtils {
     
 	public static void addInsertMenuItems(Menu menu, String itemName, boolean isTaskList, Context context) {
 		String menuName = context.getResources().getString(R.string.menu_insert, itemName);
-		MenuItem item = menu.add(0, INSERT_ID, 0, menuName).setIcon(R.drawable.list_add);
-        item.setAlphabeticShortcut(isTaskList ? 'c' : 'a');
+		menu.add(0, INSERT_ID, 0, menuName)
+			.setIcon(android.R.drawable.ic_menu_add)
+			.setAlphabeticShortcut(isTaskList ? 'c' : 'a');
 	}
 
 	public static void addExpandableInsertMenuItems(Menu menu, String groupName, String childName, Context context) {
 		String menuName;
 		menuName = context.getResources().getString(R.string.menu_insert, childName);
-        menu.add(0, INSERT_CHILD_ID, 0, menuName).setIcon(R.drawable.list_add).setAlphabeticShortcut('c');
+        menu.add(0, INSERT_CHILD_ID, 0, menuName)
+        	.setIcon(android.R.drawable.ic_menu_add).setAlphabeticShortcut('c');
 		menuName = context.getResources().getString(R.string.menu_insert, groupName);
-        menu.add(0, INSERT_GROUP_ID, 0, menuName).setIcon(R.drawable.folder_new).setAlphabeticShortcut('a');
+        menu.add(0, INSERT_GROUP_ID, 0, menuName)
+        	.setIcon(android.R.drawable.ic_menu_add).setAlphabeticShortcut('a');
 	}
 
 	public static void addViewMenuItems(Menu menu, int currentViewMenuId) {
@@ -93,14 +96,16 @@ public class MenuUtils {
         if (state == State.STATE_EDIT) {
             menu.add(0, SAVE_ID, 0, R.string.menu_save).setAlphabeticShortcut('s');
             menu.add(0, REVERT_ID, 0, R.string.menu_revert)
-            	.setIcon(R.drawable.edit_undo).setAlphabeticShortcut('r');
+            	.setIcon(android.R.drawable.ic_menu_revert).setAlphabeticShortcut('r');
             menu.add(0, DELETE_ID, 0, R.string.menu_delete)
-            	.setIcon(R.drawable.edit_delete).setAlphabeticShortcut('d');
+            	.setIcon(android.R.drawable.ic_menu_delete).setAlphabeticShortcut('d');
 
         // Build the menus that are shown when inserting.
         } else {
+            menu.add(0, SAVE_ID, 0, R.string.menu_save)
+            	.setIcon(android.R.drawable.ic_menu_save).setAlphabeticShortcut('s');
             menu.add(0, DISCARD_ID, 0, R.string.menu_discard)
-            	.setIcon(R.drawable.edit_delete).setAlphabeticShortcut('d');
+            	.setIcon(android.R.drawable.ic_menu_close_clear_cancel).setAlphabeticShortcut('d');
         }
 	}
 	
@@ -108,7 +113,7 @@ public class MenuUtils {
         menu.add(0, PREFERENCE_ID, 0, R.string.menu_preferences)
         	.setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('p');
         menu.add(0, HELP_ID, 0, R.string.menu_help)
-        	.setIcon(R.drawable.help_browser).setAlphabeticShortcut('h');
+        	.setIcon(android.R.drawable.ic_menu_help).setAlphabeticShortcut('h');
 	}
 		
 	public static void addAlternativeMenuItems(Menu menu, Uri uri, Activity activity) {
@@ -147,30 +152,35 @@ public class MenuUtils {
         // Give a shortcut to the edit action.
         if (items[editIndex] != null) {
             items[editIndex].setAlphabeticShortcut('e');
-            items[editIndex].setIcon(R.drawable.edit_find_replace);
+            items[editIndex].setIcon(android.R.drawable.ic_menu_edit);
         }		
         if (includeView && items[viewIndex] != null) {
             items[viewIndex].setAlphabeticShortcut('v');
-            items[viewIndex].setIcon(R.drawable.edit_find_replace);
+            items[viewIndex].setIcon(android.R.drawable.ic_menu_view);
         }		
 	}
 	
 	public static void addCompleteMenuItem(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, 5, R.string.menu_complete).setAlphabeticShortcut('x');
+        menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, 5, R.string.menu_complete)
+        	.setIcon(R.drawable.btn_check_on).setAlphabeticShortcut('x');
     }
 
 	public static void addDeleteMenuItem(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, DELETE_ID, 10, R.string.menu_delete).setIcon(R.drawable.edit_delete).setAlphabeticShortcut('d');
+        menu.add(Menu.CATEGORY_ALTERNATIVE, DELETE_ID, 10, R.string.menu_delete)
+        	.setIcon(android.R.drawable.ic_menu_delete).setAlphabeticShortcut('d');
     }
 
 
 	public static void addCleanInboxMenuItem(Menu menu) {
-        menu.add(0, CLEAN_INBOX_ID, 0, R.string.clean_inbox_button_title).setIcon(R.drawable.edit_clear).setAlphabeticShortcut('i');
+        menu.add(0, CLEAN_INBOX_ID, 0, R.string.clean_inbox_button_title)
+        	.setIcon(R.drawable.edit_clear).setAlphabeticShortcut('i');
     }
 
 	public static void addMoveMenuItems(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_UP_ID, 0, R.string.menu_move_up).setIcon(R.drawable.go_up).setAlphabeticShortcut('k');
-        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_DOWN_ID, 0, R.string.menu_move_down).setIcon(R.drawable.go_down).setAlphabeticShortcut('j');
+        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_UP_ID, 0, R.string.menu_move_up)
+        	.setIcon(R.drawable.go_up).setAlphabeticShortcut('k');
+        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_DOWN_ID, 0, R.string.menu_move_down)
+        	.setIcon(R.drawable.go_down).setAlphabeticShortcut('j');
     }
 
 	public static boolean checkCommonItemsSelected(MenuItem item, Activity activity, int currentViewMenuId) {

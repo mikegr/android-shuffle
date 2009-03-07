@@ -26,13 +26,13 @@
         <activity android:name=".activity.TopLevelActivity" android:label="@string/app_name">
         </activity>
 
-        <activity android:name=".activity.CalendarActivity" android:label="@string/title_calendar">
+        <activity android:name=".activity.CalendarActivity">
         </activity>
 
-        <activity android:name=".activity.TabbedDueActionsActivity" android:label="@string/title_calendar">
+        <activity android:name=".activity.TabbedDueActionsActivity">
         </activity>
 
-        <activity android:name=".activity.InboxActivity" android:label="@string/title_inbox">
+        <activity android:name=".activity.InboxActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -42,7 +42,7 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.TopTasksActivity" android:label="@string/title_due_tasks">
+        <activity android:name=".activity.TopTasksActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -52,7 +52,7 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.ProjectTasksActivity" android:label="@string/title_project">
+        <activity android:name=".activity.ProjectTasksActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -62,7 +62,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.ContextTasksActivity" android:label="@string/title_inbox">
+        <activity android:name=".activity.ContextTasksActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -83,7 +83,7 @@
         </activity>
         
         
-        <activity android:name=".activity.ProjectsActivity" android:label="@string/title_project">
+        <activity android:name=".activity.ProjectsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -103,7 +103,7 @@
             </intent-filter>            
         </activity>
         
-        <activity android:name=".activity.ContextsActivity" android:label="@string/title_context">
+        <activity android:name=".activity.ContextsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -113,7 +113,8 @@
             </intent-filter>            
         </activity>
         
-        <activity android:name=".activity.TaskEditorActivity" android:label="@string/title_new_task">
+        <activity android:name=".activity.TaskEditorActivity" 
+        	android:label="@string/title_new_task">
             <!-- This filter says that we can edit the data of a single task -->
             <intent-filter android:label="@string/title_edit_task">
                 <action android:name="android.intent.action.EDIT" />
@@ -141,7 +142,8 @@
         </activity>
 
         
-        <activity android:name=".activity.ProjectEditorActivity" android:label="@string/title_new_project">
+        <activity android:name=".activity.ProjectEditorActivity" 
+        	android:label="@string/title_new_project">
             <!-- This filter says that we can view or edit the data of
                  a single project -->
             <intent-filter android:label="@string/title_edit_project">
@@ -160,7 +162,8 @@
             </intent-filter>
         </activity>        
 
-        <activity android:name=".activity.ContextEditorActivity" android:label="@string/title_new_context">
+        <activity android:name=".activity.ContextEditorActivity" 
+        	android:label="@string/title_new_context">
             <!-- This filter says that we can view or edit the data of
                  a single context -->
             <intent-filter android:label="@string/title_edit_context">
@@ -210,7 +213,9 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.IconPickerActivity" android:label="@string/title_icon_picker">
+        <activity android:name=".activity.IconPickerActivity" 
+        	android:label="@string/title_icon_picker"
+        	android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -220,7 +225,9 @@
             </intent-filter>            
         </activity>
         
-        <activity android:name=".activity.ColourPickerActivity" android:label="@string/title_icon_picker">
+        <activity android:name=".activity.ColourPickerActivity" 
+        	android:label="@string/title_icon_picker"
+        	android:theme="@android:style/Theme.Dialog">
         	<!--  android:theme="@android:style/Theme.Dialog" -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

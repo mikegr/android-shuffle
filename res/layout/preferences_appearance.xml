@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/appearance_table" 
     android:orientation="vertical" 
     android:padding="4dip"
     android:layout_width="fill_parent" 
@@ -8,9 +7,21 @@
     android:stretchColumns="1"
     >
 
-	<TableRow
-        style="@style/centered_row"
-        >
+	<TableRow>
+        
+        <LinearLayout
+			android:id="@+id/appearance_layout" 
+    		android:orientation="vertical" 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_span="2"
+			style="@style/activity">
+		</LinearLayout>
+        
+        
+	</TableRow>
+	
+	<TableRow>
         
         <LinearLayout
     		android:orientation="vertical" 
@@ -23,8 +34,7 @@
         	
 	</TableRow>	
 	
-	<TableRow
-        style="@style/centered_row">
+	<TableRow>
 	    <TextView
 	        android:layout_width="wrap_content" 
 	        android:layout_height="wrap_content"
@@ -36,8 +46,7 @@
 	</TableRow>	
 
 	<TableRow
-        android:paddingTop="8px"
-	>	        
+        android:paddingTop="8px">	        
 	        
 	    <CheckBox android:id="@+id/display_context"
 	        android:layout_width="wrap_content"

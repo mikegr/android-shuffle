@@ -8,33 +8,10 @@
 	android:gravity="center_vertical"
 	android:baselineAligned="false">
 
-	<LinearLayout android:id="@+id/contextDisplay" 
-		android:orientation="vertical"
-		android:layout_width="wrap_content"
-		android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-		android:gravity="center">
-
-		<ImageView android:id="@+id/icon"
-			android:layout_width="36px"
-			android:layout_height="wrap_content"
-			android:scaleType="center" 
-			android:paddingLeft="4px"
-			android:paddingRight="4px" 
-			android:paddingBottom="2px"
-			style="@style/image" />
-
-		<org.dodgybits.android.shuffle.view.LabelView
-			android:id="@+id/context" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:paddingLeft="5px"
-			android:paddingRight="5px" style="@style/context" />
-
-	</LinearLayout>
-
 	<LinearLayout android:orientation="vertical"
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
-        android:layout_toRightOf="@id/contextDisplay"
+        android:layout_alignParentLeft="true"
 		android:gravity="center_vertical"
 		>
 
@@ -42,8 +19,20 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
-			android:paddingLeft="5px" android:paddingRight="5px"
-			android:lines="1" android:maxLength="20" style="@style/text" />
+			android:paddingLeft="5px" 
+			android:paddingRight="10px"
+			android:singleLine="true"
+			android:ellipsize="middle"
+			style="@style/text" />
+
+		<TextView android:id="@+id/details"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="5px" 
+			android:paddingRight="10px"
+			android:singleLine="true"
+			android:ellipsize="marquee"
+			style="@style/sub_text_2" />
 		
 		<TextView android:id="@+id/project"
 			android:layout_width="wrap_content"
@@ -51,26 +40,8 @@
 			android:paddingLeft="5px" 
 			android:lines="1" style="@style/sub_text_1" />
 
-		<TextView android:id="@+id/details"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:maxLength="30"
-			android:paddingLeft="5px" 
-			android:lines="1" style="@style/sub_text_2" />
-		
 	</LinearLayout>
-	
-	<TextView android:id="@+id/due_date"
-		android:layout_width="wrap_content"
-		android:layout_height="fill_parent" 
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-		android:gravity="top"
-		android:paddingLeft="5px" 
-		android:paddingRight="10px"
-		style="@style/due_date" />
-	
-	
+
 	<ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
@@ -82,6 +53,39 @@
 		android:src="@drawable/arrow_right_float"
 		style="@style/image" 
 		/>
+
+	<TextView android:id="@+id/due_date"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent" 
+        android:layout_alignParentRight="true"
+        android:gravity="bottom"
+		android:paddingLeft="5px" 
+		android:paddingRight="10px"
+		style="@style/due_date" />
+	
+	<org.dodgybits.android.shuffle.view.LabelView
+		android:id="@+id/context" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_toLeftOf="@+id/due_date"
+		android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentBottom="true"
+		android:layout_marginRight="6px"
+		android:paddingLeft="5px"
+		android:paddingRight="5px"
+		style="@style/context" />
+		
+		<!-- 
+	<ImageView android:id="@+id/icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toLeftOf="@+id/context"
+        android:layout_alignParentBottom="true"
+		android:paddingLeft="4px"
+		android:paddingRight="4px" 
+		android:paddingBottom="2px"
+		style="@style/image" />
+	 -->
 	
 
 </RelativeLayout>

@@ -1,10 +1,10 @@
 package org.dodgybits.android.shuffle.activity;
 
-import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.config.ContextListConfig;
+import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.android.shuffle.util.MenuUtils;
 import org.dodgybits.android.shuffle.view.ContextView;
 
 import android.content.Intent;
@@ -27,39 +27,22 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	protected void onResume() {
 		super.onResume();
 		
-		Cursor cursor = getContentResolver().query(getListContentUri(), Shuffle.Contexts.cFullTaskProjection, null, null, null);
+		Cursor cursor = getContentResolver().query(getDrilldownListConfig().getListContentUri(), 
+				Shuffle.Contexts.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();
 	}
 	
 	@Override
-	protected int getContentViewResId() {
-		return R.layout.contexts;
-	}
-
-	@Override
-	protected Uri getContentUri() {
-		return Shuffle.Contexts.CONTENT_URI;
-	}
-	
-	@Override
-	protected Uri getListContentUri() {
-		return Shuffle.Contexts.cContextTasksContentURI;
-	}
-	
-	@Override
-	protected Uri getChildContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
-	
-	@Override
-	String getChildName() {
-		return getString(R.string.task_name);
+	protected ListConfig<Context> createListConfig()
+	{
+		return new ContextListConfig();
 	}
 	
 	@Override
 	protected void deleteChildren(int groupId) {
-		getContentResolver().delete(getChildContentUri(), Shuffle.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)});
+		getContentResolver().delete(getDrilldownListConfig().getChildContentUri(), 
+				Shuffle.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)});
 	}
 
 	@Override
@@ -88,8 +71,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 					contextView = new ContextView(parent.getContext());
 				}
 				contextView.setTaskCountArray(mTaskCountArray);
-				boolean isSelected = false;
-				contextView.updateView(context, isSelected);
+				contextView.updateView(context);
 				return contextView;
 			}
 
@@ -116,24 +98,6 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
     	return intent;
     }
 	
-	@Override
-    protected Context readItem(Cursor c) {
-        return BindingUtils.readContext(c);
-    }
 
-	@Override
-    protected int getCurrentViewMenuId() {
-    	return MenuUtils.CONTEXT_ID;
-    }
-	
-	@Override
-	protected String getItemName() {
-		return getString(R.string.context_name);
-	}
-    
-    @Override
-    protected boolean isTaskList() {
-    	return false;
-    }
 
 }

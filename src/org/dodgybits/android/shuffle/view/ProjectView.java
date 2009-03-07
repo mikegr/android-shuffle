@@ -32,7 +32,7 @@ public class ProjectView extends ItemView<Project> {
 	}
 	
 	@Override
-	public void updateView(Project project, boolean isSelected) {
+	public void updateView(Project project) {
 		if (mTaskCountArray != null) {
 			Integer count = mTaskCountArray.get(project.id);
 			if (count == null) count = 0;

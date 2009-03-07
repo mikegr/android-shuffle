@@ -35,7 +35,7 @@ public class ContextView extends ItemView<Context> {
 	}
 	
 	@Override
-	public void updateView(Context context, boolean isSelected) {
+	public void updateView(Context context) {
 		mIcon.setPadding(0, 0, 0, 0);
 		// add context icon
 		Integer iconResource = context.iconResource;

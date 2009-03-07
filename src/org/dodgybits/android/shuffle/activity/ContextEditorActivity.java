@@ -179,7 +179,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
 	}
     
 	private void displayColour() {
-		mColourWidget.setColourIndex(mColourIndex, false);
+		mColourWidget.setColourIndex(mColourIndex);
 		mColourWidget.setVisibility(View.VISIBLE);
     }
 

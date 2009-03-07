@@ -1,10 +1,10 @@
 package org.dodgybits.android.shuffle.activity;
 
+import org.dodgybits.android.shuffle.activity.config.DrilldownListConfig;
 import org.dodgybits.android.shuffle.util.AlertUtils;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.net.Uri;
 import android.util.Log;
 import android.util.SparseIntArray;
 
@@ -15,19 +15,19 @@ import android.util.SparseIntArray;
 public abstract class AbstractDrilldownListActivity<T> extends AbstractListActivity<T> {
 	private static final String cTag = "AbstractDrilldownListActivity";
 
-
 	protected SparseIntArray mTaskCountArray;
 	
-	abstract Uri getChildContentUri();
-    
-	abstract String getChildName();
-	
-	abstract void deleteChildren(int groupId);
-
 	protected int getSelectedItemChildCount() {
 		int groupId = (int)getSelectedItemId();
 		return mTaskCountArray.get(groupId);
 	}
+	
+	protected final DrilldownListConfig<T> getDrilldownListConfig()
+	{
+		return (DrilldownListConfig<T>)getListConfig();
+	}
+	
+	abstract void deleteChildren(int groupId);
 	
     /**
      * Permanently delete the selected item.
@@ -48,15 +48,11 @@ public abstract class AbstractDrilldownListActivity<T> extends AbstractListActiv
     				}
     			}
     		};
-			AlertUtils.showDeleteGroupWarning(this, getItemName(), getChildName(), childCount, buttonListener);
+			AlertUtils.showDeleteGroupWarning(this, getDrilldownListConfig().getItemName(this), 
+					getDrilldownListConfig().getChildName(this), childCount, buttonListener);
 		} else {
 			super.deleteItem(getSelectedItemId());
 		}
     }
-
-    @Override
-	protected boolean supportsViewAction() {
-		return false;
-	}
 
 }

@@ -63,7 +63,8 @@ public class ColourPickerActivity extends Activity implements
 				view.setText("Abc");
 				view.setGravity(Gravity.CENTER);
 			}
-			view.setColourIndex(position, false);
+			view.setColourIndex(position);
+			view.setIcon(null);
 			return view;
 		}
 

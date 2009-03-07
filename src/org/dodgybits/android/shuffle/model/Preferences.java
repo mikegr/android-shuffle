@@ -55,12 +55,12 @@ public class Preferences {
 
 	public static Boolean isProjectViewExpandable(Context context) {
 		getSharedPreferences(context);
-		return sPrefs.getBoolean(PROJECT_VIEW_KEY, false);
+		return !sPrefs.getBoolean(PROJECT_VIEW_KEY, false);
 	}
 
 	public static Boolean isContextViewExpandable(Context context) {
 		getSharedPreferences(context);
-		return sPrefs.getBoolean(CONTEXT_VIEW_KEY, true);
+		return !sPrefs.getBoolean(CONTEXT_VIEW_KEY, true);
 	}
 
 	public static boolean displayContextIcon(Context context) {

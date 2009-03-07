@@ -57,7 +57,7 @@ public class Test {
 				} else {
 					taskView = new TaskView(parent.getContext());
 				}
-				taskView.updateView(task, false);
+				taskView.updateView(task);
 				return taskView;
 			}
 			

@@ -49,29 +49,47 @@ public class TaskView extends ItemView<Task> {
 		return R.layout.list_task_view;
 	}
 	
-	public void updateView(Task task, boolean isSelected) {
+	public void updateView(Task task) {
 		org.dodgybits.android.shuffle.model.Context context = task.context;
-		if (mShowContext && context != null) {
-			boolean displayIcon = Preferences.displayContextIcon(getContext());
+		boolean displayContext = Preferences.displayContextName(getContext());
+		boolean displayIcon = Preferences.displayContextIcon(getContext());
+		if (mShowContext && context != null && (displayContext || displayIcon)) {
+			if (mIcon != null) {
+				// add context icon if preferences indicate to
+				Integer iconResource = context.iconResource;
+				Integer id = 0;
+				if (iconResource != null) {
+					String name = getResources().getResourceName(iconResource) + "_small";
+					id = getResources().getIdentifier(name, null, null);
+				}
+				if (id > 0 && displayIcon) {
+					mIcon.setImageResource(id);
+					mIcon.setVisibility(View.VISIBLE);
+				} else {
+					mIcon.setVisibility(View.GONE);
+				}
+			}
+			
+			mContext.setText(displayContext ? context.name : "");
+			mContext.setColourIndex(context.colourIndex);
 			// add context icon if preferences indicate to
 			Integer iconResource = context.iconResource;
-			if (iconResource != null && displayIcon) {
-				mIcon.setImageResource(iconResource);
-				mIcon.setVisibility(View.VISIBLE);
-			} else {
-				mIcon.setVisibility(View.GONE);
+			Integer id = 0;
+			if (iconResource != null) {
+				String name = getResources().getResourceName(iconResource) + "_small";
+				id = getResources().getIdentifier(name, null, null);
 			}
-			boolean displayContext = Preferences.displayContextName(getContext());
-			if (displayContext) {
-				mContext.setText(context.name);
-				mContext.setColourIndex(context.colourIndex, isSelected);
-				mContext.setVisibility(View.VISIBLE);
+			if (id > 0 && displayIcon) {
+				mContext.setIcon(getResources().getDrawable(id));
 			} else {
-				mContext.setVisibility(View.GONE);
+				mContext.setIcon(null);
 			}
+			mContext.setVisibility(View.VISIBLE);
 		} else {
 			mContext.setVisibility(View.GONE);
-			mIcon.setVisibility(View.GONE);
+			if (mIcon != null) {
+				mIcon.setVisibility(View.GONE);
+			}
 		}		
 		CharSequence description = task.description;
 		if (task.complete) {
@@ -89,7 +107,7 @@ public class TaskView extends ItemView<Task> {
 				mDueDate.setTextColor(Color.RED);
 			} else {
 				mDueDate.setTypeface(Typeface.DEFAULT);
-				mDueDate.setTextColor(getContext().getResources().getColor(R.drawable.date_blue));
+				mDueDate.setTextColor(getContext().getResources().getColor(R.drawable.dark_blue));
 			}
 			mDueDate.setVisibility(View.VISIBLE);
 		} else {

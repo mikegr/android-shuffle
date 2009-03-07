@@ -9,6 +9,6 @@ public abstract class ItemView<T> extends LinearLayout {
 		super(androidContext);
 	}
 	
-	public abstract void updateView(T item, boolean isSelected);
+	public abstract void updateView(T item);
 
 }

@@ -1,10 +1,10 @@
 package org.dodgybits.android.shuffle.activity;
 
-import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_CONTEXT_NAME_KEY;
-import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_DUE_DATE_KEY;
 import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_CONTEXT_ICON_KEY;
-import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_PROJECT_KEY;
+import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_CONTEXT_NAME_KEY;
 import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_DETAILS_KEY;
+import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_DUE_DATE_KEY;
+import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_PROJECT_KEY;
 
 import java.util.Date;
 
@@ -20,12 +20,9 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.LinearLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TableRow.LayoutParams;
 
@@ -61,14 +58,10 @@ public class PreferencesAppearanceActivity extends Activity  {
         // need to add task view programatically due to issues adding via XML
         
         mTaskView = new TaskView(this);
-        mTaskView.updateView(mSampleTask, false);
+        mTaskView.updateView(mSampleTask);
         LayoutParams taskLayout = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT );
-        taskLayout.span = 2;
-        TableRow taskRow = new TableRow(this);
-        taskRow.addView(mTaskView, taskLayout);
-        TableLayout table = (TableLayout)findViewById(R.id.appearance_table);
-        TableLayout.LayoutParams rowLayout = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT );
-        table.addView(taskRow, 0, rowLayout);
+        LinearLayout layout = (LinearLayout)findViewById(R.id.appearance_layout);
+        layout.addView(mTaskView, 0, taskLayout);
         
         // currently no cancel button
         mSaveChanges = true;
@@ -76,7 +69,7 @@ public class PreferencesAppearanceActivity extends Activity  {
         OnCheckedChangeListener listener = new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
 	        	savePrefs();
-		        mTaskView.updateView(mSampleTask, false);
+		        mTaskView.updateView(mSampleTask);
 			}
         };
         mDisplayIconCheckbox.setOnCheckedChangeListener(listener);

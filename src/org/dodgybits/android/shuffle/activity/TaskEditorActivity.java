@@ -154,7 +154,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             mDetailsWidget.setTextKeepState(task.details == null ? "" : task.details);
             
             mDescriptionWidget.setTextKeepState(task.description);
-            if (task.context != null) {
+            if ( task.context != null) {
                 mContextView.setTextKeepState(task.context.name);
             } else if (extras != null) {
             	String contextName = extras.getString(Shuffle.Tasks.CONTEXT_ID);
@@ -179,7 +179,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             mDescriptionWidget.setText(getText(R.string.error_message));
         }
         // select the description
-        mDescriptionWidget.selectAll();
+//        mDescriptionWidget.selectAll();
     }
     
     private OnDateSetListener mDateSetListener =
@@ -194,7 +194,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
 
     private void drawDateWidget() {
     	if (mDueDate == null) {
-    		mDueDateWidget.setText(R.string.undefined);
+    		mDueDateWidget.setText(R.string.no_due_date);
             mClearDueDateButton.setEnabled(false);
     	} else {
     		DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM);

@@ -12,6 +12,7 @@ import org.dodgybits.android.shuffle.view.LabelView;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -72,7 +73,9 @@ public class TaskViewActivity extends Activity {
             	mDetailsWidget.setText(task.details);
             }
             if (task.context != null) {
-            	mContextView.setColourIndex(task.context.colourIndex, false);
+                Drawable icon = getResources().getDrawable(R.drawable.go_home_small);
+            	mContextView.setIcon(icon);
+            	mContextView.setColourIndex(task.context.colourIndex);
                 mContextView.setTextKeepState(task.context.name);
     			Integer iconResource = task.context.iconResource;
     			if (iconResource != null) {

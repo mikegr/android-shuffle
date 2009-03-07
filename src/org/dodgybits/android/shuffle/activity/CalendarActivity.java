@@ -1,9 +1,13 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.config.AbstractTaskListConfig;
+import org.dodgybits.android.shuffle.activity.config.ListConfig;
+import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
+import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,21 +50,38 @@ public class CalendarActivity extends AbstractTaskListActivity {
         });
 	}
 	
+
+	protected ListConfig<Task> createListConfig()
+	{
+		return new AbstractTaskListConfig() {
+
+			public Uri getListContentUri() {
+				return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(mMode)).build();
+			}
+
+		    public int getCurrentViewMenuId() {
+		    	return MenuUtils.CALENDAR_ID;
+		    }
+		    
+		    public String createTitle(ContextWrapper context)
+		    {
+		    	return context.getString(R.string.title_calendar, getSelectedPeriod());
+		    }
+		    
+			@Override
+			public int getContentViewResId() {
+				return R.layout.calendar;
+			}
+			
+		};
+	}
+
+	
 	private void updateCursor() {
     	Cursor cursor = createItemQuery();
     	SimpleCursorAdapter adapter = (SimpleCursorAdapter)getListAdapter();
     	adapter.changeCursor(cursor);
-    	setTitle(createTitle());
-	}
-
-	@Override
-	protected int getContentViewResId() {
-		return R.layout.calendar;
-	}
-
-	@Override
-	protected CharSequence createTitle() {
-		return getString(R.string.title_calendar, getSelectedPeriod());
+    	setTitle(getListConfig().createTitle(this));
 	}
 
 	private String getSelectedPeriod() {
@@ -78,15 +99,6 @@ public class CalendarActivity extends AbstractTaskListActivity {
 		}
 		return result;
 	}
-	
-	@Override
-	protected Uri getListContentUri() {
-		return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(mMode)).build();
-	}
-	
-	@Override
-	protected int getCurrentViewMenuId() {
-		return MenuUtils.CALENDAR_ID;
-	}
+		
 
 }

@@ -1,10 +1,14 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.config.AbstractTaskListConfig;
+import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.model.Preferences;
+import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.Menu;
@@ -12,22 +16,6 @@ import android.view.MenuItem;
 
 public class InboxActivity extends AbstractTaskListActivity {
 
-	@Override
-	protected CharSequence createTitle() {
-		return getResources().getString(R.string.title_inbox);
-	}
-
-	@Override
-	protected Uri getListContentUri() {
-		// Tasks with no projects or created since last clean
-		return Shuffle.Tasks.cInboxTasksContentURI;
-	}
-
-	@Override
-    protected int getCurrentViewMenuId() {
-    	return MenuUtils.INBOX_ID;
-    }
-	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	MenuUtils.addCleanInboxMenuItem(menu);
@@ -49,4 +37,26 @@ public class InboxActivity extends AbstractTaskListActivity {
         return super.onOptionsItemSelected(item);
     }
 
+	@Override
+	protected ListConfig<Task> createListConfig()
+	{
+		return new AbstractTaskListConfig() {
+
+			public Uri getListContentUri() {
+				// Tasks with no projects or created since last clean
+				return Shuffle.Tasks.cInboxTasksContentURI;
+			}
+
+		    public int getCurrentViewMenuId() {
+		    	return MenuUtils.INBOX_ID;
+		    }
+		    
+		    public String createTitle(ContextWrapper context)
+		    {
+		    	return context.getString(R.string.title_inbox);
+		    }
+			
+		};
+	}
+	    
 }
