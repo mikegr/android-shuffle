@@ -1,10 +1,10 @@
 package org.dodgybits.android.shuffle.activity;
 
-import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.config.ContextExpandableListConfig;
+import org.dodgybits.android.shuffle.activity.config.ExpandableListConfig;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
-import org.dodgybits.android.shuffle.util.MenuUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.view.ContextView;
 import org.dodgybits.android.shuffle.view.ExpandableContextView;
@@ -12,7 +12,6 @@ import org.dodgybits.android.shuffle.view.ExpandableTaskView;
 import org.dodgybits.android.shuffle.view.TaskView;
 
 import android.database.Cursor;
-import android.net.Uri;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,11 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 	private SparseIntArray mTaskCountArray;
 	
 	@Override
+	protected ExpandableListConfig<Context, Task> createListConfig() {
+		return new ContextExpandableListConfig();
+	}
+	
+	@Override
 	protected void refreshChildCount() {
 		Cursor cursor = getContentResolver().query(
 				Shuffle.Contexts.cContextTasksContentURI, 
@@ -32,22 +36,6 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 		cursor.close();
 	}
 	
-
-	@Override
-	protected int getContentViewResId() {
-		return R.layout.expandable_contexts;
-	}
-	
-	@Override
-	protected Uri getGroupContentUri() {
-		return Shuffle.Contexts.CONTENT_URI;
-	}
-
-	@Override
-	protected Uri getChildContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
-
 	@Override
 	protected Cursor createGroupQuery() {
 		Cursor cursor = managedQuery(Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection,
@@ -66,7 +54,6 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 		return mChildIdColumnIndex;
 	}
 
-
 	@Override
 	protected Cursor createChildQuery(long groupId) {
 		Cursor cursor = managedQuery(Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cExpandedProjection,
@@ -74,26 +61,6 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 				Shuffle.Tasks.CREATED_DATE + " ASC");
 		mChildIdColumnIndex = cursor.getColumnIndex(Shuffle.Tasks._ID);
 		return cursor;
-	}
-
-	@Override
-    protected int getCurrentViewMenuId() {
-    	return MenuUtils.CONTEXT_ID;
-    }
-
-	@Override
-	protected String getChildName() {
-		return getString(R.string.task_name);
-	}
-
-	@Override
-	protected String getGroupName() {
-		return getString(R.string.context_name);
-	}
-	
-	@Override
-	protected String getGroupIdColumnName() {
-		return Shuffle.Tasks.CONTEXT_ID;
 	}
 
 	@Override
@@ -109,7 +76,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getChild(groupPosition, childPosition);
-				Task task = readChild(cursor);
+				Task task = getListConfig().readChild(cursor);
 				TaskView taskView;
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
@@ -122,7 +89,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getGroup(groupPosition);
-	        	Context context = readGroup(cursor);
+	        	Context context = getListConfig().readGroup(cursor);
 				ContextView contextView;
 				if (convertView instanceof ExpandableContextView) {
 					contextView = (ExpandableContextView) convertView;
@@ -136,15 +103,5 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 			
 		};
 	}
-	@Override
-	Task readChild(Cursor cursor) {
-        return BindingUtils.readTask(cursor);
-	}
-
-	@Override
-	Context readGroup(Cursor cursor) {
-        return BindingUtils.readContext(cursor);
-	}
-
 
 }

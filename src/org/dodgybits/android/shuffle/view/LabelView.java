@@ -3,7 +3,6 @@ package org.dodgybits.android.shuffle.view;
 import org.dodgybits.android.shuffle.util.TextColours;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
@@ -48,17 +47,12 @@ public class LabelView extends TextView {
     public void setColourIndex(int colourIndex) {
     	mTextColour = mTextColours.getTextColour(colourIndex);
     	mBgColour = mTextColours.getBackgroundColours(colourIndex);
+		setTextColor(mTextColour);
+		mBackground.setColorFilter(mBgColour, Mode.SRC);
     }
 
     public void setIcon(Drawable icon) {
     	mIcon = icon;
-    }
-    
-    @Override
-    public void onDraw(Canvas canvas) {    	
-    	super.onDraw(canvas);
-		setTextColor(mTextColour);
-		mBackground.setColorFilter(mBgColour, Mode.SRC);
 		setCompoundDrawablesWithIntrinsicBounds(mIcon, null, null, null);
     }
     

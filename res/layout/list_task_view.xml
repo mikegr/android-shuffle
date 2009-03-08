@@ -71,6 +71,7 @@
 		android:layout_alignWithParentIfMissing="true"
         android:layout_alignParentBottom="true"
 		android:layout_marginRight="6px"
+		android:drawablePadding="3px"
 		android:paddingLeft="5px"
 		android:paddingRight="5px"
 		style="@style/context" />

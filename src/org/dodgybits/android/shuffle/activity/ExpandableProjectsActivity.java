@@ -1,10 +1,10 @@
 package org.dodgybits.android.shuffle.activity;
 
-import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.config.ExpandableListConfig;
+import org.dodgybits.android.shuffle.activity.config.ProjectExpandableListConfig;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
-import org.dodgybits.android.shuffle.util.MenuUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.view.ExpandableProjectView;
 import org.dodgybits.android.shuffle.view.ExpandableTaskView;
@@ -12,43 +12,28 @@ import org.dodgybits.android.shuffle.view.ProjectView;
 import org.dodgybits.android.shuffle.view.TaskView;
 
 import android.database.Cursor;
-import android.net.Uri;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 
 public class ExpandableProjectsActivity extends AbstractExpandableActivity<Project, Task> {
-	@SuppressWarnings("unused")
-	private static final String cTag = "ExpandableProjectsActivity";
-	
     private int mChildIdColumnIndex; 
 	private int mGroupIdColumnIndex; 
 	private SparseIntArray mTaskCountArray;
 
+	@Override
+	protected ExpandableListConfig<Project, Task> createListConfig() {
+		return new ProjectExpandableListConfig();
+	}
+	
 	@Override
 	protected void refreshChildCount() {
 		Cursor cursor = getContentResolver().query(Shuffle.Projects.cProjectTasksContentURI, Shuffle.Projects.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();
 	}
-	
-	@Override
-	protected int getContentViewResId() {
-		return R.layout.expandable_projects;
-	}
-	
-	@Override
-	protected Uri getGroupContentUri() {
-		return Shuffle.Projects.CONTENT_URI;
-	}
-
-	@Override
-	protected Uri getChildContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
-
-	
+		
 	@Override
 	protected Cursor createGroupQuery() {
 		Cursor cursor = managedQuery(Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection,
@@ -77,26 +62,6 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	}
 
 	@Override
-    protected int getCurrentViewMenuId() {
-    	return MenuUtils.PROJECT_ID;
-    }
-
-	@Override
-	protected String getChildName() {
-		return getString(R.string.task_name);
-	}
-
-	@Override
-	protected String getGroupName() {
-		return getString(R.string.project_name);
-	}
-	
-	@Override
-	protected String getGroupIdColumnName() {
-		return Shuffle.Tasks.PROJECT_ID;
-	}
-
-	@Override
 	protected ExpandableListAdapter createExpandableListAdapter(Cursor cursor) {
 		return new MyExpandableListAdapter(this, 
         		cursor,
@@ -109,7 +74,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getChild(groupPosition, childPosition);
-				Task task = readChild(cursor);
+				Task task = getListConfig().readChild(cursor);
 				TaskView taskView;
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
@@ -122,7 +87,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getGroup(groupPosition);
-				Project project = readGroup(cursor);
+				Project project = getListConfig().readGroup(cursor);
 				ProjectView projectView;
 				if (convertView instanceof ExpandableProjectView) {
 					projectView = (ExpandableProjectView) convertView;
@@ -135,16 +100,6 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	        }
 			
 		};
-	}
-
-	@Override
-	protected Task readChild(Cursor cursor) {
-        return BindingUtils.readTask(cursor);
-	}
-
-	@Override
-	protected Project readGroup(Cursor cursor) {
-        return BindingUtils.readProject(cursor);
 	}
 
 }
