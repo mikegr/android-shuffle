@@ -88,7 +88,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     protected Intent getClickIntent(Uri uri) {
     	long taskId = ContentUris.parseId(uri);
     	Uri taskURI = ContentUris.withAppendedId(Shuffle.Tasks.CONTENT_URI, taskId);
-    	return new Intent(Intent.ACTION_VIEW, taskURI);
+    	return new Intent(Intent.ACTION_EDIT, taskURI);
     }
 
     /**

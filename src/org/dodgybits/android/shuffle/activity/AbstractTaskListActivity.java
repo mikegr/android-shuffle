@@ -53,7 +53,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     
 	@Override
     protected Intent getClickIntent(Uri uri) {
-    	return new Intent(Intent.ACTION_VIEW, uri);
+    	return new Intent(Intent.ACTION_EDIT, uri);
     }
     
 	@Override

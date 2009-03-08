@@ -22,6 +22,8 @@
 
     <style name="list" parent="activity">
     	<item name="android:divider">@android:drawable/divider_horizontal_bright</item> 
+    	<item name="android:background">@drawable/pale_weak_cyan</item> 
+    	<item name="android:cacheColorHint">@drawable/pale_weak_cyan</item>
 	</style>
 
 	<style name="image">

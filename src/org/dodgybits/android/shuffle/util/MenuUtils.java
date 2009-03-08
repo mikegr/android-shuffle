@@ -94,7 +94,8 @@ public class MenuUtils {
 	public static void addEditorMenuItems(Menu menu, int state) {
         // Build the menus that are shown when editing.
         if (state == State.STATE_EDIT) {
-            menu.add(0, SAVE_ID, 0, R.string.menu_save).setAlphabeticShortcut('s');
+            menu.add(0, SAVE_ID, 0, R.string.menu_save)
+            	.setIcon(android.R.drawable.ic_menu_save).setAlphabeticShortcut('s');
             menu.add(0, REVERT_ID, 0, R.string.menu_revert)
             	.setIcon(android.R.drawable.ic_menu_revert).setAlphabeticShortcut('r');
             menu.add(0, DELETE_ID, 0, R.string.menu_delete)

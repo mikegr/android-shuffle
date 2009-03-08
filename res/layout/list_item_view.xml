@@ -25,7 +25,7 @@
 		android:paddingLeft="5px"
 		android:paddingRight="5px" 
 		android:gravity="center_horizontal"
-		android:src="@drawable/arrow_right_float"
+		android:src="@drawable/user_input_icon"
 		style="@style/image" 
 		/>
 

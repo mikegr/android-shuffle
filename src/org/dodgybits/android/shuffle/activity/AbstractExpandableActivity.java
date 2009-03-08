@@ -247,7 +247,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 	 * @param url type of data selected
 	 */
 	protected Intent getClickIntent(Uri uri) {
-		return new Intent(Intent.ACTION_VIEW, uri);
+		return new Intent(Intent.ACTION_EDIT, uri);
 	}
 	
     /**

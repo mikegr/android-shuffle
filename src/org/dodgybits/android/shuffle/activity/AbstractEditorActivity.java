@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 
 /**
  * A generic activity for editing an item in a database.  This can be used
@@ -46,6 +45,11 @@ public abstract class AbstractEditorActivity<T> extends Activity {
             // in the container.
             mState = State.STATE_INSERT;
             mUri = getContentResolver().insert(intent.getData(), null);
+            // set the intent to edit so we don't keep recreating if user
+            // switches orientation
+            intent.setAction(Intent.ACTION_EDIT);
+            intent.setData(mUri);
+            setIntent(intent);
 
             // If we were unable to create a new item, then just finish
             // this activity.  A RESULT_CANCELED will be sent back to the
@@ -78,6 +82,17 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         }
 
         setContentView(getContentViewResId());
+    }
+    
+    @Override
+    protected void onResume() {
+        Log.d(cTag, "onResume+");
+        super.onResume();
+        if (mCursor != null) {
+        	// need to requery otherwise values saved on onPause are not restored
+        	mCursor.requery();
+        }
+        Log.d(cTag, "onResume-");
     }
     
     /**
