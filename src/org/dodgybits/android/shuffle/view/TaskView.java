@@ -13,23 +13,18 @@ import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class TaskView extends ItemView<Task> {
 	protected LabelView mContext;
 	protected TextView mDescription;
-	protected ImageView mIcon;
 	protected TextView mDueDate;
-	protected boolean mShowContext;
 	protected TextView mProject;
 	protected TextView mDetails;
+	protected boolean mShowContext;
+	protected boolean mShowProject;
 	
 	public TaskView(Context androidContext) {
-		this(androidContext, true);
-	}
-	
-	public TaskView(Context androidContext, boolean showContext) {
 		super(androidContext);
 		
         LayoutInflater vi = (LayoutInflater)androidContext.
@@ -38,38 +33,31 @@ public class TaskView extends ItemView<Task> {
 		
 		mContext = (LabelView) findViewById(R.id.context);
 		mDescription = (TextView) findViewById(R.id.description);
-		mIcon = (ImageView) findViewById(R.id.icon);
 		mDueDate = (TextView) findViewById(R.id.due_date);
 		mProject = (TextView) findViewById(R.id.project);
 		mDetails = (TextView) findViewById(R.id.details);
-		mShowContext = showContext;
+		mShowContext = true;
+		mShowProject = true;
 	}
 		
 	protected int getViewResourceId() {
 		return R.layout.list_task_view;
 	}
 	
+	public void setShowContext(boolean showContext) {
+		mShowContext = showContext;
+	}
+	
+	public void setShowProject(boolean showProject) {
+		mShowProject = showProject;
+	}
+	
+	
 	public void updateView(Task task) {
 		org.dodgybits.android.shuffle.model.Context context = task.context;
 		boolean displayContext = Preferences.displayContextName(getContext());
 		boolean displayIcon = Preferences.displayContextIcon(getContext());
-		if (mShowContext && context != null && (displayContext || displayIcon)) {
-			if (mIcon != null) {
-				// add context icon if preferences indicate to
-				Integer iconResource = context.iconResource;
-				Integer id = 0;
-				if (iconResource != null) {
-					String name = getResources().getResourceName(iconResource) + "_small";
-					id = getResources().getIdentifier(name, null, null);
-				}
-				if (id > 0 && displayIcon) {
-					mIcon.setImageResource(id);
-					mIcon.setVisibility(View.VISIBLE);
-				} else {
-					mIcon.setVisibility(View.GONE);
-				}
-			}
-			
+		if (mShowContext && context != null && (displayContext || displayIcon)) {			
 			mContext.setText(displayContext ? context.name : "");
 			mContext.setColourIndex(context.colourIndex);
 			// add context icon if preferences indicate to
@@ -87,9 +75,6 @@ public class TaskView extends ItemView<Task> {
 			mContext.setVisibility(View.VISIBLE);
 		} else {
 			mContext.setVisibility(View.GONE);
-			if (mIcon != null) {
-				mIcon.setVisibility(View.GONE);
-			}
 		}		
 		CharSequence description = task.description;
 		if (task.complete) {
@@ -113,7 +98,7 @@ public class TaskView extends ItemView<Task> {
 		} else {
 			mDueDate.setVisibility(View.GONE);
 		}
-		if (Preferences.displayProject(getContext()) && (task.project != null)) {
+		if (mShowProject && Preferences.displayProject(getContext()) && (task.project != null)) {
 			mProject.setText(task.project.name);
 			mProject.setVisibility(View.VISIBLE);
 		} else {

@@ -177,11 +177,15 @@ public class MenuUtils {
         	.setIcon(R.drawable.edit_clear).setAlphabeticShortcut('i');
     }
 
-	public static void addMoveMenuItems(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_UP_ID, 0, R.string.menu_move_up)
-        	.setIcon(R.drawable.go_up).setAlphabeticShortcut('k');
-        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_DOWN_ID, 0, R.string.menu_move_down)
-        	.setIcon(R.drawable.go_down).setAlphabeticShortcut('j');
+	public static void addMoveMenuItems(Menu menu, boolean enableUp, boolean enableDown) {
+		if (enableUp) {
+	        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_UP_ID, 11, R.string.menu_move_up)
+	        	.setIcon(R.drawable.go_up).setAlphabeticShortcut('k');
+		}
+		if (enableDown) {
+	        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_DOWN_ID, 12, R.string.menu_move_down)
+	        	.setIcon(R.drawable.go_down).setAlphabeticShortcut('j');
+		}
     }
 
 	public static boolean checkCommonItemsSelected(MenuItem item, Activity activity, int currentViewMenuId) {

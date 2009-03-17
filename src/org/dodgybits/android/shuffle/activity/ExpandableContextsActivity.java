@@ -81,8 +81,10 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
 				} else {
-					taskView = new ExpandableTaskView(parent.getContext(), false);
+					taskView = new ExpandableTaskView(parent.getContext());
 				}
+				taskView.setShowContext(false);
+				taskView.setShowProject(true);
 				taskView.updateView(task);
 				return taskView;
 	        }

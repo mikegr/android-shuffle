@@ -7,8 +7,8 @@ import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
-import org.dodgybits.android.shuffle.util.MenuUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
+import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.content.ContentUris;
 import android.content.ContextWrapper;
@@ -17,8 +17,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
+import android.view.ContextMenu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
 
 public class ProjectTasksActivity extends AbstractTaskListActivity {
 
@@ -107,50 +110,60 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        
-        final boolean haveItems = getItemCount() > 0;
+	protected boolean showTaskProject() {
+		return false;
+	}
+    
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+    	super.onCreateContextMenu(menu, view, menuInfo);
 
-        // If there are any projects in the list (which implies that one of
-        // them is selected), then we need to generate the actions that
-        // can be performed on the current selection.  This will be a combination
-        // of our own specific actions along with any extensions that can be
-        // found.
-        if (haveItems) {
-        	MenuUtils.addMoveMenuItems(menu);
-        }
-        return true;
+    	AdapterView.AdapterContextMenuInfo info = 
+    			(AdapterView.AdapterContextMenuInfo) menuInfo;
+    	MenuUtils.addMoveMenuItems(menu, 
+    			moveUpPermitted(info.position), moveDownPermitted(info.position));
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case MenuUtils.MOVE_UP_ID:
-            moveUp();
-            return true;
-        case MenuUtils.MOVE_DOWN_ID:
-            moveDown();
-            return true;
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info;
+        try {
+             info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        } catch (ClassCastException e) {
+            Log.e(cTag, "bad menuInfo", e);
+            return false;
         }
-        return super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+	        case MenuUtils.MOVE_UP_ID:
+	            moveUp(info.position);
+	            return true;
+	        case MenuUtils.MOVE_DOWN_ID:
+	            moveDown(info.position);
+	            return true;
+        }
+        return super.onContextItemSelected(item);
+    }	
+    
+    private boolean moveUpPermitted(int selection) {
+    	return selection > 0;
     }
     
-    protected final void moveUp() {
-    	int selection = getSelectedItemPosition();
-    	if (selection > 0) {
+    private boolean moveDownPermitted(int selection) {
+    	return selection < getItemCount() - 1;
+    }
+    
+    protected final void moveUp(int selection) {
+    	if (moveUpPermitted(selection)) {
     		Cursor cursor = (Cursor) getListAdapter().getItem(selection);
     		BindingUtils.swapTaskPositions(this, cursor, selection - 1, selection);
-    		setSelection(selection - 1);
     	}
     }
     
-    protected final void moveDown() {
-    	int selection = getSelectedItemPosition();
-    	if (selection < getItemCount() - 1) {
+    protected final void moveDown(int selection) {
+    	if (moveDownPermitted(selection)) {
     		Cursor cursor = (Cursor) getListAdapter().getItem(selection);
     		BindingUtils.swapTaskPositions(this, cursor, selection, selection + 1);
-    		setSelection(selection + 1);
     	}
     }
 

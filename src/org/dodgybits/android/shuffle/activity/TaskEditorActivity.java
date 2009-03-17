@@ -141,9 +141,12 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             // Modify our overall title depending on the mode we are running in.
             if (mState == State.STATE_EDIT) {
                 setTitle(R.string.title_edit_task);
+                mCompletedCheckBox.setVisibility(View.VISIBLE);                
             } else if (mState == State.STATE_INSERT) {
                 setTitle(R.string.title_new_task);
+                mCompletedCheckBox.setVisibility(View.GONE);
             }
+            
             // This is a little nasty: we have resumed after previously being
             // paused/stopped.  We want to re-retrieve the data to make sure
             // we are still accurately showing what is in the cursor...  but

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.dodgybits.android.shuffle">
     
+    <uses-sdk minSdkVersion="2" />
+    
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     
     <application 

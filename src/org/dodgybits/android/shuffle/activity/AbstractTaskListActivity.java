@@ -1,7 +1,6 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
@@ -78,8 +77,10 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 				if (convertView instanceof TaskView) {
 					taskView = (TaskView) convertView;
 				} else {
-					taskView = new TaskView(parent.getContext(), showTaskContext());
+					taskView = new TaskView(parent.getContext());
 				}
+				taskView.setShowContext(showTaskContext());
+				taskView.setShowProject(showTaskProject());
 				taskView.updateView(task);
 				return taskView;
 			}
@@ -103,6 +104,9 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 		return true;
 	}
 	
+	protected boolean showTaskProject() {
+		return true;
+	}
+	
 }
-
     

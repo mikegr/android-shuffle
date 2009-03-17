@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class HelpActivity extends Activity {
-    private static final String cTag = "HelpActivity";
     public static final String cHelpPage = "helpPage";
     
 	private Spinner mHelpSpinner;
@@ -29,7 +28,8 @@ public class HelpActivity extends Activity {
         mHelpSpinner = (Spinner) findViewById(R.id.help_screen);
         mHelpContent = (TextView) findViewById(R.id.help_text);
         mShortcuts = (TableLayout) findViewById(R.id.help_shortcuts);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.help_screens,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+        		this, R.array.help_screens,
                 android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mHelpSpinner.setAdapter(adapter);
@@ -40,7 +40,8 @@ public class HelpActivity extends Activity {
         	
         	public void onItemSelected(AdapterView parent, View v,
         			int position, long id) {
-        		int resId = HelpActivity.this.getResources().getIdentifier("help" + position, "string", "org.dodgybits.android.shuffle");
+        		int resId = HelpActivity.this.getResources().getIdentifier(
+        				"help" + position, "string", "org.dodgybits.android.shuffle");
         		mHelpContent.setText(HelpActivity.this.getText(resId));
     			mShortcuts.setVisibility(position == 7 ? View.VISIBLE : View.GONE);
         	}

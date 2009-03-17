@@ -9,39 +9,37 @@
 	android:gravity="center_vertical"
 	android:baselineAligned="false">
 
-	<LinearLayout android:orientation="vertical"
+	<TextView android:id="@+id/description"
 		android:layout_width="wrap_content"
-		android:layout_height="fill_parent"
+		android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-		android:gravity="center_vertical"
-		>
+        android:layout_alignParentTop="true"
+		android:paddingLeft="5px" 
+		android:paddingRight="10px"
+		android:singleLine="true"
+		android:ellipsize="middle"
+		style="@style/text" />
 
-		<TextView android:id="@+id/description"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-			android:paddingLeft="5px" 
-			android:paddingRight="10px"
-			android:singleLine="true"
-			android:ellipsize="middle"
-			style="@style/text" />
+	<TextView android:id="@+id/details"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingLeft="5px" 
+		android:paddingRight="10px"
+        android:layout_alignParentLeft="true"
+		android:layout_below="@+id/description"        
+		android:singleLine="true"
+		android:ellipsize="marquee"
+		style="@style/sub_text_2" />
+	
+	<TextView android:id="@+id/project"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+		android:paddingLeft="5px" 
+		android:lines="1" 
+		style="@style/sub_text_1" />
 
-		<TextView android:id="@+id/details"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingLeft="5px" 
-			android:paddingRight="10px"
-			android:singleLine="true"
-			android:ellipsize="marquee"
-			style="@style/sub_text_2" />
-		
-		<TextView android:id="@+id/project"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingLeft="5px" 
-			android:lines="1" style="@style/sub_text_1" />
-
-	</LinearLayout>
 
 	<ImageView
 		android:layout_width="wrap_content"
@@ -77,17 +75,4 @@
 		android:paddingRight="3px"
 		style="@style/context" />
 		
-		<!-- 
-	<ImageView android:id="@+id/icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_toLeftOf="@+id/context"
-        android:layout_alignParentBottom="true"
-		android:paddingLeft="4px"
-		android:paddingRight="4px" 
-		android:paddingBottom="2px"
-		style="@style/image" />
-	 -->
-	
-
 </RelativeLayout>

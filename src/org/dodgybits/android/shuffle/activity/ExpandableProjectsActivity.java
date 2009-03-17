@@ -6,19 +6,27 @@ import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
+import org.dodgybits.android.shuffle.util.MenuUtils;
 import org.dodgybits.android.shuffle.view.ExpandableProjectView;
 import org.dodgybits.android.shuffle.view.ExpandableTaskView;
 import org.dodgybits.android.shuffle.view.ProjectView;
 import org.dodgybits.android.shuffle.view.TaskView;
 
 import android.database.Cursor;
+import android.util.Log;
 import android.util.SparseIntArray;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 
 public class ExpandableProjectsActivity extends AbstractExpandableActivity<Project, Task> {
-    private int mChildIdColumnIndex; 
+	private static final String cTag = "ExpandableProjectsActivity";
+
+	private int mChildIdColumnIndex; 
 	private int mGroupIdColumnIndex; 
 	private SparseIntArray mTaskCountArray;
 
@@ -29,7 +37,9 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	
 	@Override
 	protected void refreshChildCount() {
-		Cursor cursor = getContentResolver().query(Shuffle.Projects.cProjectTasksContentURI, Shuffle.Projects.cFullTaskProjection, null, null, null);
+		Cursor cursor = getContentResolver().query(
+				Shuffle.Projects.cProjectTasksContentURI, 
+				Shuffle.Projects.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();
 	}
@@ -79,8 +89,10 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
 				} else {
-					taskView = new ExpandableTaskView(parent.getContext(), true);
+					taskView = new ExpandableTaskView(parent.getContext());
 				}
+				taskView.setShowContext(true);
+				taskView.setShowProject(false);
 				taskView.updateView(task);
 				return taskView;
 	        }
@@ -101,5 +113,77 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 			
 		};
 	}
+	
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+    	super.onCreateContextMenu(menu, view, menuInfo);
 
+    	ExpandableListView.ExpandableListContextMenuInfo info;
+        try {
+             info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
+        } catch (ClassCastException e) {
+            Log.e(cTag, "bad menuInfo", e);
+            return;
+        }
+        long packedPosition = info.packedPosition;
+        int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+        int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+        boolean isChild = isChild(packedPosition); 
+        if (isChild) {
+	    	MenuUtils.addMoveMenuItems(menu, 
+	    			moveUpPermitted(groupPosition, childPosition), 
+	    			moveDownPermitted(groupPosition, childPosition));
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+    	ExpandableListView.ExpandableListContextMenuInfo info;
+        try {
+             info = (ExpandableListView.ExpandableListContextMenuInfo) item.getMenuInfo();
+        } catch (ClassCastException e) {
+            Log.e(cTag, "bad menuInfo", e);
+            return false;
+        }
+
+        switch (item.getItemId()) {
+	        case MenuUtils.MOVE_UP_ID:
+	            moveUp(info.packedPosition);
+	            return true;
+	        case MenuUtils.MOVE_DOWN_ID:
+	            moveDown(info.packedPosition);
+	            return true;
+        }
+        return super.onContextItemSelected(item);
+    }	
+    
+    private boolean moveUpPermitted(int groupPosition,int childPosition) {
+    	return childPosition > 0;
+    }
+    
+    private boolean moveDownPermitted(int groupPosition,int childPosition) {
+    	int childCount = getExpandableListAdapter().getChildrenCount(groupPosition);
+    	return childPosition < childCount - 1;
+    }
+    
+    protected final void moveUp(long packedPosition) {
+        int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+        int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+    	if (moveUpPermitted(groupPosition, childPosition)) {
+    		Cursor cursor = (Cursor) getExpandableListAdapter().getChild(
+    				groupPosition, childPosition);
+    		BindingUtils.swapTaskPositions(this, cursor, childPosition - 1, childPosition);
+    	}
+    }
+    
+    protected final void moveDown(long packedPosition) {
+        int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+        int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+    	if (moveDownPermitted(groupPosition, childPosition)) {
+    		Cursor cursor = (Cursor) getExpandableListAdapter().getChild(
+    				groupPosition, childPosition);
+    		BindingUtils.swapTaskPositions(this, cursor, childPosition, childPosition + 1);
+    	}	
+    }
+	
 }
