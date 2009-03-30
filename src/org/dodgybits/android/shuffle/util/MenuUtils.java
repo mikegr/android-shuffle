@@ -173,7 +173,7 @@ public class MenuUtils {
 
 
 	public static void addCleanInboxMenuItem(Menu menu) {
-        menu.add(0, CLEAN_INBOX_ID, 0, R.string.clean_inbox_button_title)
+        menu.add(0, CLEAN_INBOX_ID, 15, R.string.clean_inbox_button_title)
         	.setIcon(R.drawable.edit_clear).setAlphabeticShortcut('i');
     }
 

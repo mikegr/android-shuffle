@@ -83,7 +83,7 @@ public class PreferencesAppearanceActivity extends Activity  {
 	private void setupSampleTask() {
         Date now = new Date();
         Project sampleProject = new Project("Sample project", 0, false);
-        Context sampleContext = ModelUtils.cPresetContexts[3];
+        Context sampleContext = ModelUtils.getSampleContext(getResources());
         mSampleTask = new Task("Sample action", "Additional action details", sampleContext, sampleProject, now, now, now, 1, false);
 		
 	}

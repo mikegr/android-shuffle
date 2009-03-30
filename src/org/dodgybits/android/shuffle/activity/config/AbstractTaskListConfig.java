@@ -6,6 +6,7 @@ import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -23,8 +24,8 @@ public abstract class AbstractTaskListConfig implements ListConfig<Task> {
 		return context.getString(R.string.task_name);
 	}
 	
-	public Task readItem(Cursor c) {
-        return BindingUtils.readTask(c);
+	public Task readItem(Cursor c, Resources res) {
+        return BindingUtils.readTask(c,res);
     }
     
   

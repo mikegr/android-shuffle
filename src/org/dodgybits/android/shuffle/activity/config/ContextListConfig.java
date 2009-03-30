@@ -1,6 +1,7 @@
 package org.dodgybits.android.shuffle.activity.config;
 
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -40,8 +41,8 @@ public class ContextListConfig implements DrilldownListConfig<Context> {
 		return false;
 	}
 
-	public Context readItem(Cursor cursor) {
-        return BindingUtils.readContext(cursor);
+	public Context readItem(Cursor cursor, Resources res) {
+        return BindingUtils.readContext(cursor, res);
 	}
 
 	public boolean supportsViewAction() {

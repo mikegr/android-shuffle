@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.provider.Shuffle.Contexts;
 import org.dodgybits.android.shuffle.provider.Shuffle.Projects;
@@ -17,7 +16,6 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,7 +32,7 @@ public class ShuffleProvider extends ContentProvider {
     private static final String cTag = "ShuffleProvider";
 
     public static final String cDatabaseName = "shuffle.db";
-    private static final int cDatabaseVersion = 9;
+    private static final int cDatabaseVersion = 10;
     
     static final String cTaskTableName = "task";
     static final String cProjectTableName = "project";
@@ -72,19 +70,47 @@ public class ShuffleProvider extends ContentProvider {
         @Override
         public void onCreate(SQLiteDatabase db) {
         	Log.i(cTag, "Creating shuffle DB");
+        	createContextTable(db);
+        	createProjectTable(db);
+        	createTaskTable(db);
+        }
+        
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        	if (oldVersion == 9) {
+        		db.execSQL("ALTER TABLE " + cContextTableName + " RENAME TO contextOld");
+        		createContextTable(db);
+        		db.execSQL("INSERT INTO " + cContextTableName + " (_id,name,colour)" +
+        				" SELECT _id,name,colour FROM contextOld");
+        		db.execSQL("DROP TABLE contextOld");
+        	} else {
+	            Log.w(cTag, "Upgrading database from version " + oldVersion + " to "
+	                    + newVersion + ", which will destroy all old data");
+	            db.execSQL("DROP TABLE IF EXISTS " + cContextTableName);
+	            db.execSQL("DROP TABLE IF EXISTS " + cProjectTableName);
+	            db.execSQL("DROP TABLE IF EXISTS " + cTaskTableName);
+	            onCreate(db);
+        	}
+        }
+
+        private void createContextTable(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + cContextTableName + " ("
             		+ "_id INTEGER PRIMARY KEY,"
                     + "name TEXT," 
                     + "colour INTEGER," 
-                    + "iconId INTEGER" + ");");
-
+                    + "iconName TEXT" + ");");
+        }
+        
+        private void createProjectTable(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + cProjectTableName + " (" 
             		+ "_id INTEGER PRIMARY KEY,"
                     + "name TEXT," 
                     + "archived INTEGER,"
                     + "defaultContextId INTEGER"
                     + ");");
-        	
+        }
+
+        private void createTaskTable(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + cTaskTableName + " (" 
             		+ "_id INTEGER PRIMARY KEY,"
                     + "description TEXT," 
@@ -97,18 +123,7 @@ public class ShuffleProvider extends ContentProvider {
                     + "displayOrder INTEGER,"
                     + "complete INTEGER"
                     + ");");
-            
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(cTag, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS " + cContextTableName);
-            db.execSQL("DROP TABLE IF EXISTS " + cProjectTableName);
-            db.execSQL("DROP TABLE IF EXISTS " + cTaskTableName);
-            onCreate(db);
-        }
+        }    
     }
     
     private DatabaseHelper mOpenHelper;
@@ -283,7 +298,6 @@ public class ShuffleProvider extends ContentProvider {
     public Uri insert(Uri url, ContentValues initialValues) {
         long rowID;
         ContentValues values;
-        Resources r;
         if (initialValues != null) {
             values = new ContentValues(initialValues);
         } else {
@@ -298,7 +312,6 @@ public class ShuffleProvider extends ContentProvider {
         case TOP_TASKS:
         case INBOX_TASKS:
             Long now = Long.valueOf(System.currentTimeMillis());
-            r = getContext().getResources();
 
             // Make sure that the fields are all set
             if (! values.containsKey(Shuffle.Tasks.CREATED_DATE)) {
@@ -329,7 +342,6 @@ public class ShuffleProvider extends ContentProvider {
         	break;
         	        	
         case PROJECTS:
-            r = android.content.res.Resources.getSystem();
             if (values.containsKey(Shuffle.Projects.NAME) == false) {
                 values.put(Shuffle.Projects.NAME, "");
             }
@@ -343,7 +355,6 @@ public class ShuffleProvider extends ContentProvider {
         	break;
         	
         case CONTEXTS:
-            r = Resources.getSystem();
             if (values.containsKey(Shuffle.Contexts.NAME) == false) {
                 values.put(Shuffle.Contexts.NAME, "");
             }
@@ -499,13 +510,13 @@ public class ShuffleProvider extends ContentProvider {
         sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_ARCHIVED, cProjectTableName + ".archived");
         sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_NAME, cContextTableName + ".name");
         sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_COLOUR, cContextTableName + ".colour");
-        sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_ICON, cContextTableName + ".iconId");
+        sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_ICON, cContextTableName + ".iconName");
 
         sContextListProjectMap = new HashMap<String, String>();
         sContextListProjectMap.put(Shuffle.Contexts._ID, cContextTableName + "._id");
         sContextListProjectMap.put(Shuffle.Contexts.NAME, cContextTableName + ".name");
         sContextListProjectMap.put(Shuffle.Contexts.COLOUR, cContextTableName + ".colour");
-        sContextListProjectMap.put(Shuffle.Contexts.ICON, cContextTableName + ".iconId");
+        sContextListProjectMap.put(Shuffle.Contexts.ICON, cContextTableName + ".iconName");
 
         sProjectListProjectMap = new HashMap<String, String>();
         sProjectListProjectMap.put(Shuffle.Projects._ID, cProjectTableName + "._id");

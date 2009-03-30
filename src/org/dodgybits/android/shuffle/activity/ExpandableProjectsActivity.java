@@ -84,7 +84,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getChild(groupPosition, childPosition);
-				Task task = getListConfig().readChild(cursor);
+				Task task = getListConfig().readChild(cursor, getResources());
 				TaskView taskView;
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
@@ -99,7 +99,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getGroup(groupPosition);
-				Project project = getListConfig().readGroup(cursor);
+				Project project = getListConfig().readGroup(cursor, getResources());
 				ProjectView projectView;
 				if (convertView instanceof ExpandableProjectView) {
 					projectView = (ExpandableProjectView) convertView;

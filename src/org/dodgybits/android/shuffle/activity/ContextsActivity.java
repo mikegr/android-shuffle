@@ -63,7 +63,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 			
 			public View getView(int position, View convertView, ViewGroup parent) {
 				Cursor cursor = (Cursor)getItem(position);
-				Context context = BindingUtils.readContext(cursor);
+				Context context = BindingUtils.readContext(cursor,getResources());
 				ContextView contextView;
 				if (convertView instanceof ContextView) {
 					contextView = (ContextView) convertView;

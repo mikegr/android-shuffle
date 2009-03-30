@@ -5,6 +5,7 @@ import java.util.Date;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
+import org.dodgybits.android.shuffle.model.Context.Icon;
 import org.dodgybits.android.shuffle.view.TaskView;
 import org.xmlpull.v1.XmlPullParser;
 
@@ -23,10 +24,10 @@ public class Test {
 	private static final String cTag = "Test";
 	
 	private static Context[] sContexts = {
-			new Context("Home", 3, android.R.drawable.ic_menu_gallery),
-			new Context("Work", 4, android.R.drawable.ic_dialog_dialer),
-			new Context("Town", 1, null),
-			new Context("Online", 6, null),
+			new Context("Home", 3, Icon.NONE),
+			new Context("Work", 4, Icon.NONE),
+			new Context("Town", 1, Icon.NONE),
+			new Context("Online", 6, Icon.NONE),
 	};
 	
 	private static Project[] sProjects = {

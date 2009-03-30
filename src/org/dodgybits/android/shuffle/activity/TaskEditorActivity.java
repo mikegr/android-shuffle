@@ -119,7 +119,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
 
     @Override
     protected Task restoreItem(Bundle icicle) {
-    	return BindingUtils.restoreTask(icicle);
+    	return BindingUtils.restoreTask(icicle,getResources());
     }
     
     @Override
@@ -153,7 +153,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             // we don't want to lose any UI state like the current cursor
             // position.  This trick accomplishes that.  In the future we
             // should have a better API for doing this...
-            Task task = BindingUtils.readTask(mCursor);
+            Task task = BindingUtils.readTask(mCursor,getResources());
             mDetailsWidget.setTextKeepState(task.details == null ? "" : task.details);
             
             mDescriptionWidget.setTextKeepState(task.description);
@@ -277,7 +277,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     			cursor = getContentResolver().query(uri, Shuffle.Contexts.cFullProjection, null, null, null);
         		cursor.moveToFirst();
     		}
-			context = BindingUtils.readContext(cursor);
+			context = BindingUtils.readContext(cursor,getResources());
 			cursor.close();
     	}
     	return context;

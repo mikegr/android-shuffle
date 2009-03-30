@@ -76,7 +76,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getChild(groupPosition, childPosition);
-				Task task = getListConfig().readChild(cursor);
+				Task task = getListConfig().readChild(cursor, getResources());
 				TaskView taskView;
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
@@ -91,7 +91,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getGroup(groupPosition);
-	        	Context context = getListConfig().readGroup(cursor);
+	        	Context context = getListConfig().readGroup(cursor, getResources());
 				ContextView contextView;
 				if (convertView instanceof ExpandableContextView) {
 					contextView = (ExpandableContextView) convertView;

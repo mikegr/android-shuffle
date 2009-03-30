@@ -72,7 +72,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 		Cursor cursor = getContentResolver().query(Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection,
 				Shuffle.Contexts._ID + " = ?", new String[] {String.valueOf(mContextId)}, null);
 		if (cursor.moveToNext()) {
-			mContext = BindingUtils.readContext(cursor);
+			mContext = BindingUtils.readContext(cursor,getResources());
 		}
 		cursor.close();
 		

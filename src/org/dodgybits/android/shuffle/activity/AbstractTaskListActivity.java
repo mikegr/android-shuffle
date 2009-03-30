@@ -72,7 +72,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 			public View getView(int position, View convertView, ViewGroup parent) {
 				Log.d(cTag, "getView position=" + position + ". Old view=" + convertView);
 				Cursor cursor = (Cursor)getItem(position);
-				Task task = getListConfig().readItem(cursor);
+				Task task = getListConfig().readItem(cursor, getResources());
 				TaskView taskView;
 				if (convertView instanceof TaskView) {
 					taskView = (TaskView) convertView;

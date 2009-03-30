@@ -61,12 +61,7 @@ public class TaskView extends ItemView<Task> {
 			mContext.setText(displayContext ? context.name : "");
 			mContext.setColourIndex(context.colourIndex);
 			// add context icon if preferences indicate to
-			Integer iconResource = context.iconResource;
-			Integer id = 0;
-			if (iconResource != null) {
-				String name = getResources().getResourceName(iconResource) + "_small";
-				id = getResources().getIdentifier(name, null, null);
-			}
+			int id = context.icon.smallIconId;
 			if (id > 0 && displayIcon) {
 				mContext.setIcon(getResources().getDrawable(id));
 			} else {

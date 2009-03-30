@@ -8,10 +8,12 @@ import java.util.Iterator;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
+import org.dodgybits.android.shuffle.model.Context.Icon;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,18 +25,17 @@ import android.util.SparseIntArray;
  * model to our own model classes.
  */
 public class BindingUtils {
-    private static final String cTag = "BindingUtils";
 
     private BindingUtils() {
 		// deny
 	}
 	
-	public static Task restoreTask(Bundle icicle) {
+	public static Task restoreTask(Bundle icicle, Resources res) {
 		if (icicle == null) return null;
 		Integer id = getInteger(icicle, Shuffle.Tasks._ID);
 		String description = icicle.getString(Shuffle.Tasks.DESCRIPTION);
 		String details = icicle.getString(Shuffle.Tasks.DETAILS);
-		Context context = restoreContext(icicle.getBundle(Shuffle.Tasks.CONTEXT_ID));
+		Context context = restoreContext(icicle.getBundle(Shuffle.Tasks.CONTEXT_ID), res);
 		Project project = restoreProject(icicle.getBundle(Shuffle.Tasks.PROJECT_ID));
 		Date created = restoreDate(icicle, Shuffle.Tasks.CREATED_DATE);
 		Date modified = restoreDate(icicle, Shuffle.Tasks.MODIFIED_DATE);
@@ -54,13 +55,14 @@ public class BindingUtils {
 		return date;
 	}
 	
-	public static Context restoreContext(Bundle icicle) {
+	public static Context restoreContext(Bundle icicle, Resources res) {
 		if (icicle == null) return null;
 		Integer id = getInteger(icicle, Shuffle.Contexts._ID);
 		String name = icicle.getString(Shuffle.Contexts.NAME);
 		Integer colour = getInteger(icicle, Shuffle.Contexts.COLOUR);
-		Integer iconResource = icicle.getInt(Shuffle.Contexts.ICON);
-		return new Context(id, name, colour, iconResource);
+		String iconName = icicle.getString(Shuffle.Contexts.ICON);
+		Icon icon = Icon.createIcon(iconName, res);
+		return new Context(id, name, colour, icon);
 	}
 	
 	public static Project restoreProject(Bundle icicle) {
@@ -109,7 +111,7 @@ public class BindingUtils {
 		putInteger(icicle, Shuffle.Contexts._ID, context.id);
 		icicle.putString(Shuffle.Contexts.NAME, context.name);
 		putInteger(icicle, Shuffle.Contexts.COLOUR, context.colourIndex);
-		putInteger(icicle, Shuffle.Contexts.ICON, context.iconResource);
+		icicle.putString(Shuffle.Contexts.ICON, context.icon.iconName);
 		return icicle;
 	}
 	
@@ -140,14 +142,14 @@ public class BindingUtils {
     private static final int CONTEXT_COLOUR_INDEX = 14;
     private static final int CONTEXT_ICON_INDEX = 15;
     
-	public static Task readTask(Cursor cursor) {
+	public static Task readTask(Cursor cursor, Resources res) {
 		Integer id = readInteger(cursor, ID_INDEX);
         String description = readString(cursor, DESCRIPTION_INDEX);
 		String details = readString(cursor, DETAILS_INDEX);
 		Integer projectId = readInteger(cursor, PROJECT_INDEX);
 		Project project = readJoinedProject(cursor, projectId);
 		Integer contextId = readInteger(cursor, CONTEXT_INDEX);
-		Context context = readJoinedContext(cursor, contextId);
+		Context context = readJoinedContext(cursor, res, contextId);
 		
 		Date created = readDate(cursor, CREATED_INDEX);
 		Date modified = readDate(cursor, MODIFIED_INDEX);
@@ -168,12 +170,13 @@ public class BindingUtils {
 		
 	}
 
-	private static Context readJoinedContext(Cursor cursor, Integer contextId) {
+	private static Context readJoinedContext(Cursor cursor, Resources res, Integer contextId) {
 		if (contextId == null) return null;
 		String name = readString(cursor, CONTEXT_NAME_INDEX);
 		int colour = cursor.getInt(CONTEXT_COLOUR_INDEX);
-		Integer iconResourceId = readInteger(cursor, CONTEXT_ICON_INDEX);
-		return new Context(contextId, name, colour, iconResourceId);
+		String iconName = readString(cursor, CONTEXT_ICON_INDEX);
+		Icon icon = Icon.createIcon(iconName, res);
+		return new Context(contextId, name, colour, icon);
 	}
 
 	public static Project fetchProjectById(android.content.Context androidContext, Integer projectId) {
@@ -194,9 +197,10 @@ public class BindingUtils {
 		Context context = null;
 		if (contextId != null) {
 			Uri uri = ContentUris.withAppendedId(Shuffle.Contexts.CONTENT_URI, contextId);			
-			Cursor contextCursor = androidContext.getContentResolver().query(uri, Shuffle.Contexts.cFullProjection, null, null, null);
+			Cursor contextCursor = androidContext.getContentResolver().query(
+					uri, Shuffle.Contexts.cFullProjection, null, null, null);
 			if (contextCursor.moveToFirst()) {
-				context = readContext(contextCursor);
+				context = readContext(contextCursor, androidContext.getResources());
 			}
 			contextCursor.close();
 		}
@@ -264,19 +268,20 @@ public class BindingUtils {
 	private static final int COLOUR_INDEX = 2;
 	private static final int ICON_INDEX = 3;
 	
-	public static Context readContext(Cursor cursor) {
+	public static Context readContext(Cursor cursor, Resources res) {
 		Integer id = readInteger(cursor, ID_INDEX);
 		String name = readString(cursor, NAME_INDEX);
 		int colour = cursor.getInt(COLOUR_INDEX);
-		Integer iconResourceId = readInteger(cursor, ICON_INDEX);
-		return new Context(id, name, colour, iconResourceId);
+		String iconName = readString(cursor, ICON_INDEX);
+		Icon icon = Icon.createIcon(iconName, res);
+		return new Context(id, name, colour, icon);
 	}
 	
 	public static void writeContext(ContentValues values, Context context) {
 		// never write id since it's auto generated
 		writeString(values, Shuffle.Contexts.NAME, context.name);
 		writeInteger(values, Shuffle.Contexts.COLOUR, context.colourIndex);
-		writeInteger(values, Shuffle.Contexts.ICON, context.iconResource);
+		writeString(values, Shuffle.Contexts.ICON, context.icon.iconName);
 	}
 	
 	private static final int DEFAULT_CONTEXT_INDEX = 2;

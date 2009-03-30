@@ -3,6 +3,7 @@ package org.dodgybits.android.shuffle.activity;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.State;
+import org.dodgybits.android.shuffle.model.Context.Icon;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.view.LabelView;
@@ -26,7 +27,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     private static final int ICON_PICKER = 1;
     
     private int mColourIndex;
-    private Integer mIconId;
+    private Icon mIcon;
     
     private EditText mNameWidget;
     private LabelView mColourWidget;
@@ -49,7 +50,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         
         mIconWidget = (ImageView) findViewById(R.id.icon_display);
         mIconNoneWidget = (TextView) findViewById(R.id.icon_none);
-        mIconId = null;
+        mIcon = Icon.NONE;
         
         mChangeColourButton = (Button) findViewById(R.id.colour_change_button);
         mChangeColourButton.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +76,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         mClearIconButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-            	mIconId = null;
+            	mIcon = Icon.NONE;
             	displayIcon();
             }
         });        
@@ -92,7 +93,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     }
 
     protected Context restoreItem(Bundle icicle) {
-    	return BindingUtils.restoreContext(icicle);
+    	return BindingUtils.restoreContext(icicle,getResources());
     }
     
     protected void saveItem(Bundle outState, Context item) {
@@ -121,7 +122,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
             // paused/stopped.  We want to put the new text in the text view,
             // but leave the user where they were (retain the cursor position
             // etc).  This version of setText does that for us.
-            Context context = BindingUtils.readContext(mCursor);
+            Context context = BindingUtils.readContext(mCursor,getResources());
             mNameWidget.setTextKeepState(context.name);
             
             if (mColourIndex == -1) {
@@ -130,9 +131,9 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
             }
             displayColour();
             
-            if (mIconId == null) {
-            	// if icon already set, use that (e.g. after use picks a new one)
-              mIconId = context.iconResource;
+            if (mIcon == Icon.NONE) {
+            	// if icon already set, use that (e.g. after user picks a new one)
+                mIcon = context.icon;
             }
         	displayIcon();
 
@@ -168,7 +169,8 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     	case ICON_PICKER:
         	if (resultCode == Activity.RESULT_OK) {
     			if (data != null) {
-    				mIconId = Integer.parseInt(data.getStringExtra("icon"));
+    				String iconName = data.getStringExtra("iconName");
+    				mIcon = Icon.createIcon(iconName, getResources());
     				displayIcon();
     			}
     		}
@@ -185,13 +187,13 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
 
 
 	private void displayIcon() {
-    	if (mIconId == null) {
+    	if (mIcon == Icon.NONE) {
     		mIconNoneWidget.setVisibility(View.VISIBLE);
     		mIconWidget.setVisibility(View.GONE);
     		mClearIconButton.setEnabled(false);
     	} else {
     		mIconNoneWidget.setVisibility(View.GONE);
-    		mIconWidget.setImageResource(mIconId);
+    		mIconWidget.setImageResource(mIcon.largeIconId);
     		mIconWidget.setVisibility(View.VISIBLE);
     		mClearIconButton.setEnabled(true);
     	}
@@ -221,7 +223,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
             // Get out updates into the provider.
             } else {
             	String name = mNameWidget.getText().toString();
-            	Context context  = new Context(name, mColourIndex, mIconId);
+            	Context context  = new Context(name, mColourIndex, mIcon);
                 ContentValues values = new ContentValues();
             	writeItem(values, context);
 

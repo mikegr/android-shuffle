@@ -65,7 +65,7 @@ public class TaskViewActivity extends Activity {
         if (mCursor != null) {
             // Make sure we are at the one and only row in the cursor.
             mCursor.moveToFirst();
-            Task task = BindingUtils.readTask(mCursor);
+            Task task = BindingUtils.readTask(mCursor,getResources());
             mDescriptionWidget.setText(task.description);
             if (TextUtils.isEmpty(task.details)) {
             	mDetailsWidget.setText(R.string.undefined);
@@ -73,11 +73,11 @@ public class TaskViewActivity extends Activity {
             	mDetailsWidget.setText(task.details);
             }
             if (task.context != null) {
-                Drawable icon = getResources().getDrawable(R.drawable.go_home_small);
+                Drawable icon = getResources().getDrawable(task.context.icon.largeIconId);
             	mContextView.setIcon(icon);
             	mContextView.setColourIndex(task.context.colourIndex);
                 mContextView.setTextKeepState(task.context.name);
-    			Integer iconResource = task.context.iconResource;
+    			Integer iconResource = task.context.icon.largeIconId;
     			if (iconResource != null) {
     				mContextIcon.setImageResource(iconResource);
     			}

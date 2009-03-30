@@ -36,7 +36,9 @@ public class IconPickerActivity extends Activity implements OnItemClickListener 
     @SuppressWarnings("unchecked")
 	public void onItemClick(AdapterView parent, View v, int position, long id) {
 		Bundle bundle = new Bundle();
-	    bundle.putString("icon", String.valueOf(mGrid.getAdapter().getItem(position)));
+		int iconId = (Integer)mGrid.getAdapter().getItem(position);
+		String iconName = getResources().getResourceEntryName(iconId);
+	    bundle.putString("iconName", iconName);
 	    Intent mIntent = new Intent();
 	    mIntent.putExtras(bundle);
 	    setResult(RESULT_OK, mIntent);
@@ -52,7 +54,6 @@ public class IconPickerActivity extends Activity implements OnItemClickListener 
         
         private void loadIcons() {
         	mIconIds = new int[] {
-    			android.R.drawable.stat_sys_phone_call,
     			R.drawable.applications_accessories,
     			R.drawable.applications_development,
     			R.drawable.applications_games,
@@ -78,7 +79,6 @@ public class IconPickerActivity extends Activity implements OnItemClickListener 
             Integer iconId = mIconIds[position];
             i.setImageResource(iconId);
             i.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            //i.setLayoutParams(new Gallery.LayoutParams(32, 32));
             return i;
         }
 

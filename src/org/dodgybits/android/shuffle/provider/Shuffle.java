@@ -153,7 +153,7 @@ public class Shuffle {
         
         public static final String NAME = "name";
         public static final String COLOUR = "colour";
-        public static final String ICON = "iconId";
+        public static final String ICON = "iconName";
         
         /**
          * Projection for all the columns of a context.

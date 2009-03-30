@@ -7,6 +7,7 @@ import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -48,7 +49,7 @@ public class ProjectListConfig implements DrilldownListConfig<Project> {
     	return false;
 	}
 
-	public Project readItem(Cursor cursor) {
+	public Project readItem(Cursor cursor, Resources res) {
         return BindingUtils.readProject(cursor);
 	}
 

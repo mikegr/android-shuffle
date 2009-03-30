@@ -8,6 +8,7 @@ import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -41,12 +42,12 @@ public class ContextExpandableListConfig implements ExpandableListConfig<Context
 		return context.getString(R.string.context_name);
 	}
 	
-	public Task readChild(Cursor cursor) {
-        return BindingUtils.readTask(cursor);
+	public Task readChild(Cursor cursor, Resources res) {
+        return BindingUtils.readTask(cursor, res);
 	}
 
-	public Context readGroup(Cursor cursor) {
-        return BindingUtils.readContext(cursor);
+	public Context readGroup(Cursor cursor, Resources res) {
+        return BindingUtils.readContext(cursor, res);
 	}
 	
 }

@@ -1,6 +1,7 @@
 package org.dodgybits.android.shuffle.activity.config;
 
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -28,7 +29,7 @@ public interface ListConfig<T> {
 	/**
 	 * Generate a model object for the item at the current cursor position.
 	 */
-	public T readItem(Cursor cursor);
+	public T readItem(Cursor cursor, Resources res);
 
 	public int getCurrentViewMenuId();
 	

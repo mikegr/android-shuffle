@@ -1,6 +1,7 @@
 package org.dodgybits.android.shuffle.activity.config;
 
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -36,12 +37,12 @@ public interface ExpandableListConfig<G,C> {
     /**
      * Generate a model object for the group item at the current cursor position.
      */
-    abstract G readGroup(Cursor cursor);
+    abstract G readGroup(Cursor cursor, Resources res);
 
     /**
      * Generate a model object for the child item at the current cursor position.
      */
-    abstract C readChild(Cursor cursor);
+    abstract C readChild(Cursor cursor, Resources res);
 
     
 }
