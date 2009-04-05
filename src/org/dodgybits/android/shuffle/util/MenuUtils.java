@@ -31,12 +31,13 @@ public class MenuUtils {
 	
     // Identifiers for our menu items.
     public static final int SAVE_ID = Menu.FIRST;
-    public static final int REVERT_ID = Menu.FIRST + 1;
-    public static final int DISCARD_ID = Menu.FIRST + 2;
-    public static final int DELETE_ID = Menu.FIRST + 3;
-    public static final int INSERT_ID = Menu.FIRST + 4;
-    public static final int INSERT_CHILD_ID = Menu.FIRST + 5;
-    public static final int INSERT_GROUP_ID = Menu.FIRST + 6;
+    public static final int SAVE_AND_ADD_ID = Menu.FIRST + 1;
+    public static final int REVERT_ID = Menu.FIRST + 2;
+    public static final int DISCARD_ID = Menu.FIRST + 3;
+    public static final int DELETE_ID = Menu.FIRST + 4;
+    public static final int INSERT_ID = Menu.FIRST + 5;
+    public static final int INSERT_CHILD_ID = Menu.FIRST + 6;
+    public static final int INSERT_GROUP_ID = Menu.FIRST + 7;
     
     public static final int INBOX_ID = Menu.FIRST + 10;
     public static final int CALENDAR_ID = Menu.FIRST + 11;
@@ -54,9 +55,34 @@ public class MenuUtils {
     public static final int MOVE_DOWN_ID = Menu.FIRST + 102;
 
     
+    // Editor menus
+    private static final int SAVE_ORDER = 1;
+    private static final int SAVE_AND_ADD_ORDER = 2;
+    private static final int REVERT_ORDER = 3;
+    private static final int DISCARD_ORDER = 3;
+    
+    // Context menus
+    private static final int EDIT_ORDER = 1;
+    private static final int COMPLETE_ORDER = 3;
+    private static final int MOVE_UP_ORDER = 4;
+    private static final int MOVE_DOWN_ORDER = 5;
+    private static final int DELETE_ORDER = 10;
+    
+    // List menus
+    private static final int INSERT_ORDER = 1;
+    private static final int INSERT_CHILD_ORDER = 1;
+    private static final int INSERT_GROUP_ORDER = 2;
+    private static final int CLEAN_INBOX_ORDER = 101;
+    
+    
+    // General menus
+    private static final int PERSPECTIVE_ORDER = 201;
+    private static final int PREFERENCE_ORDER = 202;
+    private static final int HELP_ORDER = 203;
+    
 	public static void addInsertMenuItems(Menu menu, String itemName, boolean isTaskList, Context context) {
 		String menuName = context.getResources().getString(R.string.menu_insert, itemName);
-		menu.add(0, INSERT_ID, 0, menuName)
+		menu.add(Menu.NONE, INSERT_ID, INSERT_ORDER, menuName)
 			.setIcon(android.R.drawable.ic_menu_add)
 			.setAlphabeticShortcut(isTaskList ? 'c' : 'a');
 	}
@@ -64,74 +90,54 @@ public class MenuUtils {
 	public static void addExpandableInsertMenuItems(Menu menu, String groupName, String childName, Context context) {
 		String menuName;
 		menuName = context.getResources().getString(R.string.menu_insert, childName);
-        menu.add(0, INSERT_CHILD_ID, 0, menuName)
+        menu.add(Menu.NONE, INSERT_CHILD_ID, INSERT_CHILD_ORDER, menuName)
         	.setIcon(android.R.drawable.ic_menu_add).setAlphabeticShortcut('c');
 		menuName = context.getResources().getString(R.string.menu_insert, groupName);
-        menu.add(0, INSERT_GROUP_ID, 0, menuName)
+        menu.add(Menu.NONE, INSERT_GROUP_ID, INSERT_GROUP_ORDER, menuName)
         	.setIcon(android.R.drawable.ic_menu_add).setAlphabeticShortcut('a');
 	}
 
 	public static void addViewMenuItems(Menu menu, int currentViewMenuId) {
-        SubMenu viewMenu  = menu.addSubMenu(0, 0, 0, R.string.menu_view)
+        SubMenu viewMenu  = menu.addSubMenu(Menu.NONE, Menu.NONE, PERSPECTIVE_ORDER, R.string.menu_view)
         	.setIcon(R.drawable.preferences_system_windows);
-        viewMenu.add(0, INBOX_ID, 0, R.string.title_inbox)
+        viewMenu.add(Menu.NONE, INBOX_ID, 0, R.string.title_inbox)
         	.setChecked(INBOX_ID == currentViewMenuId);
-        	//.setShortcut('1','1');
-        viewMenu.add(0, CALENDAR_ID, 0, R.string.title_due_tasks)
+        viewMenu.add(Menu.NONE, CALENDAR_ID, 1, R.string.title_due_tasks)
         	.setChecked(CALENDAR_ID == currentViewMenuId);
-        	//.setShortcut('2','2');
-        viewMenu.add(0, TOP_TASKS_ID, 0, R.string.title_next_tasks)
+        viewMenu.add(Menu.NONE, TOP_TASKS_ID, 2, R.string.title_next_tasks)
         	.setChecked(TOP_TASKS_ID == currentViewMenuId);
-        	//.setShortcut('3','3');
-        viewMenu.add(0, PROJECT_ID, 0, R.string.title_project)
+        viewMenu.add(Menu.NONE, PROJECT_ID, 3, R.string.title_project)
         	.setChecked(PROJECT_ID == currentViewMenuId);
-        	//.setShortcut('4','4');
-        viewMenu.add(0, CONTEXT_ID, 0, R.string.title_context)
+        viewMenu.add(Menu.NONE, CONTEXT_ID, 4, R.string.title_context)
         	.setChecked(CONTEXT_ID == currentViewMenuId);
-        	//.setShortcut('5','5');
 	}
 	
 	public static void addEditorMenuItems(Menu menu, int state) {
+        menu.add(Menu.NONE, SAVE_ID, SAVE_ORDER, R.string.menu_save)
+    		.setIcon(android.R.drawable.ic_menu_save).setAlphabeticShortcut('s');
         // Build the menus that are shown when editing.
         if (state == State.STATE_EDIT) {
-            menu.add(0, SAVE_ID, 0, R.string.menu_save)
-            	.setIcon(android.R.drawable.ic_menu_save).setAlphabeticShortcut('s');
-            menu.add(0, REVERT_ID, 0, R.string.menu_revert)
+            menu.add(Menu.NONE, REVERT_ID, REVERT_ORDER, R.string.menu_revert)
             	.setIcon(android.R.drawable.ic_menu_revert).setAlphabeticShortcut('r');
-            menu.add(0, DELETE_ID, 0, R.string.menu_delete)
+            menu.add(Menu.NONE, DELETE_ID, DELETE_ORDER, R.string.menu_delete)
             	.setIcon(android.R.drawable.ic_menu_delete).setAlphabeticShortcut('d');
 
         // Build the menus that are shown when inserting.
         } else {
-            menu.add(0, SAVE_ID, 0, R.string.menu_save)
-            	.setIcon(android.R.drawable.ic_menu_save).setAlphabeticShortcut('s');
-            menu.add(0, DISCARD_ID, 0, R.string.menu_discard)
+            menu.add(Menu.NONE, SAVE_AND_ADD_ID, SAVE_AND_ADD_ORDER, R.string.menu_save_and_add)
+            	.setIcon(android.R.drawable.ic_menu_save);
+            menu.add(Menu.NONE, DISCARD_ID, DISCARD_ORDER, R.string.menu_discard)
             	.setIcon(android.R.drawable.ic_menu_close_clear_cancel).setAlphabeticShortcut('d');
         }
 	}
 	
 	public static void addPrefsHelpMenuItems(Menu menu) {
-        menu.add(0, PREFERENCE_ID, 0, R.string.menu_preferences)
+        menu.add(Menu.NONE, PREFERENCE_ID, PREFERENCE_ORDER, R.string.menu_preferences)
         	.setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('p');
-        menu.add(0, HELP_ID, 0, R.string.menu_help)
+        menu.add(Menu.NONE, HELP_ID, HELP_ORDER, R.string.menu_help)
         	.setIcon(android.R.drawable.ic_menu_help).setAlphabeticShortcut('h');
 	}
 		
-	public static void addAlternativeMenuItems(Menu menu, Uri uri, Activity activity) {
-        // Generate any additional actions that can be performed on the
-        // overall list.  In a normal install, there are no additional
-        // actions found here, but this allows other applications to extend
-        // our menu with their own actions.
-		
-		/* Disable for now since it's adding our own activities
-		Intent intent = new Intent(null, uri); 
-        intent.addCategory(Intent.ALTERNATIVE_CATEGORY);
-        menu.addIntentOptions(
-            Menu.ALTERNATIVE, 0, new ComponentName(activity, activity.getClass()),
-            null, intent, 0, null);
-            */
-	}
-
 	public static void addSelectedAlternativeMenuItems(Menu menu, Uri uri, Activity activity, boolean includeView) {
         // Build menu...  always starts with the EDIT action...
 		
@@ -147,7 +153,7 @@ public class MenuUtils {
         // ... is followed by whatever other actions are available...
         Intent intent = new Intent(null, uri);
         intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
-        menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0, null, specifics,
+        menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, Menu.NONE, EDIT_ORDER, null, specifics,
                               intent, 0, items);
 
         // Give a shortcut to the edit action.
@@ -162,28 +168,28 @@ public class MenuUtils {
 	}
 	
 	public static void addCompleteMenuItem(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, 5, R.string.menu_complete)
+        menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, COMPLETE_ORDER, R.string.menu_complete)
         	.setIcon(R.drawable.btn_check_on).setAlphabeticShortcut('x');
     }
 
 	public static void addDeleteMenuItem(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, DELETE_ID, 10, R.string.menu_delete)
+        menu.add(Menu.CATEGORY_ALTERNATIVE, DELETE_ID, DELETE_ORDER, R.string.menu_delete)
         	.setIcon(android.R.drawable.ic_menu_delete).setAlphabeticShortcut('d');
     }
 
 
 	public static void addCleanInboxMenuItem(Menu menu) {
-        menu.add(0, CLEAN_INBOX_ID, 15, R.string.clean_inbox_button_title)
+        menu.add(Menu.NONE, CLEAN_INBOX_ID, CLEAN_INBOX_ORDER, R.string.clean_inbox_button_title)
         	.setIcon(R.drawable.edit_clear).setAlphabeticShortcut('i');
     }
 
 	public static void addMoveMenuItems(Menu menu, boolean enableUp, boolean enableDown) {
 		if (enableUp) {
-	        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_UP_ID, 11, R.string.menu_move_up)
+	        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_UP_ID, MOVE_UP_ORDER, R.string.menu_move_up)
 	        	.setIcon(R.drawable.go_up).setAlphabeticShortcut('k');
 		}
 		if (enableDown) {
-	        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_DOWN_ID, 12, R.string.menu_move_down)
+	        menu.add(Menu.CATEGORY_ALTERNATIVE, MOVE_DOWN_ID, MOVE_DOWN_ORDER, R.string.menu_move_down)
 	        	.setIcon(R.drawable.go_down).setAlphabeticShortcut('j');
 		}
     }

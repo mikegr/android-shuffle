@@ -7,6 +7,7 @@ import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,21 +52,6 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
 
         // Get the project!
         mCursor = managedQuery(mUri, Shuffle.Projects.cFullProjection, null, null, null);
-    }
-    
-    /**
-     * @return id of layout for this view
-     */
-    protected int getContentViewResId() {
-    	return R.layout.project_editor;
-    }
-
-    protected Project restoreItem(Bundle icicle) {
-    	return BindingUtils.restoreProject(icicle);
-    }
-    
-    protected void saveItem(Bundle outState, Project item) {
-    	BindingUtils.saveProject(outState, item);
     }
     
     @Override
@@ -155,19 +141,51 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
                 // the content provider will notify the cursor of the change, which will
                 // cause the UI to be updated.
                 getContentResolver().update(mUri, values, null, null);    	
+                showSaveToast();
             }
         }
     }
-    
-    protected void writeItem(ContentValues values, Project project) {
-    	BindingUtils.writeProject(values, project);
-    }
-
+       
     /**
      * Take care of deleting a project.  Simply deletes the entry.
      */
+    @Override
     protected void deleteItem() {
     	super.deleteItem();
         mNameWidget.setText("");
     }
+    
+    /**
+     * @return id of layout for this view
+     */
+    @Override
+    protected int getContentViewResId() {
+    	return R.layout.project_editor;
+    }
+
+    @Override
+    protected Project restoreItem(Bundle icicle) {
+    	return BindingUtils.restoreProject(icicle);
+    }
+    
+    @Override
+    protected void saveItem(Bundle outState, Project item) {
+    	BindingUtils.saveProject(outState, item);
+    }
+
+    @Override
+    protected void writeItem(ContentValues values, Project project) {
+    	BindingUtils.writeProject(values, project);
+    }
+    
+    @Override
+    protected Intent getInsertIntent() {
+    	return new Intent(Intent.ACTION_INSERT, Shuffle.Projects.CONTENT_URI);
+    }
+    
+    @Override
+    protected CharSequence getItemName() {
+    	return getString(R.string.project_name);
+    }
+
 }

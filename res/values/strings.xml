@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 	<!--  Activity titles -->
     <string name="app_name">Shuffle</string>
     <string name="title_inbox">Inbox</string>
@@ -26,6 +26,7 @@
 
 	<!--  Option menu -->
     <string name="menu_save">Save</string>
+    <string name="menu_save_and_add">Save and New</string>
     <string name="menu_delete">Delete</string>
     <string name="menu_complete">Toggle complete</string>
     <string name="menu_move_up">Move up</string>
@@ -106,6 +107,14 @@
     <string name="clean_inbox_button_title">Clean up Inbox</string>
     <string name="clean_slate_button_title">Delete everything!</string>
 
+    <!-- Toast displayed when an item is created -->
+    <string name="itemCreatedToast"><xliff:g id="itemName">%s</xliff:g> created.</string>
+
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemSavedToast"><xliff:g id="itemName">%s</xliff:g> saved.</string>
+
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemDeletedToast"><xliff:g id="itemName">%s</xliff:g> deleted.</string>
 
 	<!--  messages -->
     <string name="no_due_date">No due date</string>

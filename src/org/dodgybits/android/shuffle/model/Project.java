@@ -1,5 +1,7 @@
 package org.dodgybits.android.shuffle.model;
 
+import android.text.TextUtils;
+
 public class Project {
 	public Integer id;
 	public final String name;
@@ -16,5 +18,25 @@ public class Project {
 	public Project(String name, Integer defaultContextId, boolean archived) {
 		this(null, name, defaultContextId, archived);
 	}
-		
+
+	@Override
+	public boolean equals(Object o) {
+		boolean result = false;
+		if (o instanceof Project) {
+			result = TextUtils.equals(((Project)o).name, name );
+		}
+		return result;
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	
 }

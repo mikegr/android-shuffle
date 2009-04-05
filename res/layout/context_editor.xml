@@ -1,85 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:orientation="vertical" android:padding="4dip"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content"
-    android:paddingBottom="10px"
-    style="@style/dialog_editor"  
-    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:padding="4dip"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:paddingBottom="10px" style="@style/editor">
 
-	    <EditText android:id="@+id/name"
-	        android:layout_width="fill_parent" 
-	        android:layout_height="wrap_content"	        
-	        android:hint="@string/name_title"
-            android:maxLength="20"
-            style="@style/editable_text"
-            >
-	        <requestFocus />
-	    </EditText>
-	
-		<LinearLayout 
-			android:orientation="horizontal" 
-		    android:layout_width="wrap_content" 
-	        style="@style/centered_row">
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:paddingLeft="5px"
+		android:paddingRight="5px" android:text="@string/name_title"
+		style="@style/label" />
 
-	        <org.dodgybits.android.shuffle.view.LabelView android:id="@+id/colour_display"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:paddingLeft="5px"
-	            android:paddingRight="5px"
-	            android:text="Abc"
-		        style="@style/context"
-	            />
-	
-		    <TextView
-		        android:layout_width="wrap_content" 
-		        android:layout_height="wrap_content"
-	            android:paddingLeft="20px"
-			/>
-			
-		    <Button android:id="@+id/colour_change_button"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="2"
-	            android:text="@string/edit_button_title"
-	            />	
-	            
-		</LinearLayout>           
-        
-		<LinearLayout 
-			android:orientation="horizontal" 
-	        style="@style/centered_row">
-	                
-	        <ImageView android:id="@+id/icon_display"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:paddingLeft="5px"
-	            android:paddingRight="5px"
-	            />
-	
-	        <TextView android:id="@+id/icon_none"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:paddingLeft="5px"
-	            android:paddingRight="5px"
-	            android:text="@string/no_icon"
-	            />
-	
-		    <Button android:id="@+id/icon_set_button"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:text="@string/set_button_title"
-	            />
-	
-		    <Button android:id="@+id/icon_clear_button"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:text="@string/clear_button_title"
-	            />
-    	</LinearLayout>
-	
+	<EditText android:id="@+id/name" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:hint="@string/name_title"
+		android:maxLength="20" style="@style/text_editable">
+		<requestFocus />
+	</EditText>
+
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:paddingLeft="5px"
+		android:paddingRight="5px" android:text="@string/colour_title"
+		style="@style/label" />
+
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="fill_parent" android:layout_height="wrap_content" 
+		style="@style/centered_row">
+
+		<org.dodgybits.android.shuffle.view.LabelView
+			android:id="@+id/colour_display" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:paddingLeft="5px"
+			android:paddingRight="5px" android:text="Abc" style="@style/context" />
+
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1" />
+
+		<Button android:id="@+id/colour_set_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:text="@string/set_button_title" />
+
+		<Button android:id="@+id/colour_clear_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:text="@string/clear_button_title" />
+
+	</LinearLayout>
+
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:paddingLeft="5px"
+		android:paddingRight="5px" android:text="@string/icon_title"
+		style="@style/label" />
+
+	<LinearLayout android:orientation="horizontal"
+		style="@style/centered_row">
+
+		<ImageView android:id="@+id/icon_display"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:paddingLeft="5px" android:paddingRight="5px" />
+
+		<TextView android:id="@+id/icon_none"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:paddingLeft="5px" android:paddingRight="5px"
+			android:text="@string/no_icon" />
+
+		<Button android:id="@+id/icon_set_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:text="@string/set_button_title" />
+
+		<Button android:id="@+id/icon_clear_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:text="@string/clear_button_title" />
+	</LinearLayout>
+
 </LinearLayout>

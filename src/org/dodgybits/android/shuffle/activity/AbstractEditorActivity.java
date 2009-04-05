@@ -1,5 +1,6 @@
 package org.dodgybits.android.shuffle.activity;
 
+import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.State;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * A generic activity for editing an item in a database.  This can be used
@@ -95,15 +97,6 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         Log.d(cTag, "onResume-");
     }
     
-    /**
-     * @return id of layout for this view
-     */
-    abstract int getContentViewResId();
-
-    abstract T restoreItem(Bundle icicle);
-
-    abstract void saveItem(Bundle outState, T item);
-    
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         Log.d(cTag, "onSaveInstanceState+");
@@ -118,7 +111,6 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         super.onCreateOptionsMenu(menu);
 
         MenuUtils.addEditorMenuItems(menu, mState);
-        MenuUtils.addAlternativeMenuItems(menu, getIntent().getData(), this);
         MenuUtils.addPrefsHelpMenuItems(menu);
 
         return true;
@@ -130,6 +122,12 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         switch (item.getItemId()) {
         case MenuUtils.SAVE_ID:
             finish();
+            break;
+        case MenuUtils.SAVE_AND_ADD_ID:
+        	// create an Intent for the new item based on the current item
+        	startActivity(getInsertIntent());
+            finish();
+            
             break;
         case MenuUtils.DELETE_ID:
             deleteItem();
@@ -148,8 +146,6 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    abstract void writeItem(ContentValues values, T item);
-    
     /**
      * Take care of canceling work on a item.  Deletes the item if we
      * had created it, otherwise reverts to the original text.
@@ -181,5 +177,30 @@ public abstract class AbstractEditorActivity<T> extends Activity {
             getContentResolver().delete(mUri, null, null);
         }
     }
+    
+    protected final void showSaveToast() {
+    	String text;
+    	if (mState == State.STATE_EDIT) {
+    		text = getResources().getString(R.string.itemSavedToast, getItemName());
+    	} else {
+    		text = getResources().getString(R.string.itemCreatedToast, getItemName());
+    	}
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+    
+    /**
+     * @return id of layout for this view
+     */
+    abstract protected int getContentViewResId();
+
+    abstract protected T restoreItem(Bundle icicle);
+
+    abstract protected void saveItem(Bundle outState, T item);
+    
+    abstract protected void writeItem(ContentValues values, T item);
+
+    abstract protected Intent getInsertIntent();
+    
+    abstract protected CharSequence getItemName();
     
 }

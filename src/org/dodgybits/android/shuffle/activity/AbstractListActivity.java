@@ -1,6 +1,8 @@
 package org.dodgybits.android.shuffle.activity;
 
+import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.activity.config.ListConfig;
+import org.dodgybits.android.shuffle.model.State;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.Activity;
@@ -22,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public abstract class AbstractListActivity<T> extends ListActivity {
 
@@ -138,7 +141,6 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		super.onCreateOptionsMenu(menu);
 
 		MenuUtils.addInsertMenuItems(menu, getListConfig().getItemName(this), getListConfig().isTaskList(), this);
-		MenuUtils.addAlternativeMenuItems(menu, getListConfig().getContentUri(), this);
 		MenuUtils.addViewMenuItems(menu, getListConfig().getCurrentViewMenuId());
 		MenuUtils.addPrefsHelpMenuItems(menu);
 
@@ -235,7 +237,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	abstract protected Cursor createItemQuery();
 
 	abstract protected ListAdapter createListAdapter(Cursor cursor);
-	
+		
 	// custom helper methods
 	
 	protected final ListConfig<T> getListConfig()
@@ -249,6 +251,9 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	protected void deleteItem(long id) {
         getContentResolver().delete(getListConfig().getListContentUri(), 
         		BaseColumns._ID + "=?", new String[] { String.valueOf(id) });
+    	String text = getResources().getString(
+    			R.string.itemDeletedToast, getListConfig().getItemName(this));
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();        
 	}
 
 	/**
@@ -275,6 +280,5 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	protected Intent getClickIntent(Uri uri) {
 		return new Intent(Intent.ACTION_EDIT, uri);
 	}
-
 	
 }

@@ -12,6 +12,7 @@ import org.dodgybits.android.shuffle.view.ExpandableTaskView;
 import org.dodgybits.android.shuffle.view.TaskView;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,11 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 		return cursor;
 	}
 
+	@Override
+	protected void updateInsertExtras(Bundle extras, Context context) {
+   		extras.putString(Shuffle.Tasks.CONTEXT_ID, context.name);
+	}
+	
 	@Override
 	protected ExpandableListAdapter createExpandableListAdapter(Cursor cursor) {
 		return new MyExpandableListAdapter(this, 

@@ -2,6 +2,7 @@ package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.activity.config.ExpandableListConfig;
 import org.dodgybits.android.shuffle.activity.config.ProjectExpandableListConfig;
+import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
@@ -13,6 +14,7 @@ import org.dodgybits.android.shuffle.view.ProjectView;
 import org.dodgybits.android.shuffle.view.TaskView;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.ContextMenu;
@@ -71,6 +73,17 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 		return cursor;		
 	}
 
+	@Override
+	protected void updateInsertExtras(Bundle extras, Project project) {
+    	extras.putString(Shuffle.Tasks.PROJECT_ID, project.name);
+    	if (project.defaultContextId != null) {
+    		Context context = BindingUtils.fetchContextById(this, project.defaultContextId);
+    		if (context != null) {
+        		extras.putString(Shuffle.Tasks.CONTEXT_ID, context.name);
+    		}
+    	}
+	}
+	
 	@Override
 	protected ExpandableListAdapter createExpandableListAdapter(Cursor cursor) {
 		return new MyExpandableListAdapter(this, 

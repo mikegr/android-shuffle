@@ -31,7 +31,8 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     
     private EditText mNameWidget;
     private LabelView mColourWidget;
-    private Button mChangeColourButton;
+    private Button mSetColourButton;
+    private Button mClearColourButton;
     private ImageView mIconWidget;
     private TextView mIconNoneWidget;
     private Button mSetIconButton;
@@ -52,8 +53,8 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         mIconNoneWidget = (TextView) findViewById(R.id.icon_none);
         mIcon = Icon.NONE;
         
-        mChangeColourButton = (Button) findViewById(R.id.colour_change_button);
-        mChangeColourButton.setOnClickListener(new View.OnClickListener() {
+        mSetColourButton = (Button) findViewById(R.id.colour_set_button);
+        mSetColourButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
             	// Launch activity to pick colour
@@ -62,6 +63,15 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
             	startActivityForResult(intent, COLOUR_PICKER);
             }
         });
+        mClearColourButton = (Button) findViewById(R.id.colour_clear_button);
+        mClearColourButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+            	mColourIndex = 0;
+            	displayColour();
+            }
+        });        
+        
         mSetIconButton = (Button) findViewById(R.id.icon_set_button);
         mSetIconButton.setOnClickListener(new View.OnClickListener() {
 
@@ -83,21 +93,6 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         
         // Get the context!
         mCursor = managedQuery(mUri, Shuffle.Contexts.cFullProjection, null, null, null);
-    }
-    
-    /**
-     * @return id of layout for this view
-     */
-    protected int getContentViewResId() {
-    	return R.layout.context_editor;
-    }
-
-    protected Context restoreItem(Bundle icicle) {
-    	return BindingUtils.restoreContext(icicle,getResources());
-    }
-    
-    protected void saveItem(Bundle outState, Context item) {
-    	BindingUtils.saveContext(outState, item);
     }
     
     @Override
@@ -162,7 +157,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         	if (resultCode == Activity.RESULT_OK) {
     			if (data != null) {
     				mColourIndex = Integer.parseInt(data.getStringExtra("colour"));
-    				displayIcon();
+    				displayColour();
     			}
     		}
     		break;
@@ -180,26 +175,6 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     	}
 	}
     
-	private void displayColour() {
-		mColourWidget.setColourIndex(mColourIndex);
-		mColourWidget.setVisibility(View.VISIBLE);
-    }
-
-
-	private void displayIcon() {
-    	if (mIcon == Icon.NONE) {
-    		mIconNoneWidget.setVisibility(View.VISIBLE);
-    		mIconWidget.setVisibility(View.GONE);
-    		mClearIconButton.setEnabled(false);
-    	} else {
-    		mIconNoneWidget.setVisibility(View.GONE);
-    		mIconWidget.setImageResource(mIcon.largeIconId);
-    		mIconWidget.setVisibility(View.VISIBLE);
-    		mClearIconButton.setEnabled(true);
-    	}
-    }
-
-
     @Override
     protected void onPause() {
         Log.d(cTag, "onPause+");
@@ -231,10 +206,12 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
                 // the content provider will notify the cursor of the change, which will
                 // cause the UI to be updated.
                 getContentResolver().update(mUri, values, null, null);    	
+                showSaveToast();
             }
         }
     }
     
+    @Override
     protected void writeItem(ContentValues values, Context context) {
     	BindingUtils.writeContext(values, context);
     }
@@ -242,10 +219,58 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     /**
      * Take care of deleting a context.  Simply deletes the entry.
      */
+    @Override
     protected void deleteItem() {
     	super.deleteItem();
         mNameWidget.setText("");
         mColourWidget.setText("");
     }
+    
+    /**
+     * @return id of layout for this view
+     */
+    @Override
+    protected int getContentViewResId() {
+    	return R.layout.context_editor;
+    }
+
+    @Override
+    protected Context restoreItem(Bundle icicle) {
+    	return BindingUtils.restoreContext(icicle,getResources());
+    }
+    
+    @Override
+    protected void saveItem(Bundle outState, Context item) {
+    	BindingUtils.saveContext(outState, item);
+    }
+    
+    @Override
+    protected Intent getInsertIntent() {
+    	return new Intent(Intent.ACTION_INSERT, Shuffle.Contexts.CONTENT_URI);
+    }
+    
+    @Override
+    protected CharSequence getItemName() {
+    	return getString(R.string.context_name);
+    }
+    
+	private void displayColour() {
+		mColourWidget.setColourIndex(mColourIndex);
+		mColourWidget.setVisibility(View.VISIBLE);
+    }
+
+
+	private void displayIcon() {
+    	if (mIcon == Icon.NONE) {
+    		mIconNoneWidget.setVisibility(View.VISIBLE);
+    		mIconWidget.setVisibility(View.GONE);
+    		mClearIconButton.setEnabled(false);
+    	} else {
+    		mIconNoneWidget.setVisibility(View.GONE);
+    		mIconWidget.setImageResource(mIcon.largeIconId);
+    		mIconWidget.setVisibility(View.VISIBLE);
+    		mClearIconButton.setEnabled(true);
+    	}
+    }    
     
 }

@@ -1,5 +1,6 @@
 package org.dodgybits.android.shuffle.activity;
 
+import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.activity.config.ProjectListConfig;
 import org.dodgybits.android.shuffle.model.Project;

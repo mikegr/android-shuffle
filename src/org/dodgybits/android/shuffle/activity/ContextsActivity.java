@@ -97,7 +97,5 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
     	intent.setData(uri);
     	return intent;
     }
-	
-
 
 }

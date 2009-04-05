@@ -14,11 +14,12 @@
 		android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+		android:paddingTop="1px" 
 		android:paddingLeft="5px" 
 		android:paddingRight="10px"
 		android:singleLine="true"
 		android:ellipsize="middle"
-		style="@style/text" />
+		style="@style/list_text" />
 
 	<TextView android:id="@+id/details"
 		android:layout_width="wrap_content"
@@ -29,7 +30,7 @@
 		android:layout_below="@+id/description"        
 		android:singleLine="true"
 		android:ellipsize="marquee"
-		style="@style/sub_text_2" />
+		style="@style/list_sub_text_2" />
 	
 	<TextView android:id="@+id/project"
 		android:layout_width="wrap_content"
@@ -37,8 +38,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
 		android:paddingLeft="5px" 
+		android:paddingBottom="1px" 
 		android:lines="1" 
-		style="@style/sub_text_1" />
+		style="@style/list_sub_text_1" />
 
 
 	<ImageView

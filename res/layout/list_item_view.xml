@@ -14,7 +14,7 @@
 	android:gravity="center_vertical"
     android:paddingLeft="5px" 
     android:paddingRight="5px"
-    style="@style/text"
+    style="@style/list_text"
     />
     
 	<ImageView

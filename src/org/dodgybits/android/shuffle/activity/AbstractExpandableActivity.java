@@ -1,5 +1,6 @@
 package org.dodgybits.android.shuffle.activity;
 
+import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.activity.config.ExpandableListConfig;
 import org.dodgybits.android.shuffle.util.AlertUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
@@ -24,6 +25,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
+import android.widget.Toast;
 
 public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActivity{
 	private static final String cTag = "AbstractExpandableActivity";
@@ -87,8 +89,6 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 
         MenuUtils.addExpandableInsertMenuItems(menu, mConfig.getGroupName(this), 
         		mConfig.getChildName(this), this);
-        MenuUtils.addAlternativeMenuItems(menu, mConfig.getChildContentUri(), this);
-        MenuUtils.addAlternativeMenuItems(menu, mConfig.getGroupContentUri(), this);
         MenuUtils.addViewMenuItems(menu, mConfig.getCurrentViewMenuId());
         MenuUtils.addPrefsHelpMenuItems(menu);
         
@@ -99,7 +99,18 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 	        case MenuUtils.INSERT_CHILD_ID:
-	            insertItem(mConfig.getChildContentUri());
+	        	long packedPosition = this.getSelectedPosition();
+	        	if (packedPosition != ExpandableListView.PACKED_POSITION_TYPE_NULL)
+	        	{
+	                int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+		        	Cursor cursor = (Cursor) getExpandableListAdapter().getGroup(groupPosition);
+		        	G group = getListConfig().readGroup(cursor, getResources());
+	        		insertItem(mConfig.getChildContentUri(), group);	        		
+	        	}
+	        	else
+	        	{
+	        		insertItem(mConfig.getChildContentUri());
+	        	}
 	            return true;
 	        case MenuUtils.INSERT_GROUP_ID:
 	            insertItem(mConfig.getGroupContentUri());
@@ -264,10 +275,11 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     	switch (type) {
 	    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
 	        	Log.d(cTag, "Deleting child at position " + groupPosition + "," + childPosition);
-				final long childId = getSelectedId();
+				final long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
 		    	Log.i(cTag, "Deleting child id " + childId);
 				Uri childUri = ContentUris.withAppendedId(mConfig.getChildContentUri(), childId);			
 		        getContentResolver().delete(childUri, null, null);		    
+		        showCancelToast(false);
 		        refreshChildCount();
 		        getExpandableListView().invalidate();
 	    		break;
@@ -288,6 +300,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 		    					getContentResolver().delete(mConfig.getChildContentUri(), 
 		    							mConfig.getGroupIdColumnName() + " = ?", 
 		    							new String[] {String.valueOf(groupId)});
+		    			        showCancelToast(true);
 		    				} else {
 		    					Log.d(cTag, "Hit Cancel button. Do nothing.");
 		    				}
@@ -297,15 +310,33 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 	    					mConfig.getChildName(this), childCount, buttonListener);    		
 	    		} else {
 			    	Log.i(cTag, "Deleting childless group at position " + groupPosition);
-					final long groupId = getSelectedId();
+					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 			    	Log.i(cTag, "Deleting group id " + groupId);
 					Uri groupUri = ContentUris.withAppendedId(mConfig.getGroupContentUri(), groupId);			
-			        getContentResolver().delete(groupUri, null, null);		    	
+			        getContentResolver().delete(groupUri, null, null);
+			        showCancelToast(true);
 	    		}
 	        	break;
     	}
     }
 
+    private final void showCancelToast(boolean isGroup) {
+    	String name = isGroup ? getListConfig().getGroupName(this)
+    			: getListConfig().getChildName(this);
+    	String text = getResources().getString(
+    			R.string.itemDeletedToast, name );
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();        
+    	
+    }
+    
+    private final void insertItem(Uri uri, G group) {
+    	Intent intent =  new Intent(Intent.ACTION_INSERT, uri);
+    	Bundle extras = intent.getExtras();
+    	if (extras == null) extras = new Bundle();
+    	updateInsertExtras(extras, group);
+    	intent.putExtras(extras);
+        startActivity(intent);
+    }
     
     private final void insertItem(Uri uri) {
         // Launch activity to insert a new item
@@ -313,8 +344,10 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         startActivity(intent);
     }
 
-	abstract protected ExpandableListConfig<G,C> createListConfig();
+	abstract protected void updateInsertExtras(Bundle extras, G group);
 
+	abstract protected ExpandableListConfig<G,C> createListConfig();
+	
 	abstract void refreshChildCount();
 
     abstract ExpandableListAdapter createExpandableListAdapter(Cursor cursor);

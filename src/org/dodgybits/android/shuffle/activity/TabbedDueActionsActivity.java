@@ -25,7 +25,6 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setContentView(R.layout.tabbed_due_tasks);
         
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
@@ -45,14 +44,22 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 
 			public void onTabChanged(String tabId) {
 				Log.d(cTag, "Switched to tab: " + tabId);
-				// Android issue 302: First tabId is null
 				if (tabId == null) tabId = String.valueOf(Shuffle.Tasks.DAY_MODE);
 				mMode = Integer.parseInt(tabId); 
 				updateCursor();
 			}
         	
         });
+    }
+    
+    @Override
+    protected void onResume() {
+        Log.d(cTag, "onResume+");
+        super.onResume();
         
+        // ugh!! If I take the following out, the first tab contents does not display
+    	mTabHost.setCurrentTab(1);
+    	mTabHost.setCurrentTab(0);
     }
     
 	@Override
@@ -60,8 +67,14 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	{
 		return new AbstractTaskListConfig() {
 
+			@Override
+			public int getContentViewResId() {
+				return R.layout.tabbed_due_tasks;
+			}
+			
 			public Uri getListContentUri() {
-				return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(mMode)).build();
+				return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(
+						String.valueOf(mMode)).build();
 			}
 
 		    public int getCurrentViewMenuId() {
@@ -80,13 +93,20 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         TabSpec tabSpec = mTabHost.newTabSpec(tagId);
         tabSpec.setContent(R.id.task_list);
         String tabName = getString(tabTitleRes);
-        tabSpec.setIndicator(tabName, this.getResources().getDrawable(iconId));
+        tabSpec.setIndicator(tabName); //, this.getResources().getDrawable(iconId));
         return tabSpec;
     }
     
 	private void updateCursor() {
-    	Cursor cursor = createItemQuery();
     	SimpleCursorAdapter adapter = (SimpleCursorAdapter)getListAdapter();
+    	Cursor oldCursor = adapter.getCursor();
+    	if (oldCursor != null) {
+    		// changeCursor always closes the cursor, 
+    		// so need to stop managing the old one first
+    		stopManagingCursor(oldCursor);
+    	}
+    	
+    	Cursor cursor = createItemQuery();
     	adapter.changeCursor(cursor);
     	setTitle(getListConfig().createTitle(this));
 	}    

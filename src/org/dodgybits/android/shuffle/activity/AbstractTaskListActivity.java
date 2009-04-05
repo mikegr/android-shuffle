@@ -64,7 +64,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
 		ListAdapter adapter = new SimpleCursorAdapter(this,
-						R.layout.task_view, cursor,
+						R.layout.list_task_view, cursor,
 						new String[] { Shuffle.Tasks.DESCRIPTION },
 						new int[] { R.id.description }) {
 
@@ -86,11 +86,9 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 			}
 
 		};
-//		ListAdapter adapter = Test.createTaskListAdapter(this);
 		return adapter;
 	}
 
-	
 	protected final void toggleComplete() {
     	toggleComplete(getSelectedItemPosition(), getSelectedItemId());
     }
@@ -107,6 +105,8 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 	protected boolean showTaskProject() {
 		return true;
 	}
+	
+	
 	
 }
     

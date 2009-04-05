@@ -17,6 +17,7 @@ import org.dodgybits.android.shuffle.util.BindingUtils;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -109,24 +110,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         });
     }
     
-    /**
-     * @return id of layout for this view
-     */
-    @Override
-    protected int getContentViewResId() {
-    	return R.layout.task_editor;
-    }
 
-    @Override
-    protected Task restoreItem(Bundle icicle) {
-    	return BindingUtils.restoreTask(icicle,getResources());
-    }
-    
-    @Override
-    protected void saveItem(Bundle outState, Task item) {
-    	BindingUtils.saveTask(outState, item);
-    }
-    
     @Override
     protected void onResume() {
         Log.d(cTag, "onResume+");
@@ -185,27 +169,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
 //        mDescriptionWidget.selectAll();
     }
     
-    private OnDateSetListener mDateSetListener =
-        new OnDateSetListener() {
-
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                    int dayOfMonth) {
-            	mDueDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
-            	drawDateWidget();
-            }
-        };
-
-    private void drawDateWidget() {
-    	if (mDueDate == null) {
-    		mDueDateWidget.setText(R.string.no_due_date);
-            mClearDueDateButton.setEnabled(false);
-    	} else {
-    		DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM);
-    		mDueDateWidget.setText(format.format(mDueDate));
-            mClearDueDateButton.setEnabled(true);
-    	}
-    }
-
     @Override
     protected void onPause() {
         Log.d(cTag, "onPause+");
@@ -241,12 +204,11 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
                 // If we are creating a new task, set the creation date
             	if (mState == State.STATE_INSERT) {
             		created = modified;
-            		order = calculateTaskOrder(project);
                 } else {
                 	assert mOriginalItem != null;
                 	created = mOriginalItem.created;
-            		order = mOriginalItem.order;
                 }
+        		order = calculateTaskOrder(project);
 
             	Task task  = new Task(description, details, context, project, created, modified, dueDate, order, complete);
                 ContentValues values = new ContentValues();
@@ -256,8 +218,85 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
                 // the content provider will notify the cursor of the change, which will
                 // cause the UI to be updated.
                 getContentResolver().update(mUri, values, null, null);    	
+                showSaveToast();
             }
         }
+    }
+    
+    @Override
+    protected Intent getInsertIntent() {
+    	Intent intent = new Intent(Intent.ACTION_INSERT, Shuffle.Tasks.CONTENT_URI);
+    	// give new task the same project and context as this one
+    	Bundle extras = intent.getExtras();
+    	if (extras == null) extras = new Bundle();
+    	CharSequence contextName = mContextView.getText();
+    	if (!TextUtils.isEmpty(contextName)) {
+    		extras.putString(Shuffle.Tasks.CONTEXT_ID, contextName.toString());    		
+    	}
+    	CharSequence projectName = mProjectView.getText();
+    	if (!TextUtils.isEmpty(projectName)) {
+    		extras.putString(Shuffle.Tasks.PROJECT_ID, projectName.toString());    		
+    	}
+    	intent.putExtras(extras);
+    	return intent;
+    }
+    
+    /**
+     * @return id of layout for this view
+     */
+    @Override
+    protected int getContentViewResId() {
+    	return R.layout.task_editor;
+    }
+
+    @Override
+    protected Task restoreItem(Bundle icicle) {
+    	return BindingUtils.restoreTask(icicle,getResources());
+    }
+    
+    @Override
+    protected void saveItem(Bundle outState, Task item) {
+    	BindingUtils.saveTask(outState, item);
+    }
+    
+    @Override
+    protected void writeItem(ContentValues values, Task task) {
+    	BindingUtils.writeTask(values, task);
+    }
+
+    @Override
+    protected CharSequence getItemName() {
+    	return getString(R.string.task_name);
+    }
+    
+    /**
+     * Take care of deleting a task.  Simply deletes the entry.
+     */
+    @Override
+    protected void deleteItem() {
+    	super.deleteItem();
+        mDescriptionWidget.setText("");
+    }    
+    
+    private OnDateSetListener mDateSetListener =
+        new OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                    int dayOfMonth) {
+            	mDueDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
+            	drawDateWidget();
+            }
+        };
+
+    private void drawDateWidget() {
+    	if (mDueDate == null) {
+    		mDueDateWidget.setText(R.string.no_due_date);
+            mClearDueDateButton.setEnabled(false);
+    	} else {
+    		DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM);
+    		mDueDateWidget.setText(format.format(mDueDate));
+            mClearDueDateButton.setEnabled(true);
+    	}
     }
     
     private Context fetchOrCreateContext(String contextName) {
@@ -308,7 +347,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
 
     /**
      * Calculate where this task should appear on the list for the given project.
-     * If not project is defined, order is meaningless, so return -1.
+     * If no project is defined, order is meaningless, so return -1.
      * New tasks go on the end of the list, so the highest current order
      * value for tasks for this project and add one to this.
      * For existing tasks, check if the project changed, and if so
@@ -341,20 +380,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     		order = mOriginalItem.order; 
     	}
     	return order;
-    }
-
-    @Override
-    protected void writeItem(ContentValues values, Task task) {
-    	BindingUtils.writeTask(values, task);
-    }
-
-    /**
-     * Take care of deleting a task.  Simply deletes the entry.
-     */
-    @Override
-    protected void deleteItem() {
-    	super.deleteItem();
-        mDescriptionWidget.setText("");
     }
     
 }

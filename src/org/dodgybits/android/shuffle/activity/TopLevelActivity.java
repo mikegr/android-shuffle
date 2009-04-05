@@ -81,7 +81,8 @@ public class TopLevelActivity extends ListActivity {
         perspectives[PROJECTS] += " (" + projectCount + ")";
         perspectives[CONTEXTS] += " (" + contextCount + ")";
         
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, R.layout.list_item_view, R.id.name, perspectives);
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+        		this, R.layout.list_item_view, R.id.name, perspectives);
         setListAdapter(adapter);
 	}
 
