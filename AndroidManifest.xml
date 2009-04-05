@@ -4,13 +4,10 @@
     
     <uses-sdk minSdkVersion="2" />
     
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    
     <application 
-    	android:icon="@drawable/icon" 
-    	android:debuggable="true"
     	android:theme="@style/ShuffleTheme"
-    	>
+    	android:icon="@drawable/shuffle_icon" 
+        android:label="@string/app_name">
     
         <provider android:name=".provider.ShuffleProvider"
             android:authorities="org.dodgybits.android.shuffle.provider.Shuffle" />
