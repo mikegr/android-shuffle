@@ -1,12 +1,10 @@
 package org.dodgybits.android.shuffle.view;
 
+import org.dodgybits.android.shuffle.util.DrawableUtils;
 import org.dodgybits.android.shuffle.util.TextColours;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -44,7 +42,7 @@ public class LabelView extends TextView {
     	mTextColour = mTextColours.getTextColour(colourIndex);
     	mBgColour = mTextColours.getBackgroundColours(colourIndex);
 		setTextColor(mTextColour);			
-    	setBackgroundDrawable(createGradient(mBgColour));
+    	setBackgroundDrawable(DrawableUtils.createRoundedVerticalGradient(mBgColour));
     }
 
     public void setIcon(Drawable icon) {
@@ -52,21 +50,5 @@ public class LabelView extends TextView {
 		setCompoundDrawablesWithIntrinsicBounds(mIcon, null, null, null);
     }
     
-    private static Drawable createGradient(int colour) {
-		int[] colours = new int[2];
-		float[] hsv1 = new float[3];
-		float[] hsv2 = new float[3];
-		Color.colorToHSV(colour, hsv1);
-		Color.colorToHSV(colour, hsv2);
-		hsv1[2] *= 1.1;
-		hsv2[2] *= 0.90;
-		colours[0] = Color.HSVToColor(hsv1);
-		colours[1] = Color.HSVToColor(hsv2);
-    	GradientDrawable drawable = new GradientDrawable(Orientation.TOP_BOTTOM, colours);
-    	drawable.setCornerRadius(4.0f);
-		//drawable.setAlpha(240);
-    	return drawable;
-    	
-    }
     
 }

@@ -2,6 +2,8 @@ package org.dodgybits.android.shuffle.view;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
+import org.dodgybits.android.shuffle.util.DrawableUtils;
+import org.dodgybits.android.shuffle.util.TextColours;
 
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -10,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ContextView extends ItemView<Context> {
+	protected TextColours mTextColours;
 	private ImageView mIcon;
 	private TextView mName;
+	private TextView mColour;
 	private SparseIntArray mTaskCountArray;
 
 	public ContextView(android.content.Context androidContext) {
@@ -21,8 +25,10 @@ public class ContextView extends ItemView<Context> {
         		getSystemService(android.content.Context.LAYOUT_INFLATER_SERVICE);
         vi.inflate(getViewResourceId(), this, true); 
         
+        mColour = (TextView) findViewById(R.id.colour);
 		mName = (TextView) findViewById(R.id.name);
 		mIcon = (ImageView) findViewById(R.id.icon);
+		mTextColours = TextColours.getInstance(androidContext);
 	}
 	
 	protected int getViewResourceId() {
@@ -44,7 +50,7 @@ public class ContextView extends ItemView<Context> {
 			mIcon.setPadding(5, 0, 5, 0);
 			mIcon.setVisibility(View.VISIBLE);
 		} else {
-			mIcon.setVisibility(View.GONE);
+			mIcon.setVisibility(View.INVISIBLE);
 		}
 		if (mTaskCountArray != null) {
 			Integer count = mTaskCountArray.get(context.id);
@@ -53,6 +59,8 @@ public class ContextView extends ItemView<Context> {
 		} else {
 			mName.setText(context.name);
 		}
+    	int bgColour = mTextColours.getBackgroundColours(context.colourIndex);
+		mColour.setBackgroundDrawable(DrawableUtils.createHorizontalGradient(bgColour));
 	}
 
 }
