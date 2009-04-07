@@ -32,7 +32,7 @@
 			              android:layout_width="fill_parent" 
 			              android:layout_height="fill_parent"
 			              android:text="@string/no_tasks"
-			              style="@style/label"                
+			              style="@style/text"                
 			              />
 			                            
 			</LinearLayout>

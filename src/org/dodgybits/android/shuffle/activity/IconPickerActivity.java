@@ -54,22 +54,31 @@ public class IconPickerActivity extends Activity implements OnItemClickListener 
         
         private void loadIcons() {
         	mIconIds = new int[] {
+    			R.drawable.accessories_calculator,    			
+    			R.drawable.accessories_text_editor,    			
     			R.drawable.applications_accessories,
     			R.drawable.applications_development,
     			R.drawable.applications_games,
     			R.drawable.applications_graphics,
     			R.drawable.applications_internet,
     			R.drawable.applications_office,
+    			R.drawable.applications_system,    			
+    			R.drawable.audio_x_generic,    			
+    			R.drawable.camera_photo,    			
     			R.drawable.computer,    			
     			R.drawable.emblem_favorite,    			
     			R.drawable.emblem_important,    			
+    			R.drawable.format_justify_fill,    			
     			R.drawable.go_home,    			
     			R.drawable.network_wireless,    			
     			R.drawable.office_calendar,    			
+    			R.drawable.start_here,    			
     			R.drawable.system_file_manager,    			
+    			R.drawable.system_search,    			
     			R.drawable.system_users,    			
     			R.drawable.utilities_terminal,    			
     			R.drawable.video_x_generic,    			
+    			R.drawable.weather_showers_scattered,    			
     			R.drawable.x_office_address_book,    			
         	};
         }

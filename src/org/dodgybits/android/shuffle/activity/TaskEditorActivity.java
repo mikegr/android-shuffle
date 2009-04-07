@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 /**
@@ -57,7 +58,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     private AutoCompleteTextView mProjectView;
     private Date mDueDate;
     private Button mSetDueDateButton;
-    private Button mClearDueDateButton;
+    private ImageButton mClearDueDateButton;
     private CheckBox mCompletedCheckBox;
     private TextView mDueDateWidget;
     private EditText mDetailsWidget;
@@ -72,7 +73,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         mContextView = (AutoCompleteTextView) findViewById(R.id.context);
         mProjectView = (AutoCompleteTextView) findViewById(R.id.project);
         mSetDueDateButton = (Button) findViewById(R.id.due_date_set_button);
-        mClearDueDateButton = (Button) findViewById(R.id.due_date_clear_button);
+        mClearDueDateButton = (ImageButton) findViewById(R.id.due_date_clear_button);
         mDueDateWidget = (TextView) findViewById(R.id.due_date_display);
         mCompletedCheckBox = (CheckBox) findViewById(R.id.completed_checkbox);
         mDetailsWidget = (EditText) findViewById(R.id.details);

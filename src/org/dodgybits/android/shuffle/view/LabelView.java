@@ -5,6 +5,8 @@ import org.dodgybits.android.shuffle.util.TextColours;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -40,9 +42,12 @@ public class LabelView extends TextView {
     
     public void setColourIndex(int colourIndex) {
     	mTextColour = mTextColours.getTextColour(colourIndex);
-    	mBgColour = mTextColours.getBackgroundColours(colourIndex);
-		setTextColor(mTextColour);			
-    	setBackgroundDrawable(DrawableUtils.createRoundedVerticalGradient(mBgColour));
+    	mBgColour = mTextColours.getBackgroundColour(colourIndex);
+		setTextColor(mTextColour);
+		GradientDrawable drawable = DrawableUtils.createGradient(mBgColour, Orientation.TOP_BOTTOM);
+    	drawable.setCornerRadius(4.0f);
+		//drawable.setAlpha(240);
+    	setBackgroundDrawable(drawable);
     }
 
     public void setIcon(Drawable icon) {

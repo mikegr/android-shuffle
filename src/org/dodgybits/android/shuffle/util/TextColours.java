@@ -47,7 +47,7 @@ public class TextColours {
 		return textColours[position];
 	}
 	
-	public int getBackgroundColours(int position) {
+	public int getBackgroundColour(int position) {
 		return bgColours[position];
 	}
 	

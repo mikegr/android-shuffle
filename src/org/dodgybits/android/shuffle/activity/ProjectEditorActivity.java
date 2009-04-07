@@ -141,7 +141,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
                 // the content provider will notify the cursor of the change, which will
                 // cause the UI to be updated.
                 getContentResolver().update(mUri, values, null, null);    	
-                showSaveToast();
+                //showSaveToast();
             }
         }
     }

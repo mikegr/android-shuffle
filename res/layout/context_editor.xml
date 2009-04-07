@@ -21,13 +21,12 @@
 		style="@style/label" />
 
 	<LinearLayout android:orientation="horizontal"
-		android:layout_width="fill_parent" android:layout_height="wrap_content" 
-		style="@style/centered_row">
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" style="@style/centered_row"
+		android:paddingLeft="25px">
 
-		<org.dodgybits.android.shuffle.view.LabelView
-			android:id="@+id/colour_display" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:paddingLeft="5px"
-			android:paddingRight="5px" android:text="Abc" style="@style/context" />
+		<TextView android:id="@+id/colour_display"
+			android:layout_width="40px" android:layout_height="40px" />
 
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="1" />
@@ -37,10 +36,10 @@
 			android:layout_height="wrap_content" android:layout_weight="1"
 			android:text="@string/set_button_title" />
 
-		<Button android:id="@+id/colour_clear_button"
+		<ImageButton android:id="@+id/colour_clear_button"
+			android:src="@android:drawable/ic_delete"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:text="@string/clear_button_title" />
+			android:layout_height="wrap_content" />
 
 	</LinearLayout>
 
@@ -50,12 +49,12 @@
 		style="@style/label" />
 
 	<LinearLayout android:orientation="horizontal"
-		style="@style/centered_row">
+		style="@style/centered_row" android:paddingLeft="25px">
 
 		<ImageView android:id="@+id/icon_display"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:paddingLeft="5px" android:paddingRight="5px" />
+			android:layout_height="wrap_content" android:paddingLeft="5px"
+			android:paddingRight="5px" android:layout_weight="1" />
 
 		<TextView android:id="@+id/icon_none"
 			android:layout_width="wrap_content"
@@ -68,10 +67,11 @@
 			android:layout_height="wrap_content" android:layout_weight="1"
 			android:text="@string/set_button_title" />
 
-		<Button android:id="@+id/icon_clear_button"
+		<ImageButton android:id="@+id/icon_clear_button"
+			android:src="@android:drawable/ic_delete"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:text="@string/clear_button_title" />
+			android:layout_height="wrap_content" />
+
 	</LinearLayout>
 
 </LinearLayout>

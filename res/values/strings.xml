@@ -119,7 +119,7 @@
 	<!--  messages -->
     <string name="no_due_date">No due date</string>
     <string name="no_icon">No icon</string>
-    <string name="no_tasks">There are no actions to display. Get started by selecting \"Add action\" from the menu.</string>
+    <string name="no_tasks">There are no actions to display. Get started by selecting \"Add Action\" from the menu.</string>
     <string name="no_due_tasks">There are no actions due.</string>
     <string name="no_projects">There are no projects to display. Get started by creating actions in the Inbox and assigning them to projects.</string>
     <string name="no_contexts">There are no contexts to display. Get started by creating actions in the Inbox and assigning them to contexts.</string>

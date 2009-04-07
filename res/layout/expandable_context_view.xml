@@ -1,36 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:orientation="horizontal"
-    android:layout_width="fill_parent" 
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
 	android:layout_height="?android:attr/listPreferredItemHeight"
-	android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-	android:gravity="center_vertical"
 	android:baselineAligned="false"
-    >
-  
-	 <TextView android:id="@+id/colour" 
-	   android:layout_width="10px" 
-	   android:layout_height="fill_parent"
-	   android:layout_alignParentLeft="true"
-	   style="@style/list_text"
-	   />
-	  
-	 <ImageView android:id="@+id/icon"
-	   android:layout_width="wrap_content" 
-	   android:layout_height="fill_parent"
-	   android:layout_toRightOf="@+id/colour"
-	   android:gravity="center_horizontal"
-	   />
+	android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft">
 
-	 <TextView android:id="@+id/name" 
-	   android:layout_width="wrap_content" 
-	   android:layout_height="wrap_content"
-	   android:layout_toRightOf="@+id/icon"
-	   android:layout_centerVertical="true"
-	   android:paddingLeft="5px" 
-	   android:paddingRight="5px"
-	   style="@style/list_text"
-	   />
-	 
- </LinearLayout>
- 
+	<LinearLayout android:id="@+id/colour"
+		android:layout_width="wrap_content" android:layout_height="45px"
+		android:layout_alignParentLeft="true"
+		android:layout_centerVertical="true" android:orientation="horizontal"
+		android:paddingLeft="5px" android:paddingRight="10px"
+		android:paddingTop="5px" android:paddingBottom="5px">
+
+		<ImageView android:id="@+id/icon"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent" />
+
+		<TextView android:id="@+id/name"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent" android:gravity="center_vertical"
+			android:paddingLeft="5px" android:paddingRight="5px"
+			style="@style/list_text" />
+
+	</LinearLayout>
+
+</RelativeLayout>

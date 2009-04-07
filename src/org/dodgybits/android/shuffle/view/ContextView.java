@@ -5,6 +5,8 @@ import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.util.DrawableUtils;
 import org.dodgybits.android.shuffle.util.TextColours;
 
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,7 @@ public class ContextView extends ItemView<Context> {
 	protected TextColours mTextColours;
 	private ImageView mIcon;
 	private TextView mName;
-	private TextView mColour;
+	private View mColour;
 	private SparseIntArray mTaskCountArray;
 
 	public ContextView(android.content.Context androidContext) {
@@ -25,7 +27,7 @@ public class ContextView extends ItemView<Context> {
         		getSystemService(android.content.Context.LAYOUT_INFLATER_SERVICE);
         vi.inflate(getViewResourceId(), this, true); 
         
-        mColour = (TextView) findViewById(R.id.colour);
+        mColour = (View) findViewById(R.id.colour);
 		mName = (TextView) findViewById(R.id.name);
 		mIcon = (ImageView) findViewById(R.id.icon);
 		mTextColours = TextColours.getInstance(androidContext);
@@ -59,8 +61,13 @@ public class ContextView extends ItemView<Context> {
 		} else {
 			mName.setText(context.name);
 		}
-    	int bgColour = mTextColours.getBackgroundColours(context.colourIndex);
-		mColour.setBackgroundDrawable(DrawableUtils.createHorizontalGradient(bgColour));
+    	int textColour = mTextColours.getTextColour(context.colourIndex);
+		mName.setTextColor(textColour);
+
+		int bgColour = mTextColours.getBackgroundColour(context.colourIndex);
+    	GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM);
+    	drawable.setCornerRadius(12.0f);
+    	mColour.setBackgroundDrawable(drawable);
 	}
 
 }

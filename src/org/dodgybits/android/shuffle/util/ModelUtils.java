@@ -31,12 +31,12 @@ public class ModelUtils {
 	private static void initPresetContexts(Resources res) {
 		if (cPresetContexts == null) {
 			cPresetContexts = new Context[] {
-					new Context("At home", 11, createIcon("go_home", res)), // 0
-					new Context("At work", 1, createIcon("applications_internet", res)), // 1
-					new Context("Online", 7, createIcon("applications_internet", res)), // 2
+					new Context("At home", 5, createIcon("go_home", res)), // 0
+					new Context("At work", 19, createIcon("system_file_manager", res)), // 1
+					new Context("Online", 1, createIcon("applications_internet", res)), // 2
 					new Context("Errands", 14, createIcon("applications_development", res)), // 3
-					new Context("Contact", 22, createIcon("stat_sys_phone_call", res)), // 4
-					new Context("Read", 4, createIcon("format_justify_fill", res)), // 5
+					new Context("Contact", 22, createIcon("system_users", res)), // 4
+					new Context("Read", 16, createIcon("format_justify_fill", res)), // 5
 			};
 		}
 	}
@@ -84,15 +84,16 @@ public class ModelUtils {
 		Date twoWeeks = cal.getTime();
 		int i = 1;
 
-		Project sellBike = new Project("Sell old laptop", null, false);
+		Project sellBike = new Project("Sell old Powerbook", null, false);
 		insertProject(androidContext, sellBike);
 		insertTask(androidContext, new Task("Backup data", null,
 				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now, now,
 				i++, false));
-		insertTask(androidContext, new Task("Reformat HD", null,
+		insertTask(androidContext, new Task("Reformat HD", "Install Leopard and updates",
 				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now,
 				twoDays, i++, false));
-		insertTask(androidContext, new Task("Determine good price", null,
+		insertTask(androidContext, new Task("Determine good price", 
+				"Take a look on ebay for similar systems",
 				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now,
 				oneWeek, i++, false));
 		insertTask(androidContext, new Task("Put up ad", null,
@@ -103,13 +104,15 @@ public class ModelUtils {
 		Project cleanGarage = new Project("Clean out garage", null, false);
 		insertProject(androidContext, cleanGarage);
 		insertTask(androidContext, new Task("Sort out contents",
-				"Split into keepers & junk", cPresetContexts[AT_HOME_INDEX],
+				"Split into keepers and junk", cPresetContexts[AT_HOME_INDEX],
 				cleanGarage, now, now, yesterday, i++, false));
-		insertTask(androidContext, new Task("Advertise garage sale", null,
+		insertTask(androidContext, new Task("Advertise garage sale", 
+				"Local paper(s) and on craigslist",
 				cPresetContexts[AT_COMPUTER_INDEX], cleanGarage, now, now,
 				oneWeek, i++, false));
-		insertTask(androidContext, new Task("Contact charities",
-				"See what they want", cPresetContexts[COMMUNICATION_INDEX],
+		insertTask(androidContext, new Task("Contact local charities",
+				"See what they want or maybe just put in charity bins", 
+				cPresetContexts[COMMUNICATION_INDEX],
 				cleanGarage, now, now, null, i++, false));
 		insertTask(androidContext, new Task("Take rest to tip",
 				"Hire trailer?", cPresetContexts[ERRANDS_INDEX], cleanGarage,
@@ -119,10 +122,10 @@ public class ModelUtils {
 		Project skiTrip = new Project("Organise ski trip", null, false);
 		insertProject(androidContext, skiTrip);
 		insertTask(androidContext, new Task(
-				"Send email to determine\nbest week", null,
+				"Send email to determine best week", null,
 				cPresetContexts[COMMUNICATION_INDEX], skiTrip, now, now, now,
 				i++, false));
-		insertTask(androidContext, new Task("Look up deals", null,
+		insertTask(androidContext, new Task("Look up package deals", null,
 				cPresetContexts[AT_COMPUTER_INDEX], skiTrip, now, now, twoDays,
 				i++, false));
 		insertTask(androidContext, new Task("Book chalet", null,
@@ -139,7 +142,7 @@ public class ModelUtils {
 				i++, false));
 
 		i = 1;
-		Project discussI8n = new Project("Discuss i8n",
+		Project discussI8n = new Project("Discuss internationalization",
 				cPresetContexts[AT_WORK_INDEX].id, false);
 		insertProject(androidContext, discussI8n);
 		insertTask(androidContext, new Task("Read up on options", null,

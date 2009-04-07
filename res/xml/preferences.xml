@@ -8,12 +8,16 @@
         <CheckBoxPreference
                 android:key="project_view"
                 android:title="@string/title_project_view_preference"
-                android:summary="@string/summary_project_view_preference" />
+                android:summary="@string/summary_project_view_preference" 
+				android:defaultValue="false"                
+                />
 
         <CheckBoxPreference
                 android:key="context_view"
                 android:title="@string/title_context_view_preference"
-                android:summary="@string/summary_context_view_preference" />
+                android:summary="@string/summary_context_view_preference" 
+				android:defaultValue="true"                
+                />
             
         <PreferenceScreen
                 android:title="@string/title_action_appearance_preference"

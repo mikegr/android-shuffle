@@ -6,16 +6,20 @@ import org.dodgybits.android.shuffle.model.State;
 import org.dodgybits.android.shuffle.model.Context.Icon;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.android.shuffle.view.LabelView;
+import org.dodgybits.android.shuffle.util.DrawableUtils;
+import org.dodgybits.android.shuffle.util.TextColours;
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,13 +34,13 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     private Icon mIcon;
     
     private EditText mNameWidget;
-    private LabelView mColourWidget;
+    private TextView mColourWidget;
     private Button mSetColourButton;
-    private Button mClearColourButton;
+    private ImageButton mClearColourButton;
     private ImageView mIconWidget;
     private TextView mIconNoneWidget;
     private Button mSetIconButton;
-    private Button mClearIconButton;
+    private ImageButton mClearIconButton;
         
     @Override
     protected void onCreate(Bundle icicle) {
@@ -46,7 +50,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         // The text view for our context description, identified by its ID in the XML file.
         mNameWidget = (EditText) findViewById(R.id.name);
 
-        mColourWidget = (LabelView) findViewById(R.id.colour_display);
+        mColourWidget = (TextView) findViewById(R.id.colour_display);
         mColourIndex = -1;
         
         mIconWidget = (ImageView) findViewById(R.id.icon_display);
@@ -63,7 +67,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
             	startActivityForResult(intent, COLOUR_PICKER);
             }
         });
-        mClearColourButton = (Button) findViewById(R.id.colour_clear_button);
+        mClearColourButton = (ImageButton) findViewById(R.id.colour_clear_button);
         mClearColourButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -82,7 +86,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
             	startActivityForResult(intent, ICON_PICKER);
             }
         });
-        mClearIconButton = (Button) findViewById(R.id.icon_clear_button);
+        mClearIconButton = (ImageButton) findViewById(R.id.icon_clear_button);
         mClearIconButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -206,7 +210,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
                 // the content provider will notify the cursor of the change, which will
                 // cause the UI to be updated.
                 getContentResolver().update(mUri, values, null, null);    	
-                showSaveToast();
+                //showSaveToast();
             }
         }
     }
@@ -223,7 +227,6 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     protected void deleteItem() {
     	super.deleteItem();
         mNameWidget.setText("");
-        mColourWidget.setText("");
     }
     
     /**
@@ -255,8 +258,10 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     }
     
 	private void displayColour() {
-		mColourWidget.setColourIndex(mColourIndex);
-		mColourWidget.setVisibility(View.VISIBLE);
+		int bgColour = TextColours.getInstance(this).getBackgroundColour(mColourIndex);
+		GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TL_BR);
+		drawable.setCornerRadius(8.0f);
+		mColourWidget.setBackgroundDrawable(drawable);
     }
 
 
