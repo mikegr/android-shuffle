@@ -240,7 +240,7 @@
         </activity>
         
         <activity android:name=".activity.ColourPickerActivity" 
-        	android:label="@string/title_icon_picker"
+        	android:label="@string/title_colour_picker"
         	android:theme="@android:style/Theme.Dialog">
         	<!--  android:theme="@android:style/Theme.Dialog" -->
             <intent-filter>

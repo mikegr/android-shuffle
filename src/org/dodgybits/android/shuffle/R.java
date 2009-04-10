@@ -192,115 +192,116 @@ public final class R {
         /**   Activity titles 
          */
         public static final int app_name=0x7f070000;
-        public static final int archived_title=0x7f07003d;
-        public static final int cancel_button_title=0x7f07002b;
-        public static final int clean_inbox_button_title=0x7f070054;
-        public static final int clean_inbox_message=0x7f070063;
-        public static final int clean_slate_button_title=0x7f070055;
-        public static final int clean_slate_message=0x7f070064;
-        public static final int clean_slate_title=0x7f070038;
-        public static final int clean_slate_warning=0x7f070061;
-        public static final int clean_task_message=0x7f070062;
-        public static final int cleanup_preferences=0x7f07004e;
-        public static final int clear_button_title=0x7f070026;
+        public static final int archived_title=0x7f07003e;
+        public static final int cancel_button_title=0x7f07002c;
+        public static final int clean_inbox_button_title=0x7f070055;
+        public static final int clean_inbox_message=0x7f070064;
+        public static final int clean_slate_button_title=0x7f070056;
+        public static final int clean_slate_message=0x7f070065;
+        public static final int clean_slate_title=0x7f070039;
+        public static final int clean_slate_warning=0x7f070062;
+        public static final int clean_task_message=0x7f070063;
+        public static final int cleanup_preferences=0x7f07004f;
+        public static final int clear_button_title=0x7f070027;
         /**   project & context edit screens 
          */
-        public static final int colour_title=0x7f07003c;
-        public static final int completed_title=0x7f07003b;
-        public static final int context_icon_title=0x7f070045;
-        public static final int context_name=0x7f070030;
-        public static final int context_name_title=0x7f070046;
-        public static final int context_title=0x7f070023;
+        public static final int colour_title=0x7f07003d;
+        public static final int completed_title=0x7f07003c;
+        public static final int context_icon_title=0x7f070046;
+        public static final int context_name=0x7f070031;
+        public static final int context_name_title=0x7f070047;
+        public static final int context_title=0x7f070024;
         /**   Calendar screen 
          */
-        public static final int day_button_title=0x7f070041;
-        public static final int default_context_title=0x7f070040;
-        public static final int delete_completed_button_title=0x7f070053;
-        public static final int delete_completed_warning=0x7f070060;
-        public static final int delete_warning=0x7f07005f;
+        public static final int day_button_title=0x7f070042;
+        public static final int default_context_title=0x7f070041;
+        public static final int delete_completed_button_title=0x7f070054;
+        public static final int delete_completed_warning=0x7f070061;
+        public static final int delete_warning=0x7f070060;
         /**   task edit screen 
          */
-        public static final int description_title=0x7f070039;
-        public static final int details_title=0x7f070024;
-        public static final int dialog_title_cleanup_preference=0x7f07004f;
+        public static final int description_title=0x7f07003a;
+        public static final int details_title=0x7f070025;
+        public static final int dialog_title_cleanup_preference=0x7f070050;
         /**   preferences screen 
          */
-        public static final int display_task_list_title=0x7f070044;
-        public static final int due_date_title=0x7f07003a;
-        public static final int edit_button_title=0x7f070027;
-        public static final int error_message=0x7f070066;
-        public static final int error_title=0x7f070065;
-        public static final int extras_button_title=0x7f070028;
-        public static final int help0=0x7f07006a;
-        public static final int help1=0x7f07006b;
-        public static final int help2=0x7f07006c;
-        public static final int help3=0x7f07006d;
-        public static final int help4=0x7f07006e;
-        public static final int help5=0x7f07006f;
-        public static final int help6=0x7f070070;
-        public static final int help7=0x7f070071;
-        public static final int help8=0x7f070072;
-        public static final int icon_title=0x7f07003e;
-        public static final int info_title=0x7f07002d;
+        public static final int display_task_list_title=0x7f070045;
+        public static final int due_date_title=0x7f07003b;
+        public static final int edit_button_title=0x7f070028;
+        public static final int error_message=0x7f070067;
+        public static final int error_title=0x7f070066;
+        public static final int extras_button_title=0x7f070029;
+        public static final int help0=0x7f07006b;
+        public static final int help1=0x7f07006c;
+        public static final int help2=0x7f07006d;
+        public static final int help3=0x7f07006e;
+        public static final int help4=0x7f07006f;
+        public static final int help5=0x7f070070;
+        public static final int help6=0x7f070071;
+        public static final int help7=0x7f070072;
+        public static final int help8=0x7f070073;
+        public static final int icon_title=0x7f07003f;
+        public static final int info_title=0x7f07002e;
         /**  Toast displayed when an item is created 
          */
-        public static final int itemCreatedToast=0x7f070056;
+        public static final int itemCreatedToast=0x7f070057;
         /**  Toast displayed when an item is saved 
          */
-        public static final int itemDeletedToast=0x7f070058;
+        public static final int itemDeletedToast=0x7f070059;
         /**  Toast displayed when an item is saved 
          */
-        public static final int itemSavedToast=0x7f070057;
-        public static final int layout_preferences=0x7f070047;
-        public static final int menu_complete=0x7f070019;
-        public static final int menu_delete=0x7f070018;
-        public static final int menu_discard=0x7f07001e;
-        public static final int menu_help=0x7f070021;
-        public static final int menu_insert=0x7f07001c;
-        public static final int menu_move_down=0x7f07001b;
-        public static final int menu_move_up=0x7f07001a;
-        public static final int menu_preferences=0x7f070020;
-        public static final int menu_revert=0x7f07001d;
+        public static final int itemSavedToast=0x7f070058;
+        public static final int layout_preferences=0x7f070048;
+        public static final int menu_complete=0x7f07001a;
+        public static final int menu_delete=0x7f070019;
+        public static final int menu_discard=0x7f07001f;
+        public static final int menu_help=0x7f070022;
+        public static final int menu_insert=0x7f07001d;
+        public static final int menu_move_down=0x7f07001c;
+        public static final int menu_move_up=0x7f07001b;
+        public static final int menu_preferences=0x7f070021;
+        public static final int menu_revert=0x7f07001e;
         /**   Option menu 
          */
-        public static final int menu_save=0x7f070016;
-        public static final int menu_save_and_add=0x7f070017;
-        public static final int menu_view=0x7f07001f;
-        public static final int month_button_title=0x7f070043;
-        public static final int name_title=0x7f07003f;
-        public static final int next_button_title=0x7f070036;
-        public static final int no_contexts=0x7f07005e;
+        public static final int menu_save=0x7f070017;
+        public static final int menu_save_and_add=0x7f070018;
+        public static final int menu_view=0x7f070020;
+        public static final int month_button_title=0x7f070044;
+        public static final int name_title=0x7f070040;
+        public static final int next_button_title=0x7f070037;
+        public static final int no_contexts=0x7f07005f;
         /**   messages 
          */
-        public static final int no_due_date=0x7f070059;
-        public static final int no_due_tasks=0x7f07005c;
-        public static final int no_icon=0x7f07005a;
-        public static final int no_projects=0x7f07005d;
-        public static final int no_tasks=0x7f07005b;
-        public static final int nothing=0x7f070031;
-        public static final int ok_button_title=0x7f07002a;
-        public static final int previous_button_title=0x7f070035;
-        public static final int project_name=0x7f07002f;
+        public static final int no_due_date=0x7f07005a;
+        public static final int no_due_tasks=0x7f07005d;
+        public static final int no_icon=0x7f07005b;
+        public static final int no_projects=0x7f07005e;
+        public static final int no_tasks=0x7f07005c;
+        public static final int nothing=0x7f070032;
+        public static final int ok_button_title=0x7f07002b;
+        public static final int previous_button_title=0x7f070036;
+        public static final int project_name=0x7f070030;
         /**   general purpose 
          */
-        public static final int project_title=0x7f070022;
+        public static final int project_title=0x7f070023;
         /**   Welcome screen 
          */
-        public static final int sample_data_title=0x7f070037;
-        public static final int save_button_title=0x7f070029;
-        public static final int set_button_title=0x7f070025;
-        public static final int summary_action_appearance_preference=0x7f07004d;
-        public static final int summary_context_view_preference=0x7f07004b;
-        public static final int summary_delete_all_preference=0x7f070052;
-        public static final int summary_project_view_preference=0x7f070049;
-        public static final int task_name=0x7f07002e;
-        public static final int title_action_appearance_preference=0x7f07004c;
-        public static final int title_calendar=0x7f070013;
+        public static final int sample_data_title=0x7f070038;
+        public static final int save_button_title=0x7f07002a;
+        public static final int set_button_title=0x7f070026;
+        public static final int summary_action_appearance_preference=0x7f07004e;
+        public static final int summary_context_view_preference=0x7f07004c;
+        public static final int summary_delete_all_preference=0x7f070053;
+        public static final int summary_project_view_preference=0x7f07004a;
+        public static final int task_name=0x7f07002f;
+        public static final int title_action_appearance_preference=0x7f07004d;
+        public static final int title_calendar=0x7f070014;
+        public static final int title_colour_picker=0x7f070013;
         public static final int title_context=0x7f070003;
-        public static final int title_context_tasks=0x7f070015;
-        public static final int title_context_view_preference=0x7f07004a;
-        public static final int title_delete_all_preference=0x7f070051;
-        public static final int title_delete_completed_preference=0x7f070050;
+        public static final int title_context_tasks=0x7f070016;
+        public static final int title_context_view_preference=0x7f07004b;
+        public static final int title_delete_all_preference=0x7f070052;
+        public static final int title_delete_completed_preference=0x7f070051;
         public static final int title_due_tasks=0x7f070005;
         public static final int title_edit_context=0x7f07000c;
         public static final int title_edit_project=0x7f07000a;
@@ -316,18 +317,18 @@ public final class R {
         public static final int title_preferences_appearance=0x7f07000f;
         public static final int title_preferences_clean=0x7f070010;
         public static final int title_project=0x7f070002;
-        public static final int title_project_tasks=0x7f070014;
-        public static final int title_project_view_preference=0x7f070048;
+        public static final int title_project_tasks=0x7f070015;
+        public static final int title_project_view_preference=0x7f070049;
         public static final int title_task_extras=0x7f07000d;
         public static final int title_view_task=0x7f070008;
-        public static final int today=0x7f070033;
-        public static final int undefined=0x7f070032;
-        public static final int warning_title=0x7f07002c;
-        public static final int week_button_title=0x7f070042;
-        public static final int welcome1=0x7f070067;
-        public static final int welcome2=0x7f070068;
-        public static final int welcome3=0x7f070069;
-        public static final int yesterday=0x7f070034;
+        public static final int today=0x7f070034;
+        public static final int undefined=0x7f070033;
+        public static final int warning_title=0x7f07002d;
+        public static final int week_button_title=0x7f070043;
+        public static final int welcome1=0x7f070068;
+        public static final int welcome2=0x7f070069;
+        public static final int welcome3=0x7f07006a;
+        public static final int yesterday=0x7f070035;
     }
     public static final class style {
         public static final int ShuffleTheme=0x7f080000;

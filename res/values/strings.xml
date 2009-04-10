@@ -35,6 +35,7 @@
     <string name="title_preferences_clean">General Settings > Clean up</string>
     <string name="title_help">Help</string>
     <string name="title_icon_picker">Choose icon</string>
+    <string name="title_colour_picker">Choose color</string>
     <string name="title_calendar">Actions due %s</string>
     <string name="title_project_tasks">Projects > %s</string>
     <string name="title_context_tasks">Contexts > %s</string>
