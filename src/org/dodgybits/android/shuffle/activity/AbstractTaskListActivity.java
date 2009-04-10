@@ -127,9 +127,12 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     }
 
     protected final void toggleComplete(int position) {
-    	long id = getListAdapter().getItemId(position);
-    	Cursor c = (Cursor) getListAdapter().getItem(position);
-        BindingUtils.toggleTaskComplete(this, c, getListConfig().getListContentUri(), id);
+    	if (position >= 0 && position < getItemCount())
+    	{
+	    	long id = getListAdapter().getItemId(position);
+	    	Cursor c = (Cursor) getListAdapter().getItem(position);
+	        BindingUtils.toggleTaskComplete(this, c, getListConfig().getListContentUri(), id);
+    	}
     }
 	
 	protected boolean showTaskContext() {

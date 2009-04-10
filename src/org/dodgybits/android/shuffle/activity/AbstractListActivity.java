@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -262,8 +263,9 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	 * Permanently delete the given list item.
 	 */
 	protected void deleteItem(long id) {
-		Uri uri = ContentUris.withAppendedId(getListConfig().getListContentUri(), id);
-        getContentResolver().delete(uri, null, null);
+		// use list uri to insure it is notified when value is deleted
+        getContentResolver().delete(getListConfig().getListContentUri(), 
+        		BaseColumns._ID + "=?", new String[] { String.valueOf(id) });
     	String text = getResources().getString(
     			R.string.itemDeletedToast, getListConfig().getItemName(this));
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();        

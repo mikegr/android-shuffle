@@ -54,12 +54,14 @@ public class WelcomeActivity extends Activity {
         mSampleDataButton = (Button) findViewById(R.id.sample_data_button);
         mSampleDataButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	disableButtons();
             	performCreateSampleData();
             }
         });
         mCleanSlateButton = (Button) findViewById(R.id.clean_slate_button);
         mCleanSlateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	disableButtons();
             	performCleanSlate();
             }
         });
@@ -73,6 +75,11 @@ public class WelcomeActivity extends Activity {
             }
         };
 	}
+    
+    private void disableButtons() {
+    	mCleanSlateButton.setEnabled(false);
+    	mSampleDataButton.setEnabled(false);
+    }
     
     private void performCreateSampleData() {
     	Log.i(cTag, "Adding sample data");
