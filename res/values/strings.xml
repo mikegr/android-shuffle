@@ -58,6 +58,8 @@
     <string name="undefined">None</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="previous_button_title">Previous</string>
+    <string name="next_button_title">Next</string>
     
     <!--  Welcome screen -->
     <string name="sample_data_title">Demonstration</string>
@@ -151,7 +153,7 @@ Shuffle is a \"Getting Things Done\" inspired personal organization tool.
 It lets you quickly enter and categorize \'actions\'. With 5 supported perspectives,
 you can attack your actions any way you please.
 \n
-A simple elegant workflow encourages you to categorize your actions into projects and optionally provide context.\n
+A simple elegant workflow encourages you to categorize your actions into projects and optionally provide context.
 This structure lets you to break down formidable projects into individual achievable tasks.\n
 As a project evolves, clean out old actions as they\'re performed, 
 add new actions and reorder any remaining actions depending on your current priorities.
@@ -162,7 +164,7 @@ The <b>Inbox</b> is where all actions start off before they are processed.
 Try to regularly scan the Inbox, analyzing each action and either discard it, do it or assign it
 to a project.\n
 Once you\'ve processed the list, select <i>Clean up Inbox</i> from the menu to
-clear out all the processed actions from your Inbox. 
+clear out all the categorized actions from your Inbox. 
     </string>
     <string name="help2">
 The <b>Project</b> perspective lists all your projects, and allows you to drill-down 
@@ -176,13 +178,13 @@ its actions on the same screen.
     </string>
     <string name="help3">
 <b>Contexts</b> are situations in which you intend to perform actions. Shuffle comes with a few standard contexts to get you started: 
-<i>At home</i>, <i>At  work</i>, <i>Online</i>, <i>Errands</i>, <i>Contact</i> and <i>Read</i>. Feel free to modify or delete
- the existing, or add your own contexts that suit your situation.
-
-Like the Projects perspective, contexts can be viewed in either drill-down or expandable mode, configurable via Preferences. 
+<i>At home</i>, <i>At  work</i>, <i>Online</i>, <i>Errands</i>, <i>Contact</i> and <i>Read</i>. \n
+Feel free to modify or delete the existing, or add your own contexts that suit your situation.\n
+\n
+Like the Projects perspective, contexts can be viewed in either drill-down or expandable mode, configurable via Settings. 
     </string>
     <string name="help4">
-<b>Next actions</b> is the best place to look to determine what needs to be done. 
+<b>Next actions</b> is the best place to look to determine what needs to be done. \n
 It shows the first action for each of your projects. 
 If you\'ve organized each of your projects actions in the order you intend to complete them, 
 this list quickly shows you the most important actions for you could get started on now.
@@ -194,17 +196,23 @@ There are 3 views - <i>Today</i>, <i>This Week</i> and
 Overdue actions are shown in all views.
     </string>
     <string name="help6">
-A number of aspects of Shuffle are user-configurable. The <b>Preferences</b> screen is available from all Perspectives via the menu. \n
-<b>Action appearance</b> - Lets you custom what information to display for actions in each perspective.  \n
+A number of aspects of Shuffle are user-configurable. The <b>Settings</b> screen is available from all Perspectives via the menu. \n
 <b>List layout</b>  - Show projects and contexts in two screens (drill-down) or in a tree structure (expandable). \n
-<b>Clean up</b> - Schedule automated deleting of completed actions, delete them now, or delete everything. \n
+<b>Action appearance</b> - Lets you custom what information to display for actions in each perspective.  \n
+<b>Clean up</b> - Delete completed actions or delete everything. \n
     </string>
     <string name="help7">
-There are a number of time saving <b>keyboard shortcuts</b> for common tasks.
+Some handy Shuffle features you may not know about:\n
+1) In any list view, long press on an item to see a menu of options.\n
+2) Hitting the Back button saves before closing.\n
+3) Use the <i>Save and New</i> menu to create a bunch of actions in one go.\n
+4) You can mark an action as complete by swiping your finger over it in a list.\n
     </string>
     <string name="help8">
-Thanks to the team behind the Tango Desktop Project, an open source collection of icons used in Shuffle (see http://tango.freedesktop.org/).
+Thanks to the team behind the Tango Desktop Project, an open source collection of icons used in Shuffle.
 Thanks also to David Gibb for providing some great feedback on the design and to Gudrun for tolerating my nights and weekends
-spent tinkering with Android.
+spent tinkering with Android.\n
+\n
+For feedback or bug reports, please check http://code.google.com/p/android-shuffle/issues/list or email me at andy@dodgybits.org
     </string>
 </resources>

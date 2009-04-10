@@ -44,12 +44,10 @@ public class ContextView extends ItemView<Context> {
 	
 	@Override
 	public void updateView(Context context) {
-		mIcon.setPadding(0, 0, 0, 0);
 		// add context icon
 		int iconResource = context.icon.largeIconId;
 		if (iconResource > 0) {
 			mIcon.setImageResource(iconResource);
-			mIcon.setPadding(5, 0, 5, 0);
 			mIcon.setVisibility(View.VISIBLE);
 		} else {
 			mIcon.setVisibility(View.INVISIBLE);

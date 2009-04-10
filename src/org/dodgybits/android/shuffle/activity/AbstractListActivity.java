@@ -44,7 +44,6 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	}
 	
 	/** Called when the activity is first created. */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);

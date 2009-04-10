@@ -5,11 +5,14 @@ import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.util.MenuUtils;
+import org.dodgybits.android.shuffle.view.SwipeListItemListener;
+import org.dodgybits.android.shuffle.view.SwipeListItemWrapper;
 import org.dodgybits.android.shuffle.view.TaskView;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -20,9 +23,19 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 
-public abstract class AbstractTaskListActivity extends AbstractListActivity<Task> {
+public abstract class AbstractTaskListActivity extends AbstractListActivity<Task> 
+	implements SwipeListItemListener {
 
 	private static final String cTag = "AbstractTaskListActivity";
+	
+	@Override
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		
+		// register self as swipe listener
+		SwipeListItemWrapper wrapper = (SwipeListItemWrapper) findViewById(R.id.swipe_wrapper);
+		wrapper.setSwipeListItemListener(this);
+	}
 	
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
@@ -44,7 +57,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 
         switch (item.getItemId()) {
 	        case MenuUtils.COMPLETE_ID:
-	            toggleComplete(info.position, info.id);
+	            toggleComplete(info.position);
 	            return true;
         }
         return super.onContextItemSelected(item);
@@ -88,12 +101,17 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 		};
 		return adapter;
 	}
+	
+	public void onListItemSwiped(int position) {
+		toggleComplete(position);
+	}
 
 	protected final void toggleComplete() {
-    	toggleComplete(getSelectedItemPosition(), getSelectedItemId());
+    	toggleComplete(getSelectedItemPosition());
     }
 
-    protected final void toggleComplete(int position, long id) {
+    protected final void toggleComplete(int position) {
+    	long id = getListAdapter().getItemId(position);
     	Cursor c = (Cursor) getListAdapter().getItem(position);
         BindingUtils.toggleTaskComplete(this, c, getListConfig().getListContentUri(), id);
     }

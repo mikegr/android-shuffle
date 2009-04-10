@@ -5,6 +5,8 @@ import org.dodgybits.android.shuffle.activity.config.ExpandableListConfig;
 import org.dodgybits.android.shuffle.util.AlertUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.util.MenuUtils;
+import org.dodgybits.android.shuffle.view.SwipeListItemListener;
+import org.dodgybits.android.shuffle.view.SwipeListItemWrapper;
 
 import android.app.ExpandableListActivity;
 import android.content.ContentUris;
@@ -27,7 +29,9 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.Toast;
 
-public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActivity{
+public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActivity 
+	implements SwipeListItemListener {
+	
 	private static final String cTag = "AbstractExpandableActivity";
 
 	protected ExpandableListAdapter mAdapter;
@@ -51,6 +55,10 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         // Set up our adapter
         mAdapter = createExpandableListAdapter(groupCursor); 
         setListAdapter(mAdapter);
+        
+		// register self as swipe listener
+		SwipeListItemWrapper wrapper = (SwipeListItemWrapper) findViewById(R.id.swipe_wrapper);
+		wrapper.setSwipeListItemListener(this);        
 	}
 	
 	@Override
@@ -215,6 +223,16 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 
     }
 
+	public void onListItemSwiped(int position) {
+		long packedPosition = getExpandableListView().getExpandableListPosition(position);
+		if (isChild(packedPosition)) {
+	        int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+	        int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+			long id = getExpandableListAdapter().getChildId(groupPosition, childPosition);
+			toggleComplete(packedPosition, id);
+		}
+	}
+    
     protected final void toggleComplete(long packedPosition, long id) {
         int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
         int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);

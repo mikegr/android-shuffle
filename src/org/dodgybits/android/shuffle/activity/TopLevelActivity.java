@@ -21,11 +21,11 @@ import android.widget.ListView;
 public class TopLevelActivity extends ListActivity {
     private static final String cTag = "TopLevelActivity";
 
-    private int INBOX = 0;
-    private int DUE_TASKS = 1;
-    private int TOP_TASKS = 2;
-    private int PROJECTS = 3;
-    private int CONTEXTS = 4;
+    private static final int INBOX = 0;
+    private static final int DUE_TASKS = 1;
+    private static final int TOP_TASKS = 2;
+    private static final int PROJECTS = 3;
+    private static final int CONTEXTS = 4;
     
 	@Override
     public void onCreate(Bundle icicle) {

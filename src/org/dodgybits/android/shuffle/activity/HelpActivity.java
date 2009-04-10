@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -17,17 +17,17 @@ public class HelpActivity extends Activity {
     
 	private Spinner mHelpSpinner;
 	private TextView mHelpContent;
-	private TableLayout mShortcuts;
-    
+	private Button mPrevious;
+	private Button mNext;
+    	
 	@Override
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
         setContentView(R.layout.help);
         
-        mHelpSpinner = (Spinner) findViewById(R.id.help_screen);
         mHelpContent = (TextView) findViewById(R.id.help_text);
-        mShortcuts = (TableLayout) findViewById(R.id.help_shortcuts);
+        mHelpSpinner = (Spinner) findViewById(R.id.help_screen);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
         		this, R.array.help_screens,
                 android.R.layout.simple_spinner_item);
@@ -43,9 +43,26 @@ public class HelpActivity extends Activity {
         		int resId = HelpActivity.this.getResources().getIdentifier(
         				"help" + position, "string", "org.dodgybits.android.shuffle");
         		mHelpContent.setText(HelpActivity.this.getText(resId));
-    			mShortcuts.setVisibility(position == 7 ? View.VISIBLE : View.GONE);
+        		updateNavigationButtons();
         	}
         });
+
+        mPrevious = (Button) findViewById(R.id.previous_button);
+        mPrevious.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+        		int position = mHelpSpinner.getSelectedItemPosition();
+            	mHelpSpinner.setSelection(position - 1);
+            }
+        });        
+
+        
+        mNext = (Button) findViewById(R.id.next_button);
+        mNext.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+        		int position = mHelpSpinner.getSelectedItemPosition();
+            	mHelpSpinner.setSelection(position + 1);
+            }
+        });        
         
         setSelectionFromBundle(getIntent().getExtras());
 	}
@@ -57,5 +74,11 @@ public class HelpActivity extends Activity {
         }
         mHelpSpinner.setSelection(position);
 	}
-		
+
+	private void updateNavigationButtons() {
+		int position = mHelpSpinner.getSelectedItemPosition();
+		mPrevious.setEnabled(position > 0);
+		mNext.setEnabled(position < mHelpSpinner.getCount() - 1);
+	}
+	
 }
