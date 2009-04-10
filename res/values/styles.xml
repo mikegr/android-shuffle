@@ -4,7 +4,7 @@
 	<style name="ShuffleTheme" parent="@android:Theme" >        
     </style>
 
-    <style name="activity">
+    <style name="activity" parent="ShuffleTheme">
     	<!--  <item name="android:background">@drawable/pale_weak_cyan</item> 
     	<item name="android:cacheColorHint">@drawable/pale_weak_cyan</item>
     	 -->
@@ -19,11 +19,11 @@
     	<item name="android:cacheColorHint">@drawable/pale_weak_cyan</item>
 	</style>
 
-	<style name="image">
+	<style name="image" parent="ShuffleTheme">
     	<item name="android:scaleType">fitCenter</item>
 	</style>
 
-    <style name="text">
+    <style name="text" parent="ShuffleTheme">
         <item name="android:textColor">@drawable/white</item>
         <item name="android:textScaleX">0.9</item>
     	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
@@ -54,16 +54,19 @@
         <item name="android:textColor">@drawable/white</item>
     </style>
     
-    <style name="preferences_checkbox">
+    <style name="preferences_checkbox" parent="ShuffleTheme">
     </style>
     
     <style name="text_autocomplete" parent="text_editable">
+    	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    	<item name="android:popupBackground">@drawable/black</item>
+    	
     </style>
 
     <style name="text_dropdown" parent="text_editable">
     </style>
 
-    <style name="list_text">
+    <style name="list_text" parent="ShuffleTheme">
         <item name="android:textColor">@drawable/dark_gray</item>
         <item name="android:textScaleX">0.9</item>
     	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
@@ -90,7 +93,7 @@
         <item name="android:baselineAligned">false</item>
     </style>
    
-    <style name="top_row">
+    <style name="top_row" parent="ShuffleTheme">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">top</item>

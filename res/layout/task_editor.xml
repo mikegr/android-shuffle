@@ -5,8 +5,7 @@
 
 	<LinearLayout android:id="@+id/main" android:orientation="vertical"
 		android:padding="4dip" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:scrollbars="vertical"
-		style="@style/editor">
+		android:layout_height="fill_parent" android:scrollbars="vertical">
 
 		<TextView android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:paddingLeft="5px"
@@ -29,8 +28,9 @@
 		<AutoCompleteTextView android:id="@+id/project"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/project_title" android:maxLength="20"
-			style="@style/text_autocomplete" />
+			android:hint="@string/project_title" android:maxLength="50"
+			style="@style/text_autocomplete"
+			/>
 
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:paddingLeft="5px"
@@ -40,8 +40,9 @@
 		<AutoCompleteTextView android:id="@+id/context"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/context_title" android:maxLength="20"
-			style="@style/text_autocomplete" />
+			android:hint="@string/context_title" android:maxLength="50"
+			style="@style/text_autocomplete"
+			 />
 
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:paddingLeft="5px"

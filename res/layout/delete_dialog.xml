@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	android:orientation="vertical"	
+	android:gravity="center">
+
+	<TextView android:id="@+id/text" android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+		android:gravity="center_horizontal" 
+		android:paddingTop="5px"
+		android:paddingLeft="5px"
+		android:paddingRight="5px" style="@style/text" />
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:orientation="horizontal"
+		android:paddingTop="10px"
+		>
+
+		<Button android:id="@+id/cancel_button" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:paddingLeft="5px" android:paddingRight="5px"
+			android:text="@string/cancel_button_title" />
+
+		<Button android:id="@+id/delete_button" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:paddingLeft="5px"
+			android:layout_weight="1" android:paddingRight="5px" />
+
+	</LinearLayout>
+
+</LinearLayout>
+ 

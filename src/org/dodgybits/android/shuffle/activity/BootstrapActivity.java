@@ -26,7 +26,7 @@ public class BootstrapActivity extends Activity {
 		}
         
         // start the cleaning service
-		TaskCleaner.getInstance(this).schedule();
+//		TaskCleaner.getInstance(this).schedule();
 
         startActivity(new Intent(this, activityClass));
 

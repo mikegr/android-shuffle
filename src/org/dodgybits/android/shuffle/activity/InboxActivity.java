@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class InboxActivity extends AbstractTaskListActivity {
 
@@ -28,6 +29,7 @@ public class InboxActivity extends AbstractTaskListActivity {
         switch (item.getItemId()) {
         case MenuUtils.CLEAN_INBOX_ID:
         	Preferences.cleanUpInbox(this);
+            Toast.makeText(this, R.string.clean_inbox_message, Toast.LENGTH_SHORT).show();
         	// need to restart the activity since the query has changed
         	// mCursor.requery() not enough
         	startActivity(new Intent(this, InboxActivity.class));

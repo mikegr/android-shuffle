@@ -110,7 +110,8 @@
         </activity>
         
         <activity android:name=".activity.TaskEditorActivity" 
-        	android:label="@string/title_new_task">
+        	android:label="@string/title_new_task"
+        	>
             <!-- This filter says that we can edit the data of a single task -->
             <intent-filter android:label="@string/title_edit_task">
                 <action android:name="android.intent.action.EDIT" />
@@ -182,7 +183,16 @@
         <activity android:name=".activity.PreferencesAppearanceActivity" android:label="@string/title_preferences_appearance">
         </activity>
 
-        <activity android:name=".activity.PreferencesCleanActivity" android:label="@string/title_preferences_clean">
+        <activity android:name=".activity.PreferencesDeleteCompletedActivity" 
+        	android:theme="@android:style/Theme.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>            
+        </activity>
+
+        <activity android:name=".activity.PreferencesDeleteAllActivity" 
+        	android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />

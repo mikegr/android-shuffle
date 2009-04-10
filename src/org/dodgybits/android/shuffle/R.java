@@ -122,44 +122,44 @@ public final class R {
         public static final int x_office_address_book_small=0x7f02004e;
     }
     public static final class id {
-        public static final int appearance_layout=0x7f090016;
-        public static final int clean_slate_button=0x7f09001e;
+        public static final int appearance_layout=0x7f090018;
+        public static final int cancel_button=0x7f09000c;
+        public static final int clean_slate_button=0x7f090026;
         public static final int colour=0x7f090009;
         public static final int colourGrid=0x7f090000;
         public static final int colour_clear_button=0x7f090004;
         public static final int colour_display=0x7f090002;
         public static final int colour_set_button=0x7f090003;
-        public static final int completed_checkbox=0x7f090025;
-        public static final int context=0x7f090015;
-        public static final int default_context=0x7f09001f;
-        public static final int delete_completed=0x7f09001c;
-        public static final int delete_completed_button=0x7f09001d;
-        public static final int description=0x7f090011;
-        public static final int details=0x7f090012;
-        public static final int display_context=0x7f090017;
-        public static final int display_details=0x7f09001b;
-        public static final int display_due_date=0x7f090018;
-        public static final int display_icon=0x7f090019;
-        public static final int display_project=0x7f09001a;
-        public static final int due_date=0x7f090014;
-        public static final int due_date_clear_button=0x7f090024;
-        public static final int due_date_display=0x7f090022;
-        public static final int due_date_set_button=0x7f090023;
-        public static final int help_screen=0x7f09000c;
-        public static final int help_shortcuts=0x7f09000e;
-        public static final int help_text=0x7f09000d;
+        public static final int completed_checkbox=0x7f090024;
+        public static final int context=0x7f090017;
+        public static final int default_context=0x7f09001e;
+        public static final int delete_button=0x7f09000d;
+        public static final int description=0x7f090013;
+        public static final int details=0x7f090014;
+        public static final int display_context=0x7f090019;
+        public static final int display_details=0x7f09001d;
+        public static final int display_due_date=0x7f09001a;
+        public static final int display_icon=0x7f09001b;
+        public static final int display_project=0x7f09001c;
+        public static final int due_date=0x7f090016;
+        public static final int due_date_clear_button=0x7f090023;
+        public static final int due_date_display=0x7f090021;
+        public static final int due_date_set_button=0x7f090022;
+        public static final int help_screen=0x7f09000e;
+        public static final int help_shortcuts=0x7f090010;
+        public static final int help_text=0x7f09000f;
         public static final int icon=0x7f09000a;
-        public static final int iconGrid=0x7f09000f;
+        public static final int iconGrid=0x7f090011;
         public static final int icon_clear_button=0x7f090008;
         public static final int icon_display=0x7f090005;
         public static final int icon_none=0x7f090006;
         public static final int icon_set_button=0x7f090007;
-        public static final int main=0x7f090021;
+        public static final int main=0x7f090020;
         public static final int name=0x7f090001;
-        public static final int project=0x7f090013;
-        public static final int relLayout=0x7f090010;
-        public static final int sample_data_button=0x7f090026;
-        public static final int task_list=0x7f090020;
+        public static final int project=0x7f090015;
+        public static final int relLayout=0x7f090012;
+        public static final int sample_data_button=0x7f090025;
+        public static final int task_list=0x7f09001f;
         public static final int text=0x7f09000b;
     }
     public static final class layout {
@@ -167,17 +167,17 @@ public final class R {
         public static final int context_editor=0x7f030001;
         public static final int context_view=0x7f030002;
         public static final int contexts=0x7f030003;
-        public static final int edit_separator=0x7f030004;
-        public static final int expandable_context_view=0x7f030005;
-        public static final int expandable_contexts=0x7f030006;
-        public static final int expandable_project_view=0x7f030007;
-        public static final int expandable_projects=0x7f030008;
-        public static final int help=0x7f030009;
-        public static final int icon_picker=0x7f03000a;
-        public static final int list_item_view=0x7f03000b;
-        public static final int list_task_view=0x7f03000c;
-        public static final int preferences_appearance=0x7f03000d;
-        public static final int preferences_clean=0x7f03000e;
+        public static final int delete_dialog=0x7f030004;
+        public static final int edit_separator=0x7f030005;
+        public static final int expandable_context_view=0x7f030006;
+        public static final int expandable_contexts=0x7f030007;
+        public static final int expandable_project_view=0x7f030008;
+        public static final int expandable_projects=0x7f030009;
+        public static final int help=0x7f03000a;
+        public static final int icon_picker=0x7f03000b;
+        public static final int list_item_view=0x7f03000c;
+        public static final int list_task_view=0x7f03000d;
+        public static final int preferences_appearance=0x7f03000e;
         public static final int project_editor=0x7f03000f;
         public static final int projects=0x7f030010;
         public static final int tabbed_due_tasks=0x7f030011;
@@ -193,11 +193,12 @@ public final class R {
         public static final int archived_title=0x7f07003b;
         public static final int cancel_button_title=0x7f07002b;
         public static final int clean_inbox_button_title=0x7f070052;
-        public static final int clean_inbox_message=0x7f07005f;
+        public static final int clean_inbox_message=0x7f070061;
         public static final int clean_slate_button_title=0x7f070053;
-        public static final int clean_slate_message=0x7f070060;
+        public static final int clean_slate_message=0x7f070062;
         public static final int clean_slate_title=0x7f070036;
-        public static final int clean_task_message=0x7f07005e;
+        public static final int clean_slate_warning=0x7f07005f;
+        public static final int clean_task_message=0x7f070060;
         public static final int cleanup_preferences=0x7f07004c;
         public static final int clear_button_title=0x7f070026;
         /**   project & context edit screens 
@@ -213,31 +214,30 @@ public final class R {
         public static final int day_button_title=0x7f07003f;
         public static final int default_context_title=0x7f07003e;
         public static final int delete_completed_button_title=0x7f070051;
-        public static final int delete_completed_title=0x7f070050;
+        public static final int delete_completed_warning=0x7f07005e;
         public static final int delete_warning=0x7f07005d;
         /**   task edit screen 
          */
         public static final int description_title=0x7f070037;
         public static final int details_title=0x7f070024;
-        public static final int dialog_title_cleanup_preference=0x7f07004f;
+        public static final int dialog_title_cleanup_preference=0x7f07004d;
         /**   preferences screen 
          */
         public static final int display_task_list_title=0x7f070042;
-        public static final int done_button_title=0x7f07002a;
         public static final int due_date_title=0x7f070038;
         public static final int edit_button_title=0x7f070027;
-        public static final int error_message=0x7f070062;
-        public static final int error_title=0x7f070061;
+        public static final int error_message=0x7f070064;
+        public static final int error_title=0x7f070063;
         public static final int extras_button_title=0x7f070028;
-        public static final int help0=0x7f070066;
-        public static final int help1=0x7f070067;
-        public static final int help2=0x7f070068;
-        public static final int help3=0x7f070069;
-        public static final int help4=0x7f07006a;
-        public static final int help5=0x7f07006b;
-        public static final int help6=0x7f07006c;
-        public static final int help7=0x7f07006d;
-        public static final int help8=0x7f07006e;
+        public static final int help0=0x7f070068;
+        public static final int help1=0x7f070069;
+        public static final int help2=0x7f07006a;
+        public static final int help3=0x7f07006b;
+        public static final int help4=0x7f07006c;
+        public static final int help5=0x7f07006d;
+        public static final int help6=0x7f07006e;
+        public static final int help7=0x7f07006f;
+        public static final int help8=0x7f070070;
         public static final int icon_title=0x7f07003c;
         public static final int info_title=0x7f07002d;
         /**  Toast displayed when an item is created 
@@ -275,6 +275,7 @@ public final class R {
         public static final int no_projects=0x7f07005b;
         public static final int no_tasks=0x7f070059;
         public static final int nothing=0x7f070031;
+        public static final int ok_button_title=0x7f07002a;
         public static final int project_name=0x7f07002f;
         /**   general purpose 
          */
@@ -285,16 +286,17 @@ public final class R {
         public static final int save_button_title=0x7f070029;
         public static final int set_button_title=0x7f070025;
         public static final int summary_action_appearance_preference=0x7f07004b;
-        public static final int summary_cleanup_preference=0x7f07004e;
         public static final int summary_context_view_preference=0x7f070049;
+        public static final int summary_delete_all_preference=0x7f070050;
         public static final int summary_project_view_preference=0x7f070047;
         public static final int task_name=0x7f07002e;
         public static final int title_action_appearance_preference=0x7f07004a;
         public static final int title_calendar=0x7f070013;
-        public static final int title_cleanup_preference=0x7f07004d;
         public static final int title_context=0x7f070003;
         public static final int title_context_tasks=0x7f070015;
         public static final int title_context_view_preference=0x7f070048;
+        public static final int title_delete_all_preference=0x7f07004f;
+        public static final int title_delete_completed_preference=0x7f07004e;
         public static final int title_due_tasks=0x7f070005;
         public static final int title_edit_context=0x7f07000c;
         public static final int title_edit_project=0x7f07000a;
@@ -318,9 +320,9 @@ public final class R {
         public static final int undefined=0x7f070032;
         public static final int warning_title=0x7f07002c;
         public static final int week_button_title=0x7f070040;
-        public static final int welcome1=0x7f070063;
-        public static final int welcome2=0x7f070064;
-        public static final int welcome3=0x7f070065;
+        public static final int welcome1=0x7f070065;
+        public static final int welcome2=0x7f070066;
+        public static final int welcome3=0x7f070067;
         public static final int yesterday=0x7f070034;
     }
     public static final class style {

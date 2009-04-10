@@ -47,7 +47,7 @@
     <string name="edit_button_title">Edit</string>
     <string name="extras_button_title">Extra details...</string>
     <string name="save_button_title">Save</string>
-    <string name="done_button_title">OK</string>
+    <string name="ok_button_title">OK</string>
     <string name="cancel_button_title">Cancel</string>
 	<string name="warning_title">Warning</string>
 	<string name="info_title">Information</string>
@@ -98,11 +98,13 @@
 
 	<string name="cleanup_preferences">Clean up</string>
 
-	<string name="title_cleanup_preference">Delete completed actions</string>
-	<string name="summary_cleanup_preference">Schedule deletion of completed actions</string>
 	<string name="dialog_title_cleanup_preference">Delete completed actions</string>
 
-    <string name="delete_completed_title">Delete completed\nactions...</string>
+	<string name="title_delete_completed_preference">Delete completed actions</string>
+
+	<string name="title_delete_all_preference">Delete everything!</string>
+	<string name="summary_delete_all_preference">Remove all actions, projects and custom contexts.</string>
+
     <string name="delete_completed_button_title">Delete completed actions</string>
     <string name="clean_inbox_button_title">Clean up Inbox</string>
     <string name="clean_slate_button_title">Delete everything!</string>
@@ -124,9 +126,11 @@
     <string name="no_projects">There are no projects to display. Get started by creating actions in the Inbox and assigning them to projects.</string>
     <string name="no_contexts">There are no contexts to display. Get started by creating actions in the Inbox and assigning them to contexts.</string>
     <string name="delete_warning">Are you sure you want to delete the selected %s and it's %d %ss?</string>
+    <string name="delete_completed_warning">Delete all completed tasks?</string>
+    <string name="clean_slate_warning">Delete <i>all</i> actions, projects and custom contexts?</string>
     <string name="clean_task_message">Deleted %d completed actions.</string>
     <string name="clean_inbox_message">Cleared out actions with projects from Inbox.</string>
-    <string name="clean_slate_message">Delete <i>all</i> actions, projects and custom contexts?</string>
+    <string name="clean_slate_message">Deleted all actions, projects and custom contexts.</string>
    	<string name="error_title">Error</string>
 	<string name="error_message">Error loading action</string>
     
