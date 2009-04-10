@@ -123,10 +123,10 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 	        case MenuUtils.INSERT_CHILD_ID:
-	        	long packedPosition = this.getSelectedPosition();
-	        	if (packedPosition != ExpandableListView.PACKED_POSITION_TYPE_NULL)
+	        	long packedPosition = getSelectedPosition();
+                int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+	        	if (groupPosition > -1)
 	        	{
-	                int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
 		        	Cursor cursor = (Cursor) getExpandableListAdapter().getGroup(groupPosition);
 		        	G group = getListConfig().readGroup(cursor, getResources());
 	        		insertItem(mConfig.getChildContentUri(), group);	        		

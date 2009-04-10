@@ -43,7 +43,8 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	protected void onResume() {
 		super.onResume();
 		
-		Cursor cursor = getContentResolver().query(getDrilldownListConfig().getListContentUri(), 
+		Cursor cursor = getContentResolver().query(
+				Shuffle.Contexts.cContextTasksContentURI,
 				Shuffle.Contexts.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();
@@ -56,7 +57,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	}
 	
 	@Override
-	protected void deleteChildren(int groupId) {
+	protected void deleteChildren(long groupId) {
 		getContentResolver().delete(getDrilldownListConfig().getChildContentUri(), 
 				Shuffle.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)});
 	}
@@ -93,12 +94,6 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 
 		};
 		return adapter;
-	}
-
-	@Override
-	protected int getSelectedItemChildCount() {
-		final long groupId = getSelectedItemId();
-		return mTaskCountArray.get((int)groupId);
 	}
 	
     /**

@@ -123,7 +123,7 @@ public final class R {
     }
     public static final class id {
         public static final int appearance_layout=0x7f09001a;
-        public static final int cancel_button=0x7f09000c;
+        public static final int cancel_button=0x7f09000d;
         public static final int clean_slate_button=0x7f090028;
         public static final int colour=0x7f090009;
         public static final int colourGrid=0x7f090000;
@@ -133,7 +133,7 @@ public final class R {
         public static final int completed_checkbox=0x7f090026;
         public static final int context=0x7f090019;
         public static final int default_context=0x7f090020;
-        public static final int delete_button=0x7f09000d;
+        public static final int delete_button=0x7f09000c;
         public static final int description=0x7f090015;
         public static final int details=0x7f090016;
         public static final int display_context=0x7f09001b;

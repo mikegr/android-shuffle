@@ -33,9 +33,8 @@ public abstract class AbstractDrilldownListActivity<T> extends AbstractListActiv
 
 	protected SparseIntArray mTaskCountArray;
 	
-	protected int getSelectedItemChildCount() {
-		int groupId = (int)getSelectedItemId();
-		return mTaskCountArray.get(groupId);
+	protected int getChildCount(long groupId) {
+		return mTaskCountArray.get((int)groupId);
 	}
 	
 	protected final DrilldownListConfig<T> getDrilldownListConfig()
@@ -43,18 +42,18 @@ public abstract class AbstractDrilldownListActivity<T> extends AbstractListActiv
 		return (DrilldownListConfig<T>)getListConfig();
 	}
 	
-	abstract void deleteChildren(int groupId);
+	abstract void deleteChildren(long groupId);
 	
     /**
      * Permanently delete the selected item.
      */
-    protected void deleteItem() {
-    	int childCount = getSelectedItemChildCount();
+	@Override
+    protected void deleteItem(final long groupId) {
+    	int childCount = getChildCount(groupId);
 		if (childCount > 0) {
-			final int groupId = (int)getSelectedItemId();
     		OnClickListener buttonListener = new OnClickListener() {
     			public void onClick(DialogInterface dialog, int which) {
-    				if (which == DialogInterface.BUTTON2) {
+    				if (which == DialogInterface.BUTTON1) {
     			    	Log.i(cTag, "Deleting group id " + groupId);
     			    	AbstractDrilldownListActivity.super.deleteItem(groupId);
     			    	Log.i(cTag, "Deleting all child for group id " + groupId);
@@ -67,7 +66,7 @@ public abstract class AbstractDrilldownListActivity<T> extends AbstractListActiv
 			AlertUtils.showDeleteGroupWarning(this, getDrilldownListConfig().getItemName(this), 
 					getDrilldownListConfig().getChildName(this), childCount, buttonListener);
 		} else {
-			super.deleteItem(getSelectedItemId());
+			super.deleteItem(groupId);
 		}
     }
 

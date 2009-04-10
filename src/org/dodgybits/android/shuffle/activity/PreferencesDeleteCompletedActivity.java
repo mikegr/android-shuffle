@@ -31,7 +31,7 @@ public class PreferencesDeleteCompletedActivity extends PreferencesDeleteActivit
         Log.d(cTag, "onCreate+");
         super.onCreate(icicle);
         
-        mDeleteButton.setText(R.string.ok_button_title);
+        mDeleteButton.setText(R.string.delete_completed_button_title);
         mText.setText(R.string.delete_completed_warning);
     }
     

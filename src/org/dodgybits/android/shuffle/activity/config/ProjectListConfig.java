@@ -58,7 +58,7 @@ public class ProjectListConfig implements DrilldownListConfig<Project> {
 	}
 
 	public Uri getListContentUri() {
-		return Shuffle.Projects.cProjectTasksContentURI;
+		return Shuffle.Projects.CONTENT_URI;
 	}
 
 	public boolean isTaskList() {

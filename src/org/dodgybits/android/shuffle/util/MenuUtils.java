@@ -131,6 +131,8 @@ public class MenuUtils {
 	public static void addEditorMenuItems(Menu menu, int state) {
         menu.add(Menu.NONE, SAVE_ID, SAVE_ORDER, R.string.menu_save)
     		.setIcon(android.R.drawable.ic_menu_save).setAlphabeticShortcut('s');
+        menu.add(Menu.NONE, SAVE_AND_ADD_ID, SAVE_AND_ADD_ORDER, R.string.menu_save_and_add)
+        	.setIcon(android.R.drawable.ic_menu_save);
         // Build the menus that are shown when editing.
         if (state == State.STATE_EDIT) {
             menu.add(Menu.NONE, REVERT_ID, REVERT_ORDER, R.string.menu_revert)
@@ -140,8 +142,6 @@ public class MenuUtils {
 
         // Build the menus that are shown when inserting.
         } else {
-            menu.add(Menu.NONE, SAVE_AND_ADD_ID, SAVE_AND_ADD_ORDER, R.string.menu_save_and_add)
-            	.setIcon(android.R.drawable.ic_menu_save);
             menu.add(Menu.NONE, DISCARD_ID, DISCARD_ORDER, R.string.menu_discard)
             	.setIcon(android.R.drawable.ic_menu_close_clear_cancel).setAlphabeticShortcut('d');
         }

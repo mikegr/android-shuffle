@@ -44,7 +44,7 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 		super.onResume();
 		
 		Cursor cursor = getContentResolver().query(
-				getDrilldownListConfig().getListContentUri(), 
+				Shuffle.Projects.cProjectTasksContentURI, 
 				Shuffle.Projects.cFullTaskProjection, null, null, null);
 		mTaskCountArray = BindingUtils.readCountArray(cursor);
 		cursor.close();
@@ -57,7 +57,7 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	}
 
 	@Override
-	protected void deleteChildren(int groupId) {
+	protected void deleteChildren(long groupId) {
 		getContentResolver().delete(
 				getDrilldownListConfig().getChildContentUri(), 
 				Shuffle.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(groupId)});

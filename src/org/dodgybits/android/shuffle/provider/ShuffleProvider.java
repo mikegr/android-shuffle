@@ -271,12 +271,10 @@ public class ShuffleProvider extends ContentProvider {
 			endMS = cal.getTimeInMillis();
 			break;
 		case Shuffle.Tasks.WEEK_MODE:
-			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 			cal.roll(Calendar.DAY_OF_YEAR, 7);
 			endMS = cal.getTimeInMillis();
 			break;
 		case Shuffle.Tasks.MONTH_MODE:
-			cal.set(Calendar.DAY_OF_MONTH, 1);
 			cal.roll(Calendar.MONTH, 1);
 			endMS = cal.getTimeInMillis();
 			break;

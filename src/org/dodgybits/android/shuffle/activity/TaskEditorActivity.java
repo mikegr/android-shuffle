@@ -97,13 +97,17 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         // Get the task!
         mCursor = managedQuery(mUri, Shuffle.Tasks.cExpandedProjection, null, null, null);
         // Get the context and project lists for our pulldown lists
-        mContextCursor = managedQuery(Shuffle.Contexts.CONTENT_URI, cContextProjection, null, null, null);
-        mProjectCursor = managedQuery(Shuffle.Projects.CONTENT_URI, cProjectProjection, null, null, null);
+        mContextCursor = managedQuery(Shuffle.Contexts.CONTENT_URI, 
+        		cContextProjection, null, null, null);
+        mProjectCursor = managedQuery(Shuffle.Projects.CONTENT_URI, 
+        		cProjectProjection, null, null, null);
         
 
-        mContextView.setAdapter(new AutoCompleteCursorAdapter(this, mContextCursor, cContextProjection, Shuffle.Contexts.CONTENT_URI));
+        mContextView.setAdapter(new AutoCompleteCursorAdapter(this, mContextCursor, 
+        		cContextProjection, Shuffle.Contexts.CONTENT_URI));
         //mContextView.setAdapter(Test.createContextAdapter(this));
-        mProjectView.setAdapter(new AutoCompleteCursorAdapter(this, mProjectCursor, cProjectProjection, Shuffle.Projects.CONTENT_URI));
+        mProjectView.setAdapter(new AutoCompleteCursorAdapter(this, mProjectCursor, 
+        		cProjectProjection, Shuffle.Projects.CONTENT_URI));
                 
         mSetDueDateButton.setOnClickListener(new View.OnClickListener() {
 

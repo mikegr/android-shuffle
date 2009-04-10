@@ -50,7 +50,7 @@ public class ContextListConfig implements DrilldownListConfig<Context> {
 	}
 
 	public Uri getListContentUri() {
-		return Shuffle.Contexts.cContextTasksContentURI;
+		return Shuffle.Contexts.CONTENT_URI;
 	}
 
 	public boolean isTaskList() {
