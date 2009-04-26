@@ -139,6 +139,42 @@ public class ShuffleProvider extends ContentProvider {
                     + "displayOrder INTEGER,"
                     + "complete INTEGER"
                     + ");");
+            
+            
+// 			  TODO add following to upgrade script
+            
+//            db.execSQL("CREATE INDEX taskProjectIdIndex ON " + cTaskTableName + " (" +
+//                    Shuffle.Tasks.PROJECT_ID +
+//                    ");");
+//            
+//            db.execSQL("CREATE INDEX taskContextIdIndex ON " + cTaskTableName + " (" +
+//                    Shuffle.Tasks.CONTEXT_ID +
+//                    ");");
+            
+//            "start INTEGER," +               // millis since epoch
+//            "allDay INTEGER NOT NULL DEFAULT 0," +
+//            "hasAlarm INTEGER NOT NULL DEFAULT 0," +
+  
+            
+//            db.execSQL("CREATE TABLE Reminders (" +
+//                    "_id INTEGER PRIMARY KEY," +
+//                    "event_id INTEGER," +
+//                    "minutes INTEGER," +
+//                    "method INTEGER NOT NULL" +
+//                    " DEFAULT " + Reminders.METHOD_DEFAULT +
+//               ");");
+//
+//		    db.execSQL("CREATE INDEX remindersEventIdIndex ON Reminders (" +
+//		               Reminders.EVENT_ID +
+//		               ");");
+//
+//	        // Trigger to remove data tied to an event when we delete that event.
+//	        db.execSQL("CREATE TRIGGER events_cleanup_delete DELETE ON Events " +
+//	                    "BEGIN " +
+//	                        "DELETE FROM Reminders WHERE event_id = old._id;" +
+//	                    "END");
+		    
+            
         }    
     }
     

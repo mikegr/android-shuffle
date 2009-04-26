@@ -16,10 +16,9 @@
 
 package org.dodgybits.android.shuffle.activity;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
@@ -31,7 +30,9 @@ import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -40,20 +41,24 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 /**
  * A generic activity for editing a task in the database.  This can be used
  * either to simply view a task (Intent.VIEW_ACTION), view and edit a task
  * (Intent.EDIT_ACTION), or create a new task (Intent.INSERT_ACTION).  
  */
-public class TaskEditorActivity extends AbstractEditorActivity<Task> {
+public class TaskEditorActivity extends AbstractEditorActivity<Task>
+	implements CompoundButton.OnCheckedChangeListener {
+	
     private static final String cTag = "TaskEditorActivity";
 
     private static final String[] cContextProjection = new String[] {
@@ -68,31 +73,44 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
 
     private Cursor mProjectCursor;
     private Cursor mContextCursor;
-    
+        
     private EditText mDescriptionWidget;
     private AutoCompleteTextView mContextView;
     private AutoCompleteTextView mProjectView;
-    private Date mDueDate;
-    private Button mSetDueDateButton;
-    private ImageButton mClearDueDateButton;
     private CheckBox mCompletedCheckBox;
-    private TextView mDueDateWidget;
     private EditText mDetailsWidget;
+    
+    private boolean mSchedulingExpanded;
+    private Button mStartDateButton;
+    private Button mDueDateButton;
+    private Button mStartTimeButton;
+    private Button mDueTimeButton;
+    private CheckBox mAllDayCheckBox;
+
+    private Calendar mStartCal;
+    private Calendar mDueCal;
     
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
         super.onCreate(icicle);
-        
+                
         // The text view for our task description, identified by its ID in the XML file.
         mDescriptionWidget = (EditText) findViewById(R.id.description);
         mContextView = (AutoCompleteTextView) findViewById(R.id.context);
         mProjectView = (AutoCompleteTextView) findViewById(R.id.project);
-        mSetDueDateButton = (Button) findViewById(R.id.due_date_set_button);
-        mClearDueDateButton = (ImageButton) findViewById(R.id.due_date_clear_button);
-        mDueDateWidget = (TextView) findViewById(R.id.due_date_display);
-        mCompletedCheckBox = (CheckBox) findViewById(R.id.completed_checkbox);
+
         mDetailsWidget = (EditText) findViewById(R.id.details);
+
+        View schedulingEntry = findViewById(R.id.scheduling_entry);
+        schedulingEntry.setOnClickListener(this);
+        schedulingEntry.setOnFocusChangeListener(this);
+                
+        View completeEntry = findViewById(R.id.completed_entry);
+        completeEntry.setOnClickListener(this);
+        completeEntry.setOnFocusChangeListener(this);
+        mCompletedCheckBox = (CheckBox) completeEntry.findViewById(R.id.checkbox);
+        
         
         // Get the task!
         mCursor = managedQuery(mUri, Shuffle.Tasks.cExpandedProjection, null, null, null);
@@ -105,30 +123,14 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
 
         mContextView.setAdapter(new AutoCompleteCursorAdapter(this, mContextCursor, 
         		cContextProjection, Shuffle.Contexts.CONTENT_URI));
-        //mContextView.setAdapter(Test.createContextAdapter(this));
         mProjectView.setAdapter(new AutoCompleteCursorAdapter(this, mProjectCursor, 
         		cProjectProjection, Shuffle.Projects.CONTENT_URI));
-                
-        mSetDueDateButton.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v) {
-            	Calendar defaults = Calendar.getInstance();
-            	if (mDueDate != null) {
-            		defaults.setTime(mDueDate);
-            	} 
-                new DatePickerDialog(TaskEditorActivity.this,
-                        mDateSetListener,
-                        defaults.get(Calendar.YEAR),
-                        defaults.get(Calendar.MONTH),
-                        defaults.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-        mClearDueDateButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	mDueDate = null;
-            	drawDateWidget();
-            }
-        });
+        mStartDateButton = (Button) findViewById(R.id.start_date);
+        mStartTimeButton = (Button) findViewById(R.id.start_time);
+        mDueDateButton = (Button) findViewById(R.id.due_date);
+        mDueTimeButton = (Button) findViewById(R.id.due_time);
+        mAllDayCheckBox = (CheckBox) findViewById(R.id.is_all_day);
     }
     
 
@@ -174,14 +176,41 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
             	String projectName = extras.getString(Shuffle.Tasks.PROJECT_ID);
             	if (projectName != null) mProjectView.setTextKeepState(projectName);
             }
-            mDueDate = task.dueDate;
-            drawDateWidget();
+            
+            mStartCal = Calendar.getInstance(); 
+            mDueCal = Calendar.getInstance();
+            if (task.dueDate != null)
+            {
+                mStartCal.setTime(task.dueDate);
+                mDueCal.setTime(task.dueDate);
+                mDueCal.add(Calendar.HOUR_OF_DAY, 1);
+            }
+            else
+            {
+            	mStartCal.setTimeInMillis(0); // default to no start or due dates
+            	mDueCal.setTimeInMillis(0); // default to no start or due dates
+            }
+            setDate(mStartDateButton, mStartCal);
+            setDate(mDueDateButton, mDueCal);
+
+            setTime(mStartTimeButton, mStartCal);
+            setTime(mDueTimeButton, mDueCal);
+
+            
             mCompletedCheckBox.setChecked(task.complete);
             // If we hadn't previously retrieved the original task, do so
             // now.  This allows the user to revert their changes.
             if (mOriginalItem == null) {
             	mOriginalItem = task;
             }
+            
+            mStartDateButton.setOnClickListener(new DateClickListener(mStartCal));
+            mDueDateButton.setOnClickListener(new DateClickListener(mDueCal));
+
+            mStartTimeButton.setOnClickListener(new TimeClickListener(mStartCal));
+            mDueTimeButton.setOnClickListener(new TimeClickListener(mDueCal));
+            
+            mAllDayCheckBox.setOnCheckedChangeListener(this);            
         } else {
             setTitle(getText(R.string.error_title));
             mDescriptionWidget.setText(getText(R.string.error_message));
@@ -215,7 +244,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
                 // Bump the modification time to now.
             	Date modified = new Date();
             	Date created;
-            	Date dueDate = mDueDate;
+            	Date dueDate = mDueCal.getTime();
             	Integer order;
             	String details = mDetailsWidget.getText().toString();
             	Context context = fetchOrCreateContext(mContextView.getText().toString());
@@ -299,25 +328,100 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
         mDescriptionWidget.setText("");
     }    
     
-    private OnDateSetListener mDateSetListener =
-        new OnDateSetListener() {
-
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                    int dayOfMonth) {
-            	mDueDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
-            	drawDateWidget();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.scheduling_entry: {
+            	toggleSchedulingSection();
+                break;
             }
-        };
+            
+            case R.id.completed_entry: {
+                CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkbox);
+                checkBox.toggle();
+                break;
+            }
+            
 
-    private void drawDateWidget() {
-    	if (mDueDate == null) {
-    		mDueDateWidget.setText(R.string.no_due_date);
-            mClearDueDateButton.setEnabled(false);
-    	} else {
-    		DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM);
-    		mDueDateWidget.setText(format.format(mDueDate));
-            mClearDueDateButton.setEnabled(true);
-    	}
+//            case R.id.delete: {
+//                EditEntry entry = findEntryForView(v);
+//                if (entry != null) {
+//                    // Clear the text and hide the view so it gets saved properly
+//                    ((TextView) entry.view.findViewById(R.id.data)).setText(null);
+//                    entry.view.setVisibility(View.GONE);
+//                    entry.isDeleted = true;
+//                }
+//                
+//                // Force rebuild of views because section headers might need to change
+//                buildViews();
+//                break;
+//            }
+
+            default:
+            	super.onClick(v);
+            	break;
+        }
+    }
+    
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            if (mDueCal.get(Calendar.HOUR) == 0 && mDueCal.get(Calendar.MINUTE) == 0) {
+            	mDueCal.add(Calendar.DAY_OF_MONTH, -1);
+                long dueMillis = mDueCal.getTimeInMillis();
+                long startMillis = mStartCal.getTimeInMillis();
+                
+                // Do not allow an event to have an due time before the start time.
+                if (dueMillis < startMillis) {
+                	mDueCal.setTimeInMillis(startMillis);
+                	dueMillis = mDueCal.getTimeInMillis();
+                }
+                setDate(mDueDateButton, mDueCal);
+                setTime(mDueTimeButton, mDueCal);
+            }
+
+            mStartTimeButton.setVisibility(View.GONE);
+            mDueTimeButton.setVisibility(View.GONE);
+        } else {
+            if (mDueCal.get(Calendar.HOUR) == 0 && mDueCal.get(Calendar.MINUTE) == 0) {
+            	mDueCal.add(Calendar.DAY_OF_MONTH, 1);
+                setDate(mDueDateButton, mDueCal);
+                setTime(mDueTimeButton, mDueCal);
+            }
+
+            mStartTimeButton.setVisibility(View.VISIBLE);
+            mDueTimeButton.setVisibility(View.VISIBLE);
+        }
+    }
+    
+    private void toggleSchedulingSection() {
+        ViewGroup schedulingSection = (ViewGroup) findViewById(R.id.scheduling_section);
+        View schedulingEntry = findViewById(R.id.scheduling_entry);
+        View addButton = schedulingEntry.findViewById(R.id.expand);
+        View removeButton = schedulingEntry.findViewById(R.id.collapse);
+        View schedulingExtra = schedulingSection.findViewById(R.id.scheduling_extra); 
+        if (schedulingExtra.getVisibility() != View.VISIBLE)
+        {
+        	schedulingExtra.setVisibility(View.VISIBLE);
+            addButton.setVisibility(View.GONE);
+            removeButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+        	schedulingExtra.setVisibility(View.GONE);
+            addButton.setVisibility(View.VISIBLE);
+            removeButton.setVisibility(View.GONE);
+        }
+    }
+    
+    
+    private void setDate(TextView view, Calendar cal) {
+    	SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+        view.setText(formatter.format(cal.getTime()));
+    }
+
+    private void setTime(TextView view, Calendar cal) {
+    	SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        view.setText(formatter.format(cal.getTime()));
     }
     
     private Context fetchOrCreateContext(String contextName) {
@@ -403,4 +507,132 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task> {
     	return order;
     }
     
+    /* This class is used to update the time buttons. */
+    private class TimeListener implements OnTimeSetListener {
+        private View mView;
+
+        public TimeListener(View view) {
+            mView = view;
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // Cache the member variables locally to avoid inner class overhead.
+            Calendar startCal = mStartCal;
+            Calendar dueCal = mDueCal;
+
+            long startMillis;
+            long dueMillis;
+            if (mView == mStartTimeButton) {
+                // The start time was changed.
+                int hourDuration = dueCal.get(Calendar.HOUR) - startCal.get(Calendar.HOUR);
+                int minuteDuration = dueCal.get(Calendar.MINUTE) - startCal.get(Calendar.MINUTE);
+
+                startCal.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                startCal.set(Calendar.MINUTE, minute);
+                startMillis = startCal.getTimeInMillis();
+
+                // Also update the due time to keep the duration constant.
+                dueCal.set(Calendar.HOUR_OF_DAY, hourOfDay + hourDuration);
+                dueCal.set(Calendar.MINUTE, minute + minuteDuration);
+                dueMillis = dueCal.getTimeInMillis();
+            } else {
+                // The due time was changed.
+                startMillis = startCal.getTimeInMillis();
+                dueCal.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                dueCal.set(Calendar.MINUTE, minute);
+                dueMillis = dueCal.getTimeInMillis();
+
+                // Do not allow an event to have a due time before the start time.
+                if (dueMillis < startMillis) {
+                	dueCal.setTimeInMillis(startMillis);
+                	dueMillis = startMillis;
+                }
+            }
+
+            setDate(mDueDateButton, dueCal);
+            setTime(mStartTimeButton, startCal);
+            setTime(mDueTimeButton, dueCal); // In case end time had to be reset
+            
+        }
+    }
+
+    private class TimeClickListener implements View.OnClickListener {
+        private Calendar mCal;
+
+        public TimeClickListener(Calendar cal) {
+            mCal = cal;
+        }
+
+        public void onClick(View v) {
+            new TimePickerDialog(TaskEditorActivity.this, new TimeListener(v),
+            		mCal.get(Calendar.HOUR), mCal.get(Calendar.MINUTE), true ).show();
+        }
+    }
+
+    private class DateListener implements OnDateSetListener {
+        View mView;
+
+        public DateListener(View view) {
+            mView = view;
+        }
+        
+        // TODO - change following to use Calendar instead of Time (which isn't in Android 1.1)
+
+        public void onDateSet(DatePicker view, int year, int month, int monthDay) {
+            // Cache the member variables locally to avoid inner class overhead.
+            Calendar startCal = mStartCal;
+            Calendar dueCal = mDueCal;
+
+            long startMillis;
+            long dueMillis;
+            if (mView == mStartDateButton) {
+                // The start date was changed.
+                int yearDuration = dueCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
+                int monthDuration = dueCal.get(Calendar.MONTH) - startCal.get(Calendar.MONTH);
+                int monthDayDuration = dueCal.get(Calendar.DAY_OF_MONTH) - startCal.get(Calendar.DAY_OF_MONTH);
+
+                startCal.set(Calendar.YEAR, year);
+                startCal.set(Calendar.MONTH, month);
+                startCal.set(Calendar.DAY_OF_MONTH, monthDay);
+                startMillis = startCal.getTimeInMillis();
+
+                // Also update the end date to keep the duration constant.
+                dueCal.set(Calendar.YEAR, year + yearDuration);
+                dueCal.set(Calendar.MONTH, month + monthDuration);
+                dueCal.set(Calendar.DAY_OF_MONTH, monthDay + monthDayDuration);
+                dueMillis = dueCal.getTimeInMillis();
+            } else {
+                // The due date was changed.
+                startMillis = startCal.getTimeInMillis();
+                dueCal.set(Calendar.YEAR, year);
+                dueCal.set(Calendar.MONTH, month);
+                dueCal.set(Calendar.DAY_OF_MONTH, monthDay);
+                dueMillis = dueCal.getTimeInMillis();
+
+                // Do not allow an event to have an end time before the start time.
+                if (dueMillis < startMillis) {
+                	dueCal.setTimeInMillis(startMillis);
+                    dueMillis = startMillis;
+                }
+            }
+
+            setDate(mStartDateButton, startCal);
+            setDate(mDueDateButton, dueCal);
+            setTime(mDueTimeButton, dueCal); // In case end time had to be reset
+        }
+    }
+
+    private class DateClickListener implements View.OnClickListener {
+        private Calendar mCal;
+
+        public DateClickListener(Calendar cal) {
+            mCal = cal;
+        }
+
+        public void onClick(View v) {
+            new DatePickerDialog(TaskEditorActivity.this, new DateListener(v), mCal.get(Calendar.YEAR),
+            		mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH)).show();
+        }
+    }    
+        
 }

@@ -52,7 +52,7 @@
 			android:text="@string/set_button_title" />
 
 		<ImageButton android:id="@+id/colour_clear_button"
-			android:src="@android:drawable/ic_delete"
+	        style="@style/MinusButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
 
@@ -83,7 +83,7 @@
 			android:text="@string/set_button_title" />
 
 		<ImageButton android:id="@+id/icon_clear_button"
-			android:src="@android:drawable/ic_delete"
+	        style="@style/MinusButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
 

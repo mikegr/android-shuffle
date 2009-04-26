@@ -114,5 +114,36 @@
         <item name="android:gravity">top</item>
         <item name="android:baselineAligned">false</item>
     </style>
+    
+    <style name="ButtonBar">
+		<item name="android:paddingTop">5px</item>
+        <item name="android:background">@drawable/light_gray</item>
+	</style>
+	
+    <style name="MinusButton">
+        <item name="android:background">@drawable/btn_circle</item>
+        <item name="android:src">@drawable/ic_btn_round_minus</item>
+    </style>
+
+    <style name="PlusButton">
+        <item name="android:background">@drawable/btn_circle</item>
+        <item name="android:src">@drawable/ic_btn_round_plus</item>
+    </style>
+
+    <style name="MoreButton">
+        <item name="android:background">@drawable/btn_circle</item>
+        <item name="android:src">@drawable/ic_btn_round_more</item>
+    </style>
+
+    <style name="ExpandButton">
+        <item name="android:background">@drawable/btn_circle</item>
+        <item name="android:src">@drawable/ic_btn_round_more</item>
+    </style>
+
+    <style name="CollapseButton">
+        <item name="android:background">@drawable/btn_circle</item>
+        <item name="android:src">@drawable/ic_btn_round_less</item>
+    </style>
+    
         
 </resources>

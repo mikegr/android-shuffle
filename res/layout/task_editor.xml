@@ -31,9 +31,17 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/description_title"
+            android:autoText="true"
+            android:capitalize="sentences"
 			style="@style/text_editable">
 			<requestFocus />
 		</EditText>
+		
+	    <View
+	        android:layout_width="fill_parent"
+	        android:layout_height="1dip"
+	        android:background="@android:drawable/divider_horizontal_dark"
+	    />
 
 		<TextView android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:paddingLeft="5px"
@@ -43,9 +51,18 @@
 		<AutoCompleteTextView android:id="@+id/project"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/project_title" android:maxLength="50"
+			android:hint="@string/project_title" 
+			android:maxLength="50"
+            android:autoText="true"
+            android:capitalize="sentences"
 			style="@style/text_autocomplete"
 			/>
+
+	    <View
+	        android:layout_width="fill_parent"
+	        android:layout_height="1dip"
+	        android:background="@android:drawable/divider_horizontal_dark"
+	    />
 
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:paddingLeft="5px"
@@ -55,9 +72,18 @@
 		<AutoCompleteTextView android:id="@+id/context"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/context_title" android:maxLength="50"
+			android:hint="@string/context_title" 
+			android:maxLength="50"
+            android:autoText="true"
+            android:capitalize="sentences"
 			style="@style/text_autocomplete"
 			 />
+
+	    <View
+	        android:layout_width="fill_parent"
+	        android:layout_height="1dip"
+	        android:background="@android:drawable/divider_horizontal_dark"
+	    />
 
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:paddingLeft="5px"
@@ -67,40 +93,139 @@
 		<EditText android:id="@+id/details"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/details_title" android:lines="2"
+			android:hint="@string/details_title" 
+            android:autoText="true"
+            android:capitalize="sentences"
+            android:singleLine="false" />
 			style="@style/text_editable" />
 
-		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:paddingLeft="5px"
-			android:paddingRight="5px" android:text="@string/due_date_title"
-			style="@style/label" />
+	    <View
+	        android:layout_width="fill_parent"
+	        android:layout_height="1dip"
+	        android:background="@android:drawable/divider_horizontal_dark"
+	    />
 
-		<LinearLayout android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
+		<LinearLayout android:id="@+id/scheduling_section"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginBottom="3dip"
+		    android:orientation="vertical"
+		    >
 
-			<TextView android:id="@+id/due_date_display"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:paddingLeft="5px"
-				android:paddingRight="5px" style="@style/text" />
+			<LinearLayout android:id="@+id/scheduling_entry"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:paddingRight="?android:attr/scrollbarSize"
+			    android:minHeight="?android:attr/listPreferredItemHeight"
+			    android:background="@android:drawable/list_selector_background"
+			    android:orientation="horizontal"
+			    android:gravity="center_vertical"
+			    android:focusable="true"
+			    android:clickable="true"
+			    >
+			
+			    <RelativeLayout
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginLeft="14dip"
+			        android:layout_marginTop="6dip"
+			        android:layout_marginBottom="6dip"
+			        android:layout_weight="1"
+			        android:duplicateParentState="true"
+			        >
+			
+			        <TextView android:id="@+id/label"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:singleLine="true"
+			            android:textAppearance="?android:attr/textAppearanceMedium"
+			            android:ellipsize="marquee"
+			            android:fadingEdge="horizontal"
+			            android:duplicateParentState="true"
+			            android:text="@string/scheduling_title"
+			            />
+					
+			    </RelativeLayout>
+					
+			    <ImageView android:id="@+id/expand"
+			        style="@style/ExpandButton"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+		            android:duplicateParentState="true"
+			        />
 
-			<Button android:id="@+id/due_date_set_button"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:layout_weight="1"
-				android:text="@string/set_button_title" />
-
-			<ImageButton android:id="@+id/due_date_clear_button"
-				android:src="@android:drawable/ic_delete"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
+			    <ImageView android:id="@+id/collapse"
+			        style="@style/CollapseButton"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+		            android:duplicateParentState="true"
+		            android:visibility="gone"
+			        />
+			
+			</LinearLayout>
+			
+			<include
+			    android:id="@+id/scheduling_extra"
+			    layout="@layout/task_editor_scheduling"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    />			
 
 		</LinearLayout>
 
-		<CheckBox android:id="@+id/completed_checkbox"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/completed_title" style="@style/text" />
-
+	    <View
+	        android:layout_width="fill_parent"
+	        android:layout_height="1dip"
+	        android:background="@android:drawable/divider_horizontal_dark"
+	    />
+ 
+		<LinearLayout android:id="@+id/completed_entry"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingRight="?android:attr/scrollbarSize"
+		    android:minHeight="?android:attr/listPreferredItemHeight"
+		    android:background="@android:drawable/list_selector_background"
+		    android:orientation="horizontal"
+		    android:gravity="center_vertical"
+		    android:focusable="true"
+		    android:clickable="true"
+		    >
+		
+		    <RelativeLayout
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="14dip"
+		        android:layout_marginTop="6dip"
+		        android:layout_marginBottom="6dip"
+		        android:layout_weight="1"
+		        android:duplicateParentState="true"
+		        >
+		
+		        <TextView android:id="@+id/label"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:singleLine="true"
+		            android:textAppearance="?android:attr/textAppearanceMedium"
+		            android:ellipsize="marquee"
+		            android:fadingEdge="horizontal"
+		            android:duplicateParentState="true"
+		            android:text="@string/completed_title"
+		            />
+				
+		    </RelativeLayout>
+		
+		    <CheckBox android:id="@+id/checkbox"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:focusable="false"
+		        android:clickable="false"
+		        />
+		
+		</LinearLayout>
+		
+	    <include android:id="@+id/save_panel" layout="@layout/editor_save_panel" />
+		
+		
 	</LinearLayout>
 
 </ScrollView>

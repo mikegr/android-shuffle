@@ -29,6 +29,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 /**
@@ -36,7 +38,8 @@ import android.widget.Toast;
  * either to simply view an item (Intent.VIEW_ACTION), view and edit an item
  * (Intent.EDIT_ACTION), or create a new item (Intent.INSERT_ACTION).  
  */
-public abstract class AbstractEditorActivity<T> extends Activity {
+public abstract class AbstractEditorActivity<T> extends Activity 
+	implements View.OnClickListener, View.OnFocusChangeListener {
 
     private static final String cTag = "AbstractEditorActivity";
 
@@ -100,6 +103,13 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         }
 
         setContentView(getContentViewResId());
+        
+        // Setup the bottom buttons
+        View view = findViewById(R.id.saveButton);
+        view.setOnClickListener(this);
+        view = findViewById(R.id.discardButton);
+        view.setOnClickListener(this);
+        
     }
     
     @Override
@@ -137,23 +147,22 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         // Handle all of the possible menu actions.
         switch (item.getItemId()) {
         case MenuUtils.SAVE_ID:
-            finish();
+        	doSaveAction();
             break;
         case MenuUtils.SAVE_AND_ADD_ID:
         	// create an Intent for the new item based on the current item
         	startActivity(getInsertIntent());
-            finish();
-            
+        	doSaveAction();
             break;
         case MenuUtils.DELETE_ID:
             deleteItem();
             finish();
             break;
         case MenuUtils.DISCARD_ID:
-            cancelItem();
+        	doRevertAction();
             break;
         case MenuUtils.REVERT_ID:
-            cancelItem();
+        	doRevertAction();
             break;
         }
         if (MenuUtils.checkCommonItemsSelected(item, this, MenuUtils.INBOX_ID)) {
@@ -161,12 +170,49 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    public void onFocusChange(View v, boolean hasFocus) {
+        // Because we're emulating a ListView, we need to setSelected() for
+        // views as they are focused.
+        v.setSelected(hasFocus);
+    }    
+    
+    public void onClick(View v) {
+        switch (v.getId()) {
 
+            case R.id.saveButton:
+            	doSaveAction();
+                break;
+
+            case R.id.discardButton:
+            	doRevertAction();
+                break;
+        }
+    }
+
+    protected void doSaveAction() {
+        // Save or create the contact if needed
+//        switch (mState) {
+//            case STATE_EDIT:
+//                save();
+//                break;
+//
+//            case STATE_INSERT:
+//                create();
+//                break;
+//
+//            default:
+//                Log.e(TAG, "Unknown state in doSaveOrCreate: " + mState);
+//                break;
+//        }
+        finish();
+    }
+    
     /**
      * Take care of canceling work on a item.  Deletes the item if we
      * had created it, otherwise reverts to the original text.
      */
-    protected void cancelItem() {
+    protected void doRevertAction() {
         if (mCursor != null) {
             if (mState == State.STATE_EDIT) {
                 // Put the original note text back into the database
@@ -181,8 +227,9 @@ public abstract class AbstractEditorActivity<T> extends Activity {
         }
         setResult(RESULT_CANCELED);
         finish();
+    	
     }
-
+    
     /**
      * Take care of deleting a item.  Simply deletes the entry.
      */

@@ -83,8 +83,15 @@
 
 	<!--  task edit screen -->
     <string name="description_title">Description</string>
-    <string name="due_date_title">Due date</string>
+    <string name="scheduling_title">Scheduling</string>
+    <string name="start_title">Start</string>
+    <string name="due_title">Due</string>
+    <string name="all_day_title">All day</string>
+    <string name="reminders_title">Reminders</string>
     <string name="completed_title">Completed</string>
+    <string name="menu_done">Done</string>
+    <string name="menu_doNotSave">Revert</string>
+
 
 	<!--  project & context edit screens -->
     <string name="colour_title">Color</string>
@@ -102,6 +109,7 @@
     <string name="display_task_list_title">Display in action lists</string>
     <string name="context_icon_title">Context Icon</string>
     <string name="context_name_title">Context Name</string>
+    <string name="due_date_title">Due Date</string>
 
 	<string name="layout_preferences">Layout</string>
 
@@ -156,7 +164,7 @@
 Welcome to Shuffle, a \"Getting Things Done\" inspired personal organization tool.
 If you want to see how best to use Shuffle, click \"Demonstration\" to 
 load up a bunch of example projects and actions.
-Later you can start again by selecting \"Delete all\" from the Preferences menu.     
+Later you can start again by selecting \"Delete all\" from the Settings menu.     
     </string>
     <string name="welcome2">
 Or get stuck in straight away with no actions or projects and only the default set of contexts...
