@@ -26,13 +26,17 @@ public class Task {
 	public final Project project;
 	public final Date created;
 	public final Date modified;
+	public final Date startDate;
 	public final Date dueDate;
+	public final Boolean allDay;
+	public final Boolean hasAlarms;
 	// 0-indexed order within a project. 
 	public final Integer order;
 	public final Boolean complete;
 	
 	public Task(Integer id, String description, String details,
-			Context context, Project project, Date created, Date modified, Date dueDate,
+			Context context, Project project, Date created, Date modified, 
+			Date startDate, Date dueDate, Boolean allDay, Boolean hasAlarms,
 			Integer order, Boolean complete) {
 		this.id = id;
 		this.description = description;
@@ -41,18 +45,23 @@ public class Task {
 		this.project = project;
 		this.created = created;
 		this.modified = modified;
+		this.startDate = startDate;
 		this.dueDate = dueDate;
+		this.allDay = allDay;
+		this.hasAlarms = hasAlarms;
 		this.order = order;
 		this.complete = complete;
 	}
 	
 	public Task(String description, String details,
-			Context context, Project project, Date created, 
-			Date modified, Date dueDate,
+			Context context, Project project, Date created, Date modified,
+			Date startDate, Date dueDate, Boolean allDay, Boolean hasAlarms,
 			Integer order, Boolean complete) {
 		this(
-				null, description, details, context, project, 
-				created, modified, dueDate, order, complete);
+				null, description, details, 
+				context, project, created, modified, 
+				startDate, dueDate, allDay, hasAlarms,
+				order, complete);
 	}
 	
 }

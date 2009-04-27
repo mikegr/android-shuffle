@@ -51,13 +51,28 @@ public class Test {
 			new Project("Sell car", null, false),
 			new Project("Reading", null, false),
 	};
-	
+		
 	private static Task[] sTasks = {
-			new Task("Make it go", "Do lots of stuff", sContexts[0], sProjects[0], new Date(), null, null, 0, false),
-			new Task("Create ad", "Do lots of stuff", sContexts[1], sProjects[1], new Date(), null, null, 1, false),
-			new Task("Create udder", "Do lots of stuff", sContexts[3], sProjects[1], new Date(), null, null, 0, true),
-			new Task("Fooled by Randomness", null, null, sProjects[2], new Date(), null, null, 0, true),
-			new Task("Life and Limb", "Do lots of stuff", sContexts[2], sProjects[2], new Date(), null, null, 0, true),
+			new Task("Make it go", "Do lots of stuff", 
+					sContexts[0], sProjects[0], new Date(), null, 
+					null, null, false, false,
+					0, false),
+			new Task("Create ad", "Do lots of stuff", 
+					sContexts[1], sProjects[1], new Date(), null, 
+					null, null, false, false,
+					1, false),
+			new Task("Create udder", "Do lots of stuff", 
+					sContexts[3], sProjects[1], new Date(), null, 
+					null, null, false, false,
+					0, true),
+			new Task("Fooled by Randomness", null, 
+					null, sProjects[2], new Date(), null, 
+					null, null, false, false,
+					0, true),
+			new Task("Life and Limb", "Do lots of stuff", 
+					sContexts[2], sProjects[2], new Date(), null, 
+					null, null, false, false,
+					0, true),
 	};
 	
 	public static ListAdapter createTaskListAdapter(android.content.Context context) {

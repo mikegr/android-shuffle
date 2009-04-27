@@ -28,6 +28,7 @@ import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.AutoCompleteCursorAdapter;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
+import org.dodgybits.android.shuffle.util.DateUtils;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -179,23 +180,30 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             
             mStartCal = Calendar.getInstance(); 
             mDueCal = Calendar.getInstance();
-            if (task.dueDate != null)
+            if (DateUtils.isEpoc(task.startDate))
             {
-                mStartCal.setTime(task.dueDate);
-                mDueCal.setTime(task.dueDate);
-                mDueCal.add(Calendar.HOUR_OF_DAY, 1);
+            	mStartCal.setTimeInMillis(0); // default to no start date
             }
             else
             {
-            	mStartCal.setTimeInMillis(0); // default to no start or due dates
-            	mDueCal.setTimeInMillis(0); // default to no start or due dates
+                mStartCal.setTime(task.startDate);
             }
+            if (DateUtils.isEpoc(task.dueDate))
+            {
+            	mDueCal.setTimeInMillis(0); // default to no due date
+            }
+            else
+            {
+            	mDueCal.setTime(task.dueDate);
+            }
+
             setDate(mStartDateButton, mStartCal);
             setDate(mDueDateButton, mDueCal);
 
             setTime(mStartTimeButton, mStartCal);
             setTime(mDueTimeButton, mDueCal);
 
+            mAllDayCheckBox.setChecked(task.allDay);
             
             mCompletedCheckBox.setChecked(task.complete);
             // If we hadn't previously retrieved the original task, do so
@@ -244,12 +252,15 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 // Bump the modification time to now.
             	Date modified = new Date();
             	Date created;
+            	Date startDate = mStartCal.getTime();
             	Date dueDate = mDueCal.getTime();
             	Integer order;
             	String details = mDetailsWidget.getText().toString();
             	Context context = fetchOrCreateContext(mContextView.getText().toString());
             	Project project = fetchOrCreateProject(mProjectView.getText().toString());
             	Boolean complete = mCompletedCheckBox.isChecked();
+            	Boolean allDay = mAllDayCheckBox.isChecked();
+            	Boolean hasAlarms = false;
             	
                 // If we are creating a new task, set the creation date
             	if (mState == State.STATE_INSERT) {
@@ -260,7 +271,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 }
         		order = calculateTaskOrder(project);
 
-            	Task task  = new Task(description, details, context, project, created, modified, dueDate, order, complete);
+            	Task task  = new Task(description, details, 
+            			context, project, created, modified, 
+            			startDate, dueDate, allDay, hasAlarms,
+            			order, complete);
                 ContentValues values = new ContentValues();
             	writeItem(values, task);
             	

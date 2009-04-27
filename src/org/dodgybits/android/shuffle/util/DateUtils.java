@@ -26,6 +26,8 @@ import android.content.Context;
 
 public class DateUtils {
 	
+	public static final long HOUR_IN_MILLIS = 3600000; 
+	
 	private static DateFormat sDateFormat = null;
 		
 	public static String formatDate(Date date) {
@@ -45,6 +47,11 @@ public class DateUtils {
 	public static boolean isSameDay(Calendar calA, Calendar calB) {
 		return (calA.get(Calendar.YEAR) == calB.get(Calendar.YEAR) &&
 				calA.get(Calendar.DAY_OF_YEAR) == calB.get(Calendar.DAY_OF_YEAR));
+	}
+	
+	public static boolean isEpoc(Date date)
+	{
+		return date == null || date.getTime() == 0;
 	}
 	
 	public static String displayDate(Context context, Date date) {

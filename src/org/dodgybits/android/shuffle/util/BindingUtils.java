@@ -56,11 +56,16 @@ public class BindingUtils {
 		Date created = restoreDate(icicle, Shuffle.Tasks.CREATED_DATE);
 		Date modified = restoreDate(icicle, Shuffle.Tasks.MODIFIED_DATE);
 		Date dueDate = restoreDate(icicle, Shuffle.Tasks.DUE_DATE);
+		Date startDate = restoreDate(icicle, Shuffle.Tasks.START_DATE);
+		Boolean allDay = icicle.getBoolean(Shuffle.Tasks.ALL_DAY);
+		Boolean hasAlarms = icicle.getBoolean(Shuffle.Tasks.HAS_ALARM);
 		int order = icicle.getInt(Shuffle.Tasks.DISPLAY_ORDER);
 		Boolean complete = icicle.getBoolean(Shuffle.Tasks.COMPLETE);
 		return new Task(
-				id, description, details, context, project, created, 
-				modified, dueDate, order, complete);
+				id, description, details, 
+				context, project, created, modified,
+				startDate, dueDate, allDay, hasAlarms,
+				order, complete);
 	}
 		
 	private static Date restoreDate(Bundle icicle, String key) {
@@ -146,17 +151,20 @@ public class BindingUtils {
     private static final int CONTEXT_INDEX = 4;
     private static final int CREATED_INDEX = 5;
     private static final int MODIFIED_INDEX = 6;
-    private static final int DUE_INDEX = 7;
-    private static final int DISPLAY_ORDER_INDEX = 8;
-    private static final int COMPLETE_INDEX = 9;
+    private static final int START_INDEX = 7;
+    private static final int DUE_INDEX = 8;
+    private static final int DISPLAY_ORDER_INDEX = 9;
+    private static final int COMPLETE_INDEX = 10;
+    private static final int ALL_DAY_INDEX = 11;
+    private static final int HAS_ALARM_INDEX = 12;
 
-    private static final int PROJECT_NAME_INDEX = 10;
-    private static final int PROJECT_DEFAULT_CONTEXT_ID_INDEX = 11;
-    private static final int PROJECT_ARCHIVED_INDEX = 12;
+    private static final int PROJECT_NAME_INDEX = 13;
+    private static final int PROJECT_DEFAULT_CONTEXT_ID_INDEX = 14;
+    private static final int PROJECT_ARCHIVED_INDEX = 15;
     
-    private static final int CONTEXT_NAME_INDEX = 13;
-    private static final int CONTEXT_COLOUR_INDEX = 14;
-    private static final int CONTEXT_ICON_INDEX = 15;
+    private static final int CONTEXT_NAME_INDEX = 16;
+    private static final int CONTEXT_COLOUR_INDEX = 17;
+    private static final int CONTEXT_ICON_INDEX = 18;
     
 	public static Task readTask(Cursor cursor, Resources res) {
 		Integer id = readInteger(cursor, ID_INDEX);
@@ -169,12 +177,17 @@ public class BindingUtils {
 		
 		Date created = readDate(cursor, CREATED_INDEX);
 		Date modified = readDate(cursor, MODIFIED_INDEX);
+		Date startDate = readDate(cursor, START_INDEX);
 		Date dueDate = readDate(cursor, DUE_INDEX);
 		Integer displayOrder = readInteger(cursor, DISPLAY_ORDER_INDEX);
 		Boolean complete = readBoolean(cursor, COMPLETE_INDEX);
+		Boolean allDay = readBoolean(cursor, ALL_DAY_INDEX);
+		Boolean hasAlarm = readBoolean(cursor, HAS_ALARM_INDEX);
 		return new Task(
-				id, description, details, context, project, created, 
-				modified, dueDate, displayOrder, complete);
+				id, description, details, 
+				context, project, created, modified, 
+				startDate, dueDate, allDay, hasAlarm,
+				displayOrder, complete);
 	}
 	
 	private static Project readJoinedProject(Cursor cursor, Integer projectId) {
@@ -275,7 +288,10 @@ public class BindingUtils {
 		}
 		writeDate(values, Shuffle.Tasks.CREATED_DATE, task.created);
 		writeDate(values, Shuffle.Tasks.MODIFIED_DATE, task.modified);
+		writeDate(values, Shuffle.Tasks.START_DATE, task.startDate);
 		writeDate(values, Shuffle.Tasks.DUE_DATE, task.dueDate);
+		writeBoolean(values, Shuffle.Tasks.ALL_DAY, task.allDay);
+		writeBoolean(values, Shuffle.Tasks.HAS_ALARM, task.hasAlarms);
 		writeInteger(values, Shuffle.Tasks.DISPLAY_ORDER, task.order);
 		writeBoolean(values, Shuffle.Tasks.COMPLETE, task.complete);
 	}

@@ -52,9 +52,12 @@ public class Shuffle {
         public static final String PROJECT_ID = "projectId";
         public static final String CREATED_DATE = "created";
         public static final String MODIFIED_DATE = "modified";
+        public static final String START_DATE = "start";
         public static final String DUE_DATE = "due";
         public static final String DISPLAY_ORDER = "displayOrder";
         public static final String COMPLETE = "complete";
+        public static final String ALL_DAY = "allDay";
+        public static final String HAS_ALARM = "hasAlarm"; 
         
         public static final String PROJECT_NAME = "project_name";
         public static final String PROJECT_DEFAULT_CONTEXT_ID = "project_default_context_id";
@@ -74,10 +77,13 @@ public class Shuffle {
                 PROJECT_ID,
                 CONTEXT_ID,
                 CREATED_DATE, 
-                MODIFIED_DATE, 
+                MODIFIED_DATE,
+                START_DATE,
                 DUE_DATE,
                 DISPLAY_ORDER,
                 COMPLETE,
+                ALL_DAY,
+                HAS_ALARM,
         };
                 
 
@@ -92,9 +98,12 @@ public class Shuffle {
             CONTEXT_ID,
             CREATED_DATE, 
             MODIFIED_DATE, 
+            START_DATE,
             DUE_DATE,
             DISPLAY_ORDER,
             COMPLETE,
+            ALL_DAY,
+            HAS_ALARM,
             
             PROJECT_NAME,
             PROJECT_DEFAULT_CONTEXT_ID,
@@ -193,6 +202,59 @@ public class Shuffle {
 
 
     }
+    
+	/**
+     * Reminders table
+     */
+    public static final class Reminders implements BaseColumns {
+        /**
+         * The content:// style URL for this table
+         */
+        public static final Uri CONTENT_URI = Uri.parse("content://" + PACKAGE + "/reminders");
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.dodgybits.reminder";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.dodgybits.reminder";
+
+        /**
+         * The default sort order for this table
+         */
+        public static final String DEFAULT_SORT_ORDER = "minutes DESC";
+        
+        /**
+         * The task the reminder belongs to
+         * <P>Type: INTEGER (foreign key to the task table)</P>
+         */
+        public static final String TASK_ID = "taskId";
+        
+        /**
+         * The minutes prior to the event that the alarm should ring.  -1
+         * specifies that we should use the default value for the system.
+         * <P>Type: INTEGER</P>
+         */
+        public static final String MINUTES = "minutes";
+        
+        public static final int MINUTES_DEFAULT = -1;
+        
+        /**
+         * The alarm method.
+         */
+        public static final String METHOD = "method";
+
+        public static final int METHOD_DEFAULT = 0;
+        public static final int METHOD_ALERT = 1;
+        
+        
+        /**
+         * Projection for all the columns of a context.
+         */
+        public static final String[] cFullProjection = new String[] {
+                _ID,
+                TASK_ID,
+                MINUTES, 
+                METHOD, 
+        };
+        
+    }
+    
     
 }
 

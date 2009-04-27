@@ -29,6 +29,7 @@ import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
+import org.dodgybits.android.shuffle.util.DateUtils;
 import org.dodgybits.android.shuffle.util.ModelUtils;
 import org.dodgybits.android.shuffle.view.TaskView;
 
@@ -100,7 +101,10 @@ public class PreferencesAppearanceActivity extends Activity  {
         Date now = new Date();
         Project sampleProject = new Project("Sample project", 0, false);
         Context sampleContext = ModelUtils.getSampleContext(getResources());
-        mSampleTask = new Task("Sample action", "Additional action details", sampleContext, sampleProject, now, now, now, 1, false);
+        mSampleTask = new Task("Sample action", "Additional action details", 
+        		sampleContext, sampleProject, now, now, 
+        		now, new Date(now.getTime() + DateUtils.HOUR_IN_MILLIS * 3), false, false,
+        		1, false);
 		
 	}
 	
