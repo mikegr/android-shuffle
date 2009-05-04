@@ -31,8 +31,9 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/description_title"
-            android:autoText="true"
-            android:capitalize="sentences"
+			android:capitalize="sentences"
+			android:autoText="true"
+			android:singleLine="true"
 			style="@style/text_editable">
 			<requestFocus />
 		</EditText>
@@ -53,8 +54,9 @@
 			android:layout_height="wrap_content"
 			android:hint="@string/project_title" 
 			android:maxLength="50"
-            android:autoText="true"
-            android:capitalize="sentences"
+			android:capitalize="sentences"
+			android:autoText="true"
+			android:singleLine="true"
 			style="@style/text_autocomplete"
 			/>
 
@@ -74,8 +76,9 @@
 			android:layout_height="wrap_content"
 			android:hint="@string/context_title" 
 			android:maxLength="50"
-            android:autoText="true"
-            android:capitalize="sentences"
+			android:capitalize="sentences"
+			android:autoText="true"
+			android:singleLine="true"
 			style="@style/text_autocomplete"
 			 />
 
@@ -93,10 +96,10 @@
 		<EditText android:id="@+id/details"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/details_title" 
-            android:autoText="true"
-            android:capitalize="sentences"
-            android:singleLine="false" />
+			android:hint="@string/details_title"
+			android:capitalize="sentences" 
+			android:autoText="true"
+			android:singleLine="false"
 			style="@style/text_editable" />
 
 	    <View

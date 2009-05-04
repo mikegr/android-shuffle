@@ -48,7 +48,7 @@ public class ShuffleProvider extends ContentProvider {
 	private static final String cTag = "ShuffleProvider";
 
 	public static final String cDatabaseName = "shuffle.db";
-	private static final int cDatabaseVersion = 11;
+	private static final int cDatabaseVersion = 12;
 
 	static final String cTaskTableName = "task";
 	static final String cProjectTableName = "project";
@@ -117,6 +117,11 @@ public class ShuffleProvider extends ContentProvider {
 				// no break since we want it to fall through
 
 			case 10: // Shuffle v1.1 (1st release)
+				createTaskProjectIdIndex(db);
+				createTaskContextIdIndex(db);
+				// no break since we want it to fall through
+
+			case 11: // Shuffle v1.1.1 (2nd release)
 				db.execSQL("ALTER TABLE " + cTaskTableName
 						+ " ADD COLUMN start INTEGER;");
 				db.execSQL("ALTER TABLE " + cTaskTableName
@@ -124,13 +129,11 @@ public class ShuffleProvider extends ContentProvider {
 				db.execSQL("ALTER TABLE " + cTaskTableName
 						+ " ADD COLUMN hasAlarm INTEGER NOT NULL DEFAULT 0;");
 
-				createTaskProjectIdIndex(db);
-				createTaskContextIdIndex(db);
 				createRemindersTable(db);
 				createRemindersEventIdIndex(db);
 				createTaskCleanupTrigger(db);
 				break;
-
+				
 			default: // unknown version - use destructive upgrade
 				Log.w(cTag, "Destroying all old data");
 				db.execSQL("DROP TABLE IF EXISTS " + cContextTableName);
