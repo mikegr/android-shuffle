@@ -20,7 +20,7 @@
     android:versionName="1.2.0"    
     >
     
-    <uses-sdk android:minSdkVersion="2" />
+    <uses-sdk android:minSdkVersion="3" />
     
     <application 
     	android:theme="@style/ShuffleTheme"

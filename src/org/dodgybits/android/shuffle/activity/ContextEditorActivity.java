@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -204,20 +205,18 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         // changes are safely saved away in the provider.  We don't need
         // to do this if only viewing.
         if (mCursor != null) {
-            String description = mNameWidget.getText().toString();
-            int length = description.length();
+            String name = mNameWidget.getText().toString();
 
             // If this activity is finished, and there is no text, then we
-            // do something a little special: simply delete the context entry.
-            // Note that we do this both for editing and inserting...  it
-            // would be reasonable to only do it when inserting.
-            if (isFinishing() && (length == 0)) {
+            // do something a little special: simply delete the project entry.
+            if (isFinishing() && mState == State.STATE_INSERT && TextUtils.isEmpty(name) ) {
                 setResult(RESULT_CANCELED);
                 deleteItem();
-
-            // Get out updates into the provider.
             } else {
-            	String name = mNameWidget.getText().toString();
+            	if (TextUtils.isEmpty(name) && mOriginalItem != null) {
+            		// we'll assume deleting the name was an accident
+            		name = mOriginalItem.name;
+            	}
             	Context context  = new Context(name, mColourIndex, mIcon);
                 ContentValues values = new ContentValues();
             	writeItem(values, context);

@@ -26,6 +26,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -129,20 +130,18 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         // changes are safely saved away in the provider.  We don't need
         // to do this if only viewing.
         if (mCursor != null) {
-            String description = mNameWidget.getText().toString();
-            int length = description.length();
+            String name = mNameWidget.getText().toString();
 
             // If this activity is finished, and there is no text, then we
             // do something a little special: simply delete the project entry.
-            // Note that we do this both for editing and inserting...  it
-            // would be reasonable to only do it when inserting.
-            if (isFinishing() && (length == 0)) {
+            if (isFinishing() && mState == State.STATE_INSERT && TextUtils.isEmpty(name) ) {
                 setResult(RESULT_CANCELED);
                 deleteItem();
-
-            // Get out updates into the provider.
             } else {
-            	String name = mNameWidget.getText().toString();
+            	if (TextUtils.isEmpty(name) && mOriginalItem != null) {
+            		// we'll assume deleting the name was an accident
+            		name = mOriginalItem.name;
+            	}
             	Integer defaultContextId = null;
             	int selectedItemPosition = mDefaultContextSpinner.getSelectedItemPosition();
 				if (selectedItemPosition > 0) {

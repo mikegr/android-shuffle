@@ -25,9 +25,14 @@
 		style="@style/label" />
 
 	<EditText android:id="@+id/name" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_weight="1"
-		android:hint="@string/name_title" style="@style/text_editable"
-		android:maxLength="20">
+		android:layout_height="wrap_content"
+		android:hint="@string/name_title" 
+		android:capitalize="sentences"
+		android:autoText="true"
+		android:singleLine="true"		
+		android:maxLength="20"
+		style="@style/text_editable"
+		>
 		<requestFocus />
 	</EditText>
 

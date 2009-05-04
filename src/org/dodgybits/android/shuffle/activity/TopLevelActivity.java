@@ -16,20 +16,29 @@
 
 package org.dodgybits.android.shuffle.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.provider.Shuffle;
+import org.dodgybits.android.shuffle.service.UserTask;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Displays a list of the main activities.
@@ -42,6 +51,10 @@ public class TopLevelActivity extends ListActivity {
     private static final int TOP_TASKS = 2;
     private static final int PROJECTS = 3;
     private static final int CONTEXTS = 4;
+    
+	private static final String[] cProjection = new String[] {"_id"};
+    
+    private UserTask<?, ?, ?> mTask;
     
 	@Override
     public void onCreate(Bundle icicle) {
@@ -62,46 +75,29 @@ public class TopLevelActivity extends ListActivity {
         Log.d(cTag, "onResume+");
 		super.onResume();
 
-		// get counts for each item
-		Cursor cursor;
-		String[] projection = new String[] {"_id"};
-		cursor = getContentResolver().query(Shuffle.Tasks.cInboxTasksContentURI, projection, null, null, null);
-		int inboxCount = cursor.getCount();
-		cursor.close();
-		Uri dueTaskUri = Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(Shuffle.Tasks.DAY_MODE)).build();
-		cursor = getContentResolver().query(dueTaskUri, projection, null, null, null);
-		int dueTasksCount = cursor.getCount();
-		cursor.close();
-		cursor = getContentResolver().query(Shuffle.Tasks.cTopTasksContentURI, projection, null, null, null);
-		int topTasksCount = cursor.getCount();
-		cursor.close();
-		cursor = getContentResolver().query(Shuffle.Projects.CONTENT_URI, projection, null, null, null);
-		int projectCount = cursor.getCount();
-		cursor.close();
-		cursor = getContentResolver().query(Shuffle.Contexts.CONTENT_URI, projection, null, null, null);
-		int contextCount = cursor.getCount();
-		cursor.close();
-
-		Log.d(cTag, 
-				"Inbox=" + inboxCount +
-				" due=" + dueTasksCount +
-				" top=" + topTasksCount +
-				" projects=" + projectCount +
-				" contexts=" + contextCount
-				);
+		Uri[] countUris = new Uri[5];
+		countUris[INBOX] = Shuffle.Tasks.cInboxTasksContentURI;
+		countUris[DUE_TASKS] = Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(Shuffle.Tasks.DAY_MODE)).build();
+		countUris[TOP_TASKS] = Shuffle.Tasks.cTopTasksContentURI;
+		countUris[PROJECTS] = Shuffle.Projects.CONTENT_URI;
+		countUris[CONTEXTS] = Shuffle.Contexts.CONTENT_URI;
 		
-        String[] perspectives = getResources().getStringArray(R.array.perspectives);
-        perspectives[INBOX] += " (" + inboxCount + ")";
-        perspectives[DUE_TASKS] += " (" + dueTasksCount + ")";
-        perspectives[TOP_TASKS] += " (" + topTasksCount + ")";
-        perspectives[PROJECTS] += " (" + projectCount + ")";
-        perspectives[CONTEXTS] += " (" + contextCount + ")";
-        
+		mTask = new CalculateCountTask().execute(countUris);
+
+        String[] perspectives = getResources().getStringArray(R.array.perspectives).clone();
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
         		this, R.layout.list_item_view, R.id.name, perspectives);
         setListAdapter(adapter);
 	}
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mTask != null && mTask.getStatus() != UserTask.Status.RUNNING) {
+            mTask.cancel(true);
+        }
+    }
+	
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (MenuUtils.checkCommonItemsSelected(item, this, -1)) {
@@ -115,4 +111,50 @@ public class TopLevelActivity extends ListActivity {
 		MenuUtils.checkCommonItemsSelected(position + MenuUtils.INBOX_ID, this, -1, false);
     }
 
+    private class CalculateCountTask extends UserTask<Uri, Void, List<Integer>> {
+
+    	public List<Integer> doInBackground(Uri... params) {
+    		ArrayList<Integer> result = new ArrayList<Integer>(params.length);
+    		for (Uri uri : params) {
+    			Cursor cursor = getContentResolver().query(uri, cProjection, null, null, null);
+    			result.add(cursor.getCount());
+    			cursor.close();
+    		}
+            return result;
+        }
+
+		@Override
+        public void onPostExecute(List<Integer> counts) {
+            String[] perspectives = getResources().getStringArray(R.array.perspectives);
+            CharSequence[] labels = new CharSequence[perspectives.length];
+			int colour = getResources().getColor(R.drawable.pale_blue);
+			ForegroundColorSpan span = new ForegroundColorSpan(colour);
+            int length = perspectives.length;
+            for (int i = 0; i < length; i++) {
+            	CharSequence label = perspectives[i] + " (" + counts.get(i) + ")";
+    			SpannableString spannable = new SpannableString(label);
+    			spannable.setSpan(span, perspectives[i].length(), label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+    			labels[i] = spannable;
+            }
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+            		TopLevelActivity.this, R.layout.list_item_view, R.id.name, labels) {
+            	
+            	@Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                	View view = super.getView(position, convertView, parent);
+                	TextView nameView = (TextView) view.findViewById(R.id.name);
+                	// don't use toString in order to preserve colour change
+                	nameView.setText(getItem(position));
+                	return view;
+                }
+            };
+            
+            int position = getSelectedItemPosition();
+            setListAdapter(adapter);
+            setSelection(position);
+            
+            mTask = null;
+        }
+    	
+    }
 }

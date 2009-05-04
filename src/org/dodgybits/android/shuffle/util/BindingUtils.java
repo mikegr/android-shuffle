@@ -193,6 +193,7 @@ public class BindingUtils {
 	private static Project readJoinedProject(Cursor cursor, Integer projectId) {
 		if (projectId == null) return null;
 		String name = readString(cursor, PROJECT_NAME_INDEX);
+		if (TextUtils.isEmpty(name)) return null;
 		Integer defaultContextId = readInteger(cursor, PROJECT_DEFAULT_CONTEXT_ID_INDEX);
 		Boolean archived = readBoolean(cursor, PROJECT_ARCHIVED_INDEX);
 		return new Project(projectId, name, defaultContextId, archived);
@@ -202,6 +203,7 @@ public class BindingUtils {
 	private static Context readJoinedContext(Cursor cursor, Resources res, Integer contextId) {
 		if (contextId == null) return null;
 		String name = readString(cursor, CONTEXT_NAME_INDEX);
+		if (TextUtils.isEmpty(name)) return null;
 		int colour = cursor.getInt(CONTEXT_COLOUR_INDEX);
 		String iconName = readString(cursor, CONTEXT_ICON_INDEX);
 		Icon icon = Icon.createIcon(iconName, res);
@@ -282,9 +284,13 @@ public class BindingUtils {
 		writeString(values, Shuffle.Tasks.DETAILS, task.details);
 		if (task.project != null) {
 			writeInteger(values, Shuffle.Tasks.PROJECT_ID, task.project.id);
+		} else {
+			writeInteger(values, Shuffle.Tasks.PROJECT_ID, null);
 		}
 		if (task.context != null) {
 			writeInteger(values, Shuffle.Tasks.CONTEXT_ID, task.context.id);
+		} else {
+			writeInteger(values, Shuffle.Tasks.CONTEXT_ID, null);
 		}
 		writeDate(values, Shuffle.Tasks.CREATED_DATE, task.created);
 		writeDate(values, Shuffle.Tasks.MODIFIED_DATE, task.modified);
