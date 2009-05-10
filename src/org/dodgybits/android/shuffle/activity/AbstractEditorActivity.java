@@ -130,13 +130,15 @@ public abstract class AbstractEditorActivity<T> extends Activity
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+    	super.onSaveInstanceState(outState);
     	T item = createItemFromUI();
     	saveItem(outState, item);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle inState) {
-    	T item = restoreItem(inState);
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    	super.onRestoreInstanceState(savedInstanceState);
+    	T item = restoreItem(savedInstanceState);
     	updateUIFromItem(item);
     }
     
