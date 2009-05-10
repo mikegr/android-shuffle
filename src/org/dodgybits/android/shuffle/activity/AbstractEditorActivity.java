@@ -27,10 +27,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
 /**
@@ -52,86 +52,43 @@ public abstract class AbstractEditorActivity<T> extends Activity
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
         super.onCreate(icicle);
-        final Intent intent = getIntent();
+
+        processIntent();
+        
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
-
-        // Do some setup based on the action being performed.
-        final String action = intent.getAction();
-        if (action.equals(Intent.ACTION_EDIT)) {
-            // Requested to edit: set that state, and the data being edited.
-            mState = State.STATE_EDIT;
-            mUri = intent.getData();
-        } else if (action.equals(Intent.ACTION_INSERT)) {
-            // Requested to insert: set that state, and create a new entry
-            // in the container.
-            mState = State.STATE_INSERT;
-            mUri = getContentResolver().insert(intent.getData(), null);
-            // set the intent to edit so we don't keep recreating if user
-            // switches orientation
-            intent.setAction(Intent.ACTION_EDIT);
-            intent.setData(mUri);
-            setIntent(intent);
-
-            // If we were unable to create a new item, then just finish
-            // this activity.  A RESULT_CANCELED will be sent back to the
-            // original activity if they requested a result.
-            if (mUri == null) {
-                Log.e(cTag, "Failed to insert new item into "
-                        + getIntent().getData());
-                finish();
-                return;
-            }
-            // The new entry was created, so assume all will end well and
-            // set the result to be returned.
-    		Bundle bundle = new Bundle();
-    	    bundle.putString(AbstractListActivity.cSelectedItem, mUri.toString());
-    	    Intent mIntent = new Intent();
-    	    mIntent.putExtras(bundle);
-    	    setResult(RESULT_OK, mIntent);
-        } else {
-            // Whoops, unknown action!  Bail.
-            Log.e(cTag, "Unknown action " + action + ", exiting");
-            finish();
-            return;
-        }
-        // If an instance of this activity had previously stopped, we can
-        // get the original text it started with.
-        if (icicle != null) {
-            mOriginalItem = restoreItem(icicle);
-        } else {
-        	mOriginalItem = null;
-        }
-
         setContentView(getContentViewResId());
         
-        // Setup the bottom buttons
-        View view = findViewById(R.id.saveButton);
-        view.setOnClickListener(this);
-        view = findViewById(R.id.discardButton);
-        view.setOnClickListener(this);
-        
+        addSavePanelListeners();
+        Log.d(cTag, "onCreate-");
     }
     
     @Override
-    protected void onResume() {
-        Log.d(cTag, "onResume+");
-        super.onResume();
-        if (mCursor != null) {
-        	// need to requery otherwise values saved on onPause are not restored
-        	mCursor.requery();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                // If we are creating a new event, do not create it if the
+                // description is empty, in order to
+                // prevent accidental "no subject" event creations.
+                if (mUri != null) {
+                	save();
+                }
+                break;
         }
-        Log.d(cTag, "onResume-");
-    }
-    
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        Log.d(cTag, "onSaveInstanceState+");
 
-        // Save away the original item, so we still have it if the activity
-        // needs to be killed while paused
-        saveItem(outState, mOriginalItem);
+        return super.onKeyDown(keyCode, event);
     }
     
+//    @Override
+//    protected void onResume() {
+//        Log.d(cTag, "onResume+");
+//        super.onResume();
+//        if (mCursor != null) {
+//        	// need to requery otherwise values saved on onPause are not restored
+//        	mCursor.requery();
+//        }
+//        Log.d(cTag, "onResume-");
+//    }
+        
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -155,7 +112,7 @@ public abstract class AbstractEditorActivity<T> extends Activity
         	doSaveAction();
             break;
         case MenuUtils.DELETE_ID:
-            deleteItem();
+            doDeleteAction();
             finish();
             break;
         case MenuUtils.DISCARD_ID:
@@ -169,6 +126,18 @@ public abstract class AbstractEditorActivity<T> extends Activity
         	return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	T item = createItemFromUI();
+    	saveItem(outState, item);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle inState) {
+    	T item = restoreItem(inState);
+    	updateUIFromItem(item);
     }
     
     public void onFocusChange(View v, boolean hasFocus) {
@@ -190,21 +159,21 @@ public abstract class AbstractEditorActivity<T> extends Activity
         }
     }
 
-    protected void doSaveAction() {
+    protected final void doSaveAction() {
         // Save or create the contact if needed
-//        switch (mState) {
-//            case STATE_EDIT:
-//                save();
-//                break;
-//
-//            case STATE_INSERT:
-//                create();
-//                break;
-//
-//            default:
-//                Log.e(TAG, "Unknown state in doSaveOrCreate: " + mState);
-//                break;
-//        }
+        switch (mState) {
+            case State.STATE_EDIT:
+                save();
+                break;
+
+            case State.STATE_INSERT:
+                create();
+                break;
+
+            default:
+                Log.e(cTag, "Unknown state in doSaveAction: " + mState);
+                break;
+        }
         finish();
     }
     
@@ -222,18 +191,17 @@ public abstract class AbstractEditorActivity<T> extends Activity
             	writeItem(values, mOriginalItem);
                 getContentResolver().update(mUri, values, null, null);
             } else if (mState == State.STATE_INSERT) {
-                deleteItem();
+                doDeleteAction();
             }
         }
         setResult(RESULT_CANCELED);
         finish();
-    	
     }
     
     /**
      * Take care of deleting a item.  Simply deletes the entry.
      */
-    protected void deleteItem() {
+    protected void doDeleteAction() {
         if (mCursor != null) {
             mCursor.close();
             mCursor = null;
@@ -251,19 +219,77 @@ public abstract class AbstractEditorActivity<T> extends Activity
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
     
+    protected boolean isValid() {
+    	return true;
+    }
+    
+    protected final void create() {
+    	if (isValid()) {
+    		ContentValues values = prepareContentValues();
+	    	getContentResolver().insert(mUri, values);	
+	    	showSaveToast();
+    	}
+    }
+    
+    protected final void save() {
+    	if (isValid()) {
+    		ContentValues values = prepareContentValues();
+	        getContentResolver().update(mUri, values, null, null);    	
+	    	showSaveToast();
+    	}
+    }
+    
     /**
      * @return id of layout for this view
      */
     abstract protected int getContentViewResId();
-
+    
+    abstract protected T createItemFromUI();
+    abstract protected void updateUIFromItem(T item);
+    abstract protected void updateUIFromExtras(Bundle extras);
+    
     abstract protected T restoreItem(Bundle icicle);
-
     abstract protected void saveItem(Bundle outState, T item);
     
     abstract protected void writeItem(ContentValues values, T item);
-
+    
     abstract protected Intent getInsertIntent();
     
     abstract protected CharSequence getItemName();
+    
+    private void processIntent() {
+        final Intent intent = getIntent();
+        // Do some setup based on the action being performed.
+        final String action = intent.getAction();
+        mUri = intent.getData();
+        if (action.equals(Intent.ACTION_EDIT)) {
+            // Requested to edit: set that state, and the data being edited.
+            mState = State.STATE_EDIT;
+        } else if (action.equals(Intent.ACTION_INSERT)) {
+            // Requested to insert: set that state, and create a new entry
+            // in the container.
+            mState = State.STATE_INSERT;
+        } else {
+            // Whoops, unknown action!  Bail.
+            Log.e(cTag, "Unknown action " + action + ", exiting");
+            finish();
+            return;
+        }
+    }
+    
+    private void addSavePanelListeners() {
+        // Setup the bottom buttons
+        View view = findViewById(R.id.saveButton);
+        view.setOnClickListener(this);
+        view = findViewById(R.id.discardButton);
+        view.setOnClickListener(this);
+    }
+    
+    private final ContentValues prepareContentValues() {
+    	T item = createItemFromUI();
+    	ContentValues values = new ContentValues();
+    	writeItem(values, item);
+    	return values;
+    }
     
 }

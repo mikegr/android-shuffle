@@ -16,17 +16,14 @@
 
 package org.dodgybits.android.shuffle.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.provider.Shuffle;
-import org.dodgybits.android.shuffle.service.UserTask;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -54,7 +51,7 @@ public class TopLevelActivity extends ListActivity {
     
 	private static final String[] cProjection = new String[] {"_id"};
     
-    private UserTask<?, ?, ?> mTask;
+    private AsyncTask<?, ?, ?> mTask;
     
 	@Override
     public void onCreate(Bundle icicle) {
@@ -93,7 +90,7 @@ public class TopLevelActivity extends ListActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mTask != null && mTask.getStatus() != UserTask.Status.RUNNING) {
+        if (mTask != null && mTask.getStatus() != AsyncTask.Status.RUNNING) {
             mTask.cancel(true);
         }
     }
@@ -111,31 +108,42 @@ public class TopLevelActivity extends ListActivity {
 		MenuUtils.checkCommonItemsSelected(position + MenuUtils.INBOX_ID, this, -1, false);
     }
 
-    private class CalculateCountTask extends UserTask<Uri, Void, List<Integer>> {
+    private class CalculateCountTask extends AsyncTask<Uri, CharSequence[], Void> {
 
-    	public List<Integer> doInBackground(Uri... params) {
-    		ArrayList<Integer> result = new ArrayList<Integer>(params.length);
-    		for (Uri uri : params) {
+    	public Void doInBackground(Uri... params) {
+            String[] perspectives = getResources().getStringArray(R.array.perspectives);
+			int colour = getResources().getColor(R.drawable.pale_blue);
+			ForegroundColorSpan span = new ForegroundColorSpan(colour);
+            CharSequence[] labels = new CharSequence[perspectives.length];
+            int length = perspectives.length;
+            
+            for (int i = 0; i < length; i++) {
+            	CharSequence label = perspectives[i] + " (.)";
+    			SpannableString spannable = new SpannableString(label);
+    			spannable.setSpan(span, perspectives[i].length(), 
+    					label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            	labels[i] = spannable;
+            }
+			publishProgress(labels);
+            
+            for (int i = 0; i < length; i++) {
+            	Uri uri = params[i];
     			Cursor cursor = getContentResolver().query(uri, cProjection, null, null, null);
-    			result.add(cursor.getCount());
+    			int count = cursor.getCount();
     			cursor.close();
+            	CharSequence label = perspectives[i] + " (" + count + ")";
+    			SpannableString spannable = new SpannableString(label);
+    			spannable.setSpan(span, perspectives[i].length(), 
+    					label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+    			labels[i] = spannable;
+    			publishProgress(labels);
     		}
-            return result;
+            return null;
         }
 
 		@Override
-        public void onPostExecute(List<Integer> counts) {
-            String[] perspectives = getResources().getStringArray(R.array.perspectives);
-            CharSequence[] labels = new CharSequence[perspectives.length];
-			int colour = getResources().getColor(R.drawable.pale_blue);
-			ForegroundColorSpan span = new ForegroundColorSpan(colour);
-            int length = perspectives.length;
-            for (int i = 0; i < length; i++) {
-            	CharSequence label = perspectives[i] + " (" + counts.get(i) + ")";
-    			SpannableString spannable = new SpannableString(label);
-    			spannable.setSpan(span, perspectives[i].length(), label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    			labels[i] = spannable;
-            }
+		public void onProgressUpdate (CharSequence[]... progress) {
+			CharSequence[] labels = progress[0];
             ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
             		TopLevelActivity.this, R.layout.list_item_view, R.id.name, labels) {
             	
@@ -152,7 +160,9 @@ public class TopLevelActivity extends ListActivity {
             int position = getSelectedItemPosition();
             setListAdapter(adapter);
             setSelection(position);
-            
+		}
+		
+        public void onPostExecute() {
             mTask = null;
         }
     	

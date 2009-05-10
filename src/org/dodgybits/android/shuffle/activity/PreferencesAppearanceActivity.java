@@ -22,8 +22,6 @@ import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_DETAILS_KE
 import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_DUE_DATE_KEY;
 import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_PROJECT_KEY;
 
-import java.util.Date;
-
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Preferences;
@@ -98,12 +96,12 @@ public class PreferencesAppearanceActivity extends Activity  {
 	}
 	
 	private void setupSampleTask() {
-        Date now = new Date();
+        long now = System.currentTimeMillis();
         Project sampleProject = new Project("Sample project", 0, false);
         Context sampleContext = ModelUtils.getSampleContext(getResources());
         mSampleTask = new Task("Sample action", "Additional action details", 
         		sampleContext, sampleProject, now, now, 
-        		now, new Date(now.getTime() + DateUtils.HOUR_IN_MILLIS * 3), false, false,
+        		now, now + DateUtils.HOUR_IN_MILLIS * 3, false, false,
         		1, false);
 		
 	}

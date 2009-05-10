@@ -81,6 +81,10 @@
     <string name="sample_data_title">Demonstration</string>
     <string name="clean_slate_title">Clean slate</string>
 
+	<!--  edit screens -->
+    <string name="menu_done">Save</string>
+    <string name="menu_doNotSave">Discard changes</string>
+
 	<!--  task edit screen -->
     <string name="description_title">Description</string>
     <string name="scheduling_title">Scheduling</string>
@@ -89,9 +93,6 @@
     <string name="all_day_title">All day</string>
     <string name="reminders_title">Reminders</string>
     <string name="completed_title">Completed</string>
-    <string name="menu_done">Done</string>
-    <string name="menu_doNotSave">Revert</string>
-
 
 	<!--  project & context edit screens -->
     <string name="colour_title">Color</string>

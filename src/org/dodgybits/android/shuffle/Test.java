@@ -16,8 +16,6 @@
 
 package org.dodgybits.android.shuffle;
 
-import java.util.Date;
-
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
@@ -54,24 +52,24 @@ public class Test {
 		
 	private static Task[] sTasks = {
 			new Task("Make it go", "Do lots of stuff", 
-					sContexts[0], sProjects[0], new Date(), null, 
-					null, null, false, false,
+					sContexts[0], sProjects[0], System.currentTimeMillis(), 0, 
+					0, 0, false, false,
 					0, false),
 			new Task("Create ad", "Do lots of stuff", 
-					sContexts[1], sProjects[1], new Date(), null, 
-					null, null, false, false,
+					sContexts[1], sProjects[1], System.currentTimeMillis(), 0, 
+					0, 0, false, false,
 					1, false),
 			new Task("Create udder", "Do lots of stuff", 
-					sContexts[3], sProjects[1], new Date(), null, 
-					null, null, false, false,
+					sContexts[3], sProjects[1], System.currentTimeMillis(), 0, 
+					0, 0, false, false,
 					0, true),
 			new Task("Fooled by Randomness", null, 
-					null, sProjects[2], new Date(), null, 
-					null, null, false, false,
+					null, sProjects[2], System.currentTimeMillis(), 0, 
+					0, 0, false, false,
 					0, true),
 			new Task("Life and Limb", "Do lots of stuff", 
-					sContexts[2], sProjects[2], new Date(), null, 
-					null, null, false, false,
+					sContexts[2], sProjects[2], System.currentTimeMillis(), 0, 
+					0, 0, false, false,
 					0, true),
 	};
 	

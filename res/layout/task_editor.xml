@@ -155,6 +155,7 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 		            android:duplicateParentState="true"
+		            android:visibility="gone"
 			        />
 
 			    <ImageView android:id="@+id/collapse"
@@ -162,7 +163,6 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 		            android:duplicateParentState="true"
-		            android:visibility="gone"
 			        />
 			
 			</LinearLayout>

@@ -46,15 +46,16 @@ public class WelcomeActivity extends Activity {
 		super.onCreate(icicle);
 		Log.d(cTag, "onCreate");
 		
+		
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
-        requestWindowFeature(Window.FEATURE_PROGRESS);
-        setProgressBarIndeterminate(true);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.welcome);
         
         mSampleDataButton = (Button) findViewById(R.id.sample_data_button);
         mSampleDataButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	disableButtons();
+            	startProgressAnimation();
             	performCreateSampleData();
             }
         });
@@ -62,6 +63,7 @@ public class WelcomeActivity extends Activity {
         mCleanSlateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	disableButtons();
+            	startProgressAnimation();
             	performCleanSlate();
             }
         });
@@ -69,7 +71,11 @@ public class WelcomeActivity extends Activity {
             @Override
             public void handleMessage(Message msg) {
             	updateFirstTimePref(false);
-                setProgressBarVisibility(false);
+            	
+                // Stop the spinner
+                getWindow().setFeatureInt(Window.FEATURE_INDETERMINATE_PROGRESS,
+                        Window.PROGRESS_VISIBILITY_OFF);
+                
                 startActivity(new Intent(WelcomeActivity.this, TopLevelActivity.class));
             	finish();
             }
@@ -79,6 +85,12 @@ public class WelcomeActivity extends Activity {
     private void disableButtons() {
     	mCleanSlateButton.setEnabled(false);
     	mSampleDataButton.setEnabled(false);
+    }
+    
+    private void startProgressAnimation() {
+        // Start the spinner
+        getWindow().setFeatureInt(Window.FEATURE_INDETERMINATE_PROGRESS,
+                Window.PROGRESS_VISIBILITY_ON);
     }
     
     private void performCreateSampleData() {

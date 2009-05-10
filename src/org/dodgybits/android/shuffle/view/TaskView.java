@@ -70,6 +70,14 @@ public class TaskView extends ItemView<Task> {
 	
 	
 	public void updateView(Task task) {
+		updateContext(task);
+		updateDescription(task);
+		updateDueDate(task);
+		updateProject(task);
+		updateDetails(task);
+	}
+	
+	private void updateContext(Task task) {
 		org.dodgybits.android.shuffle.model.Context context = task.context;
 		boolean displayContext = Preferences.displayContextName(getContext());
 		boolean displayIcon = Preferences.displayContextIcon(getContext());
@@ -86,7 +94,10 @@ public class TaskView extends ItemView<Task> {
 			mContext.setVisibility(View.VISIBLE);
 		} else {
 			mContext.setVisibility(View.GONE);
-		}		
+		}				
+	}
+	
+	private void updateDescription(Task task) {
 		CharSequence description = task.description;
 		if (task.complete) {
 			// add strike-through for completed tasks
@@ -94,10 +105,13 @@ public class TaskView extends ItemView<Task> {
 			desc.setSpan(new StrikethroughSpan(), 0, description.length(), Spanned.SPAN_PARAGRAPH);
 			description = desc;
 		}
-		mDescription.setText(description);
-		if (Preferences.displayDueDate(getContext()) && (task.dueDate != null)) {
+		mDescription.setText(description);	
+	}
+
+	private void updateDueDate(Task task) {
+		if (Preferences.displayDueDate(getContext()) && task.dueDate > 0) {
 			mDueDate.setText(DateUtils.displayDate(getContext(), task.dueDate));
-			if (!DateUtils.isToday(task.dueDate) && (task.dueDate.getTime() < System.currentTimeMillis())) {
+			if (task.dueDate < System.currentTimeMillis()) {
 				// task is overdue
 				mDueDate.setTypeface(Typeface.DEFAULT_BOLD);
 				mDueDate.setTextColor(Color.RED);
@@ -109,20 +123,23 @@ public class TaskView extends ItemView<Task> {
 		} else {
 			mDueDate.setVisibility(View.GONE);
 		}
+	}
+	
+	private void updateProject(Task task) {
 		if (mShowProject && Preferences.displayProject(getContext()) && (task.project != null)) {
 			mProject.setText(task.project.name);
 			mProject.setVisibility(View.VISIBLE);
 		} else {
 			mProject.setVisibility(View.GONE);
 		}
+	}
+	
+	private void updateDetails(Task task) {
 		if (Preferences.displayDetails(getContext()) && (task.details != null)) {
 			mDetails.setText(task.details);
 			mDetails.setVisibility(View.VISIBLE);
 		} else {
 			mDetails.setVisibility(View.GONE);
 		}
-		
 	}
-
-	
 }

@@ -47,127 +47,70 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         Log.d(cTag, "onCreate+");
         super.onCreate(icicle);
         
-        // The text view for our project description, identified by its ID in the XML file.
-        mNameWidget = (EditText) findViewById(R.id.name);
-        mDefaultContextSpinner = (Spinner) findViewById(R.id.default_context);
-
-        Cursor contactCursor = getContentResolver().query(Shuffle.Contexts.CONTENT_URI, new String[] {Shuffle.Contexts._ID, Shuffle.Contexts.NAME}, null, null, null);
-        int size = contactCursor.getCount() + 1;
-        mContextIds = new int[size];
-        mContextIds[0] = 0;
-        mContextNames = new String[size];
-        mContextNames[0] = "None";
-        for (int i = 1; i < size; i++) {
-        	contactCursor.moveToNext();
-        	mContextIds[i] = contactCursor.getInt(0);
-        	mContextNames[i] = contactCursor.getString(1);
+        loadCursor();
+        findViewsAndAddListeners();
+        
+        if (mState == State.STATE_EDIT) {
+            if (mCursor != null) {
+                // Make sure we are at the one and only row in the cursor.
+                mCursor.moveToFirst();
+                setTitle(R.string.title_edit_project);
+                mOriginalItem = BindingUtils.readProject(mCursor);
+              	updateUIFromItem(mOriginalItem);
+            } else {
+                setTitle(getText(R.string.error_title));
+                mNameWidget.setText(getText(R.string.error_message));
+            }
+        } else if (mState == State.STATE_INSERT) {
+            setTitle(R.string.title_new_project);
+            Bundle extras = getIntent().getExtras();
+            updateUIFromExtras(extras);
         }
-        contactCursor.close();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mContextNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mDefaultContextSpinner.setAdapter(adapter);
-
-        // Get the project!
-        mCursor = managedQuery(mUri, Shuffle.Projects.cFullProjection, null, null, null);
     }
     
     @Override
-    protected void onResume() {
-        Log.d(cTag, "onResume+");
-        super.onResume();
-
-        // If we didn't have any trouble retrieving the data, it is now
-        // time to get at the stuff.
-        if (mCursor != null) {
-            // Make sure we are at the one and only row in the cursor.
-            mCursor.moveToFirst();
-
-            // Modify our overall title depending on the mode we are running in.
-            if (mState == State.STATE_EDIT) {
-                setTitle(R.string.title_edit_project);
-            } else if (mState == State.STATE_INSERT) {
-                setTitle(R.string.title_new_project);
-            }
-
-            // This is a little tricky: we may be resumed after previously being
-            // paused/stopped.  We want to put the new text in the text view,
-            // but leave the user where they were (retain the cursor position
-            // etc).  This version of setText does that for us.
-            Project project = BindingUtils.readProject(mCursor);
-            mNameWidget.setTextKeepState(project.name);
-            Integer defaultContextId = project.defaultContextId;
-            if (defaultContextId == null) {
-            	mDefaultContextSpinner.setSelection(0);
-            } else {
-            	for (int i = 1; i < mContextIds.length; i++) {
-            		if (mContextIds[i] == defaultContextId) {
-            			mDefaultContextSpinner.setSelection(i);
-            			break;
-            		}
-            	}
-            }
-
-            // If we hadn't previously retrieved the original project, do so
-            // now.  This allows the user to revert their changes.
-            if (mOriginalItem == null) {
-            	mOriginalItem = project;
-            }
-        } else {
-            setTitle(getText(R.string.error_title));
-            mNameWidget.setText(getText(R.string.error_message));
-        }
-        
-        // select the description
-        mNameWidget.selectAll();
+    protected boolean isValid() {
+        String name = mNameWidget.getText().toString();
+        return !TextUtils.isEmpty(name);
     }
-
+    
     @Override
-    protected void onPause() {
-        Log.d(cTag, "onPause+");
-        super.onPause();
-
-        // The user is going somewhere else, so make sure their current
-        // changes are safely saved away in the provider.  We don't need
-        // to do this if only viewing.
-        if (mCursor != null) {
-            String name = mNameWidget.getText().toString();
-
-            // If this activity is finished, and there is no text, then we
-            // do something a little special: simply delete the project entry.
-            if (isFinishing() && mState == State.STATE_INSERT && TextUtils.isEmpty(name) ) {
-                setResult(RESULT_CANCELED);
-                deleteItem();
-            } else {
-            	if (TextUtils.isEmpty(name) && mOriginalItem != null) {
-            		// we'll assume deleting the name was an accident
-            		name = mOriginalItem.name;
-            	}
-            	Integer defaultContextId = null;
-            	int selectedItemPosition = mDefaultContextSpinner.getSelectedItemPosition();
-				if (selectedItemPosition > 0) {
-            		defaultContextId = mContextIds[selectedItemPosition];
-            	}
-            	boolean archived = false;
-            	Project project  = new Project(name, defaultContextId, archived);
-                ContentValues values = new ContentValues();
-            	writeItem(values, project);
-
-                // Commit all of our changes to persistent storage. When the update completes
-                // the content provider will notify the cursor of the change, which will
-                // cause the UI to be updated.
-                getContentResolver().update(mUri, values, null, null);    	
-                //showSaveToast();
-            }
-        }
-    }
-       
-    /**
-     * Take care of deleting a project.  Simply deletes the entry.
-     */
-    @Override
-    protected void deleteItem() {
-    	super.deleteItem();
+    protected void doDeleteAction() {
+    	super.doDeleteAction();
         mNameWidget.setText("");
+    }
+    
+    @Override
+    protected Project createItemFromUI() {
+        String name = mNameWidget.getText().toString();
+    	Integer defaultContextId = null;
+    	int selectedItemPosition = mDefaultContextSpinner.getSelectedItemPosition();
+		if (selectedItemPosition > 0) {
+    		defaultContextId = mContextIds[selectedItemPosition];
+    	}
+    	boolean archived = false;
+    	return new Project(name, defaultContextId, archived);
+    }
+    
+    @Override
+    protected void updateUIFromExtras(Bundle extras) {
+    	// do nothing for now
+    }
+    
+    @Override
+    protected void updateUIFromItem(Project project) {
+        mNameWidget.setTextKeepState(project.name);
+        Integer defaultContextId = project.defaultContextId;
+        if (defaultContextId == null) {
+        	mDefaultContextSpinner.setSelection(0);
+        } else {
+        	for (int i = 1; i < mContextIds.length; i++) {
+        		if (mContextIds[i] == defaultContextId) {
+        			mDefaultContextSpinner.setSelection(i);
+        			break;
+        		}
+        	}
+        }
     }
     
     /**
@@ -202,5 +145,42 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     protected CharSequence getItemName() {
     	return getString(R.string.project_name);
     }
+    
+    private void loadCursor() {
+    	if (mUri != null)
+    	{
+            mCursor = managedQuery(mUri, Shuffle.Projects.cFullProjection, null, null, null);
+	        if (mCursor == null || mCursor.getCount() == 0) {
+	            // The cursor is empty. This can happen if the event was deleted.
+	            finish();
+	            return;
+	        }
+    	}
+    }
+    
+    private void findViewsAndAddListeners() {
+        // The text view for our project description, identified by its ID in the XML file.
+        mNameWidget = (EditText) findViewById(R.id.name);
+        mDefaultContextSpinner = (Spinner) findViewById(R.id.default_context);
+
+        Cursor contactCursor = getContentResolver().query(
+        		Shuffle.Contexts.CONTENT_URI, 
+        		new String[] {Shuffle.Contexts._ID, Shuffle.Contexts.NAME}, null, null, null);
+        int size = contactCursor.getCount() + 1;
+        mContextIds = new int[size];
+        mContextIds[0] = 0;
+        mContextNames = new String[size];
+        mContextNames[0] = "None";
+        for (int i = 1; i < size; i++) {
+        	contactCursor.moveToNext();
+        	mContextIds[i] = contactCursor.getInt(0);
+        	mContextNames[i] = contactCursor.getString(1);
+        }
+        contactCursor.close();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        		this, android.R.layout.simple_list_item_1, mContextNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mDefaultContextSpinner.setAdapter(adapter);
+    }        
 
 }

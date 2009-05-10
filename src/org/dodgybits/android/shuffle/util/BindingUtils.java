@@ -18,7 +18,6 @@ package org.dodgybits.android.shuffle.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 
 import org.dodgybits.android.shuffle.model.Context;
@@ -53,10 +52,10 @@ public class BindingUtils {
 		String details = icicle.getString(Shuffle.Tasks.DETAILS);
 		Context context = restoreContext(icicle.getBundle(Shuffle.Tasks.CONTEXT_ID), res);
 		Project project = restoreProject(icicle.getBundle(Shuffle.Tasks.PROJECT_ID));
-		Date created = restoreDate(icicle, Shuffle.Tasks.CREATED_DATE);
-		Date modified = restoreDate(icicle, Shuffle.Tasks.MODIFIED_DATE);
-		Date dueDate = restoreDate(icicle, Shuffle.Tasks.DUE_DATE);
-		Date startDate = restoreDate(icicle, Shuffle.Tasks.START_DATE);
+		long created = icicle.getLong(Shuffle.Tasks.CREATED_DATE, 0L);
+		long modified = icicle.getLong(Shuffle.Tasks.MODIFIED_DATE, 0L);
+		long startDate = icicle.getLong(Shuffle.Tasks.START_DATE, 0L);
+		long dueDate = icicle.getLong(Shuffle.Tasks.DUE_DATE, 0L);
 		Boolean allDay = icicle.getBoolean(Shuffle.Tasks.ALL_DAY);
 		Boolean hasAlarms = icicle.getBoolean(Shuffle.Tasks.HAS_ALARM);
 		int order = icicle.getInt(Shuffle.Tasks.DISPLAY_ORDER);
@@ -68,14 +67,6 @@ public class BindingUtils {
 				order, complete);
 	}
 		
-	private static Date restoreDate(Bundle icicle, String key) {
-		Date date = null;
-		if (icicle.containsKey(key)) {
-			date = new Date(icicle.getLong(key));
-		}
-		return date;
-	}
-	
 	public static Context restoreContext(Bundle icicle, Resources res) {
 		if (icicle == null) return null;
 		Integer id = getInteger(icicle, Shuffle.Contexts._ID);
@@ -105,9 +96,10 @@ public class BindingUtils {
 		if (task.project != null) {
 			icicle.putBundle(Shuffle.Tasks.PROJECT_ID, saveProject(new Bundle(), task.project));
 		}
-		putDate(icicle, Shuffle.Tasks.CREATED_DATE, task.created);
-		putDate(icicle, Shuffle.Tasks.MODIFIED_DATE, task.modified);
-		putDate(icicle, Shuffle.Tasks.DUE_DATE, task.dueDate);
+		icicle.putLong(Shuffle.Tasks.CREATED_DATE, task.created);
+		icicle.putLong(Shuffle.Tasks.MODIFIED_DATE, task.modified);
+		icicle.putLong(Shuffle.Tasks.START_DATE, task.startDate);
+		icicle.putLong(Shuffle.Tasks.DUE_DATE, task.dueDate);
 		putInteger(icicle, Shuffle.Tasks.DISPLAY_ORDER, task.order);
 		icicle.putBoolean(Shuffle.Tasks.COMPLETE, task.complete);
 		return icicle;
@@ -119,13 +111,6 @@ public class BindingUtils {
 	
 	private static void putInteger(Bundle icicle, String key, Integer value) {
 		if (value != null) icicle.putInt(key, value);
-	}
-	
-	private static Bundle putDate(Bundle icicle, String key, Date date) {
-		if (date != null) {
-			icicle.putLong(key, date.getTime());
-		}
-		return icicle;
 	}
 	
 	public static Bundle saveContext(Bundle icicle, Context context) {
@@ -175,10 +160,10 @@ public class BindingUtils {
 		Integer contextId = readInteger(cursor, CONTEXT_INDEX);
 		Context context = readJoinedContext(cursor, res, contextId);
 		
-		Date created = readDate(cursor, CREATED_INDEX);
-		Date modified = readDate(cursor, MODIFIED_INDEX);
-		Date startDate = readDate(cursor, START_INDEX);
-		Date dueDate = readDate(cursor, DUE_INDEX);
+		long created = cursor.getLong(CREATED_INDEX);
+		long modified = cursor.getLong(MODIFIED_INDEX);
+		long startDate = cursor.getLong(START_INDEX);
+		long dueDate = cursor.getLong(DUE_INDEX);
 		Integer displayOrder = readInteger(cursor, DISPLAY_ORDER_INDEX);
 		Boolean complete = readBoolean(cursor, COMPLETE_INDEX);
 		Boolean allDay = readBoolean(cursor, ALL_DAY_INDEX);
@@ -292,10 +277,11 @@ public class BindingUtils {
 		} else {
 			writeInteger(values, Shuffle.Tasks.CONTEXT_ID, null);
 		}
-		writeDate(values, Shuffle.Tasks.CREATED_DATE, task.created);
-		writeDate(values, Shuffle.Tasks.MODIFIED_DATE, task.modified);
-		writeDate(values, Shuffle.Tasks.START_DATE, task.startDate);
-		writeDate(values, Shuffle.Tasks.DUE_DATE, task.dueDate);
+		
+		values.put(Shuffle.Tasks.CREATED_DATE, task.created);
+		values.put(Shuffle.Tasks.MODIFIED_DATE, task.modified);
+		values.put(Shuffle.Tasks.START_DATE, task.startDate);
+		values.put(Shuffle.Tasks.DUE_DATE, task.dueDate);
 		writeBoolean(values, Shuffle.Tasks.ALL_DAY, task.allDay);
 		writeBoolean(values, Shuffle.Tasks.HAS_ALARM, task.hasAlarms);
 		writeInteger(values, Shuffle.Tasks.DISPLAY_ORDER, task.order);
@@ -355,24 +341,12 @@ public class BindingUtils {
 		return (cursor.isNull(index) ? null : cursor.getInt(index));
 	}
 	
-	private static Date readDate(Cursor cursor, int index) {
-		return (cursor.isNull(index) ? null : new Date(cursor.getLong(index)));
-	}
-
 	private static Boolean readBoolean(Cursor cursor, int index) {
 		return (cursor.getInt(index) == 1);
 	}
 	
 	private static String readString(Cursor cursor, int index) {
 		return (cursor.isNull(index) ? null : cursor.getString(index));
-	}
-	
-	private static void writeDate(ContentValues values, String key, Date date) {
-		if (date == null) {
-			values.putNull(key);
-		} else {
-			values.put(key, date.getTime());
-		}
 	}
 	
 	private static void writeInteger(ContentValues values, String key, Integer value) {
