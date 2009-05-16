@@ -118,11 +118,8 @@ public class TopLevelActivity extends ListActivity {
             int length = perspectives.length;
             
             for (int i = 0; i < length; i++) {
-            	CharSequence label = perspectives[i] + " (.)";
-    			SpannableString spannable = new SpannableString(label);
-    			spannable.setSpan(span, perspectives[i].length(), 
-    					label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-            	labels[i] = spannable;
+            	CharSequence label = perspectives[i];
+            	labels[i] = label;
             }
 			publishProgress(labels);
             

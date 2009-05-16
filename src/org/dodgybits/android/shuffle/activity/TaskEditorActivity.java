@@ -16,6 +16,8 @@
 
 package org.dodgybits.android.shuffle.activity;
 
+import java.util.TimeZone;
+
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
@@ -76,7 +78,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private EditText mDescriptionWidget;
     private AutoCompleteTextView mContextView;
     private AutoCompleteTextView mProjectView;
-    private CheckBox mCompletedCheckBox;
     private EditText mDetailsWidget;
     
     private boolean mSchedulingExpanded;
@@ -86,9 +87,19 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private Button mDueTimeButton;
     private CheckBox mAllDayCheckBox;
 
+    private boolean mShowStart;
     private Time mStartTime;
+    private boolean mShowDue;
     private Time mDueTime;
+
+	private View mSchedulingExtra;
+	private View mExpandButton;
+	private View mCollapseButton;
+
+	private View mCompleteEntry;
+    private CheckBox mCompletedCheckBox;
     
+	
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
@@ -106,7 +117,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 mCursor.moveToFirst();
                 // Modify our overall title depending on the mode we are running in.
                 setTitle(R.string.title_edit_task);
-                mCompletedCheckBox.setVisibility(View.VISIBLE);    
+                mCompleteEntry.setVisibility(View.VISIBLE);    
                 mOriginalItem = BindingUtils.readTask(mCursor,getResources());
               	updateUIFromItem(mOriginalItem);
             } else {
@@ -115,7 +126,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             }
         } else if (mState == State.STATE_INSERT) {
             setTitle(R.string.title_new_task);
-            mCompletedCheckBox.setVisibility(View.GONE);
+            mCompleteEntry.setVisibility(View.GONE);
             // see if the context or project were suggested for this task
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
@@ -136,6 +147,12 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         	String projectName = extras.getString(Shuffle.Tasks.PROJECT_ID);
         	if (projectName != null) mProjectView.setTextKeepState(projectName);
         }
+    	
+        setWhenDefaults();   
+        populateWhen();
+        
+        mStartTimeButton.setVisibility(View.VISIBLE);
+        mDueTimeButton.setVisibility(View.VISIBLE);
     }
     
     @Override
@@ -143,51 +160,53 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mDetailsWidget.setTextKeepState(task.details == null ? "" : task.details);
         
         mDescriptionWidget.setTextKeepState(task.description);
-        if ( task.context != null) {
+        if (task.context != null) {
             mContextView.setTextKeepState(task.context.name);
         }
         if (task.project != null) {
             mProjectView.setTextKeepState(task.project.name);
         }
-        
-        // If the event is all-day, read the times in UTC timezone
-        if (task.startDate != 0) {
-            if (task.allDay) {
-                String tz = mStartTime.timezone;
-                mStartTime.timezone = Time.TIMEZONE_UTC;
-                mStartTime.set(task.startDate);
-                mStartTime.timezone = tz;
+                         
+        Boolean allDay = task.allDay;
+		if (allDay) {
+            String tz = mStartTime.timezone;
+            mStartTime.timezone = Time.TIMEZONE_UTC;
+            mStartTime.set(task.startDate);
+            mStartTime.timezone = tz;
 
-                // Calling normalize to calculate isDst
-                mStartTime.normalize(true);
-            } else {
-                mStartTime.set(task.startDate);
-            }
+            // Calling normalize to calculate isDst
+            mStartTime.normalize(true);
+        } else {
+            mStartTime.set(task.startDate);
         }
 
-        if (task.dueDate != 0) {
-            if (task.allDay) {
-                String tz = mStartTime.timezone;
-                mDueTime.timezone = Time.TIMEZONE_UTC;
-                mDueTime.set(task.dueDate);
-                mDueTime.timezone = tz;
+        if (allDay) {
+            String tz = mStartTime.timezone;
+            mDueTime.timezone = Time.TIMEZONE_UTC;
+            mDueTime.set(task.dueDate);
+            mDueTime.timezone = tz;
 
-                // Calling normalize to calculate isDst
-                mDueTime.normalize(true);
-            } else {
-                mDueTime.set(task.dueDate);
-            }
+            // Calling normalize to calculate isDst
+            mDueTime.normalize(true);
+        } else {
+            mDueTime.set(task.dueDate);
         }
+
+        setWhenDefaults();   
+        populateWhen();
         
-        mAllDayCheckBox.setOnCheckedChangeListener(this);            
-        mAllDayCheckBox.setChecked(task.allDay);
+    	// show scheduling section if either start or due date are set
+    	setSchedulingVisibility(mShowStart || mShowDue);
+        
+        mAllDayCheckBox.setChecked(allDay);
+        updateTimeVisibility(!allDay);
         
         mCompletedCheckBox.setChecked(task.complete);
         // If we hadn't previously retrieved the original task, do so
         // now.  This allows the user to revert their changes.
         if (mOriginalItem == null) {
         	mOriginalItem = task;
-        }    	
+        }
     }
         
     @Override
@@ -198,11 +217,52 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     	long modified = System.currentTimeMillis();
     	long created;
     	Boolean allDay = mAllDayCheckBox.isChecked();
-    	long startDate = mStartTime.toMillis(true);
-    	long dueDate = mDueTime.toMillis(true);
     	
-    	// TODO handle all day events
-    	
+        String timezone = null;
+        long startMillis = 0L;
+        long dueMillis = 0L;
+        if (allDay) {
+            // Reset start and end time, increment the monthDay by 1, and set
+            // the timezone to UTC, as required for all-day events.
+            timezone = Time.TIMEZONE_UTC;
+            mStartTime.hour = 0;
+            mStartTime.minute = 0;
+            mStartTime.second = 0;
+            mStartTime.timezone = timezone;
+            startMillis = mStartTime.normalize(true);
+
+            mDueTime.hour = 0;
+            mDueTime.minute = 0;
+            mDueTime.second = 0;
+            mDueTime.monthDay++;
+            mDueTime.timezone = timezone;
+            dueMillis = mDueTime.normalize(true);
+        } else {
+        	if (mShowStart && !Time.isEpoch(mStartTime)) {
+        		startMillis = mStartTime.toMillis(true);
+        	}
+        	
+        	if (mShowDue && !Time.isEpoch(mDueTime)) {
+        		dueMillis = mDueTime.toMillis(true);
+        	}
+        	
+        	if (mState == State.STATE_INSERT) {
+                // The timezone for a new task is the currently displayed timezone
+                timezone = TimeZone.getDefault().getID();
+        	}
+        	else
+        	{
+        		timezone = mOriginalItem.timezone;
+                
+                // The timezone might be null if we are changing an existing
+                // all-day task to a non-all-day event.  We need to assign
+                // a timezone to the non-all-day task.
+                if (TextUtils.isEmpty(timezone)) {
+                    timezone = TimeZone.getDefault().getID();
+                }
+            }
+        }
+        
     	Integer order;
     	String details = mDetailsWidget.getText().toString();
     	Context context = fetchOrCreateContext(mContextView.getText().toString());
@@ -221,7 +281,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
 
     	Task task  = new Task(description, details, 
     			context, project, created, modified, 
-    			startDate, dueDate, allDay, hasAlarms,
+    			startMillis, dueMillis, timezone, allDay, hasAlarms,
     			order, complete);
     	return task;
 	}
@@ -295,21 +355,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 break;
             }
             
-
-//            case R.id.delete: {
-//                EditEntry entry = findEntryForView(v);
-//                if (entry != null) {
-//                    // Clear the text and hide the view so it gets saved properly
-//                    ((TextView) entry.view.findViewById(R.id.data)).setText(null);
-//                    entry.view.setVisibility(View.GONE);
-//                    entry.isDeleted = true;
-//                }
-//                
-//                // Force rebuild of views because section headers might need to change
-//                buildViews();
-//                break;
-//            }
-
             default:
             	super.onClick(v);
             	break;
@@ -320,35 +365,44 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         if (isChecked) {
             if (mDueTime.hour == 0 && mDueTime.minute == 0) {
                 mDueTime.monthDay--;
-                long dueMillis = mDueTime.normalize(true);
 
                 // Do not allow an event to have an end time before the start time.
                 if (mDueTime.before(mStartTime)) {
                     mDueTime.set(mStartTime);
-                    dueMillis = mDueTime.normalize(true);
                 }
-                setDate(mDueDateButton, dueMillis);
-                setTime(mDueTimeButton, dueMillis);
             }
-
-            mStartTimeButton.setVisibility(View.GONE);
-            mDueTimeButton.setVisibility(View.GONE);
         } else {
             if (mDueTime.hour == 0 && mDueTime.minute == 0) {
                 mDueTime.monthDay++;
-                long endMillis = mDueTime.normalize(true);
-                setDate(mDueDateButton, endMillis);
-                setTime(mDueTimeButton, endMillis);
             }
+        }
 
+    	mShowStart = true;
+        long startMillis = mStartTime.normalize(true);
+        setDate(mStartDateButton, startMillis, mShowStart);
+        setTime(mStartTimeButton, startMillis, mShowStart);
+
+    	mShowDue = true;
+        long dueMillis = mDueTime.normalize(true);
+        setDate(mDueDateButton, dueMillis, mShowDue);
+        setTime(mDueTimeButton, dueMillis, mShowDue);
+        
+        updateTimeVisibility(!isChecked);
+    }
+    
+    private void updateTimeVisibility(boolean showTime) {
+    	if (showTime) {
             mStartTimeButton.setVisibility(View.VISIBLE);
             mDueTimeButton.setVisibility(View.VISIBLE);
-        }
+    	} else {
+            mStartTimeButton.setVisibility(View.GONE);
+            mDueTimeButton.setVisibility(View.GONE);
+    	}
     }
 
     private void loadCursors() {
         // Get the task if we're editing
-    	if (mUri != null)
+    	if (mUri != null && mState == State.STATE_EDIT )
     	{
 	        mCursor = managedQuery(mUri, Shuffle.Tasks.cExpandedProjection, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {
@@ -372,15 +426,11 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mProjectView = (AutoCompleteTextView) findViewById(R.id.project);
 
         mDetailsWidget = (EditText) findViewById(R.id.details);
-    	
-        View schedulingEntry = findViewById(R.id.scheduling_entry);
-        schedulingEntry.setOnClickListener(this);
-        schedulingEntry.setOnFocusChangeListener(this);
                 
-        View completeEntry = findViewById(R.id.completed_entry);
-        completeEntry.setOnClickListener(this);
-        completeEntry.setOnFocusChangeListener(this);
-        mCompletedCheckBox = (CheckBox) completeEntry.findViewById(R.id.checkbox);
+        mCompleteEntry = findViewById(R.id.completed_entry);
+        mCompleteEntry.setOnClickListener(this);
+        mCompleteEntry.setOnFocusChangeListener(this);
+        mCompletedCheckBox = (CheckBox) mCompleteEntry.findViewById(R.id.checkbox);
     	
         mContextView.setAdapter(new AutoCompleteCursorAdapter(this, mContextCursor, 
         		cContextProjection, Shuffle.Contexts.CONTENT_URI));
@@ -388,54 +438,113 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         		cProjectProjection, Shuffle.Projects.CONTENT_URI));
 
         mStartDateButton = (Button) findViewById(R.id.start_date);
-        mStartTimeButton = (Button) findViewById(R.id.start_time);
-        mDueDateButton = (Button) findViewById(R.id.due_date);
-        mDueTimeButton = (Button) findViewById(R.id.due_time);
-        mAllDayCheckBox = (CheckBox) findViewById(R.id.is_all_day);
-        
         mStartDateButton.setOnClickListener(new DateClickListener(mStartTime));
-        mDueDateButton.setOnClickListener(new DateClickListener(mDueTime));
-
-        mStartTimeButton.setOnClickListener(new TimeClickListener(mStartTime));
-        mDueTimeButton.setOnClickListener(new TimeClickListener(mDueTime));
         
-        mSchedulingExpanded = true;
+        mStartTimeButton = (Button) findViewById(R.id.start_time);
+        mStartTimeButton.setOnClickListener(new TimeClickListener(mStartTime));
+        
+        mDueDateButton = (Button) findViewById(R.id.due_date);
+        mDueDateButton.setOnClickListener(new DateClickListener(mDueTime));
+        
+        mDueTimeButton = (Button) findViewById(R.id.due_time);
+        mDueTimeButton.setOnClickListener(new TimeClickListener(mDueTime));
+
+        mAllDayCheckBox = (CheckBox) findViewById(R.id.is_all_day);
+        mAllDayCheckBox.setOnCheckedChangeListener(this);            
+
+        ViewGroup schedulingSection = (ViewGroup) findViewById(R.id.scheduling_section);
+        View schedulingEntry = findViewById(R.id.scheduling_entry);
+        schedulingEntry.setOnClickListener(this);
+        schedulingEntry.setOnFocusChangeListener(this);
+
+        mSchedulingExtra = schedulingSection.findViewById(R.id.scheduling_extra); 
+        mExpandButton = schedulingEntry.findViewById(R.id.expand);
+        mCollapseButton = schedulingEntry.findViewById(R.id.collapse);
+        mSchedulingExpanded = mSchedulingExtra.getVisibility() == View.VISIBLE;
     }
     
     private void toggleSchedulingSection() {
-        ViewGroup schedulingSection = (ViewGroup) findViewById(R.id.scheduling_section);
-        View schedulingEntry = findViewById(R.id.scheduling_entry);
-        View addButton = schedulingEntry.findViewById(R.id.expand);
-        View removeButton = schedulingEntry.findViewById(R.id.collapse);
-        View schedulingExtra = schedulingSection.findViewById(R.id.scheduling_extra); 
-        if (mSchedulingExpanded)
-        {
-        	schedulingExtra.setVisibility(View.GONE);
-            addButton.setVisibility(View.VISIBLE);
-            removeButton.setVisibility(View.GONE);
-        }
-        else
-        {
-        	schedulingExtra.setVisibility(View.VISIBLE);
-            addButton.setVisibility(View.GONE);
-            removeButton.setVisibility(View.VISIBLE);
-        }
         mSchedulingExpanded = !mSchedulingExpanded;
-    }
-    
-    private void setDate(TextView view, long millis) {
-        int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR |
-                DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH |
-                DateUtils.FORMAT_ABBREV_WEEKDAY;
-        view.setText(DateUtils.formatDateTime(this, millis, flags));
+        setSchedulingVisibility(mSchedulingExpanded);
     }
 
-    private void setTime(TextView view, long millis) {
-        int flags = DateUtils.FORMAT_SHOW_TIME;
-        if (DateFormat.is24HourFormat(this)) {
-            flags |= DateUtils.FORMAT_24HOUR;
+    private void setSchedulingVisibility(boolean visible) {
+        if (visible) {
+        	mSchedulingExtra.setVisibility(View.VISIBLE);
+            mExpandButton.setVisibility(View.GONE);
+            mCollapseButton.setVisibility(View.VISIBLE);
+        } else {
+        	mSchedulingExtra.setVisibility(View.GONE);
+            mExpandButton.setVisibility(View.VISIBLE);
+            mCollapseButton.setVisibility(View.GONE);
         }
-        view.setText(DateUtils.formatDateTime(this, millis, flags));
+    }
+    
+    private void setWhenDefaults() {
+    	// it's possible to have:
+    	// 1) no times set
+    	// 2) due time set, but not start time
+    	// 3) start and due time set
+    	
+    	mShowStart = !Time.isEpoch(mStartTime);
+    	mShowDue = !Time.isEpoch(mDueTime);
+    	
+    	if (!mShowStart && !mShowDue) {
+            mStartTime.setToNow();
+
+            // Round the time to the nearest half hour.
+            mStartTime.second = 0;
+            int minute = mStartTime.minute;
+            if (minute > 0 && minute <= 30) {
+                mStartTime.minute = 30;
+            } else {
+                mStartTime.minute = 0;
+                mStartTime.hour += 1;
+            }
+
+            long startMillis = mStartTime.normalize(true /* ignore isDst */);
+            mDueTime.set(startMillis + DateUtils.HOUR_IN_MILLIS);
+        } else if (!mShowStart) {
+        	// default start to same as due
+        	mStartTime.set(mDueTime);
+        }
+    }
+    
+    private void populateWhen() {
+        long startMillis = mStartTime.toMillis(false /* use isDst */);
+        long endMillis = mDueTime.toMillis(false /* use isDst */);
+        setDate(mStartDateButton, startMillis, mShowStart);
+        setDate(mDueDateButton, endMillis, mShowDue);
+
+        setTime(mStartTimeButton, startMillis, mShowStart);
+        setTime(mDueTimeButton, endMillis, mShowDue);
+    }
+    
+    private void setDate(TextView view, long millis, boolean showValue) {
+    	CharSequence value;
+    	if (showValue) {
+	        int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR |
+	                DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH |
+	                DateUtils.FORMAT_ABBREV_WEEKDAY;
+	        value = DateUtils.formatDateTime(this, millis, flags);
+    	} else {
+    		value = "";
+    	}
+        view.setText(value);
+    }
+
+    private void setTime(TextView view, long millis, boolean showValue) {
+    	CharSequence value;
+    	if (showValue) {
+	        int flags = DateUtils.FORMAT_SHOW_TIME;
+	        if (DateFormat.is24HourFormat(this)) {
+	            flags |= DateUtils.FORMAT_24HOUR;
+	        }
+	        value = DateUtils.formatDateTime(this, millis, flags);
+    	} else {
+    		value = "";
+    	}
+        view.setText(value);
     }
     
     private Context fetchOrCreateContext(String contextName) {
@@ -547,28 +656,38 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 startTime.hour = hourOfDay;
                 startTime.minute = minute;
                 startMillis = startTime.normalize(true);
-
-                // Also update the end time to keep the duration constant.
+                mShowStart = true;
+                
+                // Also update the due time to keep the duration constant.
                 dueTime.hour = hourOfDay + hourDuration;
                 dueTime.minute = minute + minuteDuration;
                 dueMillis = dueTime.normalize(true);
+                mShowDue = true;
             } else {
-                // The end time was changed.
+                // The due time was changed.
                 startMillis = startTime.toMillis(true);
                 dueTime.hour = hourOfDay;
                 dueTime.minute = minute;
                 dueMillis = dueTime.normalize(true);
+                mShowDue = true;
 
-                // Do not allow an event to have an end time before the start time.
-                if (dueTime.before(startTime)) {
-                    dueTime.set(startTime);
-                    dueMillis = startMillis;
+                if (mShowStart) {
+	                // Do not allow an event to have a due time before the start time.
+	                if (dueTime.before(startTime)) {
+	                    dueTime.set(startTime);
+	                    dueMillis = startMillis;
+	                }
+                } else {
+                	// if start time is not shown, default it to be the same as due time
+                	startTime.set(dueTime);
                 }
             }
 
-            setDate(mDueDateButton, dueMillis);
-            setTime(mStartTimeButton, startMillis);
-            setTime(mDueTimeButton, dueMillis);
+            // update all 4 buttons in case visibility has changed
+            setDate(mStartDateButton, startMillis, mShowStart);
+            setTime(mStartTimeButton, startMillis, mShowStart);
+            setDate(mDueDateButton, dueMillis, mShowDue);
+            setTime(mDueTimeButton, dueMillis, mShowDue);
         }
         
     }
@@ -599,7 +718,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             Time startTime = mStartTime;
             Time dueTime = mDueTime;
 
-            // Cache the start and end millis so that we limit the number
+            // Cache the start and due millis so that we limit the number
             // of calls to normalize() and toMillis(), which are fairly
             // expensive.
             long startMillis;
@@ -614,12 +733,14 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 startTime.month = month;
                 startTime.monthDay = monthDay;
                 startMillis = startTime.normalize(true);
-
+                mShowStart = true;
+                
                 // Also update the end date to keep the duration constant.
                 dueTime.year = year + yearDuration;
                 dueTime.month = month + monthDuration;
                 dueTime.monthDay = monthDay + monthDayDuration;
                 dueMillis = dueTime.normalize(true);
+                mShowDue = true;
             } else {
                 // The end date was changed.
                 startMillis = startTime.toMillis(true);
@@ -627,17 +748,25 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 dueTime.month = month;
                 dueTime.monthDay = monthDay;
                 dueMillis = dueTime.normalize(true);
-
-                // Do not allow an event to have an end time before the start time.
-                if (dueTime.before(startTime)) {
-                    dueTime.set(startTime);
-                    dueMillis = startMillis;
+                mShowDue = true;
+                
+                if (mShowStart) {
+	                // Do not allow an event to have an end time before the start time.
+	                if (dueTime.before(startTime)) {
+	                    dueTime.set(startTime);
+	                    dueMillis = startMillis;
+	                }
+                } else {
+                	// if start time is not shown, default it to be the same as due time
+                	startTime.set(dueTime);
                 }
             }
 
-            setDate(mStartDateButton, startMillis);
-            setDate(mDueDateButton, dueMillis);
-            setTime(mDueTimeButton, dueMillis); // In case end time had to be reset
+            // update all 4 buttons in case visibility has changed
+            setDate(mStartDateButton, startMillis, mShowStart);
+            setTime(mStartTimeButton, startMillis, mShowStart);
+            setDate(mDueDateButton, dueMillis, mShowDue);
+            setTime(mDueTimeButton, dueMillis, mShowDue);
         }
         
     }

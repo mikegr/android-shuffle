@@ -44,7 +44,7 @@ public class Shuffle {
         /**
          * The default sort order for this table
          */
-        public static final String DEFAULT_SORT_ORDER = "created ASC";
+        public static final String DEFAULT_SORT_ORDER = "due ASC, created ASC";
         
         public static final String DESCRIPTION = "description";
         public static final String DETAILS = "details";
@@ -54,6 +54,7 @@ public class Shuffle {
         public static final String MODIFIED_DATE = "modified";
         public static final String START_DATE = "start";
         public static final String DUE_DATE = "due";
+        public static final String TIMEZONE = "timezone";
         public static final String DISPLAY_ORDER = "displayOrder";
         public static final String COMPLETE = "complete";
         public static final String ALL_DAY = "allDay";
@@ -80,6 +81,7 @@ public class Shuffle {
                 MODIFIED_DATE,
                 START_DATE,
                 DUE_DATE,
+                TIMEZONE,
                 DISPLAY_ORDER,
                 COMPLETE,
                 ALL_DAY,
@@ -100,6 +102,7 @@ public class Shuffle {
             MODIFIED_DATE, 
             START_DATE,
             DUE_DATE,
+            TIMEZONE,
             DISPLAY_ORDER,
             COMPLETE,
             ALL_DAY,

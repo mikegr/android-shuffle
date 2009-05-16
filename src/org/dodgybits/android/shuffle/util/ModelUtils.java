@@ -29,6 +29,7 @@ import android.content.ContentValues;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Handler;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 public class ModelUtils {
@@ -102,20 +103,20 @@ public class ModelUtils {
 		insertProject(androidContext, sellBike);
 		insertTask(androidContext, new Task("Backup data", null,
 				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now, 
-				now, now + DateUtils.HOUR_IN_MILLIS, false, false,
+				now, now + DateUtils.HOUR_IN_MILLIS, null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Reformat HD", "Install Leopard and updates",
 				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now,
-				twoDays, (now + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				twoDays, (now + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Determine good price", 
 				"Take a look on ebay for similar systems",
 				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now,
-				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Put up ad", null,
 				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now,
-				twoWeeks, (twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				twoWeeks, (twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 
 		i = 1;
@@ -124,24 +125,24 @@ public class ModelUtils {
 		insertTask(androidContext, new Task("Sort out contents",
 				"Split into keepers and junk", cPresetContexts[AT_HOME_INDEX],
 				cleanGarage, now, now, 
-				yesterday, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				yesterday, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Advertise garage sale", 
 				"Local paper(s) and on craigslist",
 				cPresetContexts[AT_COMPUTER_INDEX], 
 				cleanGarage, now, now,
-				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Contact local charities",
 				"See what they want or maybe just put in charity bins", 
 				cPresetContexts[COMMUNICATION_INDEX],
 				cleanGarage, now, now, 
-				0, 0, false, false,
+				0, 0, null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Take rest to tip",
 				"Hire trailer?", cPresetContexts[ERRANDS_INDEX], cleanGarage,
 				now, now, 
-				0, 0, false, false,
+				0, 0, null, false, false,
 				i++, false));
 
 		i = 1;
@@ -150,27 +151,27 @@ public class ModelUtils {
 		insertTask(androidContext, new Task(
 				"Send email to determine best week", null,
 				cPresetContexts[COMMUNICATION_INDEX], skiTrip, now, now, 
-				now, (now + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				now, (now + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Look up package deals", null,
 				cPresetContexts[AT_COMPUTER_INDEX], skiTrip, now, now, 
-				twoDays, twoDays, true, false,
+				twoDays, twoDays, null, true, false,
 				i++, false));
 		insertTask(androidContext, new Task("Book chalet", null,
 				cPresetContexts[AT_COMPUTER_INDEX], skiTrip, now, now, 
-				0, 0, false, false,
+				0, 0, null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Book flights", null,
 				cPresetContexts[AT_COMPUTER_INDEX], skiTrip, now, now, 
-				0, 0, false, false,
+				0, 0, null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Book hire car", null,
 				cPresetContexts[AT_COMPUTER_INDEX], skiTrip, now, now, 
-				0, 0, false, false,
+				0, 0, null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Get board waxed", null,
 				cPresetContexts[ERRANDS_INDEX], skiTrip, now, now, 
-				twoWeeks, (twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				twoWeeks, (twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 
 		i = 1;
@@ -179,33 +180,33 @@ public class ModelUtils {
 		insertProject(androidContext, discussI8n);
 		insertTask(androidContext, new Task("Read up on options", null,
 				cPresetContexts[AT_COMPUTER_INDEX], discussI8n, now, now,
-				twoDays, (twoDays + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				twoDays, (twoDays + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Kickoff meeting", null,
 				cPresetContexts[COMMUNICATION_INDEX], discussI8n, now, now,
-				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 		insertTask(androidContext, new Task("Produce report", null,
 				cPresetContexts[AT_WORK_INDEX], discussI8n, now, now, 
-				twoWeeks, (twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				twoWeeks, (twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				i++, false));
 
 		// a few stand alone tasks
 		insertTask(androidContext, new Task("Organise music collection", null,
 				cPresetContexts[AT_COMPUTER_INDEX], null, now, now, 
-				0, 0, false, false,
+				0, 0, null, false, false,
 				-1, false));
 		insertTask(androidContext, new Task("Make copy of door keys", null,
 				cPresetContexts[ERRANDS_INDEX], null, now, now, 
-				yesterday, (yesterday + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				yesterday, (yesterday + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				-1, false));
 		insertTask(androidContext, new Task("Read Falling Man", null,
 				cPresetContexts[READ_INDEX], null, now, now, 
-				0, 0, false, false,
+				0, 0, null, false, false,
 				-1, false));
 		insertTask(androidContext, new Task("Buy Tufte books", null,
 				cPresetContexts[ERRANDS_INDEX], null, now, now, 
-				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), false, false,
+				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
 				-1, false));
 
 		if (handler != null)

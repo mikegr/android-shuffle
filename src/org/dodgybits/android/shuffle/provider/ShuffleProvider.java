@@ -136,33 +136,34 @@ public class ShuffleProvider extends ContentProvider {
 				
 			default: // unknown version - use destructive upgrade
 				Log.w(cTag, "Destroying all old data");
-				db.execSQL("DROP TABLE IF EXISTS " + cContextTableName);
-				db.execSQL("DROP TABLE IF EXISTS " + cProjectTableName);
-				db.execSQL("DROP TABLE IF EXISTS " + cTaskTableName);
 				onCreate(db);
 				break;
 			}
 		}
 
 		private void createContextTable(SQLiteDatabase db) {
+			db.execSQL("DROP TABLE IF EXISTS " + cContextTableName);
 			db.execSQL("CREATE TABLE " + cContextTableName + " ("
 					+ "_id INTEGER PRIMARY KEY," + "name TEXT,"
 					+ "colour INTEGER," + "iconName TEXT" + ");");
 		}
 
 		private void createProjectTable(SQLiteDatabase db) {
+			db.execSQL("DROP TABLE IF EXISTS " + cProjectTableName);
 			db.execSQL("CREATE TABLE " + cProjectTableName + " ("
 					+ "_id INTEGER PRIMARY KEY," + "name TEXT,"
 					+ "archived INTEGER," + "defaultContextId INTEGER" + ");");
 		}
 
 		private void createTaskTable(SQLiteDatabase db) {
+			db.execSQL("DROP TABLE IF EXISTS " + cTaskTableName);
 			db.execSQL("CREATE TABLE " + cTaskTableName + " ("
 					+ "_id INTEGER PRIMARY KEY," + "description TEXT,"
 					+ "details TEXT," + "contextId INTEGER,"
 					+ "projectId INTEGER," + "created INTEGER,"
 					+ "modified INTEGER," + "due INTEGER,"
 					+ "start INTEGER," // created, modified, due, start in millis since epoch
+                    + "timezone TEXT," // timezone for task
 					+ "allDay INTEGER NOT NULL DEFAULT 0,"
 					+ "hasAlarm INTEGER NOT NULL DEFAULT 0,"
 					+ "displayOrder INTEGER," + "complete INTEGER" + 
@@ -170,16 +171,19 @@ public class ShuffleProvider extends ContentProvider {
 		}
 
 		private void createTaskProjectIdIndex(SQLiteDatabase db) {
+            db.execSQL("DROP INDEX IF EXISTS taskProjectIdIndex");
 			db.execSQL("CREATE INDEX taskProjectIdIndex ON " + cTaskTableName
 					+ " (" + Shuffle.Tasks.PROJECT_ID + ");");
 		}
 
 		private void createTaskContextIdIndex(SQLiteDatabase db) {
+            db.execSQL("DROP INDEX IF EXISTS taskContextIdIndex");
 			db.execSQL("CREATE INDEX taskContextIdIndex ON " + cTaskTableName
 					+ " (" + Shuffle.Tasks.CONTEXT_ID + ");");
 		}
 
 		private void createRemindersTable(SQLiteDatabase db) {
+			db.execSQL("DROP TABLE IF EXISTS " + cReminderTableName);
 			db.execSQL("CREATE TABLE " + cReminderTableName + " (" + "_id INTEGER PRIMARY KEY,"
 					+ "taskId INTEGER," + "minutes INTEGER,"
 					+ "method INTEGER NOT NULL" + " DEFAULT "
@@ -187,12 +191,14 @@ public class ShuffleProvider extends ContentProvider {
 		}
 
 		private void createRemindersEventIdIndex(SQLiteDatabase db) {
+            db.execSQL("DROP INDEX IF EXISTS remindersEventIdIndex");
 			db.execSQL("CREATE INDEX remindersEventIdIndex ON " + cReminderTableName + " ("
 					+ Shuffle.Reminders.TASK_ID + ");");
 		}
 
 		private void createTaskCleanupTrigger(SQLiteDatabase db) {
 			// Trigger to remove data tied to a task when we delete that task
+            db.execSQL("DROP TRIGGER IF EXISTS tasks_cleanup_delete");
 			db.execSQL("CREATE TRIGGER tasks_cleanup_delete DELETE ON " + cTaskTableName
 					+ " BEGIN "
 					+ "DELETE FROM " + cReminderTableName + " WHERE taskId = old._id;"
@@ -252,8 +258,8 @@ public class ShuffleProvider extends ContentProvider {
 
 			qb.appendWhere("(complete = 0) and (");
 			qb.appendWhere("  projectId not null and");
-			qb
-					.appendWhere("  displayOrder = (select min(t2.displayOrder) from task t2 where task.projectId = t2.projectId and t2.complete = 0))");
+			qb.appendWhere("  displayOrder = (select min(t2.displayOrder) " +
+							"from task t2 where task.projectId = t2.projectId and t2.complete = 0))");
 			break;
 		case CONTEXTS:
 			qb.setTables(cContextTableName);
@@ -266,7 +272,8 @@ public class ShuffleProvider extends ContentProvider {
 		case CONTEXT_TASKS:
 			return db
 					.rawQuery(
-							"select c._id, count(*) count from context c, task t where t.contextId = c._id group by c._id",
+							"select c._id, count(*) count from context c, task t " +
+							"where t.contextId = c._id group by c._id",
 							null);
 		case PROJECTS:
 			qb.setTables(cProjectTableName);
@@ -277,9 +284,9 @@ public class ShuffleProvider extends ContentProvider {
 			qb.appendWhere("_id=" + uri.getPathSegments().get(1));
 			break;
 		case PROJECT_TASKS:
-			return db
-					.rawQuery(
-							"select p._id, count(*) from project p, task t where t.projectId = p._id group by p._id",
+			return db.rawQuery(
+							"select p._id, count(*) from project p, task t " +
+							"where t.projectId = p._id group by p._id",
 							null);
 			
 		case REMINDERS:
@@ -493,11 +500,10 @@ public class ShuffleProvider extends ContentProvider {
 		case TASK_ID:
 			String taskId = uri.getPathSegments().get(1);
 			count = db.delete(cTaskTableName,
-					Tasks._ID
-							+ "="
-							+ taskId
-							+ (!TextUtils.isEmpty(where) ? " AND (" + where
-									+ ')' : ""), whereArgs);
+					Tasks._ID + "=" + taskId
+					+ (!TextUtils.isEmpty(where) ? " AND (" 
+					+ where
+					+ ')' : ""), whereArgs);
 			break;
 		case CONTEXTS:
 		case CONTEXT_TASKS:
@@ -617,8 +623,12 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".created");
 		sTaskListProjectMap.put(Shuffle.Tasks.MODIFIED_DATE, cTaskTableName
 				+ ".modified");
-		sTaskListProjectMap.put(Shuffle.Tasks.START_DATE, cTaskTableName + ".start");
-		sTaskListProjectMap.put(Shuffle.Tasks.DUE_DATE, cTaskTableName + ".due");
+		sTaskListProjectMap.put(Shuffle.Tasks.START_DATE, cTaskTableName 
+				+ ".start");
+		sTaskListProjectMap.put(Shuffle.Tasks.DUE_DATE, cTaskTableName 
+				+ ".due");
+		sTaskListProjectMap.put(Shuffle.Tasks.TIMEZONE, cTaskTableName 
+				+ ".timezone");
 		sTaskListProjectMap.put(Shuffle.Tasks.DISPLAY_ORDER, cTaskTableName
 				+ ".displayOrder");
 		sTaskListProjectMap.put(Shuffle.Tasks.COMPLETE, cTaskTableName

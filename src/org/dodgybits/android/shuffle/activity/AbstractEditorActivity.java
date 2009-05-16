@@ -193,7 +193,7 @@ public abstract class AbstractEditorActivity<T> extends Activity
             	writeItem(values, mOriginalItem);
                 getContentResolver().update(mUri, values, null, null);
             } else if (mState == State.STATE_INSERT) {
-                doDeleteAction();
+            	// if inserting, there's nothing to delete
             }
         }
         setResult(RESULT_CANCELED);
@@ -204,7 +204,8 @@ public abstract class AbstractEditorActivity<T> extends Activity
      * Take care of deleting a item.  Simply deletes the entry.
      */
     protected void doDeleteAction() {
-        if (mCursor != null) {
+    	// if inserting, there's nothing to delete
+        if (mState == State.STATE_EDIT && mCursor != null) {
             mCursor.close();
             mCursor = null;
             getContentResolver().delete(mUri, null, null);

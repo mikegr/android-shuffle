@@ -19,6 +19,7 @@ package org.dodgybits.android.shuffle.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
@@ -33,6 +34,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.util.SparseIntArray;
 
 /**
@@ -56,6 +58,7 @@ public class BindingUtils {
 		long modified = icicle.getLong(Shuffle.Tasks.MODIFIED_DATE, 0L);
 		long startDate = icicle.getLong(Shuffle.Tasks.START_DATE, 0L);
 		long dueDate = icicle.getLong(Shuffle.Tasks.DUE_DATE, 0L);
+		String timezone = icicle.getString(Shuffle.Tasks.TIMEZONE);
 		Boolean allDay = icicle.getBoolean(Shuffle.Tasks.ALL_DAY);
 		Boolean hasAlarms = icicle.getBoolean(Shuffle.Tasks.HAS_ALARM);
 		int order = icicle.getInt(Shuffle.Tasks.DISPLAY_ORDER);
@@ -63,7 +66,7 @@ public class BindingUtils {
 		return new Task(
 				id, description, details, 
 				context, project, created, modified,
-				startDate, dueDate, allDay, hasAlarms,
+				startDate, dueDate, timezone, allDay, hasAlarms,
 				order, complete);
 	}
 		
@@ -100,6 +103,9 @@ public class BindingUtils {
 		icicle.putLong(Shuffle.Tasks.MODIFIED_DATE, task.modified);
 		icicle.putLong(Shuffle.Tasks.START_DATE, task.startDate);
 		icicle.putLong(Shuffle.Tasks.DUE_DATE, task.dueDate);
+		icicle.putString(Shuffle.Tasks.TIMEZONE, task.timezone);
+		icicle.putBoolean(Shuffle.Tasks.ALL_DAY, task.allDay);
+		icicle.putBoolean(Shuffle.Tasks.HAS_ALARM, task.hasAlarms);
 		putInteger(icicle, Shuffle.Tasks.DISPLAY_ORDER, task.order);
 		icicle.putBoolean(Shuffle.Tasks.COMPLETE, task.complete);
 		return icicle;
@@ -130,26 +136,27 @@ public class BindingUtils {
 	}
 	
 	private static final int ID_INDEX = 0;
-    private static final int DESCRIPTION_INDEX = 1;
-    private static final int DETAILS_INDEX = 2;
-    private static final int PROJECT_INDEX = 3;
-    private static final int CONTEXT_INDEX = 4;
-    private static final int CREATED_INDEX = 5;
-    private static final int MODIFIED_INDEX = 6;
-    private static final int START_INDEX = 7;
-    private static final int DUE_INDEX = 8;
-    private static final int DISPLAY_ORDER_INDEX = 9;
-    private static final int COMPLETE_INDEX = 10;
-    private static final int ALL_DAY_INDEX = 11;
-    private static final int HAS_ALARM_INDEX = 12;
+    private static final int DESCRIPTION_INDEX = ID_INDEX + 1;
+    private static final int DETAILS_INDEX = DESCRIPTION_INDEX + 1;
+    private static final int PROJECT_INDEX = DETAILS_INDEX + 1;
+    private static final int CONTEXT_INDEX = PROJECT_INDEX + 1;
+    private static final int CREATED_INDEX = CONTEXT_INDEX + 1;
+    private static final int MODIFIED_INDEX = CREATED_INDEX + 1;
+    private static final int START_INDEX = MODIFIED_INDEX + 1;
+    private static final int DUE_INDEX = START_INDEX + 1;
+    private static final int TIMEZONE_INDEX = DUE_INDEX + 1;
+    private static final int DISPLAY_ORDER_INDEX = TIMEZONE_INDEX + 1;
+    private static final int COMPLETE_INDEX = DISPLAY_ORDER_INDEX + 1;
+    private static final int ALL_DAY_INDEX = COMPLETE_INDEX + 1;
+    private static final int HAS_ALARM_INDEX = ALL_DAY_INDEX + 1;
 
-    private static final int PROJECT_NAME_INDEX = 13;
-    private static final int PROJECT_DEFAULT_CONTEXT_ID_INDEX = 14;
-    private static final int PROJECT_ARCHIVED_INDEX = 15;
+    private static final int PROJECT_NAME_INDEX = HAS_ALARM_INDEX + 1;
+    private static final int PROJECT_DEFAULT_CONTEXT_ID_INDEX = PROJECT_NAME_INDEX + 1;
+    private static final int PROJECT_ARCHIVED_INDEX = PROJECT_DEFAULT_CONTEXT_ID_INDEX + 1;
     
-    private static final int CONTEXT_NAME_INDEX = 16;
-    private static final int CONTEXT_COLOUR_INDEX = 17;
-    private static final int CONTEXT_ICON_INDEX = 18;
+    private static final int CONTEXT_NAME_INDEX = PROJECT_ARCHIVED_INDEX + 1;
+    private static final int CONTEXT_COLOUR_INDEX = CONTEXT_NAME_INDEX + 1;
+    private static final int CONTEXT_ICON_INDEX = CONTEXT_COLOUR_INDEX + 1;
     
 	public static Task readTask(Cursor cursor, Resources res) {
 		Integer id = readInteger(cursor, ID_INDEX);
@@ -164,6 +171,7 @@ public class BindingUtils {
 		long modified = cursor.getLong(MODIFIED_INDEX);
 		long startDate = cursor.getLong(START_INDEX);
 		long dueDate = cursor.getLong(DUE_INDEX);
+		String timezone = readString(cursor, TIMEZONE_INDEX);
 		Integer displayOrder = readInteger(cursor, DISPLAY_ORDER_INDEX);
 		Boolean complete = readBoolean(cursor, COMPLETE_INDEX);
 		Boolean allDay = readBoolean(cursor, ALL_DAY_INDEX);
@@ -171,7 +179,7 @@ public class BindingUtils {
 		return new Task(
 				id, description, details, 
 				context, project, created, modified, 
-				startDate, dueDate, allDay, hasAlarm,
+				startDate, dueDate, timezone, allDay, hasAlarm,
 				displayOrder, complete);
 	}
 	
@@ -282,6 +290,18 @@ public class BindingUtils {
 		values.put(Shuffle.Tasks.MODIFIED_DATE, task.modified);
 		values.put(Shuffle.Tasks.START_DATE, task.startDate);
 		values.put(Shuffle.Tasks.DUE_DATE, task.dueDate);
+		
+		String timezone = task.timezone;
+		if (TextUtils.isEmpty(timezone))
+		{
+			if (task.allDay) {
+				timezone = Time.TIMEZONE_UTC;
+			} else {
+				timezone = TimeZone.getDefault().getID();
+			}
+		}
+		values.put(Shuffle.Tasks.TIMEZONE, timezone);
+		
 		writeBoolean(values, Shuffle.Tasks.ALL_DAY, task.allDay);
 		writeBoolean(values, Shuffle.Tasks.HAS_ALARM, task.hasAlarms);
 		writeInteger(values, Shuffle.Tasks.DISPLAY_ORDER, task.order);

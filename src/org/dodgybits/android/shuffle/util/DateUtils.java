@@ -16,35 +16,56 @@
 
 package org.dodgybits.android.shuffle.util;
 
-import java.text.DateFormat;
-import java.util.Date;
-
+import static android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+import static android.text.format.DateUtils.FORMAT_ABBREV_TIME;
+import static android.text.format.DateUtils.FORMAT_ABBREV_WEEKDAY;
+import static android.text.format.DateUtils.FORMAT_SHOW_DATE;
+import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
+import static android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY;
+import static android.text.format.DateUtils.WEEK_IN_MILLIS;
 import android.content.Context;
 import android.text.format.Time;
 
-import static android.text.format.DateUtils.*;
-
 public class DateUtils {
-	
-	public static final long HOUR_IN_MILLIS = 3600000; 
-	
-	private static DateFormat sDateFormat = null;
 		
-	public static String formatDate(long timeInMs) {
-		if (sDateFormat == null) {
-			sDateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
-		}
-		return sDateFormat.format(new Date(timeInMs));
-	}
-	
 	public static boolean isSameDay(long millisX, long millisY) {
 		return Time.getJulianDay(millisX, 0) == Time.getJulianDay(millisY, 0);
 	}
 		
-	public static CharSequence displayDate(Context context, long timeInMs) {
-		int flags = FORMAT_SHOW_TIME;
-		return android.text.format.DateUtils.getRelativeDateTimeString(
-				context, timeInMs, MINUTE_IN_MILLIS, WEEK_IN_MILLIS, flags);
+	/**
+	 * Display date time in short format using the user's date format settings
+	 * as a guideline.
+	 * 
+	 * For epoch, display nothing.
+	 * For today, only show the time.
+	 * Otherwise, only show the day and month.
+	 * 
+	 * @param context
+	 * @param timeInMs datetime to display
+	 * @return local specific representation
+	 */
+	public static CharSequence displayShortDateTime(Context context, long timeInMs) {
+		long now = System.currentTimeMillis();
+		CharSequence result;
+		if (timeInMs == 0L) {
+			result = "";
+		} else {
+			int flags;
+			if (isSameDay(timeInMs, now)) {
+				flags = FORMAT_SHOW_TIME | FORMAT_ABBREV_TIME;
+			} else {
+				if (timeInMs > now && timeInMs < now + WEEK_IN_MILLIS) {
+					// time is within the next week - show day of week
+					flags = FORMAT_SHOW_WEEKDAY; // | FORMAT_ABBREV_WEEKDAY;
+				} else {
+					flags = FORMAT_SHOW_DATE | FORMAT_ABBREV_MONTH;
+				}
+			}
+			result = android.text.format.DateUtils.formatDateRange(
+					context, timeInMs, timeInMs, flags);
+		}
+		return result;
 	}
+	
 	
 }

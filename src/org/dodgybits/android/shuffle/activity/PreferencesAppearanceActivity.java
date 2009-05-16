@@ -27,13 +27,13 @@ import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
-import org.dodgybits.android.shuffle.util.DateUtils;
 import org.dodgybits.android.shuffle.util.ModelUtils;
 import org.dodgybits.android.shuffle.view.TaskView;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -101,9 +101,8 @@ public class PreferencesAppearanceActivity extends Activity  {
         Context sampleContext = ModelUtils.getSampleContext(getResources());
         mSampleTask = new Task("Sample action", "Additional action details", 
         		sampleContext, sampleProject, now, now, 
-        		now, now + DateUtils.HOUR_IN_MILLIS * 3, false, false,
+        		now, now + DateUtils.HOUR_IN_MILLIS * 3, null, false, false,
         		1, false);
-		
 	}
 	
     @Override

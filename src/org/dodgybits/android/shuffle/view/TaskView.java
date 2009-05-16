@@ -72,7 +72,7 @@ public class TaskView extends ItemView<Task> {
 	public void updateView(Task task) {
 		updateContext(task);
 		updateDescription(task);
-		updateDueDate(task);
+		updateWhen(task);
 		updateProject(task);
 		updateDetails(task);
 	}
@@ -108,10 +108,11 @@ public class TaskView extends ItemView<Task> {
 		mDescription.setText(description);	
 	}
 
-	private void updateDueDate(Task task) {
-		if (Preferences.displayDueDate(getContext()) && task.dueDate > 0) {
-			mDueDate.setText(DateUtils.displayDate(getContext(), task.dueDate));
-			if (task.dueDate < System.currentTimeMillis()) {
+	private void updateWhen(Task task) {
+		if (Preferences.displayDueDate(getContext())) {
+			long displayDate = task.startDate > 0L ? task.startDate : task.dueDate;
+			mDueDate.setText(DateUtils.displayShortDateTime(getContext(), displayDate));
+			if (displayDate < System.currentTimeMillis()) {
 				// task is overdue
 				mDueDate.setTypeface(Typeface.DEFAULT_BOLD);
 				mDueDate.setTextColor(Color.RED);
