@@ -41,7 +41,7 @@
 	    <View
 	        android:layout_width="fill_parent"
 	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_dark"
+	        android:background="@android:drawable/divider_horizontal_bright"
 	    />
 
 		<TextView android:layout_width="fill_parent"
@@ -63,7 +63,7 @@
 	    <View
 	        android:layout_width="fill_parent"
 	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_dark"
+	        android:background="@android:drawable/divider_horizontal_bright"
 	    />
 
 		<TextView android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
 	    <View
 	        android:layout_width="fill_parent"
 	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_dark"
+	        android:background="@android:drawable/divider_horizontal_bright"
 	    />
 
 		<TextView android:layout_width="wrap_content"
@@ -105,7 +105,7 @@
 	    <View
 	        android:layout_width="fill_parent"
 	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_dark"
+	        android:background="@android:drawable/divider_horizontal_bright"
 	    />
 
 		<LinearLayout android:id="@+id/scheduling_section"
@@ -180,7 +180,7 @@
 	    <View
 	        android:layout_width="fill_parent"
 	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_dark"
+	        android:background="@android:drawable/divider_horizontal_bright"
 	    />
  
 		<LinearLayout android:id="@+id/completed_entry"

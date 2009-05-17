@@ -72,9 +72,36 @@
             android:paddingRight="1dip"/>
     </LinearLayout>
 
-	<TextView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:paddingLeft="5px"
-		android:paddingRight="5px" android:text="@string/reminders_title"
-		style="@style/label" />
+    <!-- REMINDERS -->
+    <LinearLayout android:id="@+id/reminders_container"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView android:id="@+id/reminders_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reminders_title"
+            style="@style/label"/>
+
+        <LinearLayout android:id="@+id/reminder_items_container"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|right"
+        android:paddingBottom="5dip">
+        <ImageButton android:id="@+id/reminder_add"
+            style="@style/PlusButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dip"
+            android:gravity="center_vertical|right"
+        />
+    </LinearLayout>
 
 </LinearLayout>

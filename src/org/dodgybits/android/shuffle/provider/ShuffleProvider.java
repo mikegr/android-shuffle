@@ -25,6 +25,7 @@ import java.util.Map;
 import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.provider.Shuffle.Contexts;
 import org.dodgybits.android.shuffle.provider.Shuffle.Projects;
+import org.dodgybits.android.shuffle.provider.Shuffle.Reminders;
 import org.dodgybits.android.shuffle.provider.Shuffle.Tasks;
 
 import android.content.ContentProvider;
@@ -125,10 +126,14 @@ public class ShuffleProvider extends ContentProvider {
 				db.execSQL("ALTER TABLE " + cTaskTableName
 						+ " ADD COLUMN start INTEGER;");
 				db.execSQL("ALTER TABLE " + cTaskTableName
+						+ " ADD COLUMN timezone TEXT;");
+				db.execSQL("ALTER TABLE " + cTaskTableName
 						+ " ADD COLUMN allDay INTEGER NOT NULL DEFAULT 0;");
 				db.execSQL("ALTER TABLE " + cTaskTableName
 						+ " ADD COLUMN hasAlarm INTEGER NOT NULL DEFAULT 0;");
-
+				db.execSQL("UPDATE TABLE " + cTaskTableName
+						+ " SET start = due");
+				
 				createRemindersTable(db);
 				createRemindersEventIdIndex(db);
 				createTaskCleanupTrigger(db);
@@ -393,7 +398,10 @@ public class ShuffleProvider extends ContentProvider {
 			return Shuffle.Projects.CONTENT_TYPE;
 		case PROJECT_ID:
 			return Shuffle.Projects.CONTENT_ITEM_TYPE;
-
+		case REMINDERS:
+			return Shuffle.Reminders.CONTENT_TYPE;
+		case REMINDER_ID:
+			return Shuffle.Reminders.CONTENT_ITEM_TYPE;
 		default:
 			throw new IllegalArgumentException("Unknown Uri " + uri);
 		}
@@ -478,6 +486,17 @@ public class ShuffleProvider extends ContentProvider {
 			}
 			break;
 
+		case REMINDERS:
+			rowID = db.insert(cReminderTableName, sReminderListProjectMap
+					.get(Shuffle.Reminders.METHOD), values);
+			if (rowID > 0) {
+				Uri uri = ContentUris.withAppendedId(
+						Shuffle.Reminders.CONTENT_URI, rowID);
+				getContext().getContentResolver().notifyChange(uri, null);
+				return uri;
+			}
+			break;
+			
 		default:
 			throw new IllegalArgumentException("Unknown URL " + url);
 		}
@@ -531,7 +550,20 @@ public class ShuffleProvider extends ContentProvider {
 							+ (!TextUtils.isEmpty(where) ? " AND (" + where
 									+ ')' : ""), whereArgs);
 			break;
-
+		case REMINDERS:
+			count = db.delete(cReminderTableName, where, whereArgs);
+			break;
+		case REMINDER_ID:
+			String reminderId = uri.getPathSegments().get(1);
+			count = db.delete(cReminderTableName,
+					Reminders._ID
+							+ "="
+							+ reminderId
+							+ (!TextUtils.isEmpty(where) ? " AND (" + where
+									+ ')' : ""), whereArgs);
+			break;
+			
+			
 		default:
 			throw new IllegalArgumentException("Unknown uri " + uri);
 		}
@@ -583,7 +615,17 @@ public class ShuffleProvider extends ContentProvider {
 							+ (!TextUtils.isEmpty(where) ? " AND (" + where
 									+ ')' : ""), whereArgs);
 			break;
-
+		case REMINDERS:
+			count = db.update(cReminderTableName, values, where, whereArgs);
+			break;
+		case REMINDER_ID:
+			segment = uri.getPathSegments().get(1);
+			count = db.update(cReminderTableName, values,
+					"_id="
+							+ segment
+							+ (!TextUtils.isEmpty(where) ? " AND (" + where
+									+ ')' : ""), whereArgs);
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URL " + uri);
 		}

@@ -17,6 +17,7 @@
 package org.dodgybits.android.shuffle.util;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
@@ -97,122 +98,124 @@ public class ModelUtils {
 		long oneWeek = cal.getTimeInMillis();
 		cal.add(Calendar.WEEK_OF_YEAR, 1);
 		long twoWeeks = cal.getTimeInMillis();
-		int i = 1;
 		
 		Project sellBike = new Project("Sell old Powerbook", null, false);
 		insertProject(androidContext, sellBike);
-		insertTask(androidContext, new Task("Backup data", null,
-				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now, 
-				now, now + DateUtils.HOUR_IN_MILLIS, null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Reformat HD", "Install Leopard and updates",
-				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now,
-				twoDays, (now + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Determine good price", 
-				"Take a look on ebay for similar systems",
-				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now,
-				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Put up ad", null,
-				cPresetContexts[AT_COMPUTER_INDEX], sellBike, now, now,
-				twoWeeks, (twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
+		insertTask(androidContext, 
+				createTask("Backup data", null, 
+						AT_COMPUTER_INDEX, sellBike, 
+						now, now + DateUtils.HOUR_IN_MILLIS));
+		insertTask(androidContext, 
+				createTask("Reformat HD", "Install Leopard and updates", 
+						AT_COMPUTER_INDEX, sellBike, 
+						twoDays, twoDays + 2 * DateUtils.HOUR_IN_MILLIS));
+		insertTask(androidContext, 
+				createTask("Determine good price", "Take a look on ebay for similar systems", 
+						AT_COMPUTER_INDEX, sellBike, 
+						oneWeek, oneWeek + 2 * DateUtils.HOUR_IN_MILLIS));
+		insertTask(androidContext, 
+				createTask("Put up ad", AT_COMPUTER_INDEX, sellBike, twoWeeks));
 
-		i = 1;
 		Project cleanGarage = new Project("Clean out garage", null, false);
 		insertProject(androidContext, cleanGarage);
-		insertTask(androidContext, new Task("Sort out contents",
-				"Split into keepers and junk", cPresetContexts[AT_HOME_INDEX],
-				cleanGarage, now, now, 
-				yesterday, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Advertise garage sale", 
-				"Local paper(s) and on craigslist",
-				cPresetContexts[AT_COMPUTER_INDEX], 
-				cleanGarage, now, now,
-				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Contact local charities",
-				"See what they want or maybe just put in charity bins", 
-				cPresetContexts[COMMUNICATION_INDEX],
-				cleanGarage, now, now, 
-				0, 0, null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Take rest to tip",
-				"Hire trailer?", cPresetContexts[ERRANDS_INDEX], cleanGarage,
-				now, now, 
-				0, 0, null, false, false,
-				i++, false));
+		insertTask(androidContext, 
+				createTask("Sort out contents", "Split into keepers and junk", 
+						AT_HOME_INDEX, cleanGarage, 
+						yesterday, yesterday));
+		insertTask(androidContext, 
+				createTask("Advertise garage sale", "Local paper(s) and on craigslist", 
+						AT_COMPUTER_INDEX, cleanGarage, 
+						oneWeek, oneWeek + 2 * DateUtils.HOUR_IN_MILLIS));
+		insertTask(androidContext, 
+				createTask("Contact local charities", "See what they want or maybe just put in charity bins", 
+						COMMUNICATION_INDEX, cleanGarage, 
+						now, now));
+		insertTask(androidContext, 
+				createTask("Take rest to tip", "Hire trailer?", 
+						ERRANDS_INDEX, cleanGarage, 
+						now, now));
 
-		i = 1;
 		Project skiTrip = new Project("Organise ski trip", null, false);
 		insertProject(androidContext, skiTrip);
-		insertTask(androidContext, new Task(
-				"Send email to determine best week", null,
-				cPresetContexts[COMMUNICATION_INDEX], skiTrip, now, now, 
-				now, (now + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Look up package deals", null,
-				cPresetContexts[AT_COMPUTER_INDEX], skiTrip, now, now, 
-				twoDays, twoDays, null, true, false,
-				i++, false));
-		insertTask(androidContext, new Task("Book chalet", null,
-				cPresetContexts[AT_COMPUTER_INDEX], skiTrip, now, now, 
-				0, 0, null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Book flights", null,
-				cPresetContexts[AT_COMPUTER_INDEX], skiTrip, now, now, 
-				0, 0, null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Book hire car", null,
-				cPresetContexts[AT_COMPUTER_INDEX], skiTrip, now, now, 
-				0, 0, null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Get board waxed", null,
-				cPresetContexts[ERRANDS_INDEX], skiTrip, now, now, 
-				twoWeeks, (twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
+		insertTask(androidContext, 
+				createTask("Send email to determine best week", null, 
+						COMMUNICATION_INDEX, skiTrip, 
+						now, now + 2 * DateUtils.HOUR_IN_MILLIS));
+		insertTask(androidContext, 
+				createTask("Look up package deals", 
+						AT_COMPUTER_INDEX, skiTrip, 0L));
+		insertTask(androidContext, 
+				createTask("Book chalet", 
+						AT_COMPUTER_INDEX, skiTrip, 0L)); 
+		insertTask(androidContext, 
+				createTask("Book flights", 
+						AT_COMPUTER_INDEX, skiTrip, 0L));
+		insertTask(androidContext, 
+				createTask("Book hire car", 
+						AT_COMPUTER_INDEX, skiTrip, 0L));
+		insertTask(androidContext, 
+				createTask("Get board waxed", 
+						ERRANDS_INDEX, skiTrip, 0L));
 
-		i = 1;
-		Project discussI8n = new Project("Discuss internationalization",
+		Project discussI8n = 
+			new Project("Discuss internationalization",
 				cPresetContexts[AT_WORK_INDEX].id, false);
 		insertProject(androidContext, discussI8n);
-		insertTask(androidContext, new Task("Read up on options", null,
-				cPresetContexts[AT_COMPUTER_INDEX], discussI8n, now, now,
-				twoDays, (twoDays + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Kickoff meeting", null,
-				cPresetContexts[COMMUNICATION_INDEX], discussI8n, now, now,
-				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
-		insertTask(androidContext, new Task("Produce report", null,
-				cPresetContexts[AT_WORK_INDEX], discussI8n, now, now, 
-				twoWeeks, (twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				i++, false));
+		insertTask(androidContext, 
+				createTask("Read up on options", null, 
+						AT_COMPUTER_INDEX, discussI8n, 
+						twoDays, twoDays + 2 * DateUtils.HOUR_IN_MILLIS));
+		insertTask(androidContext, 
+				createTask("Kickoff meeting", null, 
+						COMMUNICATION_INDEX, discussI8n, 
+						oneWeek, oneWeek + 2 * DateUtils.HOUR_IN_MILLIS));
+		insertTask(androidContext, 
+				createTask("Produce report", null, 
+						AT_WORK_INDEX, discussI8n, 
+						twoWeeks, twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS));
 
 		// a few stand alone tasks
-		insertTask(androidContext, new Task("Organise music collection", null,
-				cPresetContexts[AT_COMPUTER_INDEX], null, now, now, 
-				0, 0, null, false, false,
-				-1, false));
-		insertTask(androidContext, new Task("Make copy of door keys", null,
-				cPresetContexts[ERRANDS_INDEX], null, now, now, 
-				yesterday, (yesterday + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				-1, false));
-		insertTask(androidContext, new Task("Read Falling Man", null,
-				cPresetContexts[READ_INDEX], null, now, now, 
-				0, 0, null, false, false,
-				-1, false));
-		insertTask(androidContext, new Task("Buy Tufte books", null,
-				cPresetContexts[ERRANDS_INDEX], null, now, now, 
-				oneWeek, (oneWeek + 2 * DateUtils.HOUR_IN_MILLIS), null, false, false,
-				-1, false));
-
+		insertTask(androidContext, 
+				createTask("Organise music collection", 
+						AT_COMPUTER_INDEX, null, 0L));
+		insertTask(androidContext, 
+				createTask("Make copy of door keys", 
+						ERRANDS_INDEX, null, yesterday));
+		insertTask(androidContext, 
+				createTask("Read Falling Man", 
+						READ_INDEX, null, 0L));
+		insertTask(androidContext, 
+				createTask("Buy Tufte books", 
+						ERRANDS_INDEX, null, oneWeek));
 		if (handler != null)
 			handler.sendEmptyMessage(0);
 	}
 
+	private static Task createTask(String description, int contextIndex, Project project, long start) {
+		return createTask(description, null, contextIndex, project, start);
+	}
+	
+	private static Task createTask(String description, String details, 
+			int contextIndex, Project project, long start) {
+		return createTask(description, null, contextIndex, project, start, start);
+
+	}		
+
+	private static int ORDER = 1;
+	
+	private static Task createTask(String description, String details, 
+			int contextIndex, Project project, long start, long due) {
+		Context context = contextIndex > -1 ? cPresetContexts[contextIndex] : null;
+		long created = System.currentTimeMillis();
+		long modified = created;
+		String timezone = TimeZone.getDefault().getID();
+		boolean allDay = false;
+		boolean hasAlarms = false;
+		boolean complete = false;
+		return new Task(description, details, context, project, created, modified,
+				start, due, timezone, allDay, hasAlarms, ORDER++, complete);  
+	}
+	
 	/**
 	 * Delete any existing projects, contexts and tasks and create the standard
 	 * contexts.

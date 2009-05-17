@@ -36,6 +36,8 @@ public class Preferences {
 	public static final String PROJECT_VIEW_KEY = "project_view";
 	public static final String CONTEXT_VIEW_KEY = "context_view";
 	
+	public static final String KEY_DEFAULT_REMINDER = "default_reminder";
+	
 	public enum DeleteCompletedPeriod {
 		hourly, daily, weekly, never
 	}
@@ -68,6 +70,14 @@ public class Preferences {
 		getSharedPreferences(context);
 		return sPrefs.getLong(LAST_INBOX_CLEAN_KEY, 0L);
 	}
+	
+	public static int getDefaultReminderMinutes(Context context) {
+		getSharedPreferences(context);
+        String durationString =
+        	sPrefs.getString(Preferences.KEY_DEFAULT_REMINDER, "0");
+		return Integer.parseInt(durationString);
+	}
+	
 
 	public static Boolean isProjectViewExpandable(Context context) {
 		getSharedPreferences(context);
@@ -115,6 +125,5 @@ public class Preferences {
 		ed.commit();
 	}
 
-	
 	
 }

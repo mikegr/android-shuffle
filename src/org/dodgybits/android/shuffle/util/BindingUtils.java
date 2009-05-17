@@ -230,7 +230,6 @@ public class BindingUtils {
 		}
 		return context;
 	}
-		
 	
 	/**
 	 * Toggle whether the task at the given cursor position is complete.

@@ -18,11 +18,8 @@ package org.dodgybits.android.shuffle.util;
 
 import static android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
 import static android.text.format.DateUtils.FORMAT_ABBREV_TIME;
-import static android.text.format.DateUtils.FORMAT_ABBREV_WEEKDAY;
 import static android.text.format.DateUtils.FORMAT_SHOW_DATE;
 import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
-import static android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY;
-import static android.text.format.DateUtils.WEEK_IN_MILLIS;
 import android.content.Context;
 import android.text.format.Time;
 
@@ -54,12 +51,7 @@ public class DateUtils {
 			if (isSameDay(timeInMs, now)) {
 				flags = FORMAT_SHOW_TIME | FORMAT_ABBREV_TIME;
 			} else {
-				if (timeInMs > now && timeInMs < now + WEEK_IN_MILLIS) {
-					// time is within the next week - show day of week
-					flags = FORMAT_SHOW_WEEKDAY; // | FORMAT_ABBREV_WEEKDAY;
-				} else {
-					flags = FORMAT_SHOW_DATE | FORMAT_ABBREV_MONTH;
-				}
+				flags = FORMAT_SHOW_DATE | FORMAT_ABBREV_MONTH;
 			}
 			result = android.text.format.DateUtils.formatDateRange(
 					context, timeInMs, timeInMs, flags);

@@ -129,6 +129,7 @@
         
         <activity android:name=".activity.TaskEditorActivity" 
         	android:label="@string/title_new_task"
+            android:theme="@android:style/Theme.Light"
         	>
             <!-- This filter says that we can edit the data of a single task -->
             <intent-filter android:label="@string/title_edit_task">
@@ -148,7 +149,9 @@
         </activity>
 		
         <activity android:name=".activity.ProjectEditorActivity" 
-        	android:label="@string/title_new_project">
+        	android:label="@string/title_new_project"
+            android:theme="@android:style/Theme.Light"
+        	>
             <!-- This filter says that we can view or edit the data of
                  a single project -->
             <intent-filter android:label="@string/title_edit_project">
@@ -168,7 +171,9 @@
         </activity>        
 
         <activity android:name=".activity.ContextEditorActivity" 
-        	android:label="@string/title_new_context">
+        	android:label="@string/title_new_context"
+            android:theme="@android:style/Theme.Light"
+        	>
             <!-- This filter says that we can view or edit the data of
                  a single context -->
             <intent-filter android:label="@string/title_edit_context">

@@ -251,11 +251,12 @@ public class Shuffle {
          */
         public static final String[] cFullProjection = new String[] {
                 _ID,
-                TASK_ID,
                 MINUTES, 
                 METHOD, 
         };
         
+        public static final int MINUTES_INDEX = 1;
+        public static final int METHOD_INDEX = 2;
     }
     
     

@@ -13,22 +13,25 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-
-<LinearLayout
-	android:orientation="vertical" android:padding="4dip"
-	android:layout_width="fill_parent" android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:padding="4dip"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:paddingBottom="10px" style="@style/editor">
 
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:paddingLeft="5px"
-		android:paddingRight="5px" android:text="@string/name_title"
+	<TextView android:id="@+id/name_label"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+		android:paddingLeft="5px"
+		android:paddingRight="5px" 
+		android:text="@string/name_title"
 		style="@style/label" />
 
 	<EditText android:id="@+id/name" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" 
+        android:layout_alignParentLeft="true"
+		android:layout_below="@+id/name_label"        
 		android:hint="@string/name_title"
 		android:capitalize="sentences"
 		android:autoText="true"
@@ -39,14 +42,23 @@
 		<requestFocus />
 	</EditText>
 
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:paddingLeft="5px"
+	<TextView android:id="@+id/colour_label"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+        android:layout_alignParentLeft="true"
+		android:layout_below="@+id/name"        
+		android:paddingLeft="5px"
 		android:paddingRight="5px" android:text="@string/colour_title"
 		style="@style/label" />
 
-	<LinearLayout android:orientation="horizontal"
+	<LinearLayout android:id="@+id/colour_frame"
+		android:orientation="horizontal"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" style="@style/centered_row"
+		android:layout_height="wrap_content" 
+        android:layout_alignParentLeft="true"
+		android:layout_below="@+id/colour_label"        
+		android:minHeight="?android:attr/listPreferredItemHeight"
+		style="@style/centered_row"
 		android:paddingLeft="25px">
 
 		<TextView android:id="@+id/colour_display"
@@ -67,13 +79,24 @@
 
 	</LinearLayout>
 
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:paddingLeft="5px"
+	<TextView android:id="@+id/icon_label"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+        android:layout_alignParentLeft="true"
+		android:layout_below="@+id/colour_frame"        
+		android:paddingLeft="5px"
 		android:paddingRight="5px" android:text="@string/icon_title"
 		style="@style/label" />
 
-	<LinearLayout android:orientation="horizontal"
-		style="@style/centered_row" android:paddingLeft="25px">
+	<LinearLayout android:id="@+id/icon_layout"
+		android:orientation="horizontal"
+        android:layout_alignParentLeft="true"
+		android:layout_below="@+id/icon_label"        
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:minHeight="?android:attr/listPreferredItemHeight"
+		style="@style/centered_row" 
+		android:paddingLeft="25px">
 
 		<ImageView android:id="@+id/icon_display"
 			android:layout_width="wrap_content"
@@ -98,8 +121,11 @@
 
 	</LinearLayout>
 
-    <include android:id="@+id/save_panel" layout="@layout/editor_save_panel" />
+    <include android:id="@+id/save_panel" layout="@layout/editor_save_panel" 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentBottom="true"
+    />
 
-</LinearLayout>
-
-</ScrollView>
+</RelativeLayout>

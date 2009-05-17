@@ -39,13 +39,12 @@
 	</style>
 
     <style name="text" parent="ShuffleTheme">
-        <item name="android:textColor">@drawable/white</item>
+        <item name="android:textColor">@drawable/black</item>
         <item name="android:textScaleX">0.9</item>
     	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
 	</style>
 	    
     <style name="text_editable" parent="text">
-     	<item name="android:textColor">@drawable/black</item>
     	<item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
         <item name="android:typeface">sans</item>
     </style>
@@ -74,7 +73,7 @@
     
     <style name="text_autocomplete" parent="text_editable">
     	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-    	<item name="android:popupBackground">@drawable/black</item>
+    	<item name="android:popupBackground">@drawable/white</item>
     	
     </style>
 

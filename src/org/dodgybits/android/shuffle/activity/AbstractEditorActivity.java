@@ -226,20 +226,25 @@ public abstract class AbstractEditorActivity<T> extends Activity
     	return true;
     }
     
-    protected final void create() {
+    protected Uri create() {
+    	Uri uri = null;
     	if (isValid()) {
     		ContentValues values = prepareContentValues();
-	    	getContentResolver().insert(mUri, values);	
+	    	uri = getContentResolver().insert(mUri, values);	
 	    	showSaveToast();
     	}
+    	return uri;
     }
     
-    protected final void save() {
+    protected Uri save() {
+    	Uri uri = null;
     	if (isValid()) {
     		ContentValues values = prepareContentValues();
 	        getContentResolver().update(mUri, values, null, null);    	
 	    	showSaveToast();
+	    	uri = mUri;
     	}
+    	return uri;
     }
     
     /**
