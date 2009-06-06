@@ -49,7 +49,7 @@ public class BindingUtils {
 	
 	public static Task restoreTask(Bundle icicle, Resources res) {
 		if (icicle == null) return null;
-		Integer id = getInteger(icicle, Shuffle.Tasks._ID);
+		Long id = getLong(icicle, Shuffle.Tasks._ID);
 		String description = icicle.getString(Shuffle.Tasks.DESCRIPTION);
 		String details = icicle.getString(Shuffle.Tasks.DETAILS);
 		Context context = restoreContext(icicle.getBundle(Shuffle.Tasks.CONTEXT_ID), res);
@@ -61,18 +61,19 @@ public class BindingUtils {
 		String timezone = icicle.getString(Shuffle.Tasks.TIMEZONE);
 		Boolean allDay = icicle.getBoolean(Shuffle.Tasks.ALL_DAY);
 		Boolean hasAlarms = icicle.getBoolean(Shuffle.Tasks.HAS_ALARM);
+		Long calEventId = getLong(icicle, Shuffle.Tasks.CAL_EVENT_ID);
 		int order = icicle.getInt(Shuffle.Tasks.DISPLAY_ORDER);
 		Boolean complete = icicle.getBoolean(Shuffle.Tasks.COMPLETE);
 		return new Task(
 				id, description, details, 
 				context, project, created, modified,
 				startDate, dueDate, timezone, allDay, hasAlarms,
-				order, complete);
+				calEventId, order, complete);
 	}
 		
 	public static Context restoreContext(Bundle icicle, Resources res) {
 		if (icicle == null) return null;
-		Integer id = getInteger(icicle, Shuffle.Contexts._ID);
+		Long id = getLong(icicle, Shuffle.Contexts._ID);
 		String name = icicle.getString(Shuffle.Contexts.NAME);
 		Integer colour = getInteger(icicle, Shuffle.Contexts.COLOUR);
 		String iconName = icicle.getString(Shuffle.Contexts.ICON);
@@ -82,15 +83,15 @@ public class BindingUtils {
 	
 	public static Project restoreProject(Bundle icicle) {
 		if (icicle == null) return null;
-		Integer id = getInteger(icicle, Shuffle.Projects._ID);
+		Long id = getLong(icicle, Shuffle.Projects._ID);
 		String name = icicle.getString(Shuffle.Projects.NAME);
-		Integer defaultContextId = getInteger(icicle, Shuffle.Projects.DEFAULT_CONTEXT_ID);
+		Long defaultContextId = getLong(icicle, Shuffle.Projects.DEFAULT_CONTEXT_ID);
 		Boolean archived = icicle.getBoolean(Shuffle.Projects.ARCHIVED);
 		return new Project(id, name, defaultContextId, archived);
 	}
 		
 	public static Bundle saveTask(Bundle icicle, Task task) {
-		putInteger(icicle, Shuffle.Tasks._ID, task.id);
+		putLong(icicle, Shuffle.Tasks._ID, task.id);
 		icicle.putString(Shuffle.Tasks.DESCRIPTION, task.description);
 		icicle.putString(Shuffle.Tasks.DETAILS, task.details);
 		if (task.context != null) {
@@ -104,11 +105,18 @@ public class BindingUtils {
 		icicle.putLong(Shuffle.Tasks.START_DATE, task.startDate);
 		icicle.putLong(Shuffle.Tasks.DUE_DATE, task.dueDate);
 		icicle.putString(Shuffle.Tasks.TIMEZONE, task.timezone);
+		if (task.calEventId != null) {
+			icicle.putLong(Shuffle.Tasks.CAL_EVENT_ID, task.calEventId);
+		}
 		icicle.putBoolean(Shuffle.Tasks.ALL_DAY, task.allDay);
 		icicle.putBoolean(Shuffle.Tasks.HAS_ALARM, task.hasAlarms);
 		putInteger(icicle, Shuffle.Tasks.DISPLAY_ORDER, task.order);
 		icicle.putBoolean(Shuffle.Tasks.COMPLETE, task.complete);
 		return icicle;
+	}
+	
+	private static Long getLong(Bundle icicle, String key) {
+		return icicle.containsKey(key) ? icicle.getLong(key) : null;
 	}
 	
 	private static Integer getInteger(Bundle icicle, String key) {
@@ -119,8 +127,12 @@ public class BindingUtils {
 		if (value != null) icicle.putInt(key, value);
 	}
 	
+	private static void putLong(Bundle icicle, String key, Long value) {
+		if (value != null) icicle.putLong(key, value);
+	}
+	
 	public static Bundle saveContext(Bundle icicle, Context context) {
-		putInteger(icicle, Shuffle.Contexts._ID, context.id);
+		putLong(icicle, Shuffle.Contexts._ID, context.id);
 		icicle.putString(Shuffle.Contexts.NAME, context.name);
 		putInteger(icicle, Shuffle.Contexts.COLOUR, context.colourIndex);
 		icicle.putString(Shuffle.Contexts.ICON, context.icon.iconName);
@@ -128,9 +140,9 @@ public class BindingUtils {
 	}
 	
 	public static Bundle saveProject(Bundle icicle, Project project) {
-		putInteger(icicle, Shuffle.Projects._ID, project.id);
+		putLong(icicle, Shuffle.Projects._ID, project.id);
 		icicle.putString(Shuffle.Projects.NAME, project.name);
-		putInteger(icicle, Shuffle.Projects.DEFAULT_CONTEXT_ID, project.defaultContextId);
+		putLong(icicle, Shuffle.Projects.DEFAULT_CONTEXT_ID, project.defaultContextId);
 		icicle.putBoolean(Shuffle.Projects.ARCHIVED, project.archived);
 		return icicle;
 	}
@@ -145,7 +157,8 @@ public class BindingUtils {
     private static final int START_INDEX = MODIFIED_INDEX + 1;
     private static final int DUE_INDEX = START_INDEX + 1;
     private static final int TIMEZONE_INDEX = DUE_INDEX + 1;
-    private static final int DISPLAY_ORDER_INDEX = TIMEZONE_INDEX + 1;
+    private static final int CAL_EVENT_INDEX = TIMEZONE_INDEX + 1;
+    private static final int DISPLAY_ORDER_INDEX = CAL_EVENT_INDEX + 1;
     private static final int COMPLETE_INDEX = DISPLAY_ORDER_INDEX + 1;
     private static final int ALL_DAY_INDEX = COMPLETE_INDEX + 1;
     private static final int HAS_ALARM_INDEX = ALL_DAY_INDEX + 1;
@@ -159,12 +172,12 @@ public class BindingUtils {
     private static final int CONTEXT_ICON_INDEX = CONTEXT_COLOUR_INDEX + 1;
     
 	public static Task readTask(Cursor cursor, Resources res) {
-		Integer id = readInteger(cursor, ID_INDEX);
+		Long id = readLong(cursor, ID_INDEX);
         String description = readString(cursor, DESCRIPTION_INDEX);
 		String details = readString(cursor, DETAILS_INDEX);
-		Integer projectId = readInteger(cursor, PROJECT_INDEX);
+		Long projectId = readLong(cursor, PROJECT_INDEX);
 		Project project = readJoinedProject(cursor, projectId);
-		Integer contextId = readInteger(cursor, CONTEXT_INDEX);
+		Long contextId = readLong(cursor, CONTEXT_INDEX);
 		Context context = readJoinedContext(cursor, res, contextId);
 		
 		long created = cursor.getLong(CREATED_INDEX);
@@ -172,6 +185,7 @@ public class BindingUtils {
 		long startDate = cursor.getLong(START_INDEX);
 		long dueDate = cursor.getLong(DUE_INDEX);
 		String timezone = readString(cursor, TIMEZONE_INDEX);
+		Long calEventId = cursor.getLong(CAL_EVENT_INDEX);
 		Integer displayOrder = readInteger(cursor, DISPLAY_ORDER_INDEX);
 		Boolean complete = readBoolean(cursor, COMPLETE_INDEX);
 		Boolean allDay = readBoolean(cursor, ALL_DAY_INDEX);
@@ -180,20 +194,20 @@ public class BindingUtils {
 				id, description, details, 
 				context, project, created, modified, 
 				startDate, dueDate, timezone, allDay, hasAlarm,
-				displayOrder, complete);
+				calEventId, displayOrder, complete);
 	}
 	
-	private static Project readJoinedProject(Cursor cursor, Integer projectId) {
+	private static Project readJoinedProject(Cursor cursor, Long projectId) {
 		if (projectId == null) return null;
 		String name = readString(cursor, PROJECT_NAME_INDEX);
 		if (TextUtils.isEmpty(name)) return null;
-		Integer defaultContextId = readInteger(cursor, PROJECT_DEFAULT_CONTEXT_ID_INDEX);
+		Long defaultContextId = readLong(cursor, PROJECT_DEFAULT_CONTEXT_ID_INDEX);
 		Boolean archived = readBoolean(cursor, PROJECT_ARCHIVED_INDEX);
 		return new Project(projectId, name, defaultContextId, archived);
 		
 	}
 
-	private static Context readJoinedContext(Cursor cursor, Resources res, Integer contextId) {
+	private static Context readJoinedContext(Cursor cursor, Resources res, Long contextId) {
 		if (contextId == null) return null;
 		String name = readString(cursor, CONTEXT_NAME_INDEX);
 		if (TextUtils.isEmpty(name)) return null;
@@ -203,7 +217,7 @@ public class BindingUtils {
 		return new Context(contextId, name, colour, icon);
 	}
 
-	public static Project fetchProjectById(android.content.Context androidContext, Integer projectId) {
+	public static Project fetchProjectById(android.content.Context androidContext, Long projectId) {
 		Project project = null;
 		if (projectId != null) {
 			Uri uri = ContentUris.withAppendedId(Shuffle.Projects.CONTENT_URI, projectId);			
@@ -217,7 +231,7 @@ public class BindingUtils {
 		return project;
 	}
 	
-	public static Context fetchContextById(android.content.Context androidContext, Integer contextId) {
+	public static Context fetchContextById(android.content.Context androidContext, Long contextId) {
 		Context context = null;
 		if (contextId != null) {
 			Uri uri = ContentUris.withAppendedId(Shuffle.Contexts.CONTENT_URI, contextId);			
@@ -254,10 +268,10 @@ public class BindingUtils {
 	public static void swapTaskPositions(android.content.Context androidContext, Cursor cursor, int pos1, int pos2) {
         cursor.moveToPosition(pos1);
         int positionValue1 = cursor.getInt(DISPLAY_ORDER_INDEX);
-		Integer id1 = readInteger(cursor, ID_INDEX);
+		Long id1 = readLong(cursor, ID_INDEX);
         cursor.moveToPosition(pos2);
         int positionValue2 = cursor.getInt(DISPLAY_ORDER_INDEX);
-		Integer id2 = readInteger(cursor, ID_INDEX);
+		Long id2 = readLong(cursor, ID_INDEX);
         
         Uri uri = ContentUris.withAppendedId(Shuffle.Tasks.CONTENT_URI, id1);
         ContentValues values = new ContentValues();
@@ -275,14 +289,14 @@ public class BindingUtils {
 		writeString(values, Shuffle.Tasks.DESCRIPTION, task.description);
 		writeString(values, Shuffle.Tasks.DETAILS, task.details);
 		if (task.project != null) {
-			writeInteger(values, Shuffle.Tasks.PROJECT_ID, task.project.id);
+			writeLong(values, Shuffle.Tasks.PROJECT_ID, task.project.id);
 		} else {
-			writeInteger(values, Shuffle.Tasks.PROJECT_ID, null);
+			writeLong(values, Shuffle.Tasks.PROJECT_ID, null);
 		}
 		if (task.context != null) {
-			writeInteger(values, Shuffle.Tasks.CONTEXT_ID, task.context.id);
+			writeLong(values, Shuffle.Tasks.CONTEXT_ID, task.context.id);
 		} else {
-			writeInteger(values, Shuffle.Tasks.CONTEXT_ID, null);
+			writeLong(values, Shuffle.Tasks.CONTEXT_ID, null);
 		}
 		
 		values.put(Shuffle.Tasks.CREATED_DATE, task.created);
@@ -303,6 +317,7 @@ public class BindingUtils {
 		
 		writeBoolean(values, Shuffle.Tasks.ALL_DAY, task.allDay);
 		writeBoolean(values, Shuffle.Tasks.HAS_ALARM, task.hasAlarms);
+		writeLong(values, Shuffle.Tasks.CAL_EVENT_ID, task.calEventId);
 		writeInteger(values, Shuffle.Tasks.DISPLAY_ORDER, task.order);
 		writeBoolean(values, Shuffle.Tasks.COMPLETE, task.complete);
 	}
@@ -312,7 +327,7 @@ public class BindingUtils {
 	private static final int ICON_INDEX = 3;
 	
 	public static Context readContext(Cursor cursor, Resources res) {
-		Integer id = readInteger(cursor, ID_INDEX);
+		Long id = readLong(cursor, ID_INDEX);
 		String name = readString(cursor, NAME_INDEX);
 		int colour = cursor.getInt(COLOUR_INDEX);
 		String iconName = readString(cursor, ICON_INDEX);
@@ -331,9 +346,9 @@ public class BindingUtils {
 	private static final int ARCHIVED_INDEX = 3;
 	
 	public static Project readProject(Cursor cursor) {
-		Integer id = readInteger(cursor, ID_INDEX);
+		Long id = readLong(cursor, ID_INDEX);
 		String name = readString(cursor, NAME_INDEX);
-		Integer defaultContextId = readInteger(cursor, DEFAULT_CONTEXT_INDEX);
+		Long defaultContextId = readLong(cursor, DEFAULT_CONTEXT_INDEX);
 		Boolean archived = readBoolean(cursor, ARCHIVED_INDEX);
 		return new Project(id, name, defaultContextId, archived);
 	}
@@ -341,7 +356,7 @@ public class BindingUtils {
 	public static void writeProject(ContentValues values, Project project) {
 		// never write id since it's auto generated
 		writeString(values, Shuffle.Projects.NAME, project.name);
-		writeInteger(values, Shuffle.Projects.DEFAULT_CONTEXT_ID, project.defaultContextId);
+		writeLong(values, Shuffle.Projects.DEFAULT_CONTEXT_ID, project.defaultContextId);
 		writeBoolean(values, Shuffle.Projects.ARCHIVED, project.archived);
 	}
 	
@@ -356,6 +371,10 @@ public class BindingUtils {
 		return countMap;
 	}
 	
+	private static Long readLong(Cursor cursor, int index) {
+		return (cursor.isNull(index) ? null : cursor.getLong(index));
+	}
+	
 	private static Integer readInteger(Cursor cursor, int index) {
 		return (cursor.isNull(index) ? null : cursor.getInt(index));
 	}
@@ -366,6 +385,14 @@ public class BindingUtils {
 	
 	private static String readString(Cursor cursor, int index) {
 		return (cursor.isNull(index) ? null : cursor.getString(index));
+	}
+	
+	private static void writeLong(ContentValues values, String key, Long value) {
+		if (value == null) {
+			values.putNull(key);
+		} else {
+			values.put(key, value);
+		}
 	}
 	
 	private static void writeInteger(ContentValues values, String key, Integer value) {

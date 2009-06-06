@@ -19,19 +19,19 @@ package org.dodgybits.android.shuffle.model;
 import android.text.TextUtils;
 
 public class Project {
-	public Integer id;
+	public Long id;
 	public final String name;
-	public final Integer defaultContextId;
+	public final Long defaultContextId;
 	public final boolean archived;
 	
-	public Project(Integer id, String name, Integer defaultContextId, boolean archived) {
+	public Project(Long id, String name, Long defaultContextId, boolean archived) {
 		this.id = id;
 		this.name = name;
 		this.defaultContextId = defaultContextId;
 		this.archived = archived;
 	}
 	
-	public Project(String name, Integer defaultContextId, boolean archived) {
+	public Project(String name, Long defaultContextId, boolean archived) {
 		this(null, name, defaultContextId, archived);
 	}
 

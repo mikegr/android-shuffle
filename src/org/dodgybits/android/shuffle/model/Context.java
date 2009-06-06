@@ -20,13 +20,13 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 
 public class Context {
-	public Integer id;
+	public Long id;
 	public final String name;
 	public final int colourIndex;
 	// resource id to icon resource (may be null)
 	public final Icon icon;
 
-	public Context(Integer id, String name, int colourIndex, Icon icon) {
+	public Context(Long id, String name, int colourIndex, Icon icon) {
 		this.id = id;
 		this.name = name;
 		this.colourIndex = colourIndex;

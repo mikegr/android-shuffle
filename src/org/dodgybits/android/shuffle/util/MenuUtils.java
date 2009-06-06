@@ -154,7 +154,7 @@ public class MenuUtils {
         	.setIcon(android.R.drawable.ic_menu_help).setAlphabeticShortcut('h');
 	}
 		
-	public static void addSelectedAlternativeMenuItems(Menu menu, Uri uri, Activity activity, boolean includeView) {
+	public static void addSelectedAlternativeMenuItems(Menu menu, Uri uri, boolean includeView) {
         // Build menu...  always starts with the EDIT action...
 		
         int viewIndex = 0;

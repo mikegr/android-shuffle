@@ -213,7 +213,7 @@ public class ModelUtils {
 		boolean hasAlarms = false;
 		boolean complete = false;
 		return new Task(description, details, context, project, created, modified,
-				start, due, timezone, allDay, hasAlarms, ORDER++, complete);  
+				start, due, timezone, allDay, hasAlarms, null, ORDER++, complete);  
 	}
 	
 	/**
@@ -246,7 +246,7 @@ public class ModelUtils {
 			org.dodgybits.android.shuffle.model.Context context) {
 		Uri uri = androidContext.getContentResolver().insert(
 				Shuffle.Contexts.CONTENT_URI, null);
-		int id = (int) ContentUris.parseId(uri);
+		long id = ContentUris.parseId(uri);
 		Log.d(cTag, "Created context id=" + id + " uri=" + uri);
 		context.id = id;
 		ContentValues values = new ContentValues();
@@ -260,7 +260,7 @@ public class ModelUtils {
 			android.content.Context androidContext, Project project) {
 		Uri uri = androidContext.getContentResolver().insert(
 				Shuffle.Projects.CONTENT_URI, null);
-		int id = (int) ContentUris.parseId(uri);
+		long id = ContentUris.parseId(uri);
 		Log.d(cTag, "Created context id=" + id + " uri=" + uri);
 		project.id = id;
 		ContentValues values = new ContentValues();
@@ -274,7 +274,7 @@ public class ModelUtils {
 			Task task) {
 		Uri uri = androidContext.getContentResolver().insert(
 				Shuffle.Tasks.CONTENT_URI, null);
-		int id = (int) ContentUris.parseId(uri);
+		long id = ContentUris.parseId(uri);
 		Log.d(cTag, "Created task id=" + id);
 		task.id = id;
 		ContentValues values = new ContentValues();

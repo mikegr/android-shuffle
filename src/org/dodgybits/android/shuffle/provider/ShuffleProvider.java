@@ -131,6 +131,8 @@ public class ShuffleProvider extends ContentProvider {
 						+ " ADD COLUMN allDay INTEGER NOT NULL DEFAULT 0;");
 				db.execSQL("ALTER TABLE " + cTaskTableName
 						+ " ADD COLUMN hasAlarm INTEGER NOT NULL DEFAULT 0;");
+				db.execSQL("ALTER TABLE " + cTaskTableName
+						+ " ADD COLUMN calEventId INTEGER;");
 				db.execSQL("UPDATE TABLE " + cTaskTableName
 						+ " SET start = due");
 				
@@ -171,6 +173,7 @@ public class ShuffleProvider extends ContentProvider {
                     + "timezone TEXT," // timezone for task
 					+ "allDay INTEGER NOT NULL DEFAULT 0,"
 					+ "hasAlarm INTEGER NOT NULL DEFAULT 0,"
+					+ "calEventId INTEGER,"
 					+ "displayOrder INTEGER," + "complete INTEGER" + 
 					");");
 		}
@@ -671,6 +674,8 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".due");
 		sTaskListProjectMap.put(Shuffle.Tasks.TIMEZONE, cTaskTableName 
 				+ ".timezone");
+		sTaskListProjectMap.put(Shuffle.Tasks.CAL_EVENT_ID, cTaskTableName
+				+ ".calEventId");
 		sTaskListProjectMap.put(Shuffle.Tasks.DISPLAY_ORDER, cTaskTableName
 				+ ".displayOrder");
 		sTaskListProjectMap.put(Shuffle.Tasks.COMPLETE, cTaskTableName

@@ -218,7 +218,7 @@
 				
 		    </RelativeLayout>
 		
-		    <CheckBox android:id="@+id/checkbox"
+		    <CheckBox android:id="@+id/completed_entry_checkbox"
 		        android:layout_width="wrap_content"
 		        android:layout_height="fill_parent"
 		        android:focusable="false"
@@ -228,7 +228,6 @@
 		</LinearLayout>
 		
 	    <include android:id="@+id/save_panel" layout="@layout/editor_save_panel" />
-		
 		
 	</LinearLayout>
 

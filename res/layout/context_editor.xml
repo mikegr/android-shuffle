@@ -42,84 +42,140 @@
 		<requestFocus />
 	</EditText>
 
-	<TextView android:id="@+id/colour_label"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-        android:layout_alignParentLeft="true"
+    <View android:id="@+id/colour_separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
 		android:layout_below="@+id/name"        
-		android:paddingLeft="5px"
-		android:paddingRight="5px" android:text="@string/colour_title"
-		style="@style/label" />
+        android:background="@android:drawable/divider_horizontal_bright"
+    />
 
-	<LinearLayout android:id="@+id/colour_frame"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-        android:layout_alignParentLeft="true"
-		android:layout_below="@+id/colour_label"        
-		android:minHeight="?android:attr/listPreferredItemHeight"
-		style="@style/centered_row"
-		android:paddingLeft="25px">
-
+	<LinearLayout android:id="@+id/colour_entry"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+		android:layout_below="@+id/colour_separator"        
+	    android:paddingRight="?android:attr/scrollbarSize"
+	    android:minHeight="?android:attr/listPreferredItemHeight"
+	    android:background="@android:drawable/list_selector_background"
+	    android:orientation="horizontal"
+	    android:gravity="center_vertical"
+	    android:focusable="true"
+	    android:clickable="true"
+	    >
+	
+	    <RelativeLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="14dip"
+	        android:layout_marginTop="6dip"
+	        android:layout_marginBottom="6dip"
+	        android:layout_weight="1"
+	        android:duplicateParentState="true"
+	        >
+	
+	        <TextView android:id="@+id/colour_label"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:singleLine="true"
+	            android:textAppearance="?android:attr/textAppearanceMedium"
+	            android:ellipsize="marquee"
+	            android:fadingEdge="horizontal"
+	            android:duplicateParentState="true"
+	            android:text="@string/colour_title"
+	            />
+			
+	    </RelativeLayout>
+	
 		<TextView android:id="@+id/colour_display"
-			android:layout_width="40px" android:layout_height="40px" />
-
-		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="1" />
-
-		<Button android:id="@+id/colour_set_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:text="@string/set_button_title" />
-
-		<ImageButton android:id="@+id/colour_clear_button"
+			android:layout_width="40px" 
+			android:layout_height="40px" 
+	        android:focusable="false"
+	        android:clickable="false"
+			/>
+			
+		<ImageButton android:id="@+id/unused_clear_button"
 	        style="@style/MinusButton"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="40px"
+			android:visibility="invisible" 
+			/>
+		
 	</LinearLayout>
+	
+    <View android:id="@+id/icon_separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+		android:layout_below="@+id/colour_entry"        
+        android:background="@android:drawable/divider_horizontal_bright"
+    />
 
-	<TextView android:id="@+id/icon_label"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-        android:layout_alignParentLeft="true"
-		android:layout_below="@+id/colour_frame"        
-		android:paddingLeft="5px"
-		android:paddingRight="5px" android:text="@string/icon_title"
-		style="@style/label" />
-
-	<LinearLayout android:id="@+id/icon_layout"
-		android:orientation="horizontal"
-        android:layout_alignParentLeft="true"
-		android:layout_below="@+id/icon_label"        
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-		android:minHeight="?android:attr/listPreferredItemHeight"
-		style="@style/centered_row" 
-		android:paddingLeft="25px">
-
+	<LinearLayout android:id="@+id/icon_entry"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+		android:layout_below="@+id/icon_separator"        
+	    android:paddingRight="?android:attr/scrollbarSize"
+	    android:minHeight="?android:attr/listPreferredItemHeight"
+	    android:background="@android:drawable/list_selector_background"
+	    android:orientation="horizontal"
+	    android:gravity="center_vertical"
+	    android:focusable="true"
+	    android:clickable="true"
+	    >
+	
+	    <RelativeLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="14dip"
+	        android:layout_marginTop="6dip"
+	        android:layout_marginBottom="6dip"
+	        android:layout_weight="1"
+	        android:duplicateParentState="true"
+	        >
+	
+	        <TextView android:id="@+id/icon_label"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:singleLine="true"
+	            android:textAppearance="?android:attr/textAppearanceMedium"
+	            android:ellipsize="marquee"
+	            android:fadingEdge="horizontal"
+	            android:duplicateParentState="true"
+	            android:text="@string/icon_title"
+	            />
+			
+	    </RelativeLayout>
+	
 		<ImageView android:id="@+id/icon_display"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:paddingLeft="5px"
-			android:paddingRight="5px" android:layout_weight="1" />
+			android:layout_width="40px" 
+			android:layout_height="40px" 
+	        android:focusable="false"
+	        android:clickable="false"
+			/>
 
 		<TextView android:id="@+id/icon_none"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:paddingLeft="5px" android:paddingRight="5px"
-			android:text="@string/no_icon" />
-
-		<Button android:id="@+id/icon_set_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:text="@string/set_button_title" />
-
+			android:layout_width="80px" 
+			android:layout_height="40px" 
+	        android:focusable="false"
+	        android:clickable="false"
+			android:text="@string/no_icon" 
+			android:visibility="gone" 
+			android:gravity="center"
+			/>
+		
 		<ImageButton android:id="@+id/icon_clear_button"
 	        style="@style/MinusButton"
+			android:layout_marginLeft="40px"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
-
+		
 	</LinearLayout>
+
+    <View android:id="@+id/end_separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+		android:layout_below="@+id/icon_entry"        
+        android:background="@android:drawable/divider_horizontal_bright"
+    />
 
     <include android:id="@+id/save_panel" layout="@layout/editor_save_panel" 
 	    android:layout_width="fill_parent"

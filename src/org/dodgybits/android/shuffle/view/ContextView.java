@@ -69,7 +69,7 @@ public class ContextView extends ItemView<Context> {
 			mIcon.setVisibility(View.INVISIBLE);
 		}
 		if (mTaskCountArray != null) {
-			Integer count = mTaskCountArray.get(context.id);
+			Integer count = mTaskCountArray.get(context.id.intValue());
 			if (count == null) count = 0;
 			mName.setText(context.name + " (" + count + ")");
 		} else {

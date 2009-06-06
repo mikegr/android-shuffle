@@ -175,14 +175,15 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         {
         	long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
             Uri selectedUri = ContentUris.withAppendedId(mConfig.getChildContentUri(), childId);
-            MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, this, false);
+            MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
         	MenuUtils.addCompleteMenuItem(menu);
         }
         else
         {
         	long groupId = getExpandableListAdapter().getGroupId(groupPosition);
             Uri selectedUri = ContentUris.withAppendedId(mConfig.getGroupContentUri(), groupId);
-            MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, this, false);
+            MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
+            MenuUtils.addInsertMenuItems(menu, mConfig.getChildName(this), true, this);
         }
 		// ... and ends with the delete command.
 		MenuUtils.addDeleteMenuItem(menu);
@@ -203,11 +204,24 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 	            toggleComplete(info.packedPosition, info.id);
 	            return true;
 
-	        case MenuUtils.DELETE_ID: {
-	                // Delete the item that the context menu is for
-	    			deleteItem(info.packedPosition);
-	                return true;
-	            }
+	        case MenuUtils.DELETE_ID: 
+                // Delete the item that the context menu is for
+    			deleteItem(info.packedPosition);
+                return true;
+	            
+	        case MenuUtils.INSERT_ID:
+                int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+	        	if (groupPosition > -1)
+	        	{
+		        	Cursor cursor = (Cursor) getExpandableListAdapter().getGroup(groupPosition);
+		        	G group = getListConfig().readGroup(cursor, getResources());
+	        		insertItem(mConfig.getChildContentUri(), group);	        		
+	        	}
+	        	else
+	        	{
+	        		insertItem(mConfig.getChildContentUri());
+	        	}
+	            return true;
         }
         return false;
     }	 

@@ -50,7 +50,7 @@ public class ProjectView extends ItemView<Project> {
 	@Override
 	public void updateView(Project project) {
 		if (mTaskCountArray != null) {
-			Integer count = mTaskCountArray.get(project.id);
+			Integer count = mTaskCountArray.get(project.id.intValue());
 			if (count == null) count = 0;
 			mName.setText(project.name + " (" + count + ")");
 		} else {

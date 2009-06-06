@@ -18,7 +18,7 @@ package org.dodgybits.android.shuffle.model;
 
 
 public final class Task {
-	public Integer id;
+	public Long id;
 	public final String description;
 	public final String details;
 	public final Context context;
@@ -30,14 +30,15 @@ public final class Task {
 	public final String timezone;
 	public final Boolean allDay;
 	public final Boolean hasAlarms;
+	public final Long calEventId;
 	// 0-indexed order within a project. 
 	public final Integer order;
 	public final Boolean complete;
 	
-	public Task(Integer id, String description, String details,
+	public Task(Long id, String description, String details,
 			Context context, Project project, long created, long modified, 
 			long startDate, long dueDate, String timezone, Boolean allDay, Boolean hasAlarms,
-			Integer order, Boolean complete) {
+			Long calEventId, Integer order, Boolean complete) {
 		this.id = id;
 		this.description = description;
 		this.details = details;
@@ -50,6 +51,7 @@ public final class Task {
 		this.timezone = timezone;
 		this.allDay = allDay;
 		this.hasAlarms = hasAlarms;
+		this.calEventId = calEventId;
 		this.order = order;
 		this.complete = complete;
 	}
@@ -57,12 +59,12 @@ public final class Task {
 	public Task(String description, String details,
 			Context context, Project project, long created, long modified,
 			long startDate, long dueDate, String timezone, Boolean allDay, 
-			Boolean hasAlarms, Integer order, Boolean complete) {
+			Boolean hasAlarms, Long calEventId, Integer order, Boolean complete) {
 		this(
 				null, description, details, 
 				context, project, created, modified, 
 				startDate, dueDate, timezone, allDay, 
-				hasAlarms, order, complete);
+				hasAlarms, calEventId, order, complete);
 	}
 	
 }

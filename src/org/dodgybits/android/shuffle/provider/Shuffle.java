@@ -55,6 +55,7 @@ public class Shuffle {
         public static final String START_DATE = "start";
         public static final String DUE_DATE = "due";
         public static final String TIMEZONE = "timezone";
+        public static final String CAL_EVENT_ID = "calEventId";
         public static final String DISPLAY_ORDER = "displayOrder";
         public static final String COMPLETE = "complete";
         public static final String ALL_DAY = "allDay";
@@ -82,6 +83,7 @@ public class Shuffle {
                 START_DATE,
                 DUE_DATE,
                 TIMEZONE,
+                CAL_EVENT_ID,
                 DISPLAY_ORDER,
                 COMPLETE,
                 ALL_DAY,
@@ -103,6 +105,7 @@ public class Shuffle {
             START_DATE,
             DUE_DATE,
             TIMEZONE,
+            CAL_EVENT_ID,
             DISPLAY_ORDER,
             COMPLETE,
             ALL_DAY,

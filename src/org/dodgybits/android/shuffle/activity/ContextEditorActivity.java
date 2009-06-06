@@ -34,7 +34,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -51,14 +50,15 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     private Icon mIcon;
     
     private EditText mNameWidget;
+    
+    private View mColourEntry;
     private TextView mColourWidget;
-    private Button mSetColourButton;
-    private ImageButton mClearColourButton;
+
+    private View mIconEntry;
     private ImageView mIconWidget;
     private TextView mIconNoneWidget;
-    private Button mSetIconButton;
     private ImageButton mClearIconButton;
-        
+    
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
@@ -217,43 +217,48 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         mIconNoneWidget = (TextView) findViewById(R.id.icon_none);
         mIcon = Icon.NONE;
         
-        mSetColourButton = (Button) findViewById(R.id.colour_set_button);
-        mSetColourButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
+        mColourEntry = findViewById(R.id.colour_entry);
+        mColourEntry.setOnClickListener(this);
+        mColourEntry.setOnFocusChangeListener(this);
+        
+        mIconEntry = findViewById(R.id.icon_entry);
+        mIconEntry.setOnClickListener(this);
+        mIconEntry.setOnFocusChangeListener(this);
+        
+        mClearIconButton = (ImageButton) findViewById(R.id.icon_clear_button);
+        mClearIconButton.setOnClickListener(this);
+        mClearIconButton.setOnFocusChangeListener(this);
+    }
+    
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.colour_entry: {
             	// Launch activity to pick colour
             	Intent intent = new Intent(Intent.ACTION_PICK);
             	intent.setType(ColourPickerActivity.TYPE);
             	startActivityForResult(intent, COLOUR_PICKER);
+                break;
             }
-        });
-        mClearColourButton = (ImageButton) findViewById(R.id.colour_clear_button);
-        mClearColourButton.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v) {
-            	mColourIndex = 0;
-            	displayColour();
-            }
-        });        
-        
-        mSetIconButton = (Button) findViewById(R.id.icon_set_button);
-        mSetIconButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
+            case R.id.icon_entry: {
             	// Launch activity to pick icon
             	Intent intent = new Intent(Intent.ACTION_PICK);
             	intent.setType(IconPickerActivity.TYPE);
             	startActivityForResult(intent, ICON_PICKER);
+                break;
             }
-        });
-        mClearIconButton = (ImageButton) findViewById(R.id.icon_clear_button);
-        mClearIconButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-            	mIcon = Icon.NONE;
-            	displayIcon();
+                    
+            case R.id.icon_clear_button: {
+	        	mIcon = Icon.NONE;
+	        	displayIcon();
+	        	break;
             }
-        });       
+            
+            default:
+            	super.onClick(v);
+            	break;
+        }
     }
     
 	private void displayColour() {

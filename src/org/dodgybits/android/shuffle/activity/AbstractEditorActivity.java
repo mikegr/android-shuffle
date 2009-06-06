@@ -161,7 +161,7 @@ public abstract class AbstractEditorActivity<T> extends Activity
         }
     }
 
-    protected final void doSaveAction() {
+    protected void doSaveAction() {
         // Save or create the contact if needed
         switch (mState) {
             case State.STATE_EDIT:

@@ -182,7 +182,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
         menu.setHeaderTitle(cursor.getString(1));
 
     	Uri selectedUri = ContentUris.withAppendedId(getListConfig().getContentUri(), info.id);
-        MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, this, false);
+        MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
         
 		// ... and ends with the delete command.
 		MenuUtils.addDeleteMenuItem(menu);

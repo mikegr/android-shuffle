@@ -40,7 +40,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     private Spinner mDefaultContextSpinner;
     
     private String[] mContextNames;
-    private int[] mContextIds;
+    private long[] mContextIds;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -83,7 +83,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     @Override
     protected Project createItemFromUI() {
         String name = mNameWidget.getText().toString();
-    	Integer defaultContextId = null;
+    	Long defaultContextId = null;
     	int selectedItemPosition = mDefaultContextSpinner.getSelectedItemPosition();
 		if (selectedItemPosition > 0) {
     		defaultContextId = mContextIds[selectedItemPosition];
@@ -100,7 +100,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     @Override
     protected void updateUIFromItem(Project project) {
         mNameWidget.setTextKeepState(project.name);
-        Integer defaultContextId = project.defaultContextId;
+        Long defaultContextId = project.defaultContextId;
         if (defaultContextId == null) {
         	mDefaultContextSpinner.setSelection(0);
         } else {
@@ -167,13 +167,13 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         		Shuffle.Contexts.CONTENT_URI, 
         		new String[] {Shuffle.Contexts._ID, Shuffle.Contexts.NAME}, null, null, null);
         int size = contactCursor.getCount() + 1;
-        mContextIds = new int[size];
+        mContextIds = new long[size];
         mContextIds[0] = 0;
         mContextNames = new String[size];
         mContextNames[0] = "None";
         for (int i = 1; i < size; i++) {
         	contactCursor.moveToNext();
-        	mContextIds[i] = contactCursor.getInt(0);
+        	mContextIds[i] = contactCursor.getLong(0);
         	mContextNames[i] = contactCursor.getString(1);
         }
         contactCursor.close();

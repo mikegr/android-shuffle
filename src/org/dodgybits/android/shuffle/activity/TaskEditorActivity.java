@@ -117,6 +117,11 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
 	private View mCompleteEntry;
     private CheckBox mCompletedCheckBox;
     
+	private View mUpdateCalendarEntry;
+    private CheckBox mUpdateCalendarCheckBox;
+	private TextView mCalendarLabel;
+	private TextView mCalendarDetail;
+    
     private ArrayList<Integer> mReminderValues;
     private ArrayList<String> mReminderLabels;
     private int mDefaultReminderMinutes;
@@ -124,6 +129,8 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private LinearLayout mRemindersContainer;
     private ArrayList<Integer> mOriginalMinutes = new ArrayList<Integer>();
     private ArrayList<LinearLayout> mReminderItems = new ArrayList<LinearLayout>(0);
+
+    private Intent mNextIntent;
     
     @Override
     protected void onCreate(Bundle icicle) {
@@ -175,6 +182,9 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     	
         setWhenDefaults();   
         populateWhen();
+        
+        mCalendarLabel.setText(getString(R.string.add_to_gcal_title));
+        mCalendarDetail.setText(getString(R.string.add_to_gcal_detail));
         
         mStartTimeButton.setVisibility(View.VISIBLE);
         mDueTimeButton.setVisibility(View.VISIBLE);
@@ -230,6 +240,11 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         updateTimeVisibility(!allDay);
         
         mCompletedCheckBox.setChecked(task.complete);
+        
+        if (task.calEventId != null && task.calEventId > 0L) {
+            mCalendarLabel.setText(getString(R.string.update_gcal_title));
+            mCalendarDetail.setText(getString(R.string.update_gcal_detail));
+        }
         
         // Load reminders (if there are any)
         if (task.hasAlarms) {
@@ -325,7 +340,23 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     	Context context = fetchOrCreateContext(mContextView.getText().toString());
     	Project project = fetchOrCreateProject(mProjectView.getText().toString());
     	Boolean complete = mCompletedCheckBox.isChecked();
+    	Boolean updateCalendar = mUpdateCalendarCheckBox.isChecked();
+    	Long eventId = mOriginalItem == null ? null : mOriginalItem.calEventId;
     	Boolean hasAlarms = !mReminderItems.isEmpty();
+    	
+    	if (updateCalendar) {
+    		Uri calEntryUri = addOrUpdateCalendarEvent(
+    				eventId, description, details,
+    				project, context, timezone, startMillis, 
+    				dueMillis, allDay);
+    		if (calEntryUri != null) {
+    			eventId = ContentUris.parseId(calEntryUri);
+    			mNextIntent = new Intent(Intent.ACTION_EDIT, calEntryUri);
+    			mNextIntent.putExtra("beginTime", startMillis);
+    			mNextIntent.putExtra("endTime", dueMillis);
+    		}
+    		Log.i(cTag, "Updated calendar event " + eventId);
+    	}
     	
         // If we are creating a new task, set the creation date
     	if (mState == State.STATE_INSERT) {
@@ -339,9 +370,64 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     	Task task  = new Task(description, details, 
     			context, project, created, modified, 
     			startMillis, dueMillis, timezone, allDay, hasAlarms,
-    			order, complete);
+    			eventId, order, complete);
     	return task;
 	}
+    
+    @Override
+    public void finish() {
+		if (mNextIntent != null) {
+    		startActivity(mNextIntent);
+		}
+		super.finish();
+    }
+
+    
+    private Uri addOrUpdateCalendarEvent(Long calEventId, String title, String description,
+    		Project project, Context context,
+    		String timezone, long start, long end, boolean allDay) {
+        if (project != null) {
+        	title = project.name + " - " + title;
+        }
+        if (description == null) {
+        	description = "";
+        }
+        
+        ContentValues values = new ContentValues();
+        if (!TextUtils.isEmpty(timezone)) {
+        	values.put("eventTimezone", timezone);
+        }
+        values.put("calendar_id", 1); // query content://calendar/calendars for more  
+        values.put("title", title);
+        values.put("allDay", allDay ? 1 : 0);
+        if (start > 0L) {
+        	values.put("dtstart", start); // long (start date in ms)
+        }
+        if (end > 0L) {
+        	values.put("dtend", end);     // long (end date in ms)
+        }
+        values.put("description", description);
+        values.put("hasAlarm", 0);
+        values.put("transparency", 0);
+        values.put("visibility", 0);
+        if (context != null) {
+        	values.put("eventLocation", context.name);
+        }
+        
+        Uri baseUri = Uri.parse("content://calendar/events");
+        ContentResolver cr = getContentResolver();
+        int updateCount = 0;
+        Uri eventUri = null;
+        if (calEventId != null && calEventId > 0L) {
+        	eventUri = ContentUris.appendId(baseUri.buildUpon(), calEventId).build();
+            // it's possible the old event was deleted, check number of records updated
+            updateCount = cr.update(eventUri, values, null, null);
+        }
+        if (updateCount == 0) {
+        	eventUri = cr.insert(baseUri, values);
+        }
+        return eventUri;
+    }
 
     @Override
     protected Intent getInsertIntent() {
@@ -433,7 +519,13 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             }
             
             case R.id.completed_entry: {
-                CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkbox);
+                CheckBox checkBox = (CheckBox) v.findViewById(R.id.completed_entry_checkbox);
+                checkBox.toggle();
+                break;
+            }
+
+            case R.id.gcal_entry: {
+                CheckBox checkBox = (CheckBox) v.findViewById(R.id.update_calendar_checkbox);
                 checkBox.toggle();
                 break;
             }
@@ -522,8 +614,15 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mCompleteEntry = findViewById(R.id.completed_entry);
         mCompleteEntry.setOnClickListener(this);
         mCompleteEntry.setOnFocusChangeListener(this);
-        mCompletedCheckBox = (CheckBox) mCompleteEntry.findViewById(R.id.checkbox);
+        mCompletedCheckBox = (CheckBox) mCompleteEntry.findViewById(R.id.completed_entry_checkbox);
     	
+        mUpdateCalendarEntry = findViewById(R.id.gcal_entry);
+        mUpdateCalendarEntry.setOnClickListener(this);
+        mUpdateCalendarEntry.setOnFocusChangeListener(this);
+        mUpdateCalendarCheckBox = (CheckBox) mUpdateCalendarEntry.findViewById(R.id.update_calendar_checkbox);
+        mCalendarLabel = (TextView) mUpdateCalendarEntry.findViewById(R.id.gcal_label);
+        mCalendarDetail = (TextView) mUpdateCalendarEntry.findViewById(R.id.gcal_detail);
+        
         mContextView.setAdapter(new AutoCompleteCursorAdapter(this, mContextCursor, 
         		cContextProjection, Shuffle.Contexts.CONTENT_URI));
         mProjectView.setAdapter(new AutoCompleteCursorAdapter(this, mProjectCursor, 

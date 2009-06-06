@@ -92,6 +92,10 @@
     <string name="due_title">Due</string>
     <string name="all_day_title">All day</string>
     <string name="reminders_title">Reminders</string>
+    <string name="add_to_gcal_title">Add to Google Calendar</string>
+    <string name="add_to_gcal_detail">New entry will load after saving</string>
+    <string name="update_gcal_title">Update Google Calendar</string>
+    <string name="update_gcal_detail">Updated entry will load after saving</string>
     <string name="completed_title">Completed</string>
 
 	<!--  project & context edit screens -->
