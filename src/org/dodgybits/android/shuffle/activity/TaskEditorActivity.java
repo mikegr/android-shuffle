@@ -26,7 +26,6 @@ import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.State;
 import org.dodgybits.android.shuffle.model.Task;
-import org.dodgybits.android.shuffle.provider.AutoCompleteCursorAdapter;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 
@@ -52,7 +51,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -75,13 +73,13 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private static final String cTag = "TaskEditorActivity";
 
     private static final String[] cContextProjection = new String[] {
-    	Shuffle.Contexts.NAME,
-    	Shuffle.Contexts._ID
+    	Shuffle.Contexts._ID,
+    	Shuffle.Contexts.NAME
     };
     
     private static final String[] cProjectProjection = new String[] {
-    	Shuffle.Projects.NAME,
-    	Shuffle.Projects._ID
+    	Shuffle.Projects._ID,
+    	Shuffle.Projects.NAME
     };
     
     private static final String REMINDERS_WHERE = Shuffle.Reminders.TASK_ID + "=? AND (" +
@@ -90,13 +88,18 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     
     private static final int MAX_REMINDERS = 3;
 
-    private Cursor mProjectCursor;
-    private Cursor mContextCursor;
-        
+	private static final int cNewContextCode = 100;
+	private static final int cNewProjectCode = 101;
+
     private EditText mDescriptionWidget;
-    private AutoCompleteTextView mContextView;
-    private AutoCompleteTextView mProjectView;
+    private Spinner mContextSpinner;
+    private Spinner mProjectSpinner;
     private EditText mDetailsWidget;
+    
+    private String[] mContextNames;
+    private long[] mContextIds;
+    private String[] mProjectNames;
+    private long[] mProjectIds;
     
     private boolean mSchedulingExpanded;
     private Button mStartDateButton;
@@ -166,6 +169,34 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     }
     
     @Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent data) {
+    	Log.d(cTag, "Got resultCode " + resultCode + " with data " + data);		
+    	switch (requestCode) {
+    	case cNewContextCode:
+        	if (resultCode == Activity.RESULT_OK) {
+    			if (data != null) {
+    				long newContextId = ContentUris.parseId(data.getData());
+    				setupContextSpinner();
+    				setSpinnerSelection(mContextSpinner, mContextIds, newContextId);
+    			}
+    		}
+    		break;
+    	case cNewProjectCode:
+        	if (resultCode == Activity.RESULT_OK) {
+    			if (data != null) {
+    				long newProjectId = ContentUris.parseId(data.getData());
+    				setupProjectSpinner();
+    				setSpinnerSelection(mProjectSpinner, mProjectIds, newProjectId);
+    			}
+    		}
+    		break;
+    		default:
+    			Log.e(cTag, "Unknown requestCode: " + requestCode);
+    	}
+	}
+    
+    @Override
     protected boolean isValid() {
         String description = mDescriptionWidget.getText().toString();
         return !TextUtils.isEmpty(description);
@@ -174,10 +205,11 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     @Override
     protected void updateUIFromExtras(Bundle extras) {
     	if (extras != null) {
-        	String contextName = extras.getString(Shuffle.Tasks.CONTEXT_ID);
-        	if (contextName != null) mContextView.setTextKeepState(contextName);
-        	String projectName = extras.getString(Shuffle.Tasks.PROJECT_ID);
-        	if (projectName != null) mProjectView.setTextKeepState(projectName);
+        	Long contextId = extras.getLong(Shuffle.Tasks.CONTEXT_ID);
+        	setSpinnerSelection(mContextSpinner, mContextIds, contextId);
+            
+        	Long projectId = extras.getLong(Shuffle.Tasks.PROJECT_ID);
+        	setSpinnerSelection(mProjectSpinner, mProjectIds, projectId);
         }
     	
         setWhenDefaults();   
@@ -198,10 +230,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         
         mDescriptionWidget.setTextKeepState(task.description);
         if (task.context != null) {
-            mContextView.setTextKeepState(task.context.name);
+        	setSpinnerSelection(mContextSpinner, mContextIds, task.context.id);
         }
         if (task.project != null) {
-            mProjectView.setTextKeepState(task.project.name);
+        	setSpinnerSelection(mProjectSpinner, mProjectIds, task.project.id);
         }
                          
         Boolean allDay = task.allDay;
@@ -337,8 +369,13 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         
     	Integer order;
     	String details = mDetailsWidget.getText().toString();
-    	Context context = fetchOrCreateContext(mContextView.getText().toString());
-    	Project project = fetchOrCreateProject(mProjectView.getText().toString());
+    	
+    	Long contextId = getSpinnerSelectedId(mContextSpinner, mContextIds);
+		Context context = BindingUtils.fetchContextById(this, contextId);
+
+    	Long projectId = getSpinnerSelectedId(mProjectSpinner, mProjectIds);
+		Project project = BindingUtils.fetchProjectById(this, projectId);
+		
     	Boolean complete = mCompletedCheckBox.isChecked();
     	Boolean updateCalendar = mUpdateCalendarCheckBox.isChecked();
     	Long eventId = mOriginalItem == null ? null : mOriginalItem.calEventId;
@@ -435,14 +472,17 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     	// give new task the same project and context as this one
     	Bundle extras = intent.getExtras();
     	if (extras == null) extras = new Bundle();
-    	CharSequence contextName = mContextView.getText();
-    	if (!TextUtils.isEmpty(contextName)) {
-    		extras.putString(Shuffle.Tasks.CONTEXT_ID, contextName.toString());    		
+    	
+    	Long contextId = getSpinnerSelectedId(mContextSpinner, mContextIds);
+		if (contextId != null) {
+    		extras.putLong(Shuffle.Tasks.CONTEXT_ID, contextId);    		
+		}
+		
+    	Long projectId = getSpinnerSelectedId(mContextSpinner, mProjectIds);
+    	if (projectId != null) {
+    		extras.putLong(Shuffle.Tasks.PROJECT_ID, projectId);    		
     	}
-    	CharSequence projectName = mProjectView.getText();
-    	if (!TextUtils.isEmpty(projectName)) {
-    		extras.putString(Shuffle.Tasks.PROJECT_ID, projectName.toString());    		
-    	}
+
     	intent.putExtras(extras);
     	return intent;
     }
@@ -513,6 +553,18 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+	        case R.id.context_add: {
+	        	Intent addContextIntent = new Intent(Intent.ACTION_INSERT, Shuffle.Contexts.CONTENT_URI);
+	        	startActivityForResult(addContextIntent, cNewContextCode);
+	        	break;
+	        }
+
+	        case R.id.project_add: {
+	        	Intent addProjectIntent = new Intent(Intent.ACTION_INSERT, Shuffle.Projects.CONTENT_URI);
+	        	startActivityForResult(addProjectIntent, cNewProjectCode);
+	        	break;
+	        }
+
             case R.id.scheduling_entry: {
             	toggleSchedulingSection();
                 break;
@@ -595,19 +647,23 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
 	            return;
 	        }
     	}
-    	
-        // Get the context and project lists for our pulldown lists
-        mContextCursor = managedQuery(Shuffle.Contexts.CONTENT_URI, 
-        		cContextProjection, null, null, null);
-        mProjectCursor = managedQuery(Shuffle.Projects.CONTENT_URI, 
-        		cProjectProjection, null, null, null);
     }
     
     private void findViewsAndAddListeners() {
         // The text view for our task description, identified by its ID in the XML file.
         mDescriptionWidget = (EditText) findViewById(R.id.description);
-        mContextView = (AutoCompleteTextView) findViewById(R.id.context);
-        mProjectView = (AutoCompleteTextView) findViewById(R.id.project);
+        
+        mContextSpinner = (Spinner) findViewById(R.id.context);
+        setupContextSpinner();
+        ImageButton addContextButton = (ImageButton) findViewById(R.id.context_add);
+        addContextButton.setOnClickListener(this);
+        addContextButton.setOnFocusChangeListener(this);
+        
+        mProjectSpinner = (Spinner) findViewById(R.id.project);
+        setupProjectSpinner();
+        ImageButton addProjectButton = (ImageButton) findViewById(R.id.project_add);
+        addProjectButton.setOnClickListener(this);
+        addProjectButton.setOnFocusChangeListener(this);
 
         mDetailsWidget = (EditText) findViewById(R.id.details);
                 
@@ -623,11 +679,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mCalendarLabel = (TextView) mUpdateCalendarEntry.findViewById(R.id.gcal_label);
         mCalendarDetail = (TextView) mUpdateCalendarEntry.findViewById(R.id.gcal_detail);
         
-        mContextView.setAdapter(new AutoCompleteCursorAdapter(this, mContextCursor, 
-        		cContextProjection, Shuffle.Contexts.CONTENT_URI));
-        mProjectView.setAdapter(new AutoCompleteCursorAdapter(this, mProjectCursor, 
-        		cProjectProjection, Shuffle.Projects.CONTENT_URI));
-
         mStartDateButton = (Button) findViewById(R.id.start_date);
         mStartDateButton.setOnClickListener(new DateClickListener(mStartTime));
         
@@ -678,6 +729,70 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         });
         
     }
+    
+    private void setupContextSpinner() {
+        Cursor contextCursor = getContentResolver().query(
+        		Shuffle.Contexts.CONTENT_URI, cContextProjection, 
+        		null, null, Shuffle.Contexts.NAME + " ASC");
+        int arraySize = contextCursor.getCount() + 1;
+        mContextIds = new long[arraySize];
+        mContextIds[0] = 0;
+        mContextNames = new String[arraySize];
+        mContextNames[0] = "None";
+        for (int i = 1; i < arraySize; i++) {
+        	contextCursor.moveToNext();
+        	mContextIds[i] = contextCursor.getLong(0);
+        	mContextNames[i] = contextCursor.getString(1);
+        }
+        contextCursor.close();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        		this, android.R.layout.simple_list_item_1, mContextNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mContextSpinner.setAdapter(adapter);
+    }
+    
+    private void setupProjectSpinner() {
+        Cursor projectCursor = getContentResolver().query(
+        		Shuffle.Projects.CONTENT_URI, cProjectProjection, 
+        		null, null, Shuffle.Projects.NAME + " ASC");
+        int arraySize = projectCursor.getCount() + 1;
+        mProjectIds = new long[arraySize];
+        mProjectIds[0] = 0;
+        mProjectNames = new String[arraySize];
+        mProjectNames[0] = "None";
+        for (int i = 1; i < arraySize; i++) {
+        	projectCursor.moveToNext();
+        	mProjectIds[i] = projectCursor.getLong(0);
+        	mProjectNames[i] = projectCursor.getString(1);
+        }
+        projectCursor.close();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        		this, android.R.layout.simple_list_item_1, mProjectNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mProjectSpinner.setAdapter(adapter);    	
+    }
+    
+    private Long getSpinnerSelectedId(Spinner spinner, long[] ids) {
+    	Long id = null;
+    	int selectedItemPosition = spinner.getSelectedItemPosition();
+		if (selectedItemPosition > 0) {
+			id = ids[selectedItemPosition];
+    	}
+    	return id;
+    }
+        
+    private void setSpinnerSelection(Spinner spinner, long[] ids, Long id) {
+        if (id == null) {
+        	spinner.setSelection(0);
+        } else {
+        	for (int i = 1; i < ids.length; i++) {
+        		if (ids[i] == id) {
+        			spinner.setSelection(i);
+        			break;
+        		}
+        	}
+        }    	
+    }    
     
     private void addReminder() {
         if (mDefaultReminderMinutes == 0) {
@@ -809,52 +924,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         view.setText(value);
     }
     
-    private Context fetchOrCreateContext(String contextName) {
-    	Context context = null;
-    	if (!TextUtils.isEmpty(contextName)) {
-    		// first check if context already exists
-    		Cursor cursor =  getContentResolver().query(
-    				Shuffle.Contexts.CONTENT_URI, 
-    				Shuffle.Contexts.cFullProjection, 
-    				"name = ?", new String[] {contextName}, null);
-    		if (!cursor.moveToFirst()) {
-    			cursor.close();
-    			// context didn't exist - create a new one
-    			ContentValues values = new ContentValues(1);
-    			values.put(Shuffle.Contexts.NAME, contextName);
-    			Uri uri = getContentResolver().insert(Shuffle.Contexts.CONTENT_URI, values);
-    			cursor = getContentResolver().query(uri, Shuffle.Contexts.cFullProjection, null, null, null);
-        		cursor.moveToFirst();
-    		}
-			context = BindingUtils.readContext(cursor,getResources());
-			cursor.close();
-    	}
-    	return context;
-    }
-    
-    private Project fetchOrCreateProject(String projectName) {
-    	Project project = null;
-    	if (!TextUtils.isEmpty(projectName)) {
-    		// first check if context already exists
-    		Cursor cursor =  getContentResolver().query(
-    				Shuffle.Projects.CONTENT_URI, 
-    				Shuffle.Projects.cFullProjection, 
-    				"name = ?", new String[] {projectName}, null);
-    		if (!cursor.moveToFirst()) {
-    			cursor.close();
-    			// context didn't exist - create a new one
-    			ContentValues values = new ContentValues(1);
-    			values.put(Shuffle.Projects.NAME, projectName);
-    			Uri uri = getContentResolver().insert(Shuffle.Projects.CONTENT_URI, values);
-    			cursor = getContentResolver().query(uri, Shuffle.Projects.cFullProjection, null, null, null);
-        		cursor.moveToFirst();
-    		}
-			project = BindingUtils.readProject(cursor);
-			cursor.close();
-    	}
-    	return project;    	
-    }
-
     /**
      * Calculate where this task should appear on the list for the given project.
      * If no project is defined, order is meaningless, so return -1.
@@ -1071,6 +1140,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 } else {
                 	// if start time is not shown, default it to be the same as due time
                 	startTime.set(dueTime);
+                    mShowStart = true;
                 }
             }
 
@@ -1150,6 +1220,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 } else {
                 	// if start time is not shown, default it to be the same as due time
                 	startTime.set(dueTime);
+                    mShowStart = true;
                 }
             }
 

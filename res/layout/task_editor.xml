@@ -49,17 +49,33 @@
 			android:paddingRight="5px" android:text="@string/project_title"
 			style="@style/label" />
 
-		<AutoCompleteTextView android:id="@+id/project"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/project_title" 
-			android:maxLength="50"
-			android:capitalize="sentences"
-			android:autoText="true"
-			android:singleLine="true"
-			style="@style/text_autocomplete"
-			/>
+		<RelativeLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingRight="?android:attr/scrollbarSize"
+		    android:background="@android:drawable/list_selector_background"
+		    >
 
+	        <ImageButton android:id="@+id/project_add"
+	            style="@style/PlusButton"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_alignParentTop="true"
+	            android:layout_marginTop="10px"
+	            android:layout_marginLeft="5px"
+	        />
+
+			<Spinner android:id="@+id/project"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_toLeftOf="@+id/project_add"
+				android:drawSelectorOnTop="true"
+					/>
+
+		</RelativeLayout>
+		
 	    <View
 	        android:layout_width="fill_parent"
 	        android:layout_height="1dip"
@@ -71,16 +87,32 @@
 			android:paddingRight="5px" android:text="@string/context_title"
 			style="@style/label" />
 
-		<AutoCompleteTextView android:id="@+id/context"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/context_title" 
-			android:maxLength="50"
-			android:capitalize="sentences"
-			android:autoText="true"
-			android:singleLine="true"
-			style="@style/text_autocomplete"
-			 />
+		<RelativeLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingRight="?android:attr/scrollbarSize"
+		    android:minHeight="?android:attr/listPreferredItemHeight"
+		    android:background="@android:drawable/list_selector_background"
+		    >
+
+	        <ImageButton android:id="@+id/context_add"
+	            style="@style/PlusButton"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentTop="true"
+	            android:layout_alignParentRight="true"
+	            android:layout_marginTop="10px"
+	            android:layout_marginLeft="5px"
+	        />
+
+			<Spinner android:id="@+id/context"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_toLeftOf="@+id/context_add"
+					/>
+
+		</RelativeLayout>
 
 	    <View
 	        android:layout_width="fill_parent"

@@ -17,10 +17,13 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -50,8 +53,10 @@ public class TopLevelActivity extends ListActivity {
     private static final int CONTEXTS = 4;
     
 	private static final String[] cProjection = new String[] {"_id"};
-    
+	
+    private int[] mIconIds = new int[5];
     private AsyncTask<?, ?, ?> mTask;
+    
     
 	@Override
     public void onCreate(Bundle icicle) {
@@ -79,10 +84,16 @@ public class TopLevelActivity extends ListActivity {
 		countUris[PROJECTS] = Shuffle.Projects.CONTENT_URI;
 		countUris[CONTEXTS] = Shuffle.Contexts.CONTENT_URI;
 		
+		mIconIds[INBOX] = R.drawable.inbox;
+		mIconIds[DUE_TASKS] = R.drawable.due_actions;
+		mIconIds[TOP_TASKS] = R.drawable.next_actions;
+		mIconIds[PROJECTS] = R.drawable.projects;
+		mIconIds[CONTEXTS] = R.drawable.contexts;
+		
 		mTask = new CalculateCountTask().execute(countUris);
 
         String[] perspectives = getResources().getStringArray(R.array.perspectives).clone();
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+        ArrayAdapter<CharSequence> adapter = new IconArrayAdapter(
         		this, R.layout.list_item_view, R.id.name, perspectives);
         setListAdapter(adapter);
 	}
@@ -118,42 +129,53 @@ public class TopLevelActivity extends ListActivity {
             int length = perspectives.length;
             
             for (int i = 0; i < length; i++) {
-            	CharSequence label = perspectives[i];
-            	labels[i] = label;
+            	labels[i] = "  " + perspectives[i];
+            }
+
+            int[] cachedCounts = Preferences.getTopLevelCounts(TopLevelActivity.this);
+            if (cachedCounts != null && cachedCounts.length == length) {
+                for (int i = 0; i < length; i++) {
+	            	CharSequence label = labels[i] + "  (" + cachedCounts[i] + ")";
+	    			SpannableString spannable = new SpannableString(label);
+	    			spannable.setSpan(span, labels[i].length(), 
+	    					label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+	    			labels[i] = spannable;
+                }
             }
 			publishProgress(labels);
-            
+			
+            String cachedCountStr = "";
             for (int i = 0; i < length; i++) {
             	Uri uri = params[i];
     			Cursor cursor = getContentResolver().query(uri, cProjection, null, null, null);
     			int count = cursor.getCount();
     			cursor.close();
-            	CharSequence label = perspectives[i] + " (" + count + ")";
+            	CharSequence label = "  " + perspectives[i] + "  (" + count + ")";
     			SpannableString spannable = new SpannableString(label);
-    			spannable.setSpan(span, perspectives[i].length(), 
+    			spannable.setSpan(span, perspectives[i].length() + 2, 
     					label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
     			labels[i] = spannable;
     			publishProgress(labels);
+    			
+    			cachedCountStr += count;
+    			if (i < length - 1) {
+    				cachedCountStr += ",";
+    			}
     		}
+            
+            // updated cached counts
+            SharedPreferences.Editor editor = Preferences.getEditor(TopLevelActivity.this);
+            editor.putString(Preferences.TOP_LEVEL_COUNTS_KEY, cachedCountStr);
+            editor.commit();
+            
             return null;
         }
 
 		@Override
 		public void onProgressUpdate (CharSequence[]... progress) {
 			CharSequence[] labels = progress[0];
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
-            		TopLevelActivity.this, R.layout.list_item_view, R.id.name, labels) {
-            	
-            	@Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                	View view = super.getView(position, convertView, parent);
-                	TextView nameView = (TextView) view.findViewById(R.id.name);
-                	// don't use toString in order to preserve colour change
-                	nameView.setText(getItem(position));
-                	return view;
-                }
-            };
-            
+            ArrayAdapter<CharSequence> adapter = new IconArrayAdapter(
+            		TopLevelActivity.this, R.layout.list_item_view, R.id.name, labels);
             int position = getSelectedItemPosition();
             setListAdapter(adapter);
             setSelection(position);
@@ -161,6 +183,26 @@ public class TopLevelActivity extends ListActivity {
 		
         public void onPostExecute() {
             mTask = null;
+        }
+    	
+    }
+    
+    private class IconArrayAdapter extends ArrayAdapter<CharSequence> {
+
+        public IconArrayAdapter(Context context, int resource, int textViewResourceId, CharSequence[] objects) {
+            super(context, resource, textViewResourceId, objects);
+        }
+    		
+        public View getView(int position, View convertView, ViewGroup parent) {
+        	View view = super.getView(position, convertView, parent);
+        	TextView nameView = (TextView) view.findViewById(R.id.name);
+        	// don't use toString in order to preserve colour change
+        	nameView.setText(getItem(position));
+        	if (position < mIconIds.length) {
+        		nameView.setCompoundDrawablesWithIntrinsicBounds(
+        				getResources().getDrawable(mIconIds[position]), null, null, null);
+        	}
+        	return view;
         }
     	
     }

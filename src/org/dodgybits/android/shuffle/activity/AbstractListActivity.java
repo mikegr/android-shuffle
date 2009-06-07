@@ -111,11 +111,14 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		case NEW_ITEM:
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
-					Uri uri = Uri.parse(data.getStringExtra(cSelectedItem));
-					mItemIdToSelect = ContentUris.parseId(uri);
-					// need to do the actual checking and selecting
-					// in onResume, otherwise getItemId(i) is always 0
-					// and setSelection(i) does nothing
+					String selectedItem = data.getStringExtra(cSelectedItem);
+					if (selectedItem != null) {
+						Uri uri = Uri.parse(selectedItem);
+						mItemIdToSelect = ContentUris.parseId(uri);
+						// need to do the actual checking and selecting
+						// in onResume, otherwise getItemId(i) is always 0
+						// and setSelection(i) does nothing
+					}
 				}
 			}
 			break;

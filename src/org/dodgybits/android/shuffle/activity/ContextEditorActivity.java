@@ -168,7 +168,8 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     
     @Override
     protected void updateUIFromExtras(Bundle extras) {
-    	// do nothing for now
+    	displayIcon();
+        displayColour();
     }
     
     @Override
@@ -211,7 +212,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         mNameWidget = (EditText) findViewById(R.id.name);
 
         mColourWidget = (TextView) findViewById(R.id.colour_display);
-        mColourIndex = -1;
+        mColourIndex = 0;
         
         mIconWidget = (ImageView) findViewById(R.id.icon_display);
         mIconNoneWidget = (TextView) findViewById(R.id.icon_none);

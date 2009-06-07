@@ -95,7 +95,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
     	if (project.defaultContextId != null) {
     		Context context = BindingUtils.fetchContextById(this, project.defaultContextId);
     		if (context != null) {
-        		extras.putString(Shuffle.Tasks.CONTEXT_ID, context.name);
+        		extras.putLong(Shuffle.Tasks.CONTEXT_ID, context.id);
     		}
     	}
 	}

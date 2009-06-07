@@ -163,18 +163,25 @@ public abstract class AbstractEditorActivity<T> extends Activity
 
     protected void doSaveAction() {
         // Save or create the contact if needed
+    	Uri result = null;
         switch (mState) {
             case State.STATE_EDIT:
-                save();
+                result = save();
                 break;
 
             case State.STATE_INSERT:
-                create();
+                result = create();
                 break;
 
             default:
                 Log.e(cTag, "Unknown state in doSaveAction: " + mState);
                 break;
+        }
+        
+        if (result == null) {
+        	setResult(RESULT_CANCELED);
+        } else {
+        	setResult(RESULT_OK, new Intent().setData(result));
         }
         finish();
     }

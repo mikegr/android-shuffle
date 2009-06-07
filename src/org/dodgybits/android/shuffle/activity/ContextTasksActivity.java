@@ -115,7 +115,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     	Intent intent = super.getInsertIntent();
     	Bundle extras = intent.getExtras();
     	if (extras == null) extras = new Bundle();
-    	extras.putString(Shuffle.Tasks.CONTEXT_ID, mContext.name);
+    	extras.putLong(Shuffle.Tasks.CONTEXT_ID, mContext.id);
     	intent.putExtras(extras);
     	return intent;
     }

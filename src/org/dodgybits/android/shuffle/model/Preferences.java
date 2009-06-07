@@ -35,6 +35,8 @@ public class Preferences {
 	
 	public static final String PROJECT_VIEW_KEY = "project_view";
 	public static final String CONTEXT_VIEW_KEY = "context_view";
+
+	public static final String TOP_LEVEL_COUNTS_KEY = "top_level_counts";
 	
 	public static final String KEY_DEFAULT_REMINDER = "default_reminder";
 	
@@ -114,6 +116,20 @@ public class Preferences {
 		return sPrefs.getBoolean(DISPLAY_DETAILS_KEY, true);
 	}
 
+	public static int[] getTopLevelCounts(Context context) {
+		getSharedPreferences(context);
+		String countString = sPrefs.getString(Preferences.TOP_LEVEL_COUNTS_KEY, null);
+		int[] result = null;
+		if (countString != null) {
+			String[] counts = countString.split(",");
+			result = new int[counts.length];
+			for(int i = 0; i < counts.length; i++) {
+				result[i] = Integer.parseInt(counts[i]);
+			}
+		}
+		return result;
+	}
+	
 	public static SharedPreferences.Editor getEditor(Context context) {
 		getSharedPreferences(context);
 		return sPrefs.edit();

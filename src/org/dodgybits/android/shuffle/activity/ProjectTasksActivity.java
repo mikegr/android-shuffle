@@ -118,7 +118,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     	if (mProject.defaultContextId != null) {
     		Context context = BindingUtils.fetchContextById(this, mProject.defaultContextId);
     		if (context != null) {
-        		extras.putString(Shuffle.Tasks.CONTEXT_ID, context.name);
+        		extras.putLong(Shuffle.Tasks.CONTEXT_ID, context.id);
     		}
     	}
     	intent.putExtras(extras);

@@ -82,7 +82,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	@Override
 	protected void updateInsertExtras(Bundle extras, Context context) {
-   		extras.putString(Shuffle.Tasks.CONTEXT_ID, context.name);
+   		extras.putLong(Shuffle.Tasks.CONTEXT_ID, context.id);
 	}
 	
 	@Override

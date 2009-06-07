@@ -71,6 +71,10 @@
     <style name="preferences_checkbox" parent="ShuffleTheme">
     </style>
     
+    <style name="preferences_text" parent="text">
+        <item name="android:textColor">@drawable/white</item>
+    </style>
+    
     <style name="text_autocomplete" parent="text_editable">
     	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     	<item name="android:popupBackground">@drawable/white</item>
