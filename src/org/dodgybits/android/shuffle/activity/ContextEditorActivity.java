@@ -196,7 +196,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     }
     
     private void loadCursor() {
-    	if (mUri != null)
+    	if (mUri != null && mState == State.STATE_EDIT)
     	{
             mCursor = managedQuery(mUri, Shuffle.Contexts.cFullProjection, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {

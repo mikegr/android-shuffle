@@ -47,7 +47,8 @@ public abstract class AbstractEditorActivity<T> extends Activity
     protected Uri mUri;
     protected Cursor mCursor;
     protected T mOriginalItem;
-
+    protected Intent mNextIntent;
+    
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
@@ -77,6 +78,14 @@ public abstract class AbstractEditorActivity<T> extends Activity
 
         return super.onKeyDown(keyCode, event);
     }
+    
+    @Override
+    public void finish() {
+		if (mNextIntent != null) {
+    		startActivity(mNextIntent);
+		}
+		super.finish();
+    }    
     
 //    @Override
 //    protected void onResume() {

@@ -91,7 +91,6 @@
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:paddingRight="?android:attr/scrollbarSize"
-		    android:minHeight="?android:attr/listPreferredItemHeight"
 		    android:background="@android:drawable/list_selector_background"
 		    >
 

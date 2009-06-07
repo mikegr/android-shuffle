@@ -71,7 +71,7 @@
     <style name="preferences_checkbox" parent="ShuffleTheme">
     </style>
     
-    <style name="preferences_text" parent="text">
+    <style name="white_text" parent="text">
         <item name="android:textColor">@drawable/white</item>
     </style>
     

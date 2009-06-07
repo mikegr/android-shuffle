@@ -132,8 +132,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private LinearLayout mRemindersContainer;
     private ArrayList<Integer> mOriginalMinutes = new ArrayList<Integer>();
     private ArrayList<LinearLayout> mReminderItems = new ArrayList<LinearLayout>(0);
-
-    private Intent mNextIntent;
     
     @Override
     protected void onCreate(Bundle icicle) {
@@ -410,16 +408,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     			eventId, order, complete);
     	return task;
 	}
-    
-    @Override
-    public void finish() {
-		if (mNextIntent != null) {
-    		startActivity(mNextIntent);
-		}
-		super.finish();
-    }
-
-    
+        
     private Uri addOrUpdateCalendarEvent(Long calEventId, String title, String description,
     		Project project, Context context,
     		String timezone, long start, long end, boolean allDay) {
@@ -638,7 +627,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
 
     private void loadCursors() {
         // Get the task if we're editing
-    	if (mUri != null && mState == State.STATE_EDIT )
+    	if (mUri != null && mState == State.STATE_EDIT)
     	{
 	        mCursor = managedQuery(mUri, Shuffle.Tasks.cExpandedProjection, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {

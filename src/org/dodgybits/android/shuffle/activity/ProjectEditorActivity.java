@@ -147,7 +147,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     }
     
     private void loadCursor() {
-    	if (mUri != null)
+    	if (mUri != null && mState == State.STATE_EDIT)
     	{
             mCursor = managedQuery(mUri, Shuffle.Projects.cFullProjection, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {

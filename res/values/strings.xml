@@ -136,9 +136,9 @@
 	<string name="title_delete_all_preference">Delete everything!</string>
 	<string name="summary_delete_all_preference">Remove all actions, projects and custom contexts.</string>
 
-    <string name="delete_completed_button_title">Delete completed actions</string>
+    <string name="delete_completed_button_title">Delete</string>
     <string name="clean_inbox_button_title">Clean up Inbox</string>
-    <string name="clean_slate_button_title">Delete everything!</string>
+    <string name="clean_slate_button_title">Delete</string>
 
     <!-- Toast displayed when an item is created -->
     <string name="itemCreatedToast"><xliff:g id="itemName">%s</xliff:g> created.</string>
