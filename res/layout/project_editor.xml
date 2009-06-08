@@ -61,7 +61,7 @@
 
 	<Spinner android:id="@+id/default_context"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
+		android:layout_height="48px" 
         android:layout_alignParentLeft="true"
 		android:layout_below="@+id/default_context_label"        
 		android:drawSelectorOnTop="true"

@@ -262,6 +262,26 @@
             </intent-filter>            
         </activity>
                 
+        <activity android:name=".activity.NewTaskShortcutActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+
+        </activity>
+                
+        <activity-alias android:name=".activity.NewTaskShortcutActivity"
+            android:targetActivity=".activity.NewTaskShortcutActivity"
+            android:label="@string/app_name">
+
+            <!--  This intent-filter allows your shortcuts to be created in the launcher. -->
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity-alias>
+                
     </application>
     
 </manifest> 

@@ -62,13 +62,12 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentRight="true"
 	            android:layout_alignParentTop="true"
-	            android:layout_marginTop="10px"
 	            android:layout_marginLeft="5px"
 	        />
 
 			<Spinner android:id="@+id/project"
 	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
+	            android:layout_height="48px"
 	            android:layout_alignParentLeft="true"
 	            android:layout_toLeftOf="@+id/project_add"
 				android:drawSelectorOnTop="true"
@@ -100,15 +99,15 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentTop="true"
 	            android:layout_alignParentRight="true"
-	            android:layout_marginTop="10px"
 	            android:layout_marginLeft="5px"
 	        />
 
 			<Spinner android:id="@+id/context"
 	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
+	            android:layout_height="48px"
 	            android:layout_alignParentLeft="true"
 	            android:layout_toLeftOf="@+id/context_add"
+				android:drawSelectorOnTop="true"
 					/>
 
 		</RelativeLayout>

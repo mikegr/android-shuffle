@@ -771,7 +771,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     }
         
     private void setSpinnerSelection(Spinner spinner, long[] ids, Long id) {
-        if (id == null) {
+        if (id == null || id == 0) {
         	spinner.setSelection(0);
         } else {
         	for (int i = 1; i < ids.length; i++) {
