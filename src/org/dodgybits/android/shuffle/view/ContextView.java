@@ -23,6 +23,7 @@ import org.dodgybits.android.shuffle.util.TextColours;
 
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
+import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +37,17 @@ public class ContextView extends ItemView<Context> {
 	private View mColour;
 	private SparseIntArray mTaskCountArray;
 
-	public ContextView(android.content.Context androidContext) {
-		super(androidContext);
-		
+	public ContextView(android.content.Context context) {
+		super(context);
+		init(context);
+	}
+	
+    public ContextView(android.content.Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init(context);
+	}
+
+	public void init(android.content.Context androidContext) {
         LayoutInflater vi = (LayoutInflater)androidContext.
         		getSystemService(android.content.Context.LAYOUT_INFLATER_SERVICE);
         vi.inflate(getViewResourceId(), this, true); 

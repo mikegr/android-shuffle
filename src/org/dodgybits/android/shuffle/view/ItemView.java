@@ -17,14 +17,19 @@
 package org.dodgybits.android.shuffle.view;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 public abstract class ItemView<T> extends LinearLayout {
 
-	public ItemView(Context androidContext) {
-		super(androidContext);
+	public ItemView(Context context) {
+		super(context);
 	}
 	
+    public ItemView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+
 	public abstract void updateView(T item);
 
 }

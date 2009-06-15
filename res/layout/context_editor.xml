@@ -194,7 +194,7 @@
         />
     
     
-	<org.dodgybits.android.shuffle.view.LabelView
+	<org.dodgybits.android.shuffle.view.ContextView
 		android:id="@+id/context_preview" 
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -205,7 +205,8 @@
 		android:drawablePadding="2px"
 		android:paddingLeft="3px"
 		android:paddingRight="3px"
-		style="@style/context" />
+		style="@style/context" 
+		/>
 
     <View android:id="@+id/end_separator"
         android:layout_width="fill_parent"

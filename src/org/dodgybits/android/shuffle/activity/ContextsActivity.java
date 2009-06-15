@@ -16,6 +16,7 @@
 
 package org.dodgybits.android.shuffle.activity;
 
+import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.activity.config.ContextListConfig;
 import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.model.Context;
@@ -85,7 +86,12 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 				if (convertView instanceof ContextView) {
 					contextView = (ContextView) convertView;
 				} else {
-					contextView = new ContextView(parent.getContext());
+					contextView = new ContextView(parent.getContext()) {
+						protected int getViewResourceId() {
+							return R.layout.list_context_view;
+						}
+						
+					};
 				}
 				contextView.setTaskCountArray(mTaskCountArray);
 				contextView.updateView(context);

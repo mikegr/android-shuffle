@@ -24,7 +24,7 @@ import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.util.DrawableUtils;
 import org.dodgybits.android.shuffle.util.TextColours;
-import org.dodgybits.android.shuffle.view.LabelView;
+import org.dodgybits.android.shuffle.view.ContextView;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -61,7 +61,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     private ImageView mIconWidget;
     private TextView mIconNoneWidget;
     private ImageButton mClearIconButton;
-	protected LabelView mContext;
+	protected ContextView mContext;
 
 	@Override
     protected void onCreate(Bundle icicle) {
@@ -186,22 +186,13 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     @Override
     protected void updateUIFromItem(Context context) {
         mNameWidget.setTextKeepState(context.name);
-        
-        if (mColourIndex == -1) {
-        	// if colour already set, use that (e.g. after use picks a new one)
-        	mColourIndex = context.colourIndex;
-        }
+       	mColourIndex = context.colourIndex;
+        mIcon = context.icon;
+
         displayColour();
-        
-        if (mIcon == Icon.NONE) {
-        	// if icon already set, use that (e.g. after user picks a new one)
-            mIcon = context.icon;
-        }
     	displayIcon();
     	updatePreview();
 
-        // If we hadn't previously retrieved the original context, do so
-        // now.  This allows the user to revert their changes.
         if (mOriginalItem == null) {
         	mOriginalItem = context;
         }    	
@@ -243,7 +234,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         mClearIconButton.setOnClickListener(this);
         mClearIconButton.setOnFocusChangeListener(this);
         
-		mContext = (LabelView) findViewById(R.id.context_preview);
+		mContext = (ContextView) findViewById(R.id.context_preview);
     }
     
     @Override
@@ -303,14 +294,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
 		if (TextUtils.isEmpty(name) || mColourIndex == -1) {
 			mContext.setVisibility(View.GONE);
 		} else {
-			mContext.setText(name);
-			mContext.setColourIndex(mColourIndex);
-			int id = mIcon.smallIconId;
-			if (id > 0) {
-				mContext.setIcon(getResources().getDrawable(id));
-			} else {
-				mContext.setIcon(null);
-			}
+			mContext.updateView(createItemFromUI());
 			mContext.setVisibility(View.VISIBLE);
 		}				
 	}

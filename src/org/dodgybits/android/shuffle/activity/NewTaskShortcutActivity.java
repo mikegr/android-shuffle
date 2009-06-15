@@ -34,7 +34,7 @@ public class NewTaskShortcutActivity extends Activity {
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.shortcut_name));
         Parcelable iconResource = Intent.ShortcutIconResource.fromContext(
-                this,  R.drawable.shuffle_icon);
+                this,  R.drawable.add_task_3d);
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
 
         // Now, return the result to the launcher
