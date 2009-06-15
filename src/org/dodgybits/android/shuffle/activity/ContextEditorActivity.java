@@ -24,6 +24,7 @@ import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.util.DrawableUtils;
 import org.dodgybits.android.shuffle.util.TextColours;
+import org.dodgybits.android.shuffle.view.LabelView;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -31,7 +32,9 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -39,7 +42,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ContextEditorActivity extends AbstractEditorActivity<Context> {
+public class ContextEditorActivity extends AbstractEditorActivity<Context> implements TextWatcher {
 
     private static final String cTag = "ContextEditorActivity";
    
@@ -58,8 +61,9 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     private ImageView mIconWidget;
     private TextView mIconNoneWidget;
     private ImageButton mClearIconButton;
-    
-    @Override
+	protected LabelView mContext;
+
+	@Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
         super.onCreate(icicle);
@@ -101,6 +105,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     			if (data != null) {
     				mColourIndex = Integer.parseInt(data.getStringExtra("colour"));
     				displayColour();
+    	        	updatePreview();
     			}
     		}
     		break;
@@ -110,6 +115,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     				String iconName = data.getStringExtra("iconName");
     				mIcon = Icon.createIcon(iconName, getResources());
     				displayIcon();
+    	        	updatePreview();
     			}
     		}
     		break;
@@ -174,6 +180,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     	
     	displayIcon();
         displayColour();
+    	updatePreview();
     }
     
     @Override
@@ -191,6 +198,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
             mIcon = context.icon;
         }
     	displayIcon();
+    	updatePreview();
 
         // If we hadn't previously retrieved the original context, do so
         // now.  This allows the user to revert their changes.
@@ -214,7 +222,8 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     private void findViewsAndAddListeners() {
         // The text view for our context description, identified by its ID in the XML file.
         mNameWidget = (EditText) findViewById(R.id.name);
-
+        mNameWidget.addTextChangedListener(this);
+        
         mColourWidget = (TextView) findViewById(R.id.colour_display);
         mColourIndex = -1;
         
@@ -233,6 +242,8 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
         mClearIconButton = (ImageButton) findViewById(R.id.icon_clear_button);
         mClearIconButton.setOnClickListener(this);
         mClearIconButton.setOnFocusChangeListener(this);
+        
+		mContext = (LabelView) findViewById(R.id.context_preview);
     }
     
     @Override
@@ -257,6 +268,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
             case R.id.icon_clear_button: {
 	        	mIcon = Icon.NONE;
 	        	displayIcon();
+	        	updatePreview();
 	        	break;
             }
             
@@ -284,6 +296,38 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> {
     		mIconWidget.setVisibility(View.VISIBLE);
     		mClearIconButton.setEnabled(true);
     	}
-    }    
+    }
+	
+	private void updatePreview() {
+		String name = mNameWidget.getText().toString();
+		if (TextUtils.isEmpty(name) || mColourIndex == -1) {
+			mContext.setVisibility(View.GONE);
+		} else {
+			mContext.setText(name);
+			mContext.setColourIndex(mColourIndex);
+			int id = mIcon.smallIconId;
+			if (id > 0) {
+				mContext.setIcon(getResources().getDrawable(id));
+			} else {
+				mContext.setIcon(null);
+			}
+			mContext.setVisibility(View.VISIBLE);
+		}				
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		updatePreview();
+	}
+	
 	
 }

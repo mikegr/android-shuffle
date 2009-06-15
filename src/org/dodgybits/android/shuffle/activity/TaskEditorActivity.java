@@ -467,7 +467,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     		extras.putLong(Shuffle.Tasks.CONTEXT_ID, contextId);    		
 		}
 		
-    	Long projectId = getSpinnerSelectedId(mContextSpinner, mProjectIds);
+    	Long projectId = getSpinnerSelectedId(mProjectSpinner, mProjectIds);
     	if (projectId != null) {
     		extras.putLong(Shuffle.Tasks.PROJECT_ID, projectId);    		
     	}

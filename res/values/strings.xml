@@ -106,6 +106,7 @@
     <string name="icon_title">Icon</string>
     <string name="name_title">Name</string>
     <string name="default_context_title">Default context</string>
+    <string name="preview_title">Preview</string>
 
 	<!--  Calendar screen -->
     <string name="day_button_title">Today</string>
