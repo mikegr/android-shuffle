@@ -26,13 +26,27 @@ import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 public class InboxActivity extends AbstractTaskListActivity {
 
+	@Override
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		
+		mOtherButton.setText(R.string.clean_inbox_button_title);
+		Drawable cleanIcon = getResources().getDrawable(R.drawable.edit_clear);
+		cleanIcon.setBounds(0, 0, 24, 24);
+		mOtherButton.setCompoundDrawables(cleanIcon, null, null, null);
+		mOtherButton.setVisibility(View.VISIBLE);
+	}
+	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	MenuUtils.addCleanInboxMenuItem(menu);
@@ -44,12 +58,7 @@ public class InboxActivity extends AbstractTaskListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case MenuUtils.CLEAN_INBOX_ID:
-        	Preferences.cleanUpInbox(this);
-            Toast.makeText(this, R.string.clean_inbox_message, Toast.LENGTH_SHORT).show();
-        	// need to restart the activity since the query has changed
-        	// mCursor.requery() not enough
-        	startActivity(new Intent(this, InboxActivity.class));
-    		finish();
+        	doCleanup();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -77,4 +86,17 @@ public class InboxActivity extends AbstractTaskListActivity {
 		};
 	}
 	    
+	@Override
+	protected void onOtherButtonClicked() {
+		doCleanup();
+	}
+	
+	private void doCleanup() {
+    	Preferences.cleanUpInbox(this);
+        Toast.makeText(this, R.string.clean_inbox_message, Toast.LENGTH_SHORT).show();
+    	// need to restart the activity since the query has changed
+    	// mCursor.requery() not enough
+    	startActivity(new Intent(this, InboxActivity.class));
+		finish();
+	}
 }

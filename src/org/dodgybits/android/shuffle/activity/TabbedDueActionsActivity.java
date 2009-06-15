@@ -41,7 +41,7 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        
+
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
         mTabHost.addTab(createTabSpec(

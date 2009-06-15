@@ -26,6 +26,10 @@
         android:layout_width="fill_parent" 
         android:layout_height="fill_parent">
 
+	    <include android:id="@+id/icon_bar" layout="@layout/icon_bar" 
+		    android:layout_width="fill_parent"
+		    android:layout_height="40px"
+	    />
 
 	    <ListView android:id="@+id/android:list"
 	              android:layout_width="fill_parent" 
@@ -41,7 +45,7 @@
 	              android:text="@string/no_tasks"
 	              style="@style/white_text"                
 	              />
-                            
+                            		                            
 </LinearLayout>
 
 </org.dodgybits.android.shuffle.view.SwipeListItemWrapper>

@@ -27,6 +27,7 @@ import org.dodgybits.android.shuffle.view.TaskView;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,13 +37,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 
 public abstract class AbstractTaskListActivity extends AbstractListActivity<Task> 
-	implements SwipeListItemListener {
+	implements SwipeListItemListener, View.OnClickListener {
 
 	private static final String cTag = "AbstractTaskListActivity";
+	
+	protected Button mAddTaskButton;
+	protected Button mOtherButton;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -51,6 +56,18 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 		// register self as swipe listener
 		SwipeListItemWrapper wrapper = (SwipeListItemWrapper) findViewById(R.id.swipe_wrapper);
 		wrapper.setSwipeListItemListener(this);
+		
+		// lookup and setup icons in icon_bar (if present)
+		mAddTaskButton = (Button) findViewById(R.id.add_task_button);
+		if (mAddTaskButton != null) {
+			Drawable addIcon = getResources().getDrawable(android.R.drawable.ic_menu_add);
+			addIcon.setBounds(0, 0, 24, 24);
+			mAddTaskButton.setCompoundDrawables(addIcon, null, null, null);
+			mAddTaskButton.setOnClickListener(this);
+	
+			mOtherButton = (Button) findViewById(R.id.other_button);
+			mOtherButton.setOnClickListener(this);
+		}
 	}
 	
     @Override
@@ -79,6 +96,22 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
         return super.onContextItemSelected(item);
     }	
     
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.add_task_button:
+				startActivityForResult(getInsertIntent(), NEW_ITEM);
+                break;
+
+            case R.id.other_button:
+            	onOtherButtonClicked();
+                break;
+        }
+    }
+    
+    protected void onOtherButtonClicked() {
+    }
+    	
 	@Override
     protected Intent getClickIntent(Uri uri) {
     	return new Intent(Intent.ACTION_EDIT, uri);
