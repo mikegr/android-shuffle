@@ -44,7 +44,7 @@ public class Shuffle {
         /**
          * The default sort order for this table
          */
-        public static final String DEFAULT_SORT_ORDER = "due ASC, created ASC";
+        public static final String DEFAULT_SORT_ORDER = "start ASC, created ASC";
         
         public static final String DESCRIPTION = "description";
         public static final String DETAILS = "details";

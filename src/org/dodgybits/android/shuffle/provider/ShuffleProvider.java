@@ -133,8 +133,9 @@ public class ShuffleProvider extends ContentProvider {
 						+ " ADD COLUMN hasAlarm INTEGER NOT NULL DEFAULT 0;");
 				db.execSQL("ALTER TABLE " + cTaskTableName
 						+ " ADD COLUMN calEventId INTEGER;");
-				db.execSQL("UPDATE TABLE " + cTaskTableName
-						+ " SET start = due");
+				db.execSQL("UPDATE " + cTaskTableName + " SET start = due;");
+				db.execSQL("UPDATE " + cTaskTableName + " SET allDay = 1 " +
+						"WHERE due > 0;");
 				
 				createRemindersTable(db);
 				createRemindersEventIdIndex(db);
@@ -324,7 +325,7 @@ public class ShuffleProvider extends ContentProvider {
 						+ " ASC";
 				break;
 			case DUE_TASKS:
-				orderBy = Shuffle.Tasks.DUE_DATE + " ASC";
+				orderBy = Shuffle.Tasks.START_DATE + " ASC";
 				break;
 			case CONTEXTS:
 			case CONTEXT_ID:

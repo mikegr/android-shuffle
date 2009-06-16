@@ -91,7 +91,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	@Override
 	protected void updateInsertExtras(Bundle extras, Project project) {
-    	extras.putString(Shuffle.Tasks.PROJECT_ID, project.name);
+    	extras.putLong(Shuffle.Tasks.PROJECT_ID, project.id);
     	if (project.defaultContextId != null) {
     		Context context = BindingUtils.fetchContextById(this, project.defaultContextId);
     		if (context != null) {
