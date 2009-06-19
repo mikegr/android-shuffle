@@ -16,8 +16,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.dodgybits.android.shuffle"
-	android:versionCode="4"
-    android:versionName="1.2.0"    
+	android:versionCode="5"
+    android:versionName="1.2.1"    
     >
     
     <uses-sdk android:minSdkVersion="3" />
@@ -227,7 +227,10 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.HelpActivity" android:label="@string/title_help">
+        <activity android:name=".activity.HelpActivity" 
+        	android:label="@string/title_help"
+            android:theme="@android:style/Theme.Light"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />

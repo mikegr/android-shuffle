@@ -114,6 +114,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private Time mDueTime;
 
 	private View mSchedulingExtra;
+	private TextView mSchedulingDetail;
 	private View mExpandButton;
 	private View mCollapseButton;
 
@@ -213,17 +214,23 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         setWhenDefaults();   
         populateWhen();
         
-        mCalendarLabel.setText(getString(R.string.add_to_gcal_title));
-        mCalendarDetail.setText(getString(R.string.add_to_gcal_detail));
+    	setSchedulingVisibility(false);
         
         mStartTimeButton.setVisibility(View.VISIBLE);
         mDueTimeButton.setVisibility(View.VISIBLE);
+        updateCalendarPanel();
 
         updateRemindersVisibility();
     }
     
     @Override
     protected void updateUIFromItem(Task task) {
+        // If we hadn't previously retrieved the original task, do so
+        // now.  This allows the user to revert their changes.
+        if (mOriginalItem == null) {
+        	mOriginalItem = task;
+        }
+    	
         mDetailsWidget.setTextKeepState(task.details == null ? "" : task.details);
         
         mDescriptionWidget.setTextKeepState(task.description);
@@ -270,11 +277,8 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         updateTimeVisibility(!allDay);
         
         mCompletedCheckBox.setChecked(task.complete);
-        
-        if (task.calEventId != null && task.calEventId > 0L) {
-            mCalendarLabel.setText(getString(R.string.update_gcal_title));
-            mCalendarDetail.setText(getString(R.string.update_gcal_detail));
-        }
+
+        updateCalendarPanel();
         
         // Load reminders (if there are any)
         if (task.hasAlarms) {
@@ -303,12 +307,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             }
         }
         updateRemindersVisibility();
-        
-        // If we hadn't previously retrieved the original task, do so
-        // now.  This allows the user to revert their changes.
-        if (mOriginalItem == null) {
-        	mOriginalItem = task;
-        }
     }
     
     @Override
@@ -691,6 +689,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mSchedulingExtra = schedulingSection.findViewById(R.id.scheduling_extra); 
         mExpandButton = schedulingEntry.findViewById(R.id.expand);
         mCollapseButton = schedulingEntry.findViewById(R.id.collapse);
+        mSchedulingDetail = (TextView) schedulingEntry.findViewById(R.id.scheduling_detail);
         mSchedulingExpanded = mSchedulingExtra.getVisibility() == View.VISIBLE;
 
         mRemindersContainer = (LinearLayout) findViewById(R.id.reminder_items_container);
@@ -839,10 +838,12 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         	mSchedulingExtra.setVisibility(View.VISIBLE);
             mExpandButton.setVisibility(View.GONE);
             mCollapseButton.setVisibility(View.VISIBLE);
+            mSchedulingDetail.setText(R.string.scheduling_expanded);
         } else {
         	mSchedulingExtra.setVisibility(View.GONE);
             mExpandButton.setVisibility(View.VISIBLE);
             mCollapseButton.setVisibility(View.GONE);
+            mSchedulingDetail.setText(R.string.scheduling_collapsed);
         }
     }
     
@@ -1026,6 +1027,25 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         }
     }
     
+    private void updateCalendarPanel() {
+    	boolean enabled = true;
+        if (mOriginalItem != null && 
+        		mOriginalItem.calEventId != null && 
+        		mOriginalItem.calEventId > 0L) {
+            mCalendarLabel.setText(getString(R.string.update_gcal_title));
+            mCalendarDetail.setText(getString(R.string.update_gcal_detail));
+        } else if (mShowDue && mShowStart) {
+            mCalendarLabel.setText(getString(R.string.add_to_gcal_title));
+            mCalendarDetail.setText(getString(R.string.add_to_gcal_detail));
+        } else {
+            mCalendarLabel.setText(getString(R.string.add_to_gcal_title));
+            mCalendarDetail.setText(getString(R.string.add_to_gcal_detail_disabled));
+            enabled = false;
+        }
+        mUpdateCalendarEntry.setEnabled(enabled);
+        mUpdateCalendarCheckBox.setEnabled(enabled);
+    }
+    
     static ArrayList<Integer> reminderItemsToMinutes(ArrayList<LinearLayout> reminderItems,
             ArrayList<Integer> reminderValues) {
         int len = reminderItems.size();
@@ -1138,6 +1158,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             setTime(mStartTimeButton, startMillis, mShowStart);
             setDate(mDueDateButton, dueMillis, mShowDue);
             setTime(mDueTimeButton, dueMillis, mShowDue);
+            updateCalendarPanel();
         }
         
     }
@@ -1218,6 +1239,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             setTime(mStartTimeButton, startMillis, mShowStart);
             setDate(mDueDateButton, dueMillis, mShowDue);
             setTime(mDueTimeButton, dueMillis, mShowDue);
+            updateCalendarPanel();
         }
         
     }

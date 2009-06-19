@@ -90,11 +90,14 @@
 	<!--  task edit screen -->
     <string name="description_title">Description</string>
     <string name="scheduling_title">Scheduling</string>
+    <string name="scheduling_collapsed">Click to reveal scheduling options</string>
+    <string name="scheduling_expanded">Click to hide scheduling options</string>
     <string name="start_title">Start</string>
     <string name="due_title">Due</string>
     <string name="all_day_title">All day</string>
     <string name="reminders_title">Reminders</string>
     <string name="add_to_gcal_title">Add to Google Calendar</string>
+    <string name="add_to_gcal_detail_disabled">Add dates to enable this option</string>
     <string name="add_to_gcal_detail">New entry will load after saving</string>
     <string name="update_gcal_title">Update Google Calendar</string>
     <string name="update_gcal_detail">Updated entry will load after saving</string>
@@ -239,6 +242,7 @@ Some handy Shuffle features you may not know about:\n
 2) Hitting the Back button saves before closing.\n
 3) Use the <i>Save and New</i> menu to create a bunch of actions in one go.\n
 4) You can mark an action as complete by swiping your finger over it in a list.\n
+5) Create a shortcut on the Home Screen to create a new action\n
     </string>
     <string name="help8">
 Thanks to the team behind the Tango Desktop Project, an open source collection of icons used in Shuffle.
