@@ -46,6 +46,29 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+            android:title="@string/backup_preferences">
+
+        <PreferenceScreen
+                android:title="@string/title_create_backup_preference"
+                android:summary="@string/summary_create_backup_preference">
+
+            <intent android:action="android.intent.action.MAIN" 
+                android:targetPackage="org.dodgybits.android.shuffle" 
+            	android:targetClass="org.dodgybits.android.shuffle.activity.PreferencesCreateBackupActivity" />
+        </PreferenceScreen>
+
+        <PreferenceScreen
+                android:title="@string/title_restore_backup_preference"
+                android:summary="@string/summary_restore_backup_preference">
+
+            <intent android:action="android.intent.action.MAIN" 
+                android:targetPackage="org.dodgybits.android.shuffle" 
+            	android:targetClass="org.dodgybits.android.shuffle.activity.PreferencesRestoreBackupActivity" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
             android:title="@string/cleanup_preferences">
 
         <PreferenceScreen

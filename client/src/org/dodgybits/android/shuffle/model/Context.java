@@ -16,6 +16,8 @@
 
 package org.dodgybits.android.shuffle.model;
 
+import org.dodgybits.shuffle.dto.ShuffleProtos.Context.Builder;
+
 import android.content.res.Resources;
 import android.text.TextUtils;
 
@@ -59,5 +61,34 @@ public class Context {
 			int smallId = res.getIdentifier(iconName + "_small", cType, cPackage);
 			return new Icon(iconName, largeId, smallId);
 		}
+	}
+	
+	public org.dodgybits.shuffle.dto.ShuffleProtos.Context toDto() {
+		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Context.newBuilder();
+		builder 
+			.setId(id)
+			.setName(name)
+			.setColourIndex(colourIndex);
+		if (icon != Icon.NONE) {
+			builder.setIcon(icon.iconName);
+		}
+		return builder.build();
+	}
+	
+	public static Context buildFromDto(
+			org.dodgybits.shuffle.dto.ShuffleProtos.Context dto,
+			Resources res) {
+		Icon icon;
+		if (dto.hasIcon()) {
+			icon = Icon.createIcon(dto.getIcon(), res);
+		} else {
+			icon = Icon.NONE;
+		}
+		
+		return new Context(
+				dto.getId(),
+				dto.getName(),
+				dto.getColourIndex(),
+				icon);
 	}
 }

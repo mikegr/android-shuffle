@@ -16,6 +16,8 @@
 
 package org.dodgybits.android.shuffle.model;
 
+import org.dodgybits.shuffle.dto.ShuffleProtos.Project.Builder;
+
 import android.text.TextUtils;
 
 public class Project {
@@ -54,5 +56,22 @@ public class Project {
 		return name;
 	}
 
+	public org.dodgybits.shuffle.dto.ShuffleProtos.Project toDto() {
+		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Project.newBuilder();
+		builder.setId(id).setName(name);
+		if (defaultContextId != null) {
+			builder.setDefaultContextId(defaultContextId);
+		}
+		return builder.build();
+	}
+	
+	public static Project buildFromDto(
+			org.dodgybits.shuffle.dto.ShuffleProtos.Project dto) {
+		return new Project(
+				dto.getId(),
+				dto.getName(),
+				dto.getDefaultContextId(),
+				false);
+	}
 	
 }

@@ -22,6 +22,8 @@
     
     <uses-sdk android:minSdkVersion="3" />
     
+    <uses-permission android:name="android.permission.READ_OWNER_DATA" />
+    <uses-permission android:name="android.permission.WRITE_OWNER_DATA" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     
@@ -198,7 +200,8 @@
         </activity>        
 
         
-        <activity android:name=".activity.PreferencesActivity" android:label="@string/title_preferences">
+        <activity android:name=".activity.PreferencesActivity" 
+        	android:label="@string/title_preferences">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -208,7 +211,26 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.PreferencesAppearanceActivity" android:label="@string/title_preferences_appearance">
+        <activity android:name=".activity.PreferencesAppearanceActivity" 
+        	android:label="@string/title_preferences_appearance">
+        </activity>
+
+        <activity android:name=".activity.PreferencesCreateBackupActivity" 
+        	android:label="@string/title_preferences_create_backup"
+        	android:theme="@android:style/Theme.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>            
+        </activity>
+
+        <activity android:name=".activity.PreferencesRestoreBackupActivity" 
+        	android:label="@string/title_preferences_restore_backup"
+        	android:theme="@android:style/Theme.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>            
         </activity>
 
         <activity android:name=".activity.PreferencesDeleteCompletedActivity" 

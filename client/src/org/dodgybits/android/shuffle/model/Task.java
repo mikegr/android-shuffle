@@ -16,6 +16,10 @@
 
 package org.dodgybits.android.shuffle.model;
 
+import org.dodgybits.android.shuffle.service.Locator;
+import org.dodgybits.shuffle.dto.ShuffleProtos.Date;
+import org.dodgybits.shuffle.dto.ShuffleProtos.Task.Builder;
+
 
 public final class Task {
 	public Long id;
@@ -66,5 +70,91 @@ public final class Task {
 				startDate, dueDate, timezone, allDay, 
 				hasAlarms, calEventId, order, complete);
 	}
+	
+	public org.dodgybits.shuffle.dto.ShuffleProtos.Task toDto() {
+		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Task.newBuilder();
+		builder
+			.setId(id)
+			.setDescription(description)
+			.setCreated(toDate(created))
+			.setModified(toDate(modified))
+			.setStartDate(toDate(startDate))
+			.setDueDate(toDate(dueDate))
+			.setAllDay(allDay)
+			.setOrder(order)
+			.setComplete(complete);
+		if (details != null) {
+			builder.setDetails(details);
+		}
+		if (context != null) {
+			builder.setContextId(context.id);
+		}
+		if (project != null) {
+			builder.setProjectId(project.id);
+		}
+		if (timezone != null) {
+			builder.setTimezone(timezone);
+		}
+		if (calEventId != null) {
+			builder.setCalEventId(calEventId);
+		}
+		return builder.build();
+	}
+	
+	public static Task buildFromDto(
+			org.dodgybits.shuffle.dto.ShuffleProtos.Task dto,
+			Locator<Context> contextLocator,
+			Locator<Project> projectLocator) {
+		Long id = dto.getId();
+		String description = dto.getDescription();
+		String details = dto.getDetails();
+
+		Context context = null;
+		if (dto.hasContextId()) {
+			context = contextLocator.findById(dto.getContextId());
+		}
+		
+		Project project = null;
+		if (dto.hasProjectId()) {
+			project = projectLocator.findById(dto.getProjectId());
+		}
+		
+		long created = fromDate(dto.getCreated());
+		long modified = fromDate(dto.getModified());
+		long startDate = fromDate(dto.getStartDate());
+		long dueDate = fromDate(dto.getDueDate());
+		String timezone = dto.getTimezone();
+		Boolean allDay = dto.getAllDay();
+		Boolean hasAlarms = false;
+		
+		Long calEventId = null;
+		if (dto.hasCalEventId()) {
+			calEventId = dto.getCalEventId();
+		}
+		
+		Integer order = dto.getOrder();
+		Boolean complete = dto.getComplete();
+		
+		return new Task(
+				id, description, details, 
+				context, project, created, modified, 
+				startDate, dueDate, timezone, allDay, 
+				hasAlarms, calEventId, order, complete);
+	}
+	
+	private static Date toDate(long millis) {
+		return Date.newBuilder()
+			.setMillis(millis)
+			.build();
+	}
+	
+	private static long fromDate(Date date) {
+		long millis = 0L;
+		if (date != null) {
+			millis = date.getMillis();
+		}
+		return millis;
+	}
+	
 	
 }
