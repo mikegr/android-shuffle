@@ -67,12 +67,7 @@ public abstract class AbstractEditorActivity<T> extends Activity
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                // If we are creating a new event, do not create it if the
-                // description is empty, in order to
-                // prevent accidental "no subject" event creations.
-                if (mUri != null) {
-                	save();
-                }
+            	doSaveAction();
                 break;
         }
 
