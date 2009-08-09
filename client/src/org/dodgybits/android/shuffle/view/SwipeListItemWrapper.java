@@ -48,8 +48,8 @@ public class SwipeListItemWrapper extends FrameLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         final int action = ev.getAction();
-
-        final int x = (int)ev.getX();
+        
+        final int x = (int)ev.getX(); 
         final int y = (int)ev.getY();
 
         boolean stealEvent = false;
@@ -103,25 +103,21 @@ public class SwipeListItemWrapper extends FrameLayout {
 	 * Check if this appears to be a swipe event.
 	 * 
 	 * Consider it a swipe if it traverses at least a third of the screen, 
-	 * and doesn't deviate outside the list item.
+	 * and is mostly horizontal.
 	 */
 	private boolean isValidSwipe(final int x, final int y) {
 		final int screenWidth = getWidth();
-		boolean horizontalValid = Math.abs(x - mStartX) >= (screenWidth / 3);
-		
-		boolean verticalValid = false;
-		if (horizontalValid) {
+		final int xDiff = Math.abs(x - mStartX);
+		final int yDiff = Math.abs(y - mStartY);
+		boolean horizontalValid = xDiff >= (screenWidth / 3);
+		boolean verticalValid = yDiff > 0 && (xDiff / yDiff) > 4;
+
+		mPosition = AdapterView.INVALID_POSITION;
+		if (horizontalValid && verticalValid) {
 			ListView list = (ListView) findViewById(R.id.list);
 			if (list != null) {
-				int startPosition = list.pointToPosition(mStartX, mStartY);
-				int endPosition = list.pointToPosition(x, y); 
-				if (startPosition != AdapterView.INVALID_POSITION &&
-					startPosition == endPosition) {
-					verticalValid = true;
-					mPosition = startPosition;
-				} else {
-					mPosition = AdapterView.INVALID_POSITION;
-				}
+				// adjust for list not being at top of screen
+				mPosition = list.pointToPosition(mStartX, mStartY - list.getTop());
 			}
 		}
 		
