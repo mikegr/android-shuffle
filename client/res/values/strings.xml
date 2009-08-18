@@ -75,6 +75,7 @@
     <string name="project_name">Project</string>
     <string name="context_name">Context</string>
     <string name="nothing"></string>
+    <string name="none_empty">None</string>
     <string name="undefined">None</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
@@ -112,6 +113,12 @@
     <string name="name_title">Name</string>
     <string name="default_context_title">Default context</string>
     <string name="preview_title">Preview</string>
+    <string name="context_errands">Errands</string>
+	<string name="context_online">Online</string>
+    <string name="context_athome">At home</string>
+    <string name="context_atwork">At work</string>
+	<string name="context_contact">Contact</string>
+	<string name="context_read">Read</string>
 
 	<!--  Calendar screen -->
     <string name="day_button_title">Today</string>

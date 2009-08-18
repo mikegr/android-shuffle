@@ -19,6 +19,7 @@ package org.dodgybits.android.shuffle.util;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
@@ -48,12 +49,12 @@ public class ModelUtils {
 	private static void initPresetContexts(Resources res) {
 		if (cPresetContexts == null) {
 			cPresetContexts = new Context[] {
-					new Context("At home", 5, createIcon("go_home", res)), // 0
-					new Context("At work", 19, createIcon("system_file_manager", res)), // 1
-					new Context("Online", 1, createIcon("applications_internet", res)), // 2
-					new Context("Errands", 14, createIcon("applications_development", res)), // 3
-					new Context("Contact", 22, createIcon("system_users", res)), // 4
-					new Context("Read", 16, createIcon("format_justify_fill", res)), // 5
+					new Context(res.getText(R.string.context_athome).toString(), 5, createIcon("go_home", res)), // 0
+					new Context(res.getText(R.string.context_atwork).toString(), 19, createIcon("system_file_manager", res)), // 1
+					new Context(res.getText(R.string.context_online).toString(), 1, createIcon("applications_internet", res)), // 2
+					new Context(res.getText(R.string.context_errands).toString(), 14, createIcon("applications_development", res)), // 3
+					new Context(res.getText(R.string.context_contact).toString(), 22, createIcon("system_users", res)), // 4
+					new Context(res.getText(R.string.context_read).toString(), 16, createIcon("format_justify_fill", res)), // 5
 			};
 		}
 	}

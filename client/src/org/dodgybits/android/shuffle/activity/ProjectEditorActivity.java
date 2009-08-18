@@ -170,7 +170,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         mContextIds = new long[size];
         mContextIds[0] = 0;
         mContextNames = new String[size];
-        mContextNames[0] = "None";
+        mContextNames[0] = getText(R.string.none_empty).toString();
         for (int i = 1; i < size; i++) {
         	contactCursor.moveToNext();
         	mContextIds[i] = contactCursor.getLong(0);

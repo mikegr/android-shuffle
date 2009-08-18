@@ -726,7 +726,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mContextIds = new long[arraySize];
         mContextIds[0] = 0;
         mContextNames = new String[arraySize];
-        mContextNames[0] = "None";
+        mContextNames[0] = getText(R.string.none_empty).toString();
         for (int i = 1; i < arraySize; i++) {
         	contextCursor.moveToNext();
         	mContextIds[i] = contextCursor.getLong(0);
@@ -747,7 +747,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mProjectIds = new long[arraySize];
         mProjectIds[0] = 0;
         mProjectNames = new String[arraySize];
-        mProjectNames[0] = "None";
+        mProjectNames[0] = getText(R.string.none_empty).toString();
         for (int i = 1; i < arraySize; i++) {
         	projectCursor.moveToNext();
         	mProjectIds[i] = projectCursor.getLong(0);
