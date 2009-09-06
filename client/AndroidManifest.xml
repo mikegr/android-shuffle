@@ -134,7 +134,7 @@
             </intent-filter>            
         </activity>
         
-        <activity android:name=".activity.TaskEditorActivity" 
+        <activity android:name=".activity.editor.TaskEditorActivity" 
         	android:label="@string/title_new_task"
             android:theme="@android:style/Theme.Light"
         	>
@@ -155,7 +155,7 @@
             </intent-filter>
         </activity>
 		
-        <activity android:name=".activity.ProjectEditorActivity" 
+        <activity android:name=".activity.editor.ProjectEditorActivity" 
         	android:label="@string/title_new_project"
             android:theme="@android:style/Theme.Light"
         	>
@@ -177,7 +177,7 @@
             </intent-filter>
         </activity>        
 
-        <activity android:name=".activity.ContextEditorActivity" 
+        <activity android:name=".activity.editor.ContextEditorActivity" 
         	android:label="@string/title_new_context"
             android:theme="@android:style/Theme.Light"
         	>
@@ -200,7 +200,7 @@
         </activity>        
 
         
-        <activity android:name=".activity.PreferencesActivity" 
+        <activity android:name=".activity.preferences.PreferencesActivity" 
         	android:label="@string/title_preferences">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -211,11 +211,11 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.PreferencesAppearanceActivity" 
+        <activity android:name=".activity.preferences.PreferencesAppearanceActivity" 
         	android:label="@string/title_preferences_appearance">
         </activity>
 
-        <activity android:name=".activity.PreferencesCreateBackupActivity" 
+        <activity android:name=".activity.preferences.PreferencesCreateBackupActivity" 
         	android:label="@string/title_preferences_create_backup"
         	android:theme="@android:style/Theme.Dialog">
             <intent-filter>
@@ -224,7 +224,7 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.PreferencesRestoreBackupActivity" 
+        <activity android:name=".activity.preferences.PreferencesRestoreBackupActivity" 
         	android:label="@string/title_preferences_restore_backup"
         	android:theme="@android:style/Theme.Dialog">
             <intent-filter>
@@ -233,7 +233,7 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.PreferencesDeleteCompletedActivity" 
+        <activity android:name=".activity.preferences.PreferencesDeleteCompletedActivity" 
         	android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -241,7 +241,7 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.PreferencesDeleteAllActivity" 
+        <activity android:name=".activity.preferences.PreferencesDeleteAllActivity" 
         	android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -262,7 +262,7 @@
             </intent-filter>            
         </activity>
 
-        <activity android:name=".activity.IconPickerActivity" 
+        <activity android:name=".activity.editor.IconPickerActivity" 
         	android:label="@string/title_icon_picker"
         	android:theme="@android:style/Theme.Dialog">
             <intent-filter>
@@ -274,7 +274,7 @@
             </intent-filter>            
         </activity>
         
-        <activity android:name=".activity.ColourPickerActivity" 
+        <activity android:name=".activity.editor.ColourPickerActivity" 
         	android:label="@string/title_colour_picker"
         	android:theme="@android:style/Theme.Dialog">
         	<!--  android:theme="@android:style/Theme.Dialog" -->

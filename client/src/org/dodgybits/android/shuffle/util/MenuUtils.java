@@ -22,10 +22,10 @@ import org.dodgybits.android.shuffle.activity.ExpandableContextsActivity;
 import org.dodgybits.android.shuffle.activity.ExpandableProjectsActivity;
 import org.dodgybits.android.shuffle.activity.HelpActivity;
 import org.dodgybits.android.shuffle.activity.InboxActivity;
-import org.dodgybits.android.shuffle.activity.PreferencesActivity;
 import org.dodgybits.android.shuffle.activity.ProjectsActivity;
 import org.dodgybits.android.shuffle.activity.TabbedDueActionsActivity;
 import org.dodgybits.android.shuffle.activity.TopTasksActivity;
+import org.dodgybits.android.shuffle.activity.preferences.PreferencesActivity;
 import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.model.State;
 

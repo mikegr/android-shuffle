@@ -18,7 +18,10 @@ package org.dodgybits.android.shuffle.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.dodgybits.android.shuffle.model.Context;
@@ -244,6 +247,111 @@ public class BindingUtils {
 		}
 		return context;
 	}
+	
+	/**
+	 * Attempts to match existing contexts against a list of context names.
+	 * 
+	 * @return any matching contexts in a Map, keyed on the context name
+	 */
+	public static Map<String,Context> fetchContextsByName(
+			android.content.Context androidContext, Collection<String> names) {
+		Map<String,Context> contexts = new HashMap<String,Context>();
+		if (names.size() > 0)
+		{
+			String params = StringUtils.repeat(names.size(), "?", ",");
+			String[] paramValues = names.toArray(new String[0]);
+			Cursor cursor = androidContext.getContentResolver().query(
+					Shuffle.Contexts.CONTENT_URI,
+					Shuffle.Contexts.cFullProjection,
+					Shuffle.Contexts.NAME + " IN (" + params + ")", 
+					paramValues, Shuffle.Contexts.NAME + " ASC");
+			while (cursor.moveToNext()) {
+				Context context = readContext(cursor, androidContext.getResources());
+				contexts.put(context.name, context);
+			}
+			cursor.close();
+		}
+		return contexts;
+	}
+	
+	
+	/**
+	 * Attempts to match existing contexts against a list of context names.
+	 * 
+	 * @return any matching contexts in a Map, keyed on the context name
+	 */
+	public static Map<String,Project> fetchProjectsByName(
+			android.content.Context androidContext, Collection<String> names) {
+		Map<String,Project> projects = new HashMap<String,Project>();
+		if (names.size() > 0)
+		{
+			String params = StringUtils.repeat(names.size(), "?", ",");
+			String[] paramValues = names.toArray(new String[0]);
+			Cursor cursor = androidContext.getContentResolver().query(
+					Shuffle.Projects.CONTENT_URI,
+					Shuffle.Projects.cFullProjection,
+					Shuffle.Projects.NAME + " IN (" + params + ")", 
+					paramValues, Shuffle.Projects.NAME + " ASC");
+			while (cursor.moveToNext()) {
+				Project project = readProject(cursor);
+				projects.put(project.name, project);
+			}
+			cursor.close();
+		}
+		return projects;
+	}
+	
+	public static void persistNewContexts(
+			android.content.Context androidContext, 
+			List<Context> contexts) {
+		int numNewContexts = contexts.size(); 
+		if (numNewContexts > 0) {
+			ContentValues[] valuesArray = new ContentValues[numNewContexts];
+			for (int i = 0; i < numNewContexts; i++) {
+				Context newContext = contexts.get(i);
+				ContentValues values = new ContentValues();
+				writeContext(values, newContext);
+				valuesArray[i] = values;
+			}
+			androidContext.getContentResolver().bulkInsert(
+					Shuffle.Contexts.CONTENT_URI, valuesArray);
+		}		
+	}
+	
+	public static void persistNewProjects(
+			android.content.Context androidContext, 
+			List<Project> projects) {
+		int numNewProjects = projects.size(); 
+		if (numNewProjects > 0) {
+			ContentValues[] valuesArray = new ContentValues[numNewProjects];
+			for (int i = 0; i < numNewProjects; i++) {
+				Project newProject = projects.get(i);
+				ContentValues values = new ContentValues();
+				writeProject(values, newProject);
+				valuesArray[i] = values;
+			}
+			androidContext.getContentResolver().bulkInsert(
+					Shuffle.Projects.CONTENT_URI, valuesArray);
+		}		
+	}
+	
+	public static void persistNewTasks(
+			android.content.Context androidContext, 
+			List<Task> tasks) {
+		int numNewTasks = tasks.size(); 
+		if (numNewTasks > 0) {
+			ContentValues[] valuesArray = new ContentValues[numNewTasks];
+			for (int i = 0; i < numNewTasks; i++) {
+				Task newTask = tasks.get(i);
+				ContentValues values = new ContentValues();
+				writeTask(values, newTask);
+				valuesArray[i] = values;
+			}
+			androidContext.getContentResolver().bulkInsert(
+					Shuffle.Tasks.CONTENT_URI, valuesArray);
+		}		
+	}
+	
 	
 	/**
 	 * Toggle whether the task at the given cursor position is complete.

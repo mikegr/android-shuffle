@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dodgybits.android.shuffle.activity;
+package org.dodgybits.android.shuffle.activity.editor;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;

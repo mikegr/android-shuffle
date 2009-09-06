@@ -16,6 +16,7 @@
 
 package org.dodgybits.android.shuffle.model;
 
+import org.dodgybits.android.shuffle.service.Locator;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Project.Builder;
 
 import android.text.TextUtils;
@@ -58,7 +59,7 @@ public class Project {
 
 	public org.dodgybits.shuffle.dto.ShuffleProtos.Project toDto() {
 		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Project.newBuilder();
-		builder.setId(id).setName(name);
+		builder.setId(id).setName(name);  
 		if (defaultContextId != null) {
 			builder.setDefaultContextId(defaultContextId);
 		}
@@ -66,11 +67,21 @@ public class Project {
 	}
 	
 	public static Project buildFromDto(
-			org.dodgybits.shuffle.dto.ShuffleProtos.Project dto) {
+			org.dodgybits.shuffle.dto.ShuffleProtos.Project dto,
+			Locator<Context> contextLocator
+			) {
+		// use locator to find default context since we may be mapping ids
+		Long defaultContextId = null;
+		if (dto.hasDefaultContextId()) {
+			Context defaultContext = contextLocator.findById(dto.getDefaultContextId());
+			if (defaultContext != null) {
+				defaultContextId = defaultContext.id;
+			}
+		}
 		return new Project(
 				dto.getId(),
 				dto.getName(),
-				dto.getDefaultContextId(),
+				defaultContextId,
 				false);
 	}
 	

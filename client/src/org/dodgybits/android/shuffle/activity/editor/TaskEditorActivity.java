@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dodgybits.android.shuffle.activity;
+package org.dodgybits.android.shuffle.activity.editor;
 
 import java.util.ArrayList;
 import java.util.Arrays;

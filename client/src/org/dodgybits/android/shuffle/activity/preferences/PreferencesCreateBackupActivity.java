@@ -1,4 +1,4 @@
-package org.dodgybits.android.shuffle.activity;
+package org.dodgybits.android.shuffle.activity.preferences;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -128,7 +128,7 @@ public class PreferencesCreateBackupActivity extends Activity
     	
     	// write tasks
         Cursor taskCursor = getContentResolver().query(
-        		Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cFullProjection, 
+        		Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cExpandedProjection, 
         		null, null, null);
     	while (taskCursor.moveToNext()) {
     		Task task = BindingUtils.readTask(taskCursor, getResources());

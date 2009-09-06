@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dodgybits.android.shuffle.activity;
+package org.dodgybits.android.shuffle.activity.preferences;
 
 import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_CONTEXT_ICON_KEY;
 import static org.dodgybits.android.shuffle.model.Preferences.DISPLAY_CONTEXT_NAME_KEY;
