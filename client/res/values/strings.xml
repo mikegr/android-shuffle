@@ -150,6 +150,7 @@
 	<string name="summary_create_backup_preference">Save all actions, projects and contexts</string>
 
     <string name="filename_title">Backup file</string>
+	<string name="backup_progress">Writing <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string>
 	<string name="toast_backup_saved">Data successfully backed up to <xliff:g id="filename">%s</xliff:g>.</string>
 
 	<string name="title_restore_backup_preference">Restore from SD Card</string>
