@@ -12,6 +12,7 @@ import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
+import org.dodgybits.android.shuffle.service.Progress;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue.Builder;
@@ -31,8 +32,12 @@ import android.widget.TextView;
 
 public class PreferencesCreateBackupActivity extends Activity 
 	implements View.OnClickListener {
-    private static final String cTag = "PreferencesCreateBackupActivity";
+    private static final String CREATE_BACKUP_STATE = "createBackupState";
+	private static final String cTag = "PreferencesCreateBackupActivity";
     
+    private enum State {EDITING, IN_PROGRESS, COMPLETE, ERROR};
+    
+    private State mState = State.EDITING;
     private EditText mFilenameWidget;
     private Button mSaveButton;
     private Button mCancelButton;
@@ -46,31 +51,30 @@ public class PreferencesCreateBackupActivity extends Activity
         Log.d(cTag, "onCreate+");
         super.onCreate(icicle);
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
-
         setContentView(R.layout.backup_create);
-        
+        findViewsAndAddListeners();
+		onUpdateState();
+    }
+
+    private void findViewsAndAddListeners() {
         mProgressBar = (ProgressBar) findViewById(R.id.progress_horizontal);
-        mProgressBar.setVisibility(View.INVISIBLE);
         mProgressText = (TextView) findViewById(R.id.progress_label);
         mSaveButton = (Button) findViewById(R.id.saveButton);
         mCancelButton = (Button) findViewById(R.id.discardButton);
-        mCancelButton.setText(R.string.cancel_button_title);
-        
         mFilenameWidget = (EditText) findViewById(R.id.filename);
-        Date today = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        String defaultText = "shuffle-" + formatter.format(today) + ".bak";
-        mFilenameWidget.setText(defaultText);
-        mFilenameWidget.setSelection(0, defaultText.length() - 4);
         
-        addSavePanelListeners();
+        mSaveButton.setOnClickListener(this);
+        mCancelButton.setOnClickListener(this);
+        
+        // save progress text when we switch orientation
+        mProgressText.setFreezesText(true);
     }
-
+    
     public void onClick(View v) {
         switch (v.getId()) {
 
             case R.id.saveButton:
-            	setControlsEnabled(false);
+            	setState(State.IN_PROGRESS);
             	createBackup();
                 break;
 
@@ -81,31 +85,88 @@ public class PreferencesCreateBackupActivity extends Activity
     }
     
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	super.onSaveInstanceState(outState);
+    	
+    	outState.putString(CREATE_BACKUP_STATE, mState.name());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    	super.onRestoreInstanceState(savedInstanceState);
+    	
+    	String stateName = savedInstanceState.getString(CREATE_BACKUP_STATE);
+    	if (stateName == null) {
+    		stateName = State.EDITING.name();
+    	}
+    	setState(State.valueOf(stateName));
+    }
+    
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mTask != null && mTask.getStatus() != AsyncTask.Status.RUNNING) {
             mTask.cancel(true);
         }
     }
-
-    private void addSavePanelListeners() {
-        // Setup the bottom buttons
-        View view = findViewById(R.id.saveButton);
-        view.setOnClickListener(this);
-        view = findViewById(R.id.discardButton);
-        view.setOnClickListener(this);
+    
+    private void setState(State value) {
+    	if (mState != value) {
+    		mState = value;
+    		onUpdateState();
+    	}
     }
     
-    private void setControlsEnabled(boolean enabled) {
-    	mFilenameWidget.setEnabled(enabled);
+    private void onUpdateState() {
+    	switch (mState) {
+	    	case EDITING:
+	    		setButtonsEnabled(true);
+	    		if (TextUtils.isEmpty(mFilenameWidget.getText())) {
+		            Date today = new Date();
+		            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		            String defaultText = "shuffle-" + formatter.format(today) + ".bak";
+		            mFilenameWidget.setText(defaultText);
+		            mFilenameWidget.setSelection(0, defaultText.length() - 4);
+	    		}    		
+	        	mFilenameWidget.setEnabled(true);
+	            mProgressBar.setVisibility(View.INVISIBLE);
+	            mProgressText.setVisibility(View.INVISIBLE);
+	            mCancelButton.setText(R.string.cancel_button_title);
+	    		break;
+	    		
+	    	case IN_PROGRESS:
+	    		setButtonsEnabled(false);
+	        	mFilenameWidget.setSelection(0, 0);
+	        	mFilenameWidget.setEnabled(false);
+	        	
+	        	mProgressBar.setProgress(0);
+		        mProgressBar.setVisibility(View.VISIBLE);
+	            mProgressText.setVisibility(View.VISIBLE);
+	    		break;
+	    		
+	    	case COMPLETE:
+	    		setButtonsEnabled(true);
+	        	mFilenameWidget.setEnabled(false);
+		        mProgressBar.setVisibility(View.VISIBLE);
+	            mProgressText.setVisibility(View.VISIBLE);
+	        	mSaveButton.setVisibility(View.GONE);
+	        	mCancelButton.setText(R.string.ok_button_title);
+	    		break;
+	    		
+	    	case ERROR:
+	    		setButtonsEnabled(true);
+	        	mFilenameWidget.setEnabled(true);
+		        mProgressBar.setVisibility(View.VISIBLE);
+	            mProgressText.setVisibility(View.VISIBLE);
+	        	mSaveButton.setVisibility(View.VISIBLE);
+	            mCancelButton.setText(R.string.cancel_button_title);
+	    		break;	
+    	}
+    }
+
+    private void setButtonsEnabled(boolean enabled) {
     	mSaveButton.setEnabled(enabled);
     	mCancelButton.setEnabled(enabled);
-    }
-    
-    private void showOkButton() {
-    	mSaveButton.setVisibility(View.GONE);
-    	mCancelButton.setText(R.string.ok_button_title);
-    	mCancelButton.setEnabled(true);
     }
     
     private void createBackup() {
@@ -116,36 +177,34 @@ public class PreferencesCreateBackupActivity extends Activity
 			return;
     	} 
     	
-    	Log.d(cTag, "Checking media state");
-    	String storage_state = Environment.getExternalStorageState();
-    	if (! Environment.MEDIA_MOUNTED.equals(storage_state)) {
-    		// TODO show alert
-			Log.e(cTag, "Media is not mounted: " + storage_state);
-			return;
-    	}
+		mTask = new CreateBackupTask().execute(filename);
     	
-		File dir = Environment.getExternalStorageDirectory();
-		File backupFile = new File(dir, filename);
-		try {
-	    	Log.d(cTag, "Creating backup file");
-			backupFile.createNewFile();
-			FileOutputStream out = new FileOutputStream(backupFile);
-			mTask = new CreateBackupTask().execute(out);
-		} catch (IOException ioe) {
-			// TODO show alert
-			Log.e(cTag, "Failed to create backup " + ioe.getMessage());
-			return;
-		}
     }
     
-    private class CreateBackupTask extends AsyncTask<OutputStream, CreateBackupProgress, Void> {
+    private class CreateBackupTask extends AsyncTask<String, Progress, Void> {
 
-    	public Void doInBackground(OutputStream... out) {
+    	public Void doInBackground(String... filename) {
             try {
-            	writeBackup(out[0]);
+            	String message = "Checking media state";
+				Log.d(cTag, message);
+            	updateProgress(0, message, false);
+            	String storage_state = Environment.getExternalStorageState();
+            	if (! Environment.MEDIA_MOUNTED.equals(storage_state)) {
+            		message = "Media is not mounted " + storage_state;
+            		reportError(message);
+            	} else {
+	        		File dir = Environment.getExternalStorageDirectory();
+	        		File backupFile = new File(dir, filename[0]);
+	        		message = "Creating backup file";
+        	    	Log.d(cTag, message);
+                	updateProgress(5, message, false);
+        			backupFile.createNewFile();
+        			FileOutputStream out = new FileOutputStream(backupFile);
+                	writeBackup(out);
+        		}
             } catch (Exception e) {
             	String message = "Backup failed " + e.getMessage();
-            	updateProgress(100, message, true);
+        		reportError(message);
             }
             
             return null;
@@ -154,8 +213,8 @@ public class PreferencesCreateBackupActivity extends Activity
         private void writeBackup(OutputStream out) throws IOException {
         	Builder builder = Catalogue.newBuilder();
         	
-        	writeContexts(builder, 0, 15);
-        	writeProjects(builder, 15, 30);
+        	writeContexts(builder, 10, 20);
+        	writeProjects(builder, 20, 30);
         	writeTasks(builder, 30, 100);
 
         	builder.build().writeTo(out);
@@ -179,7 +238,8 @@ public class PreferencesCreateBackupActivity extends Activity
             	builder.addContext(context.toDto());
     			String text = getString(R.string.backup_progress, type, context.name);
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-            	updateProgress(percent, text, false);
+    			updateProgress(percent, text, false);
+            	
         	}
         	cursor.close();
         }
@@ -198,7 +258,7 @@ public class PreferencesCreateBackupActivity extends Activity
             	builder.addProject(project.toDto());
     			String text = getString(R.string.backup_progress, type, project.name);
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-            	updateProgress(percent, text, false);
+    			updateProgress(percent, text, false);
         	}
         	cursor.close();
         }
@@ -217,7 +277,7 @@ public class PreferencesCreateBackupActivity extends Activity
             	builder.addTask(task.toDto());
     			String text = getString(R.string.backup_progress, type, task.description);
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-            	updateProgress(percent, text, false);
+    			updateProgress(percent, text, false);
         	}
         	cursor.close();
         }
@@ -226,22 +286,25 @@ public class PreferencesCreateBackupActivity extends Activity
         	return start + (end - start) * current / total;
         }
         
+        private void reportError(String message) {
+			Log.e(cTag, message);
+        	updateProgress(0, message, true);
+        }
+        
         private void updateProgress(int progressPercent, String details, boolean isError) {
-        	CreateBackupProgress progress = new CreateBackupProgress();
-        	progress.progressPercent = progressPercent;
-        	progress.details = details;
-        	progress.isError = isError;
+        	Progress progress = new Progress(progressPercent, details, false);
         	publishProgress(progress);
         }
         
 		@Override
-		public void onProgressUpdate (CreateBackupProgress... progresses) {
-			CreateBackupProgress progress = progresses[0];
-	        mProgressBar.setVisibility(View.VISIBLE);
-	        mProgressBar.setProgress(progress.progressPercent);
-	        mProgressText.setText(progress.details);
-	        if (progress.progressPercent == 100) {
-	            showOkButton();
+		public void onProgressUpdate (Progress... progresses) {
+			Progress progress = progresses[0];
+	        mProgressBar.setProgress(progress.getProgressPercent());
+	        mProgressText.setText(progress.getDetails());
+	        if (progress.isComplete()) {
+	        	setState(State.COMPLETE);
+	        } else if (progress.isError()) {
+	        	setState(State.ERROR);
 	        }
 		}
 		
@@ -251,10 +314,4 @@ public class PreferencesCreateBackupActivity extends Activity
     	
     }
     
-    private class CreateBackupProgress {
-    	public int progressPercent;
-    	public String details;
-    	public boolean isError;
-    }
-
 }
