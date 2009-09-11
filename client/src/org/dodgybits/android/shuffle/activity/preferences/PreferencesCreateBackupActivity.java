@@ -172,30 +172,30 @@ public class PreferencesCreateBackupActivity extends Activity
     private void createBackup() {
     	String filename = mFilenameWidget.getText().toString();
     	if (TextUtils.isEmpty(filename)) {
+    		String message = getString(R.string.warning_filename_empty);
     		// TODO show alert
-			Log.e(cTag, "Filename was empty");
+			Log.e(cTag, message);
 			return;
     	} 
     	
 		mTask = new CreateBackupTask().execute(filename);
-    	
     }
     
     private class CreateBackupTask extends AsyncTask<String, Progress, Void> {
 
     	public Void doInBackground(String... filename) {
             try {
-            	String message = "Checking media state";
+            	String message = getString(R.string.status_checking_media);
 				Log.d(cTag, message);
             	updateProgress(0, message, false);
             	String storage_state = Environment.getExternalStorageState();
             	if (! Environment.MEDIA_MOUNTED.equals(storage_state)) {
-            		message = "Media is not mounted " + storage_state;
+            		message = getString(R.string.warning_media_not_mounted, storage_state);
             		reportError(message);
             	} else {
 	        		File dir = Environment.getExternalStorageDirectory();
 	        		File backupFile = new File(dir, filename[0]);
-	        		message = "Creating backup file";
+	        		message = getString(R.string.status_creating_backup);
         	    	Log.d(cTag, message);
                 	updateProgress(5, message, false);
         			backupFile.createNewFile();
@@ -203,7 +203,7 @@ public class PreferencesCreateBackupActivity extends Activity
                 	writeBackup(out);
         		}
             } catch (Exception e) {
-            	String message = "Backup failed " + e.getMessage();
+            	String message = getString(R.string.warning_backup_failed, e.getMessage());
         		reportError(message);
             }
             
@@ -220,7 +220,7 @@ public class PreferencesCreateBackupActivity extends Activity
         	builder.build().writeTo(out);
         	out.close();
 
-        	String message = "Backup complete.";
+        	String message = getString(R.string.status_backup_complete);
         	updateProgress(100, message, false);
         }
         

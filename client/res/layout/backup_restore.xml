@@ -26,13 +26,14 @@
 		android:paddingLeft="5px"
 		android:paddingRight="5px" 
 		android:text="@string/filename_title"
-		style="@style/label" 
+		style="@style/preferences_label" 
 		/>
 
 	<Spinner android:id="@+id/filename" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
         android:layout_alignParentLeft="true"
 		android:layout_below="@+id/filename_label"        
+        android:layout_height="48px"
+    	android:drawSelectorOnTop="true"
 		>
 	</Spinner>
 
@@ -42,6 +43,31 @@
 		android:layout_below="@+id/filename"        
         android:background="@android:drawable/divider_horizontal_bright"
     />
+
+    <ProgressBar android:id="@+id/progress_horizontal"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+		android:layout_below="@+id/filename"        
+		android:paddingLeft="15px"
+		android:paddingRight="15px" 
+		android:paddingTop="15px"
+		android:paddingBottom="10px" 
+        android:max="100"
+        android:progress="0"
+        />
+
+	<TextView android:id="@+id/progress_label"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+        android:layout_alignParentLeft="true"
+		android:layout_below="@+id/progress_horizontal"        
+		android:paddingLeft="15px"
+		android:paddingRight="15px" 
+		style="@style/white_text" 
+		/>
+    
 
     <include android:id="@+id/save_panel" layout="@layout/editor_save_panel" 
 	    android:layout_width="fill_parent"

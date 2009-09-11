@@ -156,6 +156,18 @@
 	<string name="title_restore_backup_preference">Restore from SD Card</string>
 	<string name="summary_restore_backup_preference">Recover data from backup</string>
 	<string name="toast_backup_restored">Data successfully recovered from <xliff:g id="filename">%s</xliff:g>.</string>
+	<string name="restore_progress">Reading <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string>
+	<string name="restore_button_title">Restore</string>
+
+    <string name="warning_filename_empty">You must specify a filename.</string>
+	<string name="warning_media_not_mounted">Media is not mounted <xliff:g id="error">%s</xliff:g></string>
+	<string name="warning_backup_failed">Backup failed <xliff:g id="error">%s</xliff:g></string>
+	<string name="warning_restore_failed">Restore failed <xliff:g id="error">%s</xliff:g></string>
+    <string name="status_checking_media">Checking media state.</string>
+    <string name="status_creating_backup">Creating backup file.</string>
+    <string name="status_backup_complete">Backup complete.</string>
+    <string name="status_reading_backup">Reading backup file.</string>
+    <string name="status_restore_complete">Restore complete.</string>
 
 	<string name="cleanup_preferences">Clean up</string>
 

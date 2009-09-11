@@ -149,10 +149,24 @@
 	<string name="summary_create_backup_preference">Alle Handlungen, Projekte und Kategorien speichern</string>
 
     <string name="filename_title">Backupdatei</string>
+	<string name="backup_progress">Writing <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string> <!-- TODO -->
 	<string name="toast_backup_saved">Backup erfolgreich in <xliff:g id="filename">%s</xliff:g> gespeichert.</string>
 
 	<string name="title_restore_backup_preference">Wiederherstellung von SD Card</string>
 	<string name="summary_restore_backup_preference">Daten aus Backup wiederherstellen</string>
+	<string name="toast_backup_restored">Data successfully recovered from <xliff:g id="filename">%s</xliff:g>.</string> <!-- TODO -->
+	<string name="restore_progress">Reading <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string> <!-- TODO -->
+	<string name="restore_button_title">Restore</string> <!-- TODO -->
+
+    <string name="warning_filename_empty">You must specify a filename.</string> <!-- TODO -->
+	<string name="warning_media_not_mounted">Media is not mounted <xliff:g id="error">%s</xliff:g></string> <!-- TODO -->
+	<string name="warning_backup_failed">Backup failed <xliff:g id="error">%s</xliff:g></string> <!-- TODO -->
+	<string name="warning_restore_failed">Restore failed <xliff:g id="error">%s</xliff:g></string> <!-- TODO -->
+    <string name="status_checking_media">Checking media state.</string> <!-- TODO -->
+    <string name="status_creating_backup">Creating backup file.</string> <!-- TODO -->
+    <string name="status_backup_complete">Backup complete.</string> <!-- TODO -->
+    <string name="status_reading_backup">Reading backup file.</string> <!-- TODO -->
+    <string name="status_restore_complete">Restore complete.</string> <!-- TODO -->
 
 	<string name="cleanup_preferences">Aufräumen</string>
 
