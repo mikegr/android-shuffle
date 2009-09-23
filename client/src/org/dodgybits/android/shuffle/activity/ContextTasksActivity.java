@@ -43,6 +43,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 		Uri contextUri = getIntent().getData();
 		mContextId = ContentUris.parseId(contextUri);
         super.onCreate(icicle);
+
 	}
 	
     @Override
@@ -118,6 +119,6 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     	extras.putLong(Shuffle.Tasks.CONTEXT_ID, mContext.id);
     	intent.putExtras(extras);
     	return intent;
-    }
+    }    
 
 }

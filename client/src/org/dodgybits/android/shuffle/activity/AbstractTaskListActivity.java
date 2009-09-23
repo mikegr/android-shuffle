@@ -21,6 +21,7 @@ import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.android.shuffle.util.MenuUtils;
+import org.dodgybits.android.shuffle.util.ModelUtils;
 import org.dodgybits.android.shuffle.view.SwipeListItemListener;
 import org.dodgybits.android.shuffle.view.SwipeListItemWrapper;
 import org.dodgybits.android.shuffle.view.TaskView;
@@ -40,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 public abstract class AbstractTaskListActivity extends AbstractListActivity<Task> 
 	implements SwipeListItemListener, View.OnClickListener {
@@ -66,6 +68,11 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 			mAddTaskButton.setOnClickListener(this);
 	
 			mOtherButton = (Button) findViewById(R.id.other_button);
+			mOtherButton.setText(R.string.title_delete_completed_preference);
+			Drawable deleteIcon = getResources().getDrawable(android.R.drawable.ic_menu_delete);
+			deleteIcon.setBounds(0, 0, 24, 24);
+			mOtherButton.setCompoundDrawables(deleteIcon, null, null, null);
+			mOtherButton.setVisibility(View.VISIBLE);
 			mOtherButton.setOnClickListener(this);
 		}
 	}
@@ -110,6 +117,9 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     }
     
     protected void onOtherButtonClicked() {
+    	int deletedTasks = ModelUtils.deleteCompletedTasks(this);
+		CharSequence message = getString(R.string.clean_task_message, new Object[] {deletedTasks});
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
     	
 	@Override
