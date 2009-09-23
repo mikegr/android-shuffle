@@ -247,7 +247,7 @@ public class ShuffleProvider extends ContentProvider {
 			qb.setTables(cTaskJoinTableNames);
 			qb.setProjectionMap(sTaskListProjectMap);
 			long lastCleanMS = Preferences.getLastInboxClean(getContext());
-			qb.appendWhere("(projectId is null) or (created > " + lastCleanMS
+			qb.appendWhere("(projectId is null) OR (created > " + lastCleanMS
 					+ ")");
 			break;
 		case DUE_TASKS:
@@ -265,10 +265,11 @@ public class ShuffleProvider extends ContentProvider {
 			qb.setTables(cTaskJoinTableNames);
 			qb.setProjectionMap(sTaskListProjectMap);
 
-			qb.appendWhere("(complete = 0) and (");
-			qb.appendWhere("  projectId not null and");
-			qb.appendWhere("  displayOrder = (select min(t2.displayOrder) " +
-							"from task t2 where task.projectId = t2.projectId and t2.complete = 0))");
+			qb.appendWhere("(complete = 0) AND (");
+			qb.appendWhere("  projectId not null AND");
+			qb.appendWhere("  task._id = (select t2._id FROM task t2 WHERE " +
+					"t2.projectId = task.projectId AND t2.complete = 0 " +
+					"ORDER BY due ASC, displayOrder ASC limit 1))");
 			break;
 		case CONTEXTS:
 			qb.setTables(cContextTableName);
