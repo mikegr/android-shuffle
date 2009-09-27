@@ -34,6 +34,7 @@
 		android:layout_below="@+id/filename_label"        
         android:layout_height="48px"
     	android:drawSelectorOnTop="true"
+    	style="@style/preferences_restore_spinner"
 		>
 	</Spinner>
 

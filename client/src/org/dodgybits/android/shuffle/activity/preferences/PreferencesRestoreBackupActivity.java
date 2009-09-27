@@ -16,6 +16,7 @@ import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.service.BaseLocator;
 import org.dodgybits.android.shuffle.service.Locator;
 import org.dodgybits.android.shuffle.service.Progress;
+import org.dodgybits.android.shuffle.util.AlertUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
 
@@ -57,6 +58,11 @@ public class PreferencesRestoreBackupActivity extends Activity
 		onUpdateState();
     }
     
+    @Override
+    protected void onResume() {
+    	super.onResume();
+        setupFileSpinner();
+    }    	
     
     private void findViewsAndAddListeners() {
         mProgressBar = (ProgressBar) findViewById(R.id.progress_horizontal);
@@ -72,15 +78,15 @@ public class PreferencesRestoreBackupActivity extends Activity
         
         // save progress text when we switch orientation
         mProgressText.setFreezesText(true);
-        setupFileSpinner();
     }
     
     private void setupFileSpinner() {
     	String storage_state = Environment.getExternalStorageState();
     	if (! Environment.MEDIA_MOUNTED.equals(storage_state)) {
-    		// TODO show alert
     		String message = getString(R.string.warning_media_not_mounted, storage_state);
-			Log.e(cTag, message);
+    		Log.e(cTag, message);
+    		AlertUtils.showWarning(this, message);
+			setState(State.COMPLETE);
 			return;
     	}
     	
@@ -88,7 +94,8 @@ public class PreferencesRestoreBackupActivity extends Activity
     	String[] files = dir.list(new FilenameFilter() {
     		@Override
     		public boolean accept(File dir, String filename) {
-    			return filename.endsWith(".bak");
+    			// don't show hidden files
+    			return !filename.startsWith(".");
     		}
     	});
     	
@@ -96,6 +103,20 @@ public class PreferencesRestoreBackupActivity extends Activity
         		this, android.R.layout.simple_list_item_1, files);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mFileSpinner.setAdapter(adapter);    	
+
+    	// select most recent file ending in .bak
+    	int selectedIndex = 0;
+    	long lastModified = Long.MIN_VALUE;
+    	for (int i = 0; i < files.length; i++) {
+    		String filename = files[i];
+    		File f = new File(dir, filename);
+    		if (f.getName().endsWith(".bak") &&
+    				f.lastModified() > lastModified) {
+    			selectedIndex = i;
+    			lastModified = f.lastModified();
+    		}
+    	}
+    	mFileSpinner.setSelection(selectedIndex);
     }
 
     
@@ -216,7 +237,7 @@ public class PreferencesRestoreBackupActivity extends Activity
     			Locator<Project> projectLocator = addProjects(catalogue.getProjectList(), contextLocator, 20, 30);
     			addTasks(catalogue.getTaskList(), contextLocator, projectLocator, 30, 100);
     			
-            	message = getString(R.string.status_backup_complete);
+            	message = getString(R.string.status_restore_complete);
             	publishProgress(Progress.createProgress(100, message));
             } catch (Exception e) {
             	String message = getString(R.string.warning_restore_failed, e.getMessage());
@@ -371,7 +392,7 @@ public class PreferencesRestoreBackupActivity extends Activity
 	        mProgressText.setText(progress.getDetails());
 
 	        if (progress.isError()) {
-//				AlertUtils.showWarning(PreferencesRestoreBackupActivity.this, progress.getDetails());
+				AlertUtils.showWarning(PreferencesRestoreBackupActivity.this, progress.getDetails());
         		Runnable action = progress.getErrorUIAction();
 	        	if (action != null) {
 	        		action.run();

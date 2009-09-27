@@ -70,6 +70,12 @@
     
     <style name="preferences_checkbox" parent="ShuffleTheme">
     </style>
+
+    <style name="preferences_restore_spinner" parent="white_text">
+    	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textScaleX">0.8</item>
+    </style>
+    
     
     <style name="white_text" parent="text">
         <item name="android:textColor">@drawable/white</item>

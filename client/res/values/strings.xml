@@ -33,8 +33,8 @@
     <string name="title_preferences">General Settings</string>
     <string name="title_preferences_appearance">General Settings > Action appearance</string>
     <string name="title_preferences_clean">General Settings > Clean up</string>
-    <string name="title_preferences_create_backup">General Settings > Create backup</string>
-    <string name="title_preferences_restore_backup">General Settings > Restore from backup</string>
+    <string name="title_preferences_create_backup">Create backup</string>
+    <string name="title_preferences_restore_backup">Restore from backup</string>
     <string name="title_help">Help</string>
     <string name="title_icon_picker">Choose icon</string>
     <string name="title_colour_picker">Choose color</string>
