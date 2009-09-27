@@ -202,19 +202,22 @@ public class PreferencesRestoreBackupActivity extends Activity
             try {
             	String message = getString(R.string.status_reading_backup);
 				Log.d(cTag, message);
-            	updateProgress(5, message, false);
+            	publishProgress(Progress.createProgress(5, message));
+            	
         		File dir = Environment.getExternalStorageDirectory();
         		File backupFile = new File(dir, filename[0]);
     			FileInputStream in = new FileInputStream(backupFile);
     			Catalogue catalogue = Catalogue.parseFrom(in);
     			in.close();
     			
+    			Log.d(cTag, catalogue.toString());
+    			
     			Locator<Context> contextLocator = addContexts(catalogue.getContextList(), 10, 20);
     			Locator<Project> projectLocator = addProjects(catalogue.getProjectList(), contextLocator, 20, 30);
     			addTasks(catalogue.getTaskList(), contextLocator, projectLocator, 30, 100);
     			
             	message = getString(R.string.status_backup_complete);
-            	updateProgress(100, message, false);
+            	publishProgress(Progress.createProgress(100, message));
             } catch (Exception e) {
             	String message = getString(R.string.warning_restore_failed, e.getMessage());
         		reportError(message);
@@ -226,20 +229,22 @@ public class PreferencesRestoreBackupActivity extends Activity
     	private Locator<Context> addContexts(
 				List<org.dodgybits.shuffle.dto.ShuffleProtos.Context> protoContexts,
 				int progressStart, int progressEnd) {
-			Set<String> contextNameSet = new HashSet<String>();
+			Set<String> allContextNames = new HashSet<String>();
 			for (org.dodgybits.shuffle.dto.ShuffleProtos.Context protoContext : protoContexts)
 			{
-				contextNameSet.add(protoContext.getName());
+				allContextNames.add(protoContext.getName());
 			}
 			Map<String,Context> existingContexts = BindingUtils.fetchContextsByName(
-					PreferencesRestoreBackupActivity.this, contextNameSet);
+					PreferencesRestoreBackupActivity.this, allContextNames);
 			
 			// build up the locator and list of new contacts
 			BaseLocator<Context> contextLocator = new BaseLocator<Context>();
 			List<Context> newContexts = new ArrayList<Context>();
+			Set<String> newContextNames = new HashSet<String>();
 	        int i = 0;
 	        int total = protoContexts.size();
 	        String type = getString(R.string.context_name);
+	        
 			for (org.dodgybits.shuffle.dto.ShuffleProtos.Context protoContext : protoContexts)
 			{
 				String contextName = protoContext.getName();
@@ -251,13 +256,25 @@ public class PreferencesRestoreBackupActivity extends Activity
 					context = Context.buildFromDto(protoContext, getResources());
 					
 					newContexts.add(context);
+					newContextNames.add(contextName);
 				}
 				contextLocator.addItem(protoContext.getId(), contextName, context);
 				String text = getString(R.string.restore_progress, type, contextName);
 				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-				updateProgress(percent, text, false);
+            	publishProgress(Progress.createProgress(percent, text));
 			}
 			BindingUtils.persistNewContexts(PreferencesRestoreBackupActivity.this, newContexts);
+			
+			// we need to fetch all the newly created contexts to retrieve their new ids
+			// and update the locator accordingly
+			Map<String,Context> savedContexts = BindingUtils.fetchContextsByName(
+					PreferencesRestoreBackupActivity.this, newContextNames);
+			for (String contextName : newContextNames) {
+				Context savedContext = savedContexts.get(contextName);
+				Context restoredContext = contextLocator.findByName(contextName);
+				contextLocator.addItem(restoredContext.id, contextName, savedContext);
+			}
+			
 			return contextLocator;
 		}
 	    
@@ -266,20 +283,22 @@ public class PreferencesRestoreBackupActivity extends Activity
 				List<org.dodgybits.shuffle.dto.ShuffleProtos.Project> protoProjects,
 				Locator<Context> contextLocator,
 				int progressStart, int progressEnd) {
-			Set<String> projectNameSet = new HashSet<String>();
+			Set<String> allProjectNames = new HashSet<String>();
 			for (org.dodgybits.shuffle.dto.ShuffleProtos.Project protoProject : protoProjects)
 			{
-				projectNameSet.add(protoProject.getName());
+				allProjectNames.add(protoProject.getName());
 			}
 			Map<String,Project> existingProjects = BindingUtils.fetchProjectsByName(
-					PreferencesRestoreBackupActivity.this, projectNameSet);
+					PreferencesRestoreBackupActivity.this, allProjectNames);
 			
 			// build up the locator and list of new projects
 			BaseLocator<Project> projectLocator = new BaseLocator<Project>();
 			List<Project> newProjects = new ArrayList<Project>();
+			Set<String> newProjectNames = new HashSet<String>();
 	        int i = 0;
 	        int total = protoProjects.size();
 	        String type = getString(R.string.project_name);
+	        
 			for (org.dodgybits.shuffle.dto.ShuffleProtos.Project protoProject : protoProjects)
 			{
 				String projectName = protoProject.getName();
@@ -291,13 +310,25 @@ public class PreferencesRestoreBackupActivity extends Activity
 					project = Project.buildFromDto(protoProject, contextLocator);
 					
 					newProjects.add(project);
+					newProjectNames.add(projectName);
 				}
 				projectLocator.addItem(protoProject.getId(), projectName, project);
 				String text = getString(R.string.restore_progress, type, projectName);
 				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-				updateProgress(percent, text, false);
+            	publishProgress(Progress.createProgress(percent, text));
 			}
 			BindingUtils.persistNewProjects(PreferencesRestoreBackupActivity.this, newProjects);
+			
+			// we need to fetch all the newly created contexts to retrieve their new ids
+			// and update the locator accordingly
+			Map<String,Project> savedProjects = BindingUtils.fetchProjectsByName(
+					PreferencesRestoreBackupActivity.this, newProjectNames);
+			for (String projectName : newProjectNames) {
+				Project savedProject = savedProjects.get(projectName);
+				Project restoredProject = projectLocator.findByName(projectName);
+				projectLocator.addItem(restoredProject.id, projectName, savedProject);
+			}
+			
 			return projectLocator;
 		}
 		
@@ -319,7 +350,7 @@ public class PreferencesRestoreBackupActivity extends Activity
 				Log.d(cTag, "Adding task " + task.description);
 				String text = getString(R.string.restore_progress, type, task.description);
 				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-				updateProgress(percent, text, false);
+            	publishProgress(Progress.createProgress(percent, text));
 			}
 			BindingUtils.persistNewTasks(PreferencesRestoreBackupActivity.this, newTasks);
 		}
@@ -330,12 +361,7 @@ public class PreferencesRestoreBackupActivity extends Activity
         
         private void reportError(String message) {
 			Log.e(cTag, message);
-        	updateProgress(0, message, true);
-        }
-        
-        private void updateProgress(int progressPercent, String details, boolean isError) {
-        	Progress progress = new Progress(progressPercent, details, false);
-        	publishProgress(progress);
+        	publishProgress(Progress.createErrorProgress(message));
         }
         
 		@Override
@@ -343,10 +369,17 @@ public class PreferencesRestoreBackupActivity extends Activity
 			Progress progress = progresses[0];
 	        mProgressBar.setProgress(progress.getProgressPercent());
 	        mProgressText.setText(progress.getDetails());
-	        if (progress.isComplete()) {
+
+	        if (progress.isError()) {
+//				AlertUtils.showWarning(PreferencesRestoreBackupActivity.this, progress.getDetails());
+        		Runnable action = progress.getErrorUIAction();
+	        	if (action != null) {
+	        		action.run();
+	        	} else {
+		        	setState(State.ERROR);
+	        	}
+	        } else if (progress.isComplete()) {
 	        	setState(State.COMPLETE);
-	        } else if (progress.isError()) {
-	        	setState(State.ERROR);
 	        }
 		}
 		

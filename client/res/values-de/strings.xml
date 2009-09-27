@@ -68,6 +68,7 @@
     <string name="save_button_title">Speichern</string>
     <string name="ok_button_title">OK</string>
     <string name="cancel_button_title">Abbrechen</string>
+    <string name="replace_button_title">Replace</string> <!--  TODO -->
 	<string name="warning_title">Warnung</string>
 	<string name="info_title">Information</string>
     <string name="task_name">Handlung</string>
@@ -159,6 +160,7 @@
 	<string name="restore_button_title">Restore</string> <!-- TODO -->
 
     <string name="warning_filename_empty">You must specify a filename.</string> <!-- TODO -->
+	<string name="warning_filename_exists"><xliff:g id="filename">%s</xliff:g> already exists.</string> <!--  TODO -->
 	<string name="warning_media_not_mounted">Media is not mounted <xliff:g id="error">%s</xliff:g></string> <!-- TODO -->
 	<string name="warning_backup_failed">Backup failed <xliff:g id="error">%s</xliff:g></string> <!-- TODO -->
 	<string name="warning_restore_failed">Restore failed <xliff:g id="error">%s</xliff:g></string> <!-- TODO -->

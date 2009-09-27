@@ -13,11 +13,15 @@ import org.dodgybits.android.shuffle.model.Project;
 import org.dodgybits.android.shuffle.model.Task;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.service.Progress;
+import org.dodgybits.android.shuffle.util.AlertUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue.Builder;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -173,12 +177,12 @@ public class PreferencesCreateBackupActivity extends Activity
     	String filename = mFilenameWidget.getText().toString();
     	if (TextUtils.isEmpty(filename)) {
     		String message = getString(R.string.warning_filename_empty);
-    		// TODO show alert
 			Log.e(cTag, message);
-			return;
-    	} 
-    	
-		mTask = new CreateBackupTask().execute(filename);
+    		AlertUtils.showWarning(this, message);
+			setState(State.EDITING);
+    	} else {
+    		mTask = new CreateBackupTask().execute(filename);
+    	}
     }
     
     private class CreateBackupTask extends AsyncTask<String, Progress, Void> {
@@ -187,20 +191,31 @@ public class PreferencesCreateBackupActivity extends Activity
             try {
             	String message = getString(R.string.status_checking_media);
 				Log.d(cTag, message);
-            	updateProgress(0, message, false);
+            	publishProgress(Progress.createProgress(0, message));
+
             	String storage_state = Environment.getExternalStorageState();
             	if (! Environment.MEDIA_MOUNTED.equals(storage_state)) {
             		message = getString(R.string.warning_media_not_mounted, storage_state);
             		reportError(message);
             	} else {
 	        		File dir = Environment.getExternalStorageDirectory();
-	        		File backupFile = new File(dir, filename[0]);
+	        		final File backupFile = new File(dir, filename[0]);
 	        		message = getString(R.string.status_creating_backup);
         	    	Log.d(cTag, message);
-                	updateProgress(5, message, false);
-        			backupFile.createNewFile();
-        			FileOutputStream out = new FileOutputStream(backupFile);
-                	writeBackup(out);
+                	publishProgress(Progress.createProgress(5, message));
+                	
+                	if (backupFile.exists()) {
+                    	publishProgress(Progress.createErrorProgress("", new Runnable() {
+                    		@Override
+                    		public void run() {
+                    			showFileExistsWarning(backupFile);
+                    		}
+                    	}));
+                	} else {
+	        			backupFile.createNewFile();
+	        			FileOutputStream out = new FileOutputStream(backupFile);
+	                	writeBackup(out);
+                	}
         		}
             } catch (Exception e) {
             	String message = getString(R.string.warning_backup_failed, e.getMessage());
@@ -209,6 +224,36 @@ public class PreferencesCreateBackupActivity extends Activity
             
             return null;
         }
+    	
+    	private void showFileExistsWarning(final File backupFile) {
+    		OnClickListener buttonListener = new OnClickListener() {
+    			public void onClick(DialogInterface dialog, int which) {
+    				if (which == DialogInterface.BUTTON1) {
+    			    	Log.i(cTag, "Overwriting file " + backupFile.getName());
+    		            try {
+	            			FileOutputStream out = new FileOutputStream(backupFile);
+	                    	writeBackup(out);
+    		            } catch (Exception e) {
+    		            	String message = getString(R.string.warning_backup_failed, e.getMessage());
+    		        		reportError(message);
+    		            }
+    				} else {
+    					Log.d(cTag, "Hit Cancel button.");
+    					setState(State.EDITING);
+    				}
+    			}
+    		};
+    		OnCancelListener cancelListener = new OnCancelListener() {
+    			public void onCancel(DialogInterface dialog) {
+					Log.d(cTag, "Hit Cancel button.");
+					setState(State.EDITING);
+    			}
+    		};
+    		
+			AlertUtils.showFileExistsWarning(PreferencesCreateBackupActivity.this, 
+					backupFile.getName(), buttonListener, cancelListener);
+    		
+    	}
     	
         private void writeBackup(OutputStream out) throws IOException {
         	Builder builder = Catalogue.newBuilder();
@@ -221,7 +266,9 @@ public class PreferencesCreateBackupActivity extends Activity
         	out.close();
 
         	String message = getString(R.string.status_backup_complete);
-        	updateProgress(100, message, false);
+			Progress progress = Progress.createProgress(100, message);
+        	publishProgress(progress);
+        	
         }
         
         private void writeContexts(Builder builder, int progressStart, int progressEnd)
@@ -238,7 +285,7 @@ public class PreferencesCreateBackupActivity extends Activity
             	builder.addContext(context.toDto());
     			String text = getString(R.string.backup_progress, type, context.name);
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-    			updateProgress(percent, text, false);
+            	publishProgress(Progress.createProgress(percent, text));
             	
         	}
         	cursor.close();
@@ -258,7 +305,7 @@ public class PreferencesCreateBackupActivity extends Activity
             	builder.addProject(project.toDto());
     			String text = getString(R.string.backup_progress, type, project.name);
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-    			updateProgress(percent, text, false);
+            	publishProgress(Progress.createProgress(percent, text));
         	}
         	cursor.close();
         }
@@ -277,7 +324,7 @@ public class PreferencesCreateBackupActivity extends Activity
             	builder.addTask(task.toDto());
     			String text = getString(R.string.backup_progress, type, task.description);
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-    			updateProgress(percent, text, false);
+            	publishProgress(Progress.createProgress(percent, text));
         	}
         	cursor.close();
         }
@@ -288,23 +335,25 @@ public class PreferencesCreateBackupActivity extends Activity
         
         private void reportError(String message) {
 			Log.e(cTag, message);
-        	updateProgress(0, message, true);
+        	publishProgress(Progress.createErrorProgress(message));
         }
-        
-        private void updateProgress(int progressPercent, String details, boolean isError) {
-        	Progress progress = new Progress(progressPercent, details, false);
-        	publishProgress(progress);
-        }
-        
+                
 		@Override
 		public void onProgressUpdate (Progress... progresses) {
 			Progress progress = progresses[0];
 	        mProgressBar.setProgress(progress.getProgressPercent());
 	        mProgressText.setText(progress.getDetails());
-	        if (progress.isComplete()) {
+
+	        if (progress.isError()) {
+//				AlertUtils.showWarning(PreferencesCreateBackupActivity.this, progress.getDetails());
+        		Runnable action = progress.getErrorUIAction();
+	        	if (action != null) {
+	        		action.run();
+	        	} else {
+		        	setState(State.ERROR);
+	        	}
+	        } else if (progress.isComplete()) {
 	        	setState(State.COMPLETE);
-	        } else if (progress.isError()) {
-	        	setState(State.ERROR);
 	        }
 		}
 		
