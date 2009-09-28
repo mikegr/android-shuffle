@@ -69,7 +69,7 @@
     <string name="save_button_title">Enregistrer</string>
     <string name="ok_button_title">OK</string>
     <string name="cancel_button_title">Annuler</string>
-    <string name="replace_button_title">Replace</string> <!--  TODO -->
+    <string name="replace_button_title">Remplacer</string>
 	<string name="warning_title">Attention</string>
 	<string name="info_title">Information</string>
     <string name="task_name">Tâche</string>
@@ -161,9 +161,10 @@
 	<string name="restore_button_title">Restaurer</string>
 
     <string name="warning_filename_empty">Veuillez entrer un nom de fichier.</string>
-	<string name="warning_filename_exists"><xliff:g id="filename">%s</xliff:g> already exists.</string> <!-- TODO -->
+	<string name="warning_filename_exists"><xliff:g id="filename">%s</xliff:g> existe déjà.</string>
 	<string name="warning_media_not_mounted">Périphérique non monté <xliff:g id="error">%s</xliff:g></string>
 	<string name="warning_backup_failed">La sauvegarde a échoué <xliff:g id="error">%s</xliff:g></string>
+    <string name="warning_no_files">Aucun fichier à afficher.</string>
 	<string name="warning_restore_failed">La restauration a échoué <xliff:g id="error">%s</xliff:g></string>
     <string name="status_checking_media">Vérification de l'état du périphérique.</string>
     <string name="status_creating_backup">Création du fichier de sauvegarde.</string>

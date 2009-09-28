@@ -164,6 +164,7 @@
 	<string name="warning_filename_exists"><xliff:g id="filename">%s</xliff:g> already exists.</string>
 	<string name="warning_media_not_mounted">Media is not mounted <xliff:g id="error">%s</xliff:g></string>
 	<string name="warning_backup_failed">Backup failed <xliff:g id="error">%s</xliff:g></string>
+    <string name="warning_no_files">There are no files to display.</string>
 	<string name="warning_restore_failed">Restore failed <xliff:g id="error">%s</xliff:g></string>
     <string name="status_checking_media">Checking media state.</string>
     <string name="status_creating_backup">Creating backup file.</string>

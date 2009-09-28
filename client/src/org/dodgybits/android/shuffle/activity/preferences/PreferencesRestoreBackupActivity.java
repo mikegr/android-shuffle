@@ -99,6 +99,14 @@ public class PreferencesRestoreBackupActivity extends Activity
     		}
     	});
     	
+    	if (files == null || files.length == 0) {
+    		String message = getString(R.string.warning_no_files, storage_state);
+    		Log.e(cTag, message);
+    		AlertUtils.showWarning(this, message);
+			setState(State.COMPLETE);
+			return;
+    	}
+    	
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
         		this, android.R.layout.simple_list_item_1, files);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
