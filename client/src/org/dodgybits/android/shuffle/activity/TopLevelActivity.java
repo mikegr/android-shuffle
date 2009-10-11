@@ -20,9 +20,9 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.MenuUtils;
+import org.dodgybits.android.shuffle.view.IconArrayAdapter;
 
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -35,10 +35,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 /**
  * Displays a list of the main activities.
@@ -54,7 +52,7 @@ public class TopLevelActivity extends ListActivity {
     
 	private static final String[] cProjection = new String[] {"_id"};
 	
-    private int[] mIconIds = new int[5];
+    private Integer[] mIconIds = new Integer[5];
     private AsyncTask<?, ?, ?> mTask;
     
     
@@ -94,7 +92,7 @@ public class TopLevelActivity extends ListActivity {
 
         String[] perspectives = getResources().getStringArray(R.array.perspectives).clone();
         ArrayAdapter<CharSequence> adapter = new IconArrayAdapter(
-        		this, R.layout.list_item_view, R.id.name, perspectives);
+        		this, R.layout.list_item_view, R.id.name, perspectives, mIconIds);
         setListAdapter(adapter);
 	}
 
@@ -175,7 +173,7 @@ public class TopLevelActivity extends ListActivity {
 		public void onProgressUpdate (CharSequence[]... progress) {
 			CharSequence[] labels = progress[0];
             ArrayAdapter<CharSequence> adapter = new IconArrayAdapter(
-            		TopLevelActivity.this, R.layout.list_item_view, R.id.name, labels);
+            		TopLevelActivity.this, R.layout.list_item_view, R.id.name, labels, mIconIds);
             int position = getSelectedItemPosition();
             setListAdapter(adapter);
             setSelection(position);
@@ -187,23 +185,4 @@ public class TopLevelActivity extends ListActivity {
     	
     }
     
-    private class IconArrayAdapter extends ArrayAdapter<CharSequence> {
-
-        public IconArrayAdapter(Context context, int resource, int textViewResourceId, CharSequence[] objects) {
-            super(context, resource, textViewResourceId, objects);
-        }
-    		
-        public View getView(int position, View convertView, ViewGroup parent) {
-        	View view = super.getView(position, convertView, parent);
-        	TextView nameView = (TextView) view.findViewById(R.id.name);
-        	// don't use toString in order to preserve colour change
-        	nameView.setText(getItem(position));
-        	if (position < mIconIds.length) {
-        		nameView.setCompoundDrawablesWithIntrinsicBounds(
-        				getResources().getDrawable(mIconIds[position]), null, null, null);
-        	}
-        	return view;
-        }
-    	
-    }
 }

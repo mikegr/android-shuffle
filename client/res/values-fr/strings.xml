@@ -41,8 +41,7 @@
     <string name="title_calendar">Tâches dues %s</string>
     <string name="title_project_tasks">Projets > %s</string>
     <string name="title_context_tasks">Contextes > %s</string>
-
-    <string name="shortcut_name">Nouvelle tâche</string>
+    <string name="title_shortcut_picker">Pick shortcut screen</string> <!--  TODO -->
 
 	<!--  Option menu -->
     <string name="menu_save">Enregistrer</string>

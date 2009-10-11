@@ -17,6 +17,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 	<!--  Activity titles -->
     <string name="app_name">Shuffle</string>
+    <string name="app_name_with_version">Shuffle 1.3.1</string>
     <string name="title_inbox">Inbox</string>
     <string name="title_project">Projects</string>
     <string name="title_context">Contexts</string>
@@ -41,8 +42,7 @@
     <string name="title_calendar">Actions due %s</string>
     <string name="title_project_tasks">Projects > %s</string>
     <string name="title_context_tasks">Contexts > %s</string>
-
-    <string name="shortcut_name">New Action</string>
+    <string name="title_shortcut_picker">Pick shortcut screen</string>
 
 	<!--  Option menu -->
     <string name="menu_save">Save</string>

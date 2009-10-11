@@ -40,6 +40,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 /**
@@ -256,10 +257,12 @@ public class ShuffleProvider extends ContentProvider {
 
 			int mode = Integer.parseInt(uri.getPathSegments().get(1));
 			long startMS = 0L;
-			long endMS = getEndDate(mode);
+			long endOfToday = getEndDate(mode);
+			long endOfTomorrow = endOfToday + DateUtils.DAY_IN_MILLIS;
 			qb.appendWhere("complete = 0");
 			qb.appendWhere(" AND (due > " + startMS + ")");
-			qb.appendWhere(" AND (due < " + endMS + ")");
+			qb.appendWhere(" AND ( (due < " + endOfToday + ") OR");
+			qb.appendWhere("( allDay = 1 AND due < " + endOfTomorrow + " ) )");
 			break;
 		case TOP_TASKS:
 			qb.setTables(cTaskJoinTableNames);

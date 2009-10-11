@@ -40,8 +40,7 @@
     <string name="title_calendar">Handlung fälling am %s</string>
     <string name="title_project_tasks">Projekte &gt; %s</string>
     <string name="title_context_tasks">Kategorien &gt; %s</string>
-
-    <string name="shortcut_name">Neue Handlung</string>
+    <string name="title_shortcut_picker">Pick shortcut screen</string> <!--  TODO -->
 
 	<!--  Option menu -->
     <string name="menu_save">Speichern</string>
@@ -155,20 +154,20 @@
 
 	<string name="title_restore_backup_preference">Wiederherstellung von SD Card</string>
 	<string name="summary_restore_backup_preference">Daten aus Backup wiederherstellen</string>
-	<string name="toast_backup_restored">Data successfully recovered from <xliff:g id="filename">%s</xliff:g>.</string> <!-- TODO -->
-	<string name="restore_progress">Reading <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string> <!-- TODO -->
-	<string name="restore_button_title">Restore</string> <!-- TODO -->
+	<string name="toast_backup_restored">Die Daten wurden erfolgreich aus <xliff:g id="filename">%s</xliff:g> wiederhergestellt.</string>
+	<string name="restore_progress">Lese <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string>
+	<string name="restore_button_title">Wiederherstellen</string>
 
-    <string name="warning_filename_empty">You must specify a filename.</string> <!-- TODO -->
-	<string name="warning_filename_exists"><xliff:g id="filename">%s</xliff:g> already exists.</string> <!--  TODO -->
-	<string name="warning_media_not_mounted">Media is not mounted <xliff:g id="error">%s</xliff:g></string> <!-- TODO -->
-	<string name="warning_backup_failed">Backup failed <xliff:g id="error">%s</xliff:g></string> <!-- TODO -->
-	<string name="warning_restore_failed">Restore failed <xliff:g id="error">%s</xliff:g></string> <!-- TODO -->
-    <string name="status_checking_media">Checking media state.</string> <!-- TODO -->
-    <string name="status_creating_backup">Creating backup file.</string> <!-- TODO -->
-    <string name="status_backup_complete">Backup complete.</string> <!-- TODO -->
-    <string name="status_reading_backup">Reading backup file.</string> <!-- TODO -->
-    <string name="status_restore_complete">Restore complete.</string> <!-- TODO -->
+    <string name="warning_filename_empty">Es muss ein Datename angegeben werden.</string>
+	<string name="warning_filename_exists"><xliff:g id="filename">%s</xliff:g> existiert bereits.</string>
+	<string name="warning_media_not_mounted">SD-Karte ist nicht eingebunden: <xliff:g id="error">%s</xliff:g></string>
+	<string name="warning_backup_failed">Backup fehlgeschlagen: <xliff:g id="error">%s</xliff:g></string>
+	<string name="warning_restore_failed">Wiederherstellung fehlgeschlagen: <xliff:g id="error">%s</xliff:g></string>
+    <string name="status_checking_media">Überprüfe den Status der SD-Karte.</string> 
+    <string name="status_creating_backup">Erzeuge Backup-Datei.</string>
+    <string name="status_backup_complete">Backup wurde erstellt.</string>
+    <string name="status_reading_backup">Lese Backup ein.</string>
+    <string name="status_restore_complete">Wiederherstellung beendet.</string>
 
 	<string name="cleanup_preferences">Aufräumen</string>
 
@@ -221,7 +220,7 @@ Sehen Sie sich die Hilfe an, um weitere Anweisungen und Tipps zu erhalten.
     </string>
     <string name="help0">
 Shuffle ist ein Organisationsprogramm, das von \"Getting Things Done\" inspiriert wurde.
-Man kann schnell \'Handlungen\' erstellen, und diese sofort kategorisieren. Mit 5 verschiedenen PErspektiven, können Sie Ihre Handlungen so angehen, wie Sie es wollen.
+Man kann schnell \'Handlungen\' erstellen, und diese sofort kategorisieren. Mit 5 verschiedenen Perspektiven, können Sie Ihre Handlungen so angehen, wie Sie es wollen.
 \n
 Ein einfacher Arbeitsabauf ermutigt Sie dazu, ihre Handlungen in Projekten zusammenzufassen und optional auch einer Kategorie zuzuweisen.
 Dieser Aufbau macht es möglich, dass schwierige Projekte in kleine und erreichbare Aufgaben geteilt werden.\n
@@ -277,8 +276,7 @@ Danke an das Team vom Tango Desktop Project, welches eine Open Source Sammlung a
 Danke auch an David Gibb, der mir tolles Feedback bezüglich des Designs gegeben hat, und an Gudrun, die es tolleriert hat, dass ich meine Nächte und Wochenenden mit Android verbracht habe.\n
 Ebenfalls Danke an Jan Lippert, der Shuffle ins Deutsche übersetzt hat.\n
 \n
-Um ein Feedback oder einen Bugreport einzureichen, besuchen Sie bitte http://code.google.com/p/android-shuffle/issues/list oder schicken Sie eine Mail an andy@dodgybits.org (nur Englisch). Wenn Sie kein Englisch können, schicken Sie ihre Mail an lippertsjan@googlemail.com; sie wird dann übersetzt an Andy weitergeleitet.
-    </string>
+Um ein Feedback oder einen Bugreport einzureichen, besuchen Sie bitte http://code.google.com/p/android-shuffle/issues/list oder schicken Sie eine Mail an andy@dodgybits.org (nur Englisch).</string>
     
     <!-- Reminder format strings -->
     <plurals name="Nminutes">

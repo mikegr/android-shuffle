@@ -16,8 +16,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.dodgybits.android.shuffle"
-	android:versionCode="7"
-    android:versionName="1.3.0"    
+	android:versionCode="8"
+    android:versionName="1.3.1"    
     >
     
     <uses-sdk android:minSdkVersion="3" />
@@ -47,7 +47,7 @@
 	        >
         </activity>
             
-        <activity android:name=".activity.TopLevelActivity" android:label="@string/app_name">
+        <activity android:name=".activity.TopLevelActivity" android:label="@string/app_name_with_version">
         </activity>
 
         <activity android:name=".activity.TabbedDueActionsActivity">
@@ -287,7 +287,7 @@
             </intent-filter>            
         </activity>
                 
-        <activity android:name=".activity.NewTaskShortcutActivity"
+        <activity android:name=".activity.LauncherShortcutActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -295,8 +295,8 @@
 
         </activity>
                 
-        <activity-alias android:name=".activity.NewTaskShortcutActivity"
-            android:targetActivity=".activity.NewTaskShortcutActivity"
+        <activity-alias android:name=".activity.LauncherShortcutActivity"
+            android:targetActivity=".activity.LauncherShortcutActivity"
             android:label="@string/app_name">
 
             <!--  This intent-filter allows your shortcuts to be created in the launcher. -->
