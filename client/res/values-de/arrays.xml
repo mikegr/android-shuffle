@@ -35,7 +35,7 @@
         <item>Kategorien</item>
     </array>
     <array name="view_types">
-        <item>Erweiterbare Liste</item>
+        <item>Ausklappbar</item>
         <item>Einzelansicht</item>
     </array>
     <array name="help_screens">
@@ -43,14 +43,14 @@
         <item>Eingang</item>
         <item>Projekte</item>
         <item>Kategorien</item>
-        <item>Hächste Schritte</item>
+        <item>Nächste Schritte</item>
         <item>Fällige Handlungen</item>
         <item>Einstellungen</item>
         <item>Tipps und Tricks</item>
         <item>Danksagungen</item>
     </array>
     <array name="preference_screens">
-        <item>Asussehen der Handlungen</item>
+        <item>Handlungsansicht</item>
         <item>Listenlayout</item>
         <item>Aufräumen</item>
     </array>

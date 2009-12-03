@@ -20,10 +20,10 @@
     <string name="title_project">Projekte</string>
     <string name="title_context">Kategorien</string>
     <string name="title_next_tasks">Nächste Schritte</string>
-    <string name="title_due_tasks">Terminierte Handlungen</string>
-    <string name="title_new_task">Neue Handlung</string>
-    <string name="title_edit_task">Handlung bearbeiten</string>
-    <string name="title_view_task">Handlung ansehen</string>
+    <string name="title_due_tasks">Fällige Handlungen</string>
+    <string name="title_new_task">Neu</string>
+    <string name="title_edit_task">Bearbeiten</string>
+    <string name="title_view_task">Ansehen</string>
     <string name="title_new_project">Neues Projekt</string>
     <string name="title_edit_project">Projekt bearbeiten</string>
     <string name="title_new_context">Neue Kategorie</string>
@@ -37,10 +37,10 @@
     <string name="title_help">Hilfe</string>
     <string name="title_icon_picker">Icon wählen</string>
     <string name="title_colour_picker">Farbe wählen</string>
-    <string name="title_calendar">Handlung fälling am %s</string>
+    <string name="title_calendar">Fällige Handlungen</string>
     <string name="title_project_tasks">Projekte &gt; %s</string>
     <string name="title_context_tasks">Kategorien &gt; %s</string>
-    <string name="title_shortcut_picker">Pick shortcut screen</string> <!--  TODO -->
+    <string name="title_shortcut_picker">Startbildschirm wählen</string>
 
 	<!--  Option menu -->
     <string name="menu_save">Speichern</string>
@@ -49,10 +49,10 @@
     <string name="menu_complete">"Erledigt" umschalten</string>
     <string name="menu_move_up">Aufwärts bewegen</string>
     <string name="menu_move_down">Abwärts bewegen</string>
-    <string name="menu_insert">Hinzufügen %s</string>
+    <string name="menu_insert">%s hinzufügen</string>
     <string name="menu_revert">Umkehren</string>
     <string name="menu_discard">Verwerfen</string>
-    <string name="menu_view">Perspektiven</string>
+    <string name="menu_view">Ansichten</string>
     <string name="menu_preferences">Einstellungen</string>
     <string name="menu_help">Hilfe</string>
 
@@ -67,7 +67,7 @@
     <string name="save_button_title">Speichern</string>
     <string name="ok_button_title">OK</string>
     <string name="cancel_button_title">Abbrechen</string>
-    <string name="replace_button_title">Replace</string> <!--  TODO -->
+    <string name="replace_button_title">Ersetzen</string>
 	<string name="warning_title">Warnung</string>
 	<string name="info_title">Information</string>
     <string name="task_name">Handlung</string>
@@ -92,16 +92,16 @@
 	<!--  task edit screen -->
     <string name="description_title">Beschreibung</string>
     <string name="scheduling_title">Terminplanung</string>
-    <string name="scheduling_collapsed">Terminplanungsoptionen anzeigen</string>
-    <string name="scheduling_expanded">Terminplanungsoptionen verstecken</string>
+    <string name="scheduling_collapsed">Optionen anzeigen</string>
+    <string name="scheduling_expanded">Optionen verstecken</string>
     <string name="start_title">Beginn</string>
-    <string name="due_title">Fälligkeit</string>
+    <string name="due_title">Frist</string>
     <string name="all_day_title">Ganztägig</string>
     <string name="reminders_title">Erinnerung</string>
-    <string name="add_to_gcal_title">Zu Google Calendar hinzufügen</string>
+    <string name="add_to_gcal_title">Zum Kalender hinzufügen</string>
     <string name="add_to_gcal_detail_disabled">Termine hinzufügen, um diese Option anzuzeigen</string>
     <string name="add_to_gcal_detail">Neuer Eintrag wird nach dem Speichern geladen</string>
-    <string name="update_gcal_title">Google Calendar aktualisieren</string>
+    <string name="update_gcal_title">Kalender aktualisieren</string>
     <string name="update_gcal_detail">Aktualisierter Eintrag wird nach dem Speichern geladen</string>
     <string name="completed_title">Erledigt</string>
 
@@ -112,35 +112,35 @@
     <string name="name_title">Name</string>
     <string name="default_context_title">Standardkategorie</string>
     <string name="preview_title">Vorschau</string>
-    <string name="context_errands">Errands</string> <!-- TODO -->
-	<string name="context_online">Online</string> <!-- TODO -->
-    <string name="context_athome">At home</string> <!-- TODO -->
-    <string name="context_atwork">At work</string> <!-- TODO -->
-	<string name="context_contact">Contact</string> <!-- TODO -->
-	<string name="context_read">Read</string> <!-- TODO -->
+    <string name="context_errands">Besorgungen</string>
+	<string name="context_online">Online</string>
+    <string name="context_athome">Zu Hause</string>
+    <string name="context_atwork">Auf der Arbeit</string>
+	<string name="context_contact">Kontakte</string>
+	<string name="context_read">Zu Lesen</string>
 
 	<!--  Calendar screen -->
     <string name="day_button_title">Heute</string>
-    <string name="week_button_title">Nächste Woche</string>
-    <string name="month_button_title">Nächsten Monat</string>
+    <string name="week_button_title">Woche</string>
+    <string name="month_button_title">Monat</string>
 	
 	<!--  preferences screen -->    
     <string name="display_task_list_title">In Handlungsliste anzeigen</string>
     <string name="context_icon_title">Kategorieicon</string>
     <string name="context_name_title">Kategoriename</string>
-    <string name="due_date_title">Fälligkeitstermin</string>
+    <string name="due_date_title">Frist</string>
 
 
 	<string name="layout_preferences">Layout</string>
 
 	<string name="title_project_view_preference">Projektansicht</string>
-	<string name="summary_project_view_preference">Projekthandlungen auf eigenem Bildschirm anzeigen</string>
+	<string name="summary_project_view_preference">Handlungen auf eigenem Bildschirm</string>
 
 	<string name="title_context_view_preference">Kategorieansicht</string>
-	<string name="summary_context_view_preference">Kategoriehandlungen auf eigenem Bildschirm anzeigen</string>
+	<string name="summary_context_view_preference">Handlungen auf eigenem Bildschirm</string>
 
-	<string name="title_action_appearance_preference">Aussehehn der Handlungen</string>
-	<string name="summary_action_appearance_preference">Aussehen der Handlungen in Listen anpassen</string>
+	<string name="title_action_appearance_preference">Handlungsansicht</string>
+	<string name="summary_action_appearance_preference">Aussehen der Handlungen anpassen</string>
 
 
 	<string name="backup_preferences">Backup</string>
@@ -149,10 +149,10 @@
 	<string name="summary_create_backup_preference">Alle Handlungen, Projekte und Kategorien speichern</string>
 
     <string name="filename_title">Backupdatei</string>
-	<string name="backup_progress">Writing <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string> <!-- TODO -->
+	<string name="backup_progress">Schreibe <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string>
 	<string name="toast_backup_saved">Backup erfolgreich in <xliff:g id="filename">%s</xliff:g> gespeichert.</string>
 
-	<string name="title_restore_backup_preference">Wiederherstellung von SD Card</string>
+	<string name="title_restore_backup_preference">Wiederherstellung</string>
 	<string name="summary_restore_backup_preference">Daten aus Backup wiederherstellen</string>
 	<string name="toast_backup_restored">Die Daten wurden erfolgreich aus <xliff:g id="filename">%s</xliff:g> wiederhergestellt.</string>
 	<string name="restore_progress">Lese <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string>
@@ -173,7 +173,7 @@
 
 	<string name="dialog_title_cleanup_preference">Erledigte Handlungen löschen</string>
 
-	<string name="title_delete_completed_preference">Erledigte Handlungen löschen</string>
+	<string name="title_delete_completed_preference">Erledigte Handlungen</string>
 
 	<string name="title_delete_all_preference">Alles löschen!</string>
 	<string name="summary_delete_all_preference">Alle Handlungen, Projekte und selbsterstellte Kategorien werden entfernt.</string>
@@ -192,12 +192,12 @@
     <string name="itemDeletedToast"><xliff:g id="itemName">%s</xliff:g> wurde gelöscht.</string>
 
 	<!--  messages -->
-    <string name="no_due_date">Kein Fälligkeitstermin.</string>
+    <string name="no_due_date">Keine Frist</string>
     <string name="no_icon">Kein Icon</string>
-    <string name="no_tasks">Es wurden noch keine Handlungen erstellt. Wählen sie \"Handlung hinzufügen\" im Menü um zu beginnen.</string>
-    <string name="no_due_tasks">Keine terminierten Handlungen.</string>
-    <string name="no_projects">Es wurden noch keine Projekte erstellt. Fügen Sie im Eingang neue Handlungen hinzu, und weisen Sie diese einem Projekt zu.</string>
-    <string name="no_contexts">Es wurden noch keine Kategorie erstellt. Fügen Sie im Eingang neue Handlungen hinzu, und weisen Sie diese einer Kategorie zu.</string>
+    <string name="no_tasks">Es wurden noch keine Handlungen erstellt. Erzeugen Sie neue Handlungen über \"Handlung hinzufügen\" im Menü.</string>
+    <string name="no_due_tasks">Keine befristeten Handlungen.</string>
+    <string name="no_projects">Es wurden noch keine Projekte erstellt. Erzeugen Sie neue Handlungen, und weisen Sie diesen einem Projekt zu.</string>
+    <string name="no_contexts">Es wurden noch keine Kategorie erstellt. Erzeugen Sie neue Handlungen, und weisen Sie diesen einer Kategorie zu.</string>
     <string name="delete_warning">Sind Sie sicher, dass Sie die gewälten %s und ihre %d %ss löschen wollen?</string>
     <string name="delete_completed_warning">Alle erledigten Handlungen entfernen?</string>
     <string name="clean_slate_warning">Wirklich <i>alle</i> Handlungen, Projekte und selbsterstellte Kategorien entfernen?</string>
@@ -220,23 +220,23 @@ Sehen Sie sich die Hilfe an, um weitere Anweisungen und Tipps zu erhalten.
     </string>
     <string name="help0">
 Shuffle ist ein Organisationsprogramm, das von \"Getting Things Done\" inspiriert wurde.
-Man kann schnell \'Handlungen\' erstellen, und diese sofort kategorisieren. Mit 5 verschiedenen Perspektiven, können Sie Ihre Handlungen so angehen, wie Sie es wollen.
+Man kann schnell \'Handlungen\' erstellen, und diese sofort kategorisieren. Mit 5 verschiedenen Ansichten können Sie Ihre Handlungen so angehen, wie Sie es wollen.
 \n
-Ein einfacher Arbeitsabauf ermutigt Sie dazu, ihre Handlungen in Projekten zusammenzufassen und optional auch einer Kategorie zuzuweisen.
-Dieser Aufbau macht es möglich, dass schwierige Projekte in kleine und erreichbare Aufgaben geteilt werden.\n
-Wenn sich das Projekt entwickelt, können Sie alte Handlungen aufräumen, nachdem Sie eledigt wurden, neue Handlungen hinzufügen, wenn diese anfallen, und Ihre verbleibenden Handlungen nach Ihren Prioritäten neu anordnen.
+Ein einfacher Arbeitsablauf ermutigt Sie dazu, ihre Handlungen in Projekten zusammenzufassen und optional auch einer Kategorie zuzuweisen.
+Durch dieses Vorgehen können schwierige Projekte in kleine, machbare Aufgaben geteilt werden.\n
+Wenn das Projekt fortschreitet, können erledigte Handlungen entfernt werden, anfallende Handlungen neu erzeugt werden und Ihre verbleibenden Handlungen nach Ihren Prioritäten ageordnet werden.
     </string>
     <string name="help1">
 Hier ist der beste Platz, um neue Handlungen zu erstellen. 
 Der <b>Eingang</b> sammelt alle Handlungen, bevor sie weiterverarbeitet werden.
-Sie sollten Ihren Eingang regelmäßig durchgehen, jede Handlung überprüfen, und diese dann zu verwerfen, zu erledigen oder einem Projekt zu zuweisen.\n
-Nachdem Sie die Liste durchgearbeitet haben, wählen Sie <i>Eingang aufräumen</i> aus dem Menü, um alle kategorisierten Handlungen zu entfernen. 
+Sie sollten Ihren Eingang regelmäßig durchgehen, jede Handlung überprüfen, und diese dann verwerfen bzw. löschen, erledigen oder einem Projekt zuweisen.\n
+Nachdem Sie die Liste durchgearbeitet haben, können Sie den <i>Eingang aufräumen</i>, d.h. es werden alle Handlungen entfernt, die einem Projekt zugewiesen wurden. 
     </string>
     <string name="help2">
-Die <b>Projektansicht</b> listet alle Ihre Projekte auf, und erlaubt Ihnen, die Handlungen jedes Projekts anzusehen. Zusätzlich zu den Standardfunktionen \"Hinzufügen\", \"Bearbeiten\" und \"Löschen\" können Sie hier die Handlungen neu anordnen, um diese in der von Ihnen gewpnschten Reihenfolge abzuarbeiten.
+Die <b>Projektansicht</b> listet alle Ihre Projekte auf, und erlaubt Ihnen, die Handlungen eines jeden Projekts anzusehen. Zusätzlich zu den Standardfunktionen \"Hinzufügen\", \"Bearbeiten\" und \"Löschen\" können Sie hier die Handlungen neu anordnen, um diese in der von Ihnen gewünschten Reihenfolge abzuarbeiten.
 \n
 Projekte können, genau wie Kategorien, mit verschiedenen Ansichten betrachtet werden.
-Bei Einzelansicht öffnet der Klick auf ein Projekt einen neuen Bildschirm, auf dem die handlungen zu sehen sind. 
+Bei Einzelansicht öffnet der Klick auf ein Projekt einen neuen Bildschirm, auf dem die Handlungen zu sehen sind. 
 In der Erweiterungsansicht, werden die Handlungen nach einem Klick auf dem selben Bildschirm gezeigt.
     </string>
     <string name="help3">
@@ -248,25 +248,24 @@ Wie auch die Projektansicht, kann die Kategorieansicht entweder mit Einzelansich
     </string>
     <string name="help4">
 Unter <b>Nächste Schritte</b> können Sie am besten feststellen, was als nächstes erledigt werden muss. \n
-Hier wird jeweils die erste unerledigte Handlung Ihrer Projekte gezeigt.
-Wenn Sie die Handlungen innerhalb eines Projektes in der Reihenfolge angeordnet haben, in der sie erledigt werden müssen, zeigt Ihnen diese Liste die wichtigsten Handlungen, die Sie sofort erledige können.
-    </string>
+Hier werden jeweils die ersten, unerledigten Handlungen Ihrer Projekte gezeigt.
+Die Reihenfolge, in der die Handlungen erledigt werden müssen, können Sie in der Prjektansicht selbst festlegen.</string>
     <string name="help5">
 Unter <b>Fällige Handlungen</b> können Sie feststellen, welchen Handlungen Sie einen bestimmten Fälligkeitstermin zugewiesen haben. 
-Es gibt hier 3 Ansichten - <i>Heute</i>, <i>Diese Woche</i> und 
-<i>Diesen Monat</i> -, welche Ihnen fällige Aufgaben für diesen Zeitraum zeigen.
-Überfällige Aufgaben werden in jeder Ansicht gezeigt.
+Es gibt hier 3 Ansichten - <i>Heute</i>, <i>Woche</i> und 
+<i>Monat</i> -, welche Ihnen fällige Aufgaben für den entsprechenden Zeitraum zeigen.
+Unerledigte Aufgaben, die bereits fällig waren, werden in jeder Ansicht gezeigt.
     </string>
     <string name="help6">
 Viele Teile von Shuffle sind an den Benutzer anpassbar. Die <b>Einstellungen</b> sind von überall über das Menü zu erreichen.. \n
 <b>Listenansicht</b>  - Projekte und Kategorien können auf zwei verschiedene Weisen angezeigt werden: Einzelansicht oder Erweiterungsansicht. \n
-<b>Aussehen der Handlungen</b> - Hier können Sie anpassen, welche Informationen über jede Handlung angezeigt werden. Diese Einstellung betrifft jede Ansicht.  \n
-<b>Aufräumen</b> - Löscht erledigte Handlungen oder alles. \n
+<b>Handlungsansicht</b> - Hier können Sie anpassen, welche Informationen über jede Handlung angezeigt werden. Diese Einstellung betrifft jede Ansicht.  \n
+<b>Aufräumen</b> - Löscht entweder alle erledigten Handlungen oder alles. \n
     </string>
     <string name="help7">
 Einige nützliche Tipps für Sie:\n
-1) In jeder Liste können Sie lange auf einen Eintrag drücken, um ein Menü mit verschiedenen Optionen anzuzeigen.\n
-2) Wenn Sie die Zurück-Taste betätigen, wird vorher gespeichert.\n
+1) In jeder Liste können Sie lange auf einen Eintrag drücken, um ein Menü anzuzeigen.\n
+2) Wenn Sie die Zurück-Taste betätigen, wird automatisch gespeichert.\n
 3) Benutzen Sie <i>Speichern und Neu</i> um viele Handlungen auf einmal hinzuzufügen.\n
 4) Um eine Handlung als erledigt anzuzeigen, können Sie diese mit Ihrem Finger "durchstreichen".\n
 5) Sie können ein Shortcut auf ihrem Bildschirm einfügen, mit dem Sie neue Handlungen erstellen können.\n
