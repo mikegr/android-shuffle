@@ -1,0 +1,27 @@
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:shuffle='urn:import:org.dodgybits.shuffle.web.client'>
+
+  <ui:style field='style'
+    type='org.dodgybits.shuffle.web.client.Navigation.Style'>
+
+  .views {
+    padding: 0.5em;
+    line-height: 150%;
+  }
+
+  .item {
+    display: block;
+    cursor: pointer;
+  }
+  </ui:style>
+
+  <g:FlowPanel styleName='{style.views}' ui:field='panel'>
+    <g:Anchor styleName='{style.item}' ui:field='inboxLink'>Inbox</g:Anchor>
+    <g:Anchor styleName='{style.item}' ui:field='dueActionsLink'>Due actions</g:Anchor>
+    <g:Anchor styleName='{style.item}' ui:field='nextActionsLink'>Next actions</g:Anchor>
+    <g:Anchor styleName='{style.item}' ui:field='projectsLink'>Projects</g:Anchor>
+    <g:Anchor styleName='{style.item}' ui:field='contextsLink'>Contexts</g:Anchor>
+  </g:FlowPanel>
+</ui:UiBinder>

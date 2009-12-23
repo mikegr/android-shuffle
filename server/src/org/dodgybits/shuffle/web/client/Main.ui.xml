@@ -1,0 +1,24 @@
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:shuffle='urn:import:org.dodgybits.shuffle.web.client'>
+
+  <g:DockLayoutPanel unit='EM'>
+    <g:north size='4'>
+      <shuffle:TopPanel ui:field='topPanel' />
+    </g:north>
+
+    <g:center>
+      <g:SplitLayoutPanel>
+        <g:west size='100'>
+          <shuffle:Navigation ui:field='navigation' />
+        </g:west>
+
+        <g:center>
+          <shuffle:CentrePanel ui:field='centrePanel' />
+        </g:center>
+      </g:SplitLayoutPanel>
+    </g:center>
+  </g:DockLayoutPanel>
+
+</ui:UiBinder>
