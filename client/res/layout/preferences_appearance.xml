@@ -41,7 +41,7 @@
         <LinearLayout
     		android:orientation="vertical" 
 			android:layout_width="fill_parent"
-			android:layout_height="1px"
+			android:layout_height="1dip"
 			android:layout_span="2"
 			android:background="@drawable/box">
 		</LinearLayout>
@@ -54,14 +54,14 @@
 	        android:layout_width="wrap_content" 
 	        android:layout_height="wrap_content"
 			android:layout_span="2"
-			android:paddingTop="10px"
+			android:paddingTop="10dip"
 	        android:text="@string/display_task_list_title"
-            style="@style/label"
+            style="@style/preferences_label"
 	        />
 	</TableRow>	
 
 	<TableRow
-        android:paddingTop="8px">	        
+        android:paddingTop="8dip">	        
 	        
 	    <CheckBox android:id="@+id/display_context"
 	        android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
 	</TableRow>	
 
 	<TableRow
-        android:paddingTop="5px"
+        android:paddingTop="5dip"
 	>	        
 
 	    <CheckBox android:id="@+id/display_icon"
@@ -100,7 +100,7 @@
 	</TableRow>	
 
 	<TableRow
-        android:paddingTop="5px"
+        android:paddingTop="5dip"
 	>	        
 
 	    <CheckBox android:id="@+id/display_details"

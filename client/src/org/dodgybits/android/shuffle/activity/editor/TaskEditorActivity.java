@@ -421,7 +421,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         if (!TextUtils.isEmpty(timezone)) {
         	values.put("eventTimezone", timezone);
         }
-        values.put("calendar_id", 1); // query content://calendar/calendars for more  
+        values.put("calendar_id", Preferences.getCalendarId(this));  
         values.put("title", title);
         values.put("allDay", allDay ? 1 : 0);
         if (start > 0L) {

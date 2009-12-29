@@ -27,8 +27,8 @@
     android:layout_height="fill_parent"
     android:layout_alignParentLeft="true"
 	android:gravity="center_vertical"
-    android:paddingLeft="5px" 
-    android:paddingRight="5px"
+    android:paddingLeft="5dip" 
+    android:paddingRight="5dip"
     style="@style/list_text"
     />
     
@@ -37,8 +37,8 @@
 		android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
 		android:scaleType="center" 
-		android:paddingLeft="5px"
-		android:paddingRight="5px" 
+		android:paddingLeft="5dip"
+		android:paddingRight="5dip" 
 		android:gravity="center_horizontal"
 		android:src="@drawable/user_input_icon"
 		style="@style/image" 

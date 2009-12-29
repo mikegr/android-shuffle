@@ -412,6 +412,7 @@ public class PreferencesRestoreBackupActivity extends Activity
 	        }
 		}
 		
+        @SuppressWarnings("unused")
         public void onPostExecute() {
             mTask = null;
         }

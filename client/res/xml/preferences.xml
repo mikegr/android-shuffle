@@ -18,6 +18,17 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+            android:title="@string/general_preferences">
+
+        <ListPreference
+            android:key="calendar_id"
+            android:title="@string/title_calendar_preference"
+            android:summary="@string/summary_calendar_preference"
+            android:dialogTitle="@string/title_calendar_preference" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
             android:title="@string/layout_preferences">
             
         <CheckBoxPreference

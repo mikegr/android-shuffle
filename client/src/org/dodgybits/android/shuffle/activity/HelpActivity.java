@@ -50,11 +50,11 @@ public class HelpActivity extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mHelpSpinner.setAdapter(adapter);
         mHelpSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-        	public void onNothingSelected(AdapterView arg0) {
+        	public void onNothingSelected(AdapterView<?> arg0) {
         		// do nothing
         	}
         	
-        	public void onItemSelected(AdapterView parent, View v,
+        	public void onItemSelected(AdapterView<?> parent, View v,
         			int position, long id) {
         		int resId = HelpActivity.this.getResources().getIdentifier(
         				"help" + position, "string", "org.dodgybits.android.shuffle");

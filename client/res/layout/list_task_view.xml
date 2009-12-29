@@ -19,8 +19,8 @@
 	android:orientation="horizontal" 
 	android:layout_width="fill_parent"
 	android:layout_height="?android:attr/listPreferredItemHeight"
-	android:paddingLeft="3px" 
-	android:paddingRight="7px" 
+	android:paddingLeft="3dip" 
+	android:paddingRight="7dip" 
 	android:gravity="center_vertical"
 	android:baselineAligned="false">
 
@@ -29,9 +29,9 @@
 		android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-		android:paddingTop="1px" 
-		android:paddingLeft="5px" 
-		android:paddingRight="10px"
+		android:paddingTop="1dip" 
+		android:paddingLeft="5dip" 
+		android:paddingRight="10dip"
 		android:singleLine="true"
 		android:ellipsize="middle"
 		style="@style/list_text" />
@@ -39,8 +39,8 @@
 	<TextView android:id="@+id/details"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:paddingLeft="5px" 
-		android:paddingRight="10px"
+		android:paddingLeft="5dip" 
+		android:paddingRight="10dip"
         android:layout_alignParentLeft="true"
 		android:layout_below="@+id/description"        
 		android:singleLine="true"
@@ -52,8 +52,8 @@
 		android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-		android:paddingLeft="5px" 
-		android:paddingBottom="1px" 
+		android:paddingLeft="5dip" 
+		android:paddingBottom="1dip" 
 		android:lines="1" 
 		style="@style/list_sub_text_1" />
 
@@ -62,8 +62,8 @@
 		android:layout_height="fill_parent" 
         android:layout_alignParentRight="true"
         android:gravity="bottom"
-		android:paddingLeft="5px" 
-		android:paddingRight="0px"
+		android:paddingLeft="5dip" 
+		android:paddingRight="0dip"
 		style="@style/due_date" />
 	
 	<org.dodgybits.android.shuffle.view.LabelView
@@ -73,10 +73,10 @@
 		android:layout_toLeftOf="@+id/due_date"
 		android:layout_alignWithParentIfMissing="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="1px"
-		android:drawablePadding="2px"
-		android:paddingLeft="3px"
-		android:paddingRight="3px"
+        android:layout_marginBottom="1dip"
+		android:drawablePadding="2dip"
+		android:paddingLeft="3dip"
+		android:paddingRight="3dip"
 		style="@style/context" />
 		
 </RelativeLayout>

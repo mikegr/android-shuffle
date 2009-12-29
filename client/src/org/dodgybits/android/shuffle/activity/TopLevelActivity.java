@@ -24,6 +24,7 @@ import org.dodgybits.android.shuffle.view.IconArrayAdapter;
 
 import android.app.ListActivity;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,6 +32,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.AndroidException;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +63,8 @@ public class TopLevelActivity extends ListActivity {
         super.onCreate(icicle);
         setContentView(R.layout.top_level);
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
+        
+        addVersionToTitle();
     }
 	
 	@Override
@@ -179,10 +183,23 @@ public class TopLevelActivity extends ListActivity {
             setSelection(position);
 		}
 		
+        @SuppressWarnings("unused")
         public void onPostExecute() {
             mTask = null;
         }
     	
+    }
+    
+    
+    private void addVersionToTitle() {
+        String title = getTitle().toString();
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            title += " " + info.versionName;
+            setTitle(title);
+        } catch (AndroidException e) {
+            Log.e(cTag, "Failed to add version to title: " + e.getMessage());
+        }
     }
     
 }

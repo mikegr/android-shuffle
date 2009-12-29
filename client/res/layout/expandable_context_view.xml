@@ -22,21 +22,21 @@
 	android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft">
 
 	<LinearLayout android:id="@+id/colour"
-		android:layout_width="wrap_content" android:layout_height="42px"
+		android:layout_width="wrap_content" android:layout_height="42dip"
 		android:layout_alignParentLeft="true"
 		android:layout_centerVertical="true" android:orientation="horizontal"
-		android:paddingLeft="5px" android:paddingRight="10px"
-		android:paddingTop="5px" android:paddingBottom="5px">
+		android:paddingLeft="5dip" android:paddingRight="10dip"
+		android:paddingTop="5dip" android:paddingBottom="5dip">
 
 		<ImageView android:id="@+id/icon"
-			android:layout_width="32px"
-			android:layout_height="32px" 
+			android:layout_width="32dip"
+			android:layout_height="32dip" 
 			/>
 
 		<TextView android:id="@+id/name"
 			android:layout_width="wrap_content"
 			android:layout_height="fill_parent" android:gravity="center_vertical"
-			android:paddingLeft="5px" android:paddingRight="5px"
+			android:paddingLeft="5dip" android:paddingRight="5dip"
 			style="@style/list_text" />
 
 	</LinearLayout>

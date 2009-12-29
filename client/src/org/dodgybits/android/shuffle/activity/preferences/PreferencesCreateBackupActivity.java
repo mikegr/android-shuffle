@@ -357,6 +357,7 @@ public class PreferencesCreateBackupActivity extends Activity
 	        }
 		}
 		
+        @SuppressWarnings("unused")
         public void onPostExecute() {
             mTask = null;
         }

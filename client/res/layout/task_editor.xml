@@ -23,8 +23,8 @@
 		android:layout_height="fill_parent" android:scrollbars="vertical">
 
 		<TextView android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:paddingLeft="5px"
-			android:paddingRight="5px" android:text="@string/description_title"
+			android:layout_height="wrap_content" android:paddingLeft="5dip"
+			android:paddingRight="5dip" android:text="@string/description_title"
 			style="@style/label" />
 
 		<EditText android:id="@+id/description"
@@ -45,8 +45,8 @@
 	    />
 
 		<TextView android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:paddingLeft="5px"
-			android:paddingRight="5px" android:text="@string/project_title"
+			android:layout_height="wrap_content" android:paddingLeft="5dip"
+			android:paddingRight="5dip" android:text="@string/project_title"
 			style="@style/label" />
 
 		<RelativeLayout
@@ -62,12 +62,12 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentRight="true"
 	            android:layout_alignParentTop="true"
-	            android:layout_marginLeft="5px"
+	            android:layout_marginLeft="5dip"
 	        />
 
 			<Spinner android:id="@+id/project"
 	            android:layout_width="wrap_content"
-	            android:layout_height="48px"
+	            android:layout_height="48dip"
 	            android:layout_alignParentLeft="true"
 	            android:layout_toLeftOf="@+id/project_add"
 				android:drawSelectorOnTop="true"
@@ -82,8 +82,8 @@
 	    />
 
 		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:paddingLeft="5px"
-			android:paddingRight="5px" android:text="@string/context_title"
+			android:layout_height="wrap_content" android:paddingLeft="5dip"
+			android:paddingRight="5dip" android:text="@string/context_title"
 			style="@style/label" />
 
 		<RelativeLayout
@@ -99,12 +99,12 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentTop="true"
 	            android:layout_alignParentRight="true"
-	            android:layout_marginLeft="5px"
+	            android:layout_marginLeft="5dip"
 	        />
 
 			<Spinner android:id="@+id/context"
 	            android:layout_width="wrap_content"
-	            android:layout_height="48px"
+	            android:layout_height="48dip"
 	            android:layout_alignParentLeft="true"
 	            android:layout_toLeftOf="@+id/context_add"
 				android:drawSelectorOnTop="true"
@@ -119,8 +119,8 @@
 	    />
 
 		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:paddingLeft="5px"
-			android:paddingRight="5px" android:text="@string/details_title"
+			android:layout_height="wrap_content" android:paddingLeft="5dip"
+			android:paddingRight="5dip" android:text="@string/details_title"
 			style="@style/label" />
 
 		<EditText android:id="@+id/details"

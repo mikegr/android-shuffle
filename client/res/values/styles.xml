@@ -16,17 +16,17 @@
 
 <resources>
 
-	<style name="ShuffleTheme" parent="@android:Theme" >        
+    <style name="ShuffleTheme" parent="@android:Theme" >        
     </style>
 
     <style name="activity" parent="ShuffleTheme">
-    	<!--  <item name="android:background">@drawable/pale_weak_cyan</item> 
-    	<item name="android:cacheColorHint">@drawable/pale_weak_cyan</item>
-    	 -->
-	</style>
+        <!--  <item name="android:background">@drawable/pale_weak_cyan</item> 
+        <item name="android:cacheColorHint">@null</item>
+         -->
+    </style>
 
     <style name="editor" parent="activity">
-	</style>
+    </style>
 
     <style name="list" parent="activity">
     	<item name="android:divider">@android:drawable/divider_horizontal_bright</item> 
@@ -61,7 +61,7 @@
         <item name="android:textScaleX">0.8</item>
         <item name="android:gravity">left</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:paddingRight">5px</item>
+        <item name="android:paddingRight">5dip</item>
     </style>
 
     <style name="preferences_label" parent="label">

@@ -19,8 +19,12 @@ package org.dodgybits.android.shuffle.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class Preferences {
+    private static final String cTag = "Preferences";
+    
+    
 	public static final String FIRST_TIME = "first_time";
 	public static final String SCREEN_KEY = "screen";
 	public static final String DELETE_COMPLETED_PERIOD_KEY = "delete_complete_period_str";
@@ -37,8 +41,8 @@ public class Preferences {
 	public static final String CONTEXT_VIEW_KEY = "context_view";
 
 	public static final String TOP_LEVEL_COUNTS_KEY = "top_level_counts";
-	
-	public static final String KEY_DEFAULT_REMINDER = "default_reminder";
+	public static final String CALENDAR_ID_KEY = "calendar_id";
+	public static final String DEFAULT_REMINDER_KEY = "default_reminder";
 	
 	public enum DeleteCompletedPeriod {
 		hourly, daily, weekly, never
@@ -76,7 +80,7 @@ public class Preferences {
 	public static int getDefaultReminderMinutes(Context context) {
 		getSharedPreferences(context);
         String durationString =
-        	sPrefs.getString(Preferences.KEY_DEFAULT_REMINDER, "0");
+        	sPrefs.getString(Preferences.DEFAULT_REMINDER_KEY, "0");
 		return Integer.parseInt(durationString);
 	}
 	
@@ -128,6 +132,20 @@ public class Preferences {
 			}
 		}
 		return result;
+	}
+	
+	public static int getCalendarId(Context context) {
+        getSharedPreferences(context);
+        int id = 1;
+        String calendarIdStr = sPrefs.getString(CALENDAR_ID_KEY, null);
+        if (calendarIdStr != null) {
+            try {
+                id = Integer.parseInt(calendarIdStr, 10);
+            } catch (NumberFormatException e) {
+                Log.e(cTag, "Failed to parse calendar id: " + e.getMessage());
+            }
+        }
+        return id;
 	}
 	
 	public static SharedPreferences.Editor getEditor(Context context) {

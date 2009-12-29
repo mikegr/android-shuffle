@@ -132,6 +132,12 @@
     <string name="due_date_title">Echéance</string>
 
 
+    <string name="general_preferences">General settings</string> <!--  TODO -->
+    
+    <string name="title_calendar_preference">Select calendar</string> <!--  TODO -->
+    <string name="summary_calendar_preference">For new Google Calendar entries</string> <!--  TODO -->
+
+
 	<string name="layout_preferences">Layout</string>
 
 	<string name="title_project_view_preference">Vue projet</string>

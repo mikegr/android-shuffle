@@ -18,7 +18,6 @@ package org.dodgybits.android.shuffle.provider;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -371,20 +370,20 @@ public class ShuffleProvider extends ContentProvider {
 		cal.set(Calendar.MILLISECOND, 0);
 		switch (mode) {
 		case Shuffle.Tasks.DAY_MODE:
-			cal.roll(Calendar.DAY_OF_YEAR, 1);
+			cal.add(Calendar.DAY_OF_YEAR, 1);
 			endMS = cal.getTimeInMillis();
 			break;
 		case Shuffle.Tasks.WEEK_MODE:
-			cal.roll(Calendar.DAY_OF_YEAR, 7);
+			cal.add(Calendar.DAY_OF_YEAR, 7);
 			endMS = cal.getTimeInMillis();
 			break;
 		case Shuffle.Tasks.MONTH_MODE:
-			cal.roll(Calendar.MONTH, 1);
+			cal.add(Calendar.MONTH, 1);
 			endMS = cal.getTimeInMillis();
 			break;
 		}
 		if (Log.isLoggable(cTag, Log.INFO)) {
-			Log.i(cTag, "Due date ends " + new Date(endMS) + "(" + endMS + ")");
+			Log.i(cTag, "Due date ends " + endMS);
 		}
 		return endMS;
 	}

@@ -17,7 +17,7 @@
 <LinearLayout 
 	xmlns:android="http://schemas.android.com/apk/res/android" 
     android:orientation="horizontal"
-    android:paddingTop="3px"
+    android:paddingTop="3dip"
     >
     
     <Button
