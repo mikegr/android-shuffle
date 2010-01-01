@@ -2,7 +2,7 @@ package org.dodgybits.shuffle.web.client.formatter;
 
 import java.util.Date;
 
-import org.dodgybits.shuffle.web.common.model.Task;
+import org.dodgybits.shuffle.web.client.model.TaskValue;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 
@@ -13,8 +13,8 @@ public class ActionDateFormatter {
 	public ActionDateFormatter() {
 		dateFormat = DateTimeFormat.getFormat("d MMM");
 	}
-	public String getShortDueDate(Task task) {
-		Date date = task.getDueDate();
+	public String getShortDueDate(TaskValue taskValue) {
+		Date date = taskValue.getDueDate();
 		String result = "";
 		if (date != null) {
 			if (isSameDay(date, new Date())) {

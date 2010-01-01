@@ -5,7 +5,16 @@
 
 <web-app>
     
-  <!-- Servlets -->
+  <filter>
+    <filter-name>PersistenceFilter</filter-name>
+    <filter-class>org.dodgybits.shuffle.web.server.persistence.PersistenceFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>PersistenceFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+    
   <servlet>
     <servlet-name>taskServiceImpl</servlet-name>
     <servlet-class>org.dodgybits.shuffle.web.server.service.TaskServiceImpl</servlet-class>
@@ -16,7 +25,6 @@
     <url-pattern>/shuffle/task</url-pattern>
   </servlet-mapping>
 
-  <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Shuffle.html</welcome-file>
   </welcome-file-list>

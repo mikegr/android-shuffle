@@ -2,8 +2,8 @@ package org.dodgybits.shuffle.web.client.command;
 
 import java.util.ArrayList;
 
+import org.dodgybits.shuffle.web.client.model.TaskValue;
 import org.dodgybits.shuffle.web.client.service.TaskServiceAsync;
-import org.dodgybits.shuffle.web.common.model.Task;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -11,19 +11,20 @@ import com.google.inject.Inject;
 
 public class GetTasksCommand implements Command {
 
-	private TaskServiceAsync service;
-	private AsyncCallback<ArrayList<Task>> callback;
+	private TaskServiceAsync mService;
+	private AsyncCallback<ArrayList<TaskValue>> mCallback;
 	
 	public GetTasksCommand(
 			TaskServiceAsync service,
-			AsyncCallback<ArrayList<Task>> callback) {
-		this.service = service;
-		this.callback = callback;
+			AsyncCallback<ArrayList<TaskValue>> callback) {
+		mService = service;
+		mCallback = callback;
 	}
 	
 	@Override
 	public void execute() {
-		service.getTasks(callback);
+//		service.getMockTasks(callback);
+	    mService.getTasks(null, null, mCallback);
 	}
 
 	public static class Factory {
@@ -34,7 +35,7 @@ public class GetTasksCommand implements Command {
 			this.service = service;
 		}
 		
-		public GetTasksCommand create(AsyncCallback<ArrayList<Task>> callback) {
+		public GetTasksCommand create(AsyncCallback<ArrayList<TaskValue>> callback) {
 			return new GetTasksCommand(service, callback);
 		}
 	}
