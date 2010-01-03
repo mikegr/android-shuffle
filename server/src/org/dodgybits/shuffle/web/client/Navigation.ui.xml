@@ -7,8 +7,14 @@
     type='org.dodgybits.shuffle.web.client.Navigation.Style'>
 
   .views {
-    padding: 0.5em;
-    line-height: 150%;
+    padding: 1em;
+    border: 1px;     
+    
+  background-color: #cee6e6; 
+  text-decoration: none; 
+  \-webkit-border-radius: 0.8em; 
+  \-moz-border-radius: 0.8em; 
+    
   }
 
   .item {

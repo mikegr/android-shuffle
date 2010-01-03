@@ -34,13 +34,12 @@
     <div class='{style.logo}'/>
 
     <div class="{style.statusDiv}">
-      <span class="{style.emailDiv}">
-        andy@example.com
+      <span class="{style.emailDiv}" ui:field="emailSpan">
       </span>
       |
       <g:Anchor href='javascript:;' ui:field='settingsLink'>Settings</g:Anchor>
       |
-      <g:Anchor href='javascript:;' ui:field='signOutLink'>Sign Out</g:Anchor>
+      <g:Anchor href='javascript:;' ui:field='loginLink'>Sign In</g:Anchor>
     </div>
   </g:HTMLPanel>
 </ui:UiBinder>

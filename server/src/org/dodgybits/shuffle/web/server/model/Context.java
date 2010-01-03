@@ -16,6 +16,7 @@ import org.dodgybits.shuffle.web.client.model.KeyValue;
 import org.dodgybits.shuffle.web.client.model.ContextValue.Builder;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
@@ -26,13 +27,19 @@ public class Context implements Serializable {
     private Key mKey;
 
     @Persistent
+    private User mUser;
+    
+    @Persistent
 	private String mName;
-	
 	
 	public final Key getKey() {
 		return mKey;
 	}
 
+	public final User getUser() {
+	    return mUser;
+	}
+	
 	public final String getName() {
 		return mName;
 	}
@@ -46,10 +53,11 @@ public class Context implements Serializable {
         return builder.build();
     }
     
-    public static final Context fromContextValue(ContextValue value) {
+    public static final Context fromContextValue(User user, ContextValue value) {
         Context context = new Context();
         context.mKey = toKey(value.getId());
         context.mName = value.getName();
+        context.mUser = user;
         return context;
     }
 	

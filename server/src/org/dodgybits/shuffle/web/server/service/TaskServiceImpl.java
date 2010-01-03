@@ -11,10 +11,14 @@ import javax.jdo.Query;
 import org.dodgybits.shuffle.web.client.model.TaskFilter;
 import org.dodgybits.shuffle.web.client.model.TaskOrdering;
 import org.dodgybits.shuffle.web.client.model.TaskValue;
+import org.dodgybits.shuffle.web.client.service.NotLoggedInException;
 import org.dodgybits.shuffle.web.client.service.TaskService;
 import org.dodgybits.shuffle.web.server.model.Task;
 import org.dodgybits.shuffle.web.server.persistence.JdoUtils;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 @SuppressWarnings("serial")
@@ -30,14 +34,16 @@ public class TaskServiceImpl extends RemoteServiceServlet implements
     }
 
     @SuppressWarnings("unchecked")
-    public ArrayList<TaskValue> getTasks(TaskFilter filter, TaskOrdering order) {
+    public ArrayList<TaskValue> getTasks(TaskFilter filter, TaskOrdering order) throws NotLoggedInException {
+        checkLoggedIn();
+
         ArrayList<TaskValue> taskValues = new ArrayList<TaskValue>();
         PersistenceManager pm = JdoUtils.getPm();
         try {
             Query query = pm.newQuery(Task.class);
             setFilter(query, filter);
             setOrdering(query, order);
-            List<Task> tasks = (List<Task>) query.execute();
+            List<Task> tasks = (List<Task>) query.execute(getUser());
             for (Task task : tasks) {
                 taskValues.add(task.toTaskValue());
             }
@@ -47,9 +53,11 @@ public class TaskServiceImpl extends RemoteServiceServlet implements
         return taskValues;
     }
 
-    public TaskValue saveTask(TaskValue taskValue) {
+    public TaskValue saveTask(TaskValue taskValue) throws NotLoggedInException {
+        checkLoggedIn();
+        
         PersistenceManager pm = JdoUtils.getPm();
-        Task task = Task.fromTaskValue(taskValue);
+        Task task = Task.fromTaskValue(getUser(), taskValue);
         try {
             task = pm.makePersistent(task);
         } finally {
@@ -59,12 +67,27 @@ public class TaskServiceImpl extends RemoteServiceServlet implements
     }
 
     private void setFilter(Query query, TaskFilter filter) {
+        query.setFilter("user == u");
+        query.declareParameters("com.google.appengine.api.users.User u");
+
         // TODO
     }
 
     private void setOrdering(Query query, TaskOrdering ordering) {
         // TODO
     }
+    
+    private void checkLoggedIn() throws NotLoggedInException {
+        if (getUser() == null) {
+          throw new NotLoggedInException("Not logged in.");
+        }
+      }
+
+      private User getUser() {
+        UserService userService = UserServiceFactory.getUserService();
+        return userService.getCurrentUser();
+      }
+    
 
     private static final long MILLIS_IN_DAY = 1000L * 60 * 60 * 24;
 

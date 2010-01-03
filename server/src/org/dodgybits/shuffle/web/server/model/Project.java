@@ -17,6 +17,7 @@ import org.dodgybits.shuffle.web.client.model.ProjectValue;
 import org.dodgybits.shuffle.web.client.model.ProjectValue.Builder;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
@@ -27,6 +28,9 @@ public class Project implements Serializable {
     private Key mKey;
 
     @Persistent
+    private User mUser;
+    
+    @Persistent
     private String mName;
     
     @Persistent
@@ -35,6 +39,10 @@ public class Project implements Serializable {
     
     public final Key getKey() {
         return mKey;
+    }
+    
+    public final User getUser() {
+        return mUser;
     }
 
     public final String getName() {
@@ -56,11 +64,12 @@ public class Project implements Serializable {
         return builder.build();
     }
 
-    public static final Project fromProjectValue(ProjectValue value) {
+    public static final Project fromProjectValue(User user, ProjectValue value) {
         Project project = new Project();
         project.mKey = toKey(value.getId());
         project.mName = value.getName();
         project.mDefaultContextKey = toKey(value.getDefaultContextId());
+        project.mUser = user;
         return project;
     }
     

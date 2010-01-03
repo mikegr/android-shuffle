@@ -23,7 +23,7 @@ public class GetTasksCommand implements Command {
 	
 	@Override
 	public void execute() {
-//		service.getMockTasks(callback);
+//		mService.getMockTasks(mCallback);
 	    mService.getTasks(null, null, mCallback);
 	}
 

@@ -15,6 +15,7 @@ a:link, a:visited, a:hover, a:active {
 .dialogTopRightInner, .dialogMiddleRightInner, .dialogBottomRightInner {
   display: none;
 }
+
 .gwt-DialogBox {
   background-color: white;
   border: 1px solid #666;

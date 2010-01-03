@@ -3,6 +3,7 @@
 	<name>Shuffle</name>
 	<comment></comment>
 	<projects>
+		<project>Shuffle-DTO</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

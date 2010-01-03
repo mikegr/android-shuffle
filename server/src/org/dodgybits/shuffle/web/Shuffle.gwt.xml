@@ -13,6 +13,9 @@
   <!-- Other module inherits                                      -->
   <inherits name="com.google.gwt.inject.Inject"/>
   
+  <!-- Include GWTUpload library -->
+  <inherits name="gwtupload.GWTUpload"/>
+  
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.dodgybits.shuffle.web.client.Shuffle'/>
 

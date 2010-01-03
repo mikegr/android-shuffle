@@ -12,8 +12,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("task")
 public interface TaskService extends RemoteService {
 
-    ArrayList<TaskValue> getMockTasks();
-    ArrayList<TaskValue> getTasks(TaskFilter filter, TaskOrdering order);
-    TaskValue saveTask(TaskValue taskValue);
+    ArrayList<TaskValue> getMockTasks() throws NotLoggedInException;
+    ArrayList<TaskValue> getTasks(TaskFilter filter, TaskOrdering order) throws NotLoggedInException;
+    TaskValue saveTask(TaskValue taskValue) throws NotLoggedInException;
 	
 }

@@ -5,6 +5,12 @@
 
 <web-app>
     
+  <context-param>
+    <!-- max size of the upload request -->
+    <param-name>maxSize</param-name>
+    <param-value>30000</param-value>
+  </context-param>
+      
   <filter>
     <filter-name>PersistenceFilter</filter-name>
     <filter-class>org.dodgybits.shuffle.web.server.persistence.PersistenceFilter</filter-class>
@@ -16,14 +22,34 @@
   </filter-mapping>
     
   <servlet>
+    <servlet-name>loginService</servlet-name>
+    <servlet-class>org.dodgybits.shuffle.web.server.service.LoginServiceImpl</servlet-class>
+  </servlet>
+    
+  <servlet>
     <servlet-name>taskServiceImpl</servlet-name>
     <servlet-class>org.dodgybits.shuffle.web.server.service.TaskServiceImpl</servlet-class>
   </servlet>
-
+  
+  <servlet>
+    <servlet-name>uploadServlet</servlet-name>
+    <servlet-class>org.dodgybits.shuffle.web.server.service.RestoreServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>loginService</servlet-name>
+    <url-pattern>/shuffle/login</url-pattern>
+  </servlet-mapping>  
+  
   <servlet-mapping>
     <servlet-name>taskServiceImpl</servlet-name>
     <url-pattern>/shuffle/task</url-pattern>
   </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>uploadServlet</servlet-name>
+    <url-pattern>/shuffle/restore</url-pattern>
+  </servlet-mapping>  
 
   <welcome-file-list>
     <welcome-file>Shuffle.html</welcome-file>

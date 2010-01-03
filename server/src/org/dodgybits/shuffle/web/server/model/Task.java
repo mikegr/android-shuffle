@@ -24,6 +24,7 @@ import org.dodgybits.shuffle.web.client.model.TaskValue.Builder;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Text;
+import com.google.appengine.api.users.User;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
@@ -33,6 +34,9 @@ public class Task implements Serializable {
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key mKey;
 
+    @Persistent
+    private User user;
+    
     @Persistent
     private String mTitle;
 
@@ -53,6 +57,10 @@ public class Task implements Serializable {
         return mKey;
     }
 
+    public final User getUser() {
+        return user;
+    }
+    
 	public final String getTitle() {
 		return mTitle;
 	}
@@ -88,9 +96,10 @@ public class Task implements Serializable {
         return builder.build();
 	}
 	
-    public static final Task fromTaskValue(TaskValue value) {
+    public static final Task fromTaskValue(User user, TaskValue value) {
         Task task = new Task();
         task.mKey = toKey(value.getId());
+        task.user = user;
         task.mTitle = value.getTitle();
         task.mDetails = new Text(value.getDetails());
         task.mProjectKey = toKey(value.getProjectId());
