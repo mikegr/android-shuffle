@@ -26,7 +26,6 @@ public final class ShuffleProtos {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Context_descriptor;
     }
     
-    @Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Context_fieldAccessorTable;
@@ -60,14 +59,12 @@ public final class ShuffleProtos {
     public boolean hasIcon() { return hasIcon; }
     public java.lang.String getIcon() { return icon_; }
     
-    @Override
     public final boolean isInitialized() {
       if (!hasId) return false;
       if (!hasName) return false;
       return true;
     }
     
-    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (hasId()) {
@@ -86,7 +83,6 @@ public final class ShuffleProtos {
     }
     
     private int memoizedSerializedSize = -1;
-    @Override
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -120,7 +116,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Context parseFrom(
         com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -131,7 +127,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Context parseFrom(
         byte[] data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -142,7 +138,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Context parseFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
@@ -153,7 +149,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Context parseDelimitedFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
                .buildParsed();
@@ -165,43 +161,49 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Context parseFrom(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
     
-    public static Builder newBuilder() { return new Builder(); }
-    public Builder newBuilderForType() { return new Builder(); }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(org.dodgybits.shuffle.dto.ShuffleProtos.Context prototype) {
-      return new Builder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private org.dodgybits.shuffle.dto.ShuffleProtos.Context result;
+      
       // Construct using org.dodgybits.shuffle.dto.ShuffleProtos.Context.newBuilder()
       private Builder() {}
       
-      org.dodgybits.shuffle.dto.ShuffleProtos.Context result = new org.dodgybits.shuffle.dto.ShuffleProtos.Context();
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new org.dodgybits.shuffle.dto.ShuffleProtos.Context();
+        return builder;
+      }
       
-      @Override
       protected org.dodgybits.shuffle.dto.ShuffleProtos.Context internalGetResult() {
         return result;
       }
       
-      @Override
       public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
         result = new org.dodgybits.shuffle.dto.ShuffleProtos.Context();
         return this;
       }
       
-      @Override
       public Builder clone() {
-        return new Builder().mergeFrom(result);
+        return create().mergeFrom(result);
       }
       
-      @Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Context.getDescriptor();
@@ -211,10 +213,12 @@ public final class ShuffleProtos {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Context.getDefaultInstance();
       }
       
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
       public org.dodgybits.shuffle.dto.ShuffleProtos.Context build() {
         if (result != null && !isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
-            result);
+          throw newUninitializedMessageException(result);
         }
         return buildPartial();
       }
@@ -222,7 +226,7 @@ public final class ShuffleProtos {
       private org.dodgybits.shuffle.dto.ShuffleProtos.Context buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         if (!isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
+          throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
         }
         return buildPartial();
@@ -231,13 +235,13 @@ public final class ShuffleProtos {
       public org.dodgybits.shuffle.dto.ShuffleProtos.Context buildPartial() {
         if (result == null) {
           throw new IllegalStateException(
-            "build() has already been called on this Builder.");  }
+            "build() has already been called on this Builder.");
+        }
         org.dodgybits.shuffle.dto.ShuffleProtos.Context returnMe = result;
         result = null;
         return returnMe;
       }
       
-      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.dodgybits.shuffle.dto.ShuffleProtos.Context) {
           return mergeFrom((org.dodgybits.shuffle.dto.ShuffleProtos.Context)other);
@@ -265,18 +269,9 @@ public final class ShuffleProtos {
         return this;
       }
       
-      @Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return mergeFrom(input,
-          com.google.protobuf.ExtensionRegistry.getEmptyRegistry());
-      }
-      
-      @Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistry extensionRegistry)
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder(
@@ -351,7 +346,7 @@ public final class ShuffleProtos {
       }
       public Builder clearName() {
         result.hasName = false;
-        result.name_ = "";
+        result.name_ = getDefaultInstance().getName();
         return this;
       }
       
@@ -390,13 +385,17 @@ public final class ShuffleProtos {
       }
       public Builder clearIcon() {
         result.hasIcon = false;
-        result.icon_ = "";
+        result.icon_ = getDefaultInstance().getIcon();
         return this;
       }
     }
     
     static {
       org.dodgybits.shuffle.dto.ShuffleProtos.getDescriptor();
+    }
+    
+    static {
+      org.dodgybits.shuffle.dto.ShuffleProtos.internalForceInit();
     }
   }
   
@@ -419,7 +418,6 @@ public final class ShuffleProtos {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Project_descriptor;
     }
     
-    @Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Project_fieldAccessorTable;
@@ -446,14 +444,12 @@ public final class ShuffleProtos {
     public boolean hasDefaultContextId() { return hasDefaultContextId; }
     public long getDefaultContextId() { return defaultContextId_; }
     
-    @Override
     public final boolean isInitialized() {
       if (!hasId) return false;
       if (!hasName) return false;
       return true;
     }
     
-    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (hasId()) {
@@ -469,7 +465,6 @@ public final class ShuffleProtos {
     }
     
     private int memoizedSerializedSize = -1;
-    @Override
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -499,7 +494,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Project parseFrom(
         com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -510,7 +505,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Project parseFrom(
         byte[] data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -521,7 +516,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Project parseFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
@@ -532,7 +527,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Project parseDelimitedFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
                .buildParsed();
@@ -544,43 +539,49 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Project parseFrom(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
     
-    public static Builder newBuilder() { return new Builder(); }
-    public Builder newBuilderForType() { return new Builder(); }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(org.dodgybits.shuffle.dto.ShuffleProtos.Project prototype) {
-      return new Builder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private org.dodgybits.shuffle.dto.ShuffleProtos.Project result;
+      
       // Construct using org.dodgybits.shuffle.dto.ShuffleProtos.Project.newBuilder()
       private Builder() {}
       
-      org.dodgybits.shuffle.dto.ShuffleProtos.Project result = new org.dodgybits.shuffle.dto.ShuffleProtos.Project();
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new org.dodgybits.shuffle.dto.ShuffleProtos.Project();
+        return builder;
+      }
       
-      @Override
       protected org.dodgybits.shuffle.dto.ShuffleProtos.Project internalGetResult() {
         return result;
       }
       
-      @Override
       public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
         result = new org.dodgybits.shuffle.dto.ShuffleProtos.Project();
         return this;
       }
       
-      @Override
       public Builder clone() {
-        return new Builder().mergeFrom(result);
+        return create().mergeFrom(result);
       }
       
-      @Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Project.getDescriptor();
@@ -590,10 +591,12 @@ public final class ShuffleProtos {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Project.getDefaultInstance();
       }
       
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
       public org.dodgybits.shuffle.dto.ShuffleProtos.Project build() {
         if (result != null && !isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
-            result);
+          throw newUninitializedMessageException(result);
         }
         return buildPartial();
       }
@@ -601,7 +604,7 @@ public final class ShuffleProtos {
       private org.dodgybits.shuffle.dto.ShuffleProtos.Project buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         if (!isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
+          throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
         }
         return buildPartial();
@@ -610,13 +613,13 @@ public final class ShuffleProtos {
       public org.dodgybits.shuffle.dto.ShuffleProtos.Project buildPartial() {
         if (result == null) {
           throw new IllegalStateException(
-            "build() has already been called on this Builder.");  }
+            "build() has already been called on this Builder.");
+        }
         org.dodgybits.shuffle.dto.ShuffleProtos.Project returnMe = result;
         result = null;
         return returnMe;
       }
       
-      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.dodgybits.shuffle.dto.ShuffleProtos.Project) {
           return mergeFrom((org.dodgybits.shuffle.dto.ShuffleProtos.Project)other);
@@ -641,18 +644,9 @@ public final class ShuffleProtos {
         return this;
       }
       
-      @Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return mergeFrom(input,
-          com.google.protobuf.ExtensionRegistry.getEmptyRegistry());
-      }
-      
-      @Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistry extensionRegistry)
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder(
@@ -723,7 +717,7 @@ public final class ShuffleProtos {
       }
       public Builder clearName() {
         result.hasName = false;
-        result.name_ = "";
+        result.name_ = getDefaultInstance().getName();
         return this;
       }
       
@@ -749,6 +743,10 @@ public final class ShuffleProtos {
     static {
       org.dodgybits.shuffle.dto.ShuffleProtos.getDescriptor();
     }
+    
+    static {
+      org.dodgybits.shuffle.dto.ShuffleProtos.internalForceInit();
+    }
   }
   
   public static final class Task extends
@@ -770,7 +768,6 @@ public final class ShuffleProtos {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Task_descriptor;
     }
     
-    @Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Task_fieldAccessorTable;
@@ -874,7 +871,6 @@ public final class ShuffleProtos {
     public boolean hasComplete() { return hasComplete; }
     public boolean getComplete() { return complete_; }
     
-    @Override
     public final boolean isInitialized() {
       if (!hasId) return false;
       if (!hasDescription) return false;
@@ -893,7 +889,6 @@ public final class ShuffleProtos {
       return true;
     }
     
-    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (hasId()) {
@@ -942,7 +937,6 @@ public final class ShuffleProtos {
     }
     
     private int memoizedSerializedSize = -1;
-    @Override
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -1016,7 +1010,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Task parseFrom(
         com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -1027,7 +1021,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Task parseFrom(
         byte[] data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -1038,7 +1032,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Task parseFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
@@ -1049,7 +1043,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Task parseDelimitedFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
                .buildParsed();
@@ -1061,43 +1055,49 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Task parseFrom(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
     
-    public static Builder newBuilder() { return new Builder(); }
-    public Builder newBuilderForType() { return new Builder(); }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(org.dodgybits.shuffle.dto.ShuffleProtos.Task prototype) {
-      return new Builder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private org.dodgybits.shuffle.dto.ShuffleProtos.Task result;
+      
       // Construct using org.dodgybits.shuffle.dto.ShuffleProtos.Task.newBuilder()
       private Builder() {}
       
-      org.dodgybits.shuffle.dto.ShuffleProtos.Task result = new org.dodgybits.shuffle.dto.ShuffleProtos.Task();
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new org.dodgybits.shuffle.dto.ShuffleProtos.Task();
+        return builder;
+      }
       
-      @Override
       protected org.dodgybits.shuffle.dto.ShuffleProtos.Task internalGetResult() {
         return result;
       }
       
-      @Override
       public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
         result = new org.dodgybits.shuffle.dto.ShuffleProtos.Task();
         return this;
       }
       
-      @Override
       public Builder clone() {
-        return new Builder().mergeFrom(result);
+        return create().mergeFrom(result);
       }
       
-      @Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Task.getDescriptor();
@@ -1107,10 +1107,12 @@ public final class ShuffleProtos {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Task.getDefaultInstance();
       }
       
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
       public org.dodgybits.shuffle.dto.ShuffleProtos.Task build() {
         if (result != null && !isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
-            result);
+          throw newUninitializedMessageException(result);
         }
         return buildPartial();
       }
@@ -1118,7 +1120,7 @@ public final class ShuffleProtos {
       private org.dodgybits.shuffle.dto.ShuffleProtos.Task buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         if (!isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
+          throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
         }
         return buildPartial();
@@ -1127,13 +1129,13 @@ public final class ShuffleProtos {
       public org.dodgybits.shuffle.dto.ShuffleProtos.Task buildPartial() {
         if (result == null) {
           throw new IllegalStateException(
-            "build() has already been called on this Builder.");  }
+            "build() has already been called on this Builder.");
+        }
         org.dodgybits.shuffle.dto.ShuffleProtos.Task returnMe = result;
         result = null;
         return returnMe;
       }
       
-      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.dodgybits.shuffle.dto.ShuffleProtos.Task) {
           return mergeFrom((org.dodgybits.shuffle.dto.ShuffleProtos.Task)other);
@@ -1191,18 +1193,9 @@ public final class ShuffleProtos {
         return this;
       }
       
-      @Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return mergeFrom(input,
-          com.google.protobuf.ExtensionRegistry.getEmptyRegistry());
-      }
-      
-      @Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistry extensionRegistry)
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder(
@@ -1337,7 +1330,7 @@ public final class ShuffleProtos {
       }
       public Builder clearDescription() {
         result.hasDescription = false;
-        result.description_ = "";
+        result.description_ = getDefaultInstance().getDescription();
         return this;
       }
       
@@ -1358,7 +1351,7 @@ public final class ShuffleProtos {
       }
       public Builder clearDetails() {
         result.hasDetails = false;
-        result.details_ = "";
+        result.details_ = getDefaultInstance().getDetails();
         return this;
       }
       
@@ -1563,7 +1556,7 @@ public final class ShuffleProtos {
       }
       public Builder clearTimezone() {
         result.hasTimezone = false;
-        result.timezone_ = "";
+        result.timezone_ = getDefaultInstance().getTimezone();
         return this;
       }
       
@@ -1643,6 +1636,10 @@ public final class ShuffleProtos {
     static {
       org.dodgybits.shuffle.dto.ShuffleProtos.getDescriptor();
     }
+    
+    static {
+      org.dodgybits.shuffle.dto.ShuffleProtos.internalForceInit();
+    }
   }
   
   public static final class Date extends
@@ -1664,7 +1661,6 @@ public final class ShuffleProtos {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Date_descriptor;
     }
     
-    @Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Date_fieldAccessorTable;
@@ -1677,13 +1673,11 @@ public final class ShuffleProtos {
     public boolean hasMillis() { return hasMillis; }
     public long getMillis() { return millis_; }
     
-    @Override
     public final boolean isInitialized() {
       if (!hasMillis) return false;
       return true;
     }
     
-    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (hasMillis()) {
@@ -1693,7 +1687,6 @@ public final class ShuffleProtos {
     }
     
     private int memoizedSerializedSize = -1;
-    @Override
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -1715,7 +1708,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Date parseFrom(
         com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -1726,7 +1719,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Date parseFrom(
         byte[] data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -1737,7 +1730,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Date parseFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
@@ -1748,7 +1741,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Date parseDelimitedFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
                .buildParsed();
@@ -1760,43 +1753,49 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Date parseFrom(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
     
-    public static Builder newBuilder() { return new Builder(); }
-    public Builder newBuilderForType() { return new Builder(); }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(org.dodgybits.shuffle.dto.ShuffleProtos.Date prototype) {
-      return new Builder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private org.dodgybits.shuffle.dto.ShuffleProtos.Date result;
+      
       // Construct using org.dodgybits.shuffle.dto.ShuffleProtos.Date.newBuilder()
       private Builder() {}
       
-      org.dodgybits.shuffle.dto.ShuffleProtos.Date result = new org.dodgybits.shuffle.dto.ShuffleProtos.Date();
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new org.dodgybits.shuffle.dto.ShuffleProtos.Date();
+        return builder;
+      }
       
-      @Override
       protected org.dodgybits.shuffle.dto.ShuffleProtos.Date internalGetResult() {
         return result;
       }
       
-      @Override
       public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
         result = new org.dodgybits.shuffle.dto.ShuffleProtos.Date();
         return this;
       }
       
-      @Override
       public Builder clone() {
-        return new Builder().mergeFrom(result);
+        return create().mergeFrom(result);
       }
       
-      @Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Date.getDescriptor();
@@ -1806,10 +1805,12 @@ public final class ShuffleProtos {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Date.getDefaultInstance();
       }
       
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
       public org.dodgybits.shuffle.dto.ShuffleProtos.Date build() {
         if (result != null && !isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
-            result);
+          throw newUninitializedMessageException(result);
         }
         return buildPartial();
       }
@@ -1817,7 +1818,7 @@ public final class ShuffleProtos {
       private org.dodgybits.shuffle.dto.ShuffleProtos.Date buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         if (!isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
+          throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
         }
         return buildPartial();
@@ -1826,13 +1827,13 @@ public final class ShuffleProtos {
       public org.dodgybits.shuffle.dto.ShuffleProtos.Date buildPartial() {
         if (result == null) {
           throw new IllegalStateException(
-            "build() has already been called on this Builder.");  }
+            "build() has already been called on this Builder.");
+        }
         org.dodgybits.shuffle.dto.ShuffleProtos.Date returnMe = result;
         result = null;
         return returnMe;
       }
       
-      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.dodgybits.shuffle.dto.ShuffleProtos.Date) {
           return mergeFrom((org.dodgybits.shuffle.dto.ShuffleProtos.Date)other);
@@ -1851,18 +1852,9 @@ public final class ShuffleProtos {
         return this;
       }
       
-      @Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return mergeFrom(input,
-          com.google.protobuf.ExtensionRegistry.getEmptyRegistry());
-      }
-      
-      @Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistry extensionRegistry)
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder(
@@ -1912,6 +1904,10 @@ public final class ShuffleProtos {
     static {
       org.dodgybits.shuffle.dto.ShuffleProtos.getDescriptor();
     }
+    
+    static {
+      org.dodgybits.shuffle.dto.ShuffleProtos.internalForceInit();
+    }
   }
   
   public static final class Catalogue extends
@@ -1933,7 +1929,6 @@ public final class ShuffleProtos {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Catalogue_descriptor;
     }
     
-    @Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return org.dodgybits.shuffle.dto.ShuffleProtos.internal_static_shuffle_Catalogue_fieldAccessorTable;
@@ -1975,7 +1970,6 @@ public final class ShuffleProtos {
       return task_.get(index);
     }
     
-    @Override
     public final boolean isInitialized() {
       for (org.dodgybits.shuffle.dto.ShuffleProtos.Context element : getContextList()) {
         if (!element.isInitialized()) return false;
@@ -1989,7 +1983,6 @@ public final class ShuffleProtos {
       return true;
     }
     
-    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       for (org.dodgybits.shuffle.dto.ShuffleProtos.Context element : getContextList()) {
@@ -2005,7 +1998,6 @@ public final class ShuffleProtos {
     }
     
     private int memoizedSerializedSize = -1;
-    @Override
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -2035,7 +2027,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue parseFrom(
         com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -2046,7 +2038,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue parseFrom(
         byte[] data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -2057,7 +2049,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue parseFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
@@ -2068,7 +2060,7 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue parseDelimitedFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
                .buildParsed();
@@ -2080,43 +2072,49 @@ public final class ShuffleProtos {
     }
     public static org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue parseFrom(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
     
-    public static Builder newBuilder() { return new Builder(); }
-    public Builder newBuilderForType() { return new Builder(); }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue prototype) {
-      return new Builder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue result;
+      
       // Construct using org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue.newBuilder()
       private Builder() {}
       
-      org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue result = new org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue();
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue();
+        return builder;
+      }
       
-      @Override
       protected org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue internalGetResult() {
         return result;
       }
       
-      @Override
       public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
         result = new org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue();
         return this;
       }
       
-      @Override
       public Builder clone() {
-        return new Builder().mergeFrom(result);
+        return create().mergeFrom(result);
       }
       
-      @Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue.getDescriptor();
@@ -2126,10 +2124,12 @@ public final class ShuffleProtos {
         return org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue.getDefaultInstance();
       }
       
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
       public org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue build() {
         if (result != null && !isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
-            result);
+          throw newUninitializedMessageException(result);
         }
         return buildPartial();
       }
@@ -2137,7 +2137,7 @@ public final class ShuffleProtos {
       private org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         if (!isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
+          throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
         }
         return buildPartial();
@@ -2146,7 +2146,8 @@ public final class ShuffleProtos {
       public org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue buildPartial() {
         if (result == null) {
           throw new IllegalStateException(
-            "build() has already been called on this Builder.");  }
+            "build() has already been called on this Builder.");
+        }
         if (result.context_ != java.util.Collections.EMPTY_LIST) {
           result.context_ =
             java.util.Collections.unmodifiableList(result.context_);
@@ -2164,7 +2165,6 @@ public final class ShuffleProtos {
         return returnMe;
       }
       
-      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue) {
           return mergeFrom((org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue)other);
@@ -2198,18 +2198,9 @@ public final class ShuffleProtos {
         return this;
       }
       
-      @Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return mergeFrom(input,
-          com.google.protobuf.ExtensionRegistry.getEmptyRegistry());
-      }
-      
-      @Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistry extensionRegistry)
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder(
@@ -2408,6 +2399,10 @@ public final class ShuffleProtos {
     static {
       org.dodgybits.shuffle.dto.ShuffleProtos.getDescriptor();
     }
+    
+    static {
+      org.dodgybits.shuffle.dto.ShuffleProtos.internalForceInit();
+    }
   }
   
   private static com.google.protobuf.Descriptors.Descriptor
@@ -2443,7 +2438,7 @@ public final class ShuffleProtos {
   private static com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
-    java.lang.String descriptorData =
+    java.lang.String[] descriptorData = {
       "\n\rshuffle.proto\022\007shuffle\"F\n\007Context\022\n\n\002i" +
       "d\030\001 \002(\003\022\014\n\004name\030\002 \002(\t\022\023\n\013colourIndex\030\003 \001" +
       "(\005\022\014\n\004icon\030\004 \001(\t\"=\n\007Project\022\n\n\002id\030\001 \002(\003\022" +
@@ -2453,14 +2448,15 @@ public final class ShuffleProtos {
       "\tprojectId\030\005 \001(\003\022\036\n\007created\030\006 \001(\0132\r.shuf" +
       "fle.Date\022\037\n\010modified\030\007 \001(\0132\r.shuffle.Dat" +
       "e\022 \n\tstartDate\030\010 \001(\0132\r.shuffle.Date\022\036\n\007d" +
-      "ueDate\030\t \001(\0132\r.shuffle.Date\022\020\n\010timezone\030" +
+      "ueDate\030\t \001(\0132\r.shuffle.Date\022\020\n\010timezone\030",
       "\n \001(\t\022\016\n\006allDay\030\013 \001(\010\022\022\n\ncalEventId\030\014 \001(" +
       "\003\022\r\n\005order\030\r \001(\005\022\020\n\010complete\030\016 \001(\010\"\026\n\004Da" +
       "te\022\016\n\006millis\030\001 \002(\003\"n\n\tCatalogue\022!\n\007conte" +
       "xt\030\001 \003(\0132\020.shuffle.Context\022!\n\007project\030\002 " +
       "\003(\0132\020.shuffle.Project\022\033\n\004task\030\003 \003(\0132\r.sh" +
       "uffle.TaskB*\n\031org.dodgybits.shuffle.dtoB" +
-      "\rShuffleProtos";
+      "\rShuffleProtos"
+    };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
@@ -2514,4 +2510,6 @@ public final class ShuffleProtos {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
   }
+  
+  public static void internalForceInit() {}
 }
