@@ -53,11 +53,9 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     private Icon mIcon;
     
     private EditText mNameWidget;
-    
-    private View mColourEntry;
+
     private TextView mColourWidget;
 
-    private View mIconEntry;
     private ImageView mIconWidget;
     private TextView mIconNoneWidget;
     private ImageButton mClearIconButton;
@@ -169,7 +167,13 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     @Override
     protected Context createItemFromUI() {
         String name = mNameWidget.getText().toString();
-        return new Context(name, mColourIndex, mIcon);
+        Long tracksId = null;
+        if (mOriginalItem != null) {
+            tracksId = mOriginalItem.tracksId;
+        }
+        return new Context(
+                name, mColourIndex, mIcon, 
+                tracksId, System.currentTimeMillis());
     }
     
     @Override
@@ -205,8 +209,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
 	        if (mCursor == null || mCursor.getCount() == 0) {
 	            // The cursor is empty. This can happen if the event was deleted.
 	            finish();
-	            return;
-	        }
+            }
     	}
     }
     
@@ -221,14 +224,14 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         mIconWidget = (ImageView) findViewById(R.id.icon_display);
         mIconNoneWidget = (TextView) findViewById(R.id.icon_none);
         mIcon = Icon.NONE;
-        
-        mColourEntry = findViewById(R.id.colour_entry);
-        mColourEntry.setOnClickListener(this);
-        mColourEntry.setOnFocusChangeListener(this);
-        
-        mIconEntry = findViewById(R.id.icon_entry);
-        mIconEntry.setOnClickListener(this);
-        mIconEntry.setOnFocusChangeListener(this);
+
+        View colourEntry = findViewById(R.id.colour_entry);
+        colourEntry.setOnClickListener(this);
+        colourEntry.setOnFocusChangeListener(this);
+
+        View iconEntry = findViewById(R.id.icon_entry);
+        iconEntry.setOnClickListener(this);
+        iconEntry.setOnFocusChangeListener(this);
         
         mClearIconButton = (ImageButton) findViewById(R.id.icon_clear_button);
         mClearIconButton.setOnClickListener(this);

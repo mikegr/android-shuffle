@@ -89,7 +89,14 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     		defaultContextId = mContextIds[selectedItemPosition];
     	}
     	boolean archived = false;
-    	return new Project(name, defaultContextId, archived);
+        Long tracksId = null;
+        if (mOriginalItem != null) {
+            tracksId = mOriginalItem.tracksId;
+        }
+
+        return new Project(
+                name, defaultContextId, archived, 
+                tracksId, System.currentTimeMillis());
     }
     
     @Override

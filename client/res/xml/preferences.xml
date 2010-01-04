@@ -56,6 +56,19 @@
 
     </PreferenceCategory>
 
+         <PreferenceCategory
+            android:title="@string/sync_preferences">
+
+        <PreferenceScreen
+                android:title="@string/changeSynchronizationSettings">
+
+            <intent android:action="android.intent.action.MAIN"
+                android:targetPackage="org.dodgybits.android.shuffle"
+            	android:targetClass="org.dodgybits.android.shuffle.activity.preferences.SynchronizationSettingsActivity" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
     <PreferenceCategory
             android:title="@string/backup_preferences">
 
@@ -100,5 +113,7 @@
         </PreferenceScreen>
 
     </PreferenceCategory>
+
+
     
 </PreferenceScreen>

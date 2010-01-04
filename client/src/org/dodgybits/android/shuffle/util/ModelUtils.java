@@ -16,16 +16,6 @@
 
 package org.dodgybits.android.shuffle.util;
 
-import java.util.Calendar;
-import java.util.TimeZone;
-
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.model.Context;
-import org.dodgybits.android.shuffle.model.Project;
-import org.dodgybits.android.shuffle.model.Task;
-import org.dodgybits.android.shuffle.model.Context.Icon;
-import org.dodgybits.android.shuffle.provider.Shuffle;
-
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.res.Resources;
@@ -33,6 +23,15 @@ import android.net.Uri;
 import android.os.Handler;
 import android.text.format.DateUtils;
 import android.util.Log;
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.model.Context;
+import org.dodgybits.android.shuffle.model.Context.Icon;
+import org.dodgybits.android.shuffle.model.Project;
+import org.dodgybits.android.shuffle.model.Task;
+import org.dodgybits.android.shuffle.provider.Shuffle;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class ModelUtils {
 	private static final String cTag = "ModelUtils";
@@ -49,12 +48,12 @@ public class ModelUtils {
 	private static void initPresetContexts(Resources res) {
 		if (cPresetContexts == null) {
 			cPresetContexts = new Context[] {
-					new Context(res.getText(R.string.context_athome).toString(), 5, createIcon("go_home", res)), // 0
-					new Context(res.getText(R.string.context_atwork).toString(), 19, createIcon("system_file_manager", res)), // 1
-					new Context(res.getText(R.string.context_online).toString(), 1, createIcon("applications_internet", res)), // 2
-					new Context(res.getText(R.string.context_errands).toString(), 14, createIcon("applications_development", res)), // 3
-					new Context(res.getText(R.string.context_contact).toString(), 22, createIcon("system_users", res)), // 4
-					new Context(res.getText(R.string.context_read).toString(), 16, createIcon("format_justify_fill", res)), // 5
+					new Context(res.getText(R.string.context_athome).toString(), 5, createIcon("go_home", res), null, null), // 0
+					new Context(res.getText(R.string.context_atwork).toString(), 19, createIcon("system_file_manager", res), null, null), // 1
+					new Context(res.getText(R.string.context_online).toString(), 1, createIcon("applications_internet", res), null, null), // 2
+					new Context(res.getText(R.string.context_errands).toString(), 14, createIcon("applications_development", res), null, null), // 3
+					new Context( res.getText(R.string.context_contact).toString(), 22, createIcon("system_users", res), null, null), // 4
+					new Context( res.getText(R.string.context_read).toString(), 16, createIcon("format_justify_fill", res), null, null), // 5
 			};
 		}
 	}
@@ -80,7 +79,9 @@ public class ModelUtils {
 	/**
 	 * Clean out the current data and populate the database with a set of sample
 	 * data.
-	 */
+     * @param androidContext the context, that being the view
+     * @param handler the message handler
+     */
 	public static void createSampleData(android.content.Context androidContext,
 			Handler handler) {
 		cleanSlate(androidContext, null);
@@ -100,7 +101,7 @@ public class ModelUtils {
 		cal.add(Calendar.WEEK_OF_YEAR, 1);
 		long twoWeeks = cal.getTimeInMillis();
 		
-		Project sellBike = new Project("Sell old Powerbook", null, false);
+		Project sellBike = new Project("Sell old Powerbook", null, false, null, null);
 		insertProject(androidContext, sellBike);
 		insertTask(androidContext, 
 				createTask("Backup data", null, 
@@ -117,7 +118,7 @@ public class ModelUtils {
 		insertTask(androidContext, 
 				createTask("Put up ad", AT_COMPUTER_INDEX, sellBike, twoWeeks));
 
-		Project cleanGarage = new Project("Clean out garage", null, false);
+		Project cleanGarage = new Project("Clean out garage", null, false, null, null);
 		insertProject(androidContext, cleanGarage);
 		insertTask(androidContext, 
 				createTask("Sort out contents", "Split into keepers and junk", 
@@ -136,7 +137,7 @@ public class ModelUtils {
 						ERRANDS_INDEX, cleanGarage, 
 						now, now));
 
-		Project skiTrip = new Project("Organise ski trip", null, false);
+		Project skiTrip = new Project("Organise ski trip", null, false, null, null);
 		insertProject(androidContext, skiTrip);
 		insertTask(androidContext, 
 				createTask("Send email to determine best week", null, 
@@ -160,7 +161,7 @@ public class ModelUtils {
 
 		Project discussI8n = 
 			new Project("Discuss internationalization",
-				cPresetContexts[AT_WORK_INDEX].id, false);
+				cPresetContexts[AT_WORK_INDEX].id, false, null, null);
 		insertProject(androidContext, discussI8n);
 		insertTask(androidContext, 
 				createTask("Read up on options", null, 
@@ -198,7 +199,7 @@ public class ModelUtils {
 	
 	private static Task createTask(String description, String details, 
 			int contextIndex, Project project, long start) {
-		return createTask(description, null, contextIndex, project, start, start);
+		return createTask(description, details, contextIndex, project, start, start);
 
 	}		
 
@@ -208,20 +209,21 @@ public class ModelUtils {
 			int contextIndex, Project project, long start, long due) {
 		Context context = contextIndex > -1 ? cPresetContexts[contextIndex] : null;
 		long created = System.currentTimeMillis();
-		long modified = created;
-		String timezone = TimeZone.getDefault().getID();
+        String timezone = TimeZone.getDefault().getID();
 		boolean allDay = false;
 		boolean hasAlarms = false;
 		boolean complete = false;
-		return new Task(description, details, context, project, created, modified,
-				start, due, timezone, allDay, hasAlarms, null, ORDER++, complete);  
+		return new Task(description, details, context, project, created, created,
+				start, due, timezone, allDay, hasAlarms, null, ORDER++, complete, 
+				null, created);  
 	}
 	
 	/**
 	 * Delete any existing projects, contexts and tasks and create the standard
 	 * contexts.
 	 * 
-	 * @param androidContext
+	 * @param androidContext the android context, in this case the activity.
+     * @param handler the android message handler
 	 */
 	public static void cleanSlate(android.content.Context androidContext,
 			Handler handler) {
@@ -242,7 +244,7 @@ public class ModelUtils {
 			handler.sendEmptyMessage(0);
 	}
 
-	private static boolean insertContext(
+	public static boolean insertContext(
 			android.content.Context androidContext,
 			org.dodgybits.android.shuffle.model.Context context) {
 		Uri uri = androidContext.getContentResolver().insert(
@@ -257,7 +259,7 @@ public class ModelUtils {
 		return (updatedRows == 1);
 	}
 
-	private static boolean insertProject(
+	public static boolean insertProject(
 			android.content.Context androidContext, Project project) {
 		Uri uri = androidContext.getContentResolver().insert(
 				Shuffle.Projects.CONTENT_URI, null);
@@ -271,7 +273,7 @@ public class ModelUtils {
 		return (updatedRows == 1);
 	}
 
-	private static boolean insertTask(android.content.Context androidContext,
+	public static boolean insertTask(android.content.Context androidContext,
 			Task task) {
 		Uri uri = androidContext.getContentResolver().insert(
 				Shuffle.Tasks.CONTENT_URI, null);

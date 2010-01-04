@@ -16,19 +16,6 @@
 
 package org.dodgybits.android.shuffle.util;
 
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.activity.ContextsActivity;
-import org.dodgybits.android.shuffle.activity.ExpandableContextsActivity;
-import org.dodgybits.android.shuffle.activity.ExpandableProjectsActivity;
-import org.dodgybits.android.shuffle.activity.HelpActivity;
-import org.dodgybits.android.shuffle.activity.InboxActivity;
-import org.dodgybits.android.shuffle.activity.ProjectsActivity;
-import org.dodgybits.android.shuffle.activity.TabbedDueActionsActivity;
-import org.dodgybits.android.shuffle.activity.TopTasksActivity;
-import org.dodgybits.android.shuffle.activity.preferences.PreferencesActivity;
-import org.dodgybits.android.shuffle.model.Preferences;
-import org.dodgybits.android.shuffle.model.State;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -37,11 +24,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.*;
+import org.dodgybits.android.shuffle.activity.preferences.PreferencesActivity;
+import org.dodgybits.android.shuffle.model.Preferences;
+import org.dodgybits.android.shuffle.model.State;
 
 public class MenuUtils {
 	private static final String cTag = "MenuUtils";
 
-	private MenuUtils() {
+
+    private MenuUtils() {
 		// deny
 	}
 	
@@ -62,7 +55,7 @@ public class MenuUtils {
     public static final int CONTEXT_ID = Menu.FIRST + 14;
     public static final int PREFERENCE_ID = Menu.FIRST + 15;
     public static final int HELP_ID = Menu.FIRST + 16;
-
+   private static final int SYNC_ID = Menu.FIRST + 17;
     public static final int CLEAN_INBOX_ID = Menu.FIRST + 50;
 
     // Menu item for activity specific items
@@ -152,6 +145,8 @@ public class MenuUtils {
         	.setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('p');
         menu.add(Menu.NONE, HELP_ID, HELP_ORDER, R.string.menu_help)
         	.setIcon(android.R.drawable.ic_menu_help).setAlphabeticShortcut('h');
+        menu.add(Menu.NONE, SYNC_ID, HELP_ORDER, R.string.menu_sync)
+        	.setIcon(android.R.drawable.ic_menu_rotate).setAlphabeticShortcut('r');
 	}
 		
 	public static void addSelectedAlternativeMenuItems(Menu menu, Uri uri, boolean includeView) {
@@ -280,6 +275,15 @@ public class MenuUtils {
 	    	
 	    	
 	    	return true;
+
+        case SYNC_ID:
+                  Log.d(cTag, "starting sync");
+
+
+
+	    	activity.startActivity(new Intent(activity, SynchronizeActivity.class));
+                        return true;
+
         }
         return false;
 	}

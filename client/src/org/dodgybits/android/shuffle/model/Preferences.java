@@ -44,7 +44,13 @@ public class Preferences {
 	public static final String CALENDAR_ID_KEY = "calendar_id";
 	public static final String DEFAULT_REMINDER_KEY = "default_reminder";
 	
-	public enum DeleteCompletedPeriod {
+	public static final String KEY_DEFAULT_REMINDER = "default_reminder";
+
+    public static final String TRACKS_URL = "tracks_url";
+    public static final String TRACKS_USER = "tracks_user";
+    public static final String TRACKS_PASSWORD = "tracks_password";
+
+    public enum DeleteCompletedPeriod {
 		hourly, daily, weekly, never
 	}
 	
@@ -61,6 +67,21 @@ public class Preferences {
 		getSharedPreferences(context);
 		return sPrefs.getBoolean(FIRST_TIME, true);
 	}
+
+    public static String getTracksUrl(Context context) {
+        getSharedPreferences(context);
+        return sPrefs.getString(TRACKS_URL, "http://my.gtdify.com");
+    }
+
+       public static String getTracksUser(Context context) {
+        getSharedPreferences(context);
+        return sPrefs.getString(TRACKS_USER, "username");
+    }
+
+        public static String getTracksPassword(Context context) {
+        getSharedPreferences(context);
+        return sPrefs.getString(TRACKS_PASSWORD, "password");
+    }
 	
 	public static String getDeleteCompletedPeriod(Context context) {
 		getSharedPreferences(context);

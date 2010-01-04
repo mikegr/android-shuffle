@@ -1,14 +1,12 @@
 package org.dodgybits.android.shuffle.activity.preferences;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.View;
+import android.widget.*;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
@@ -20,17 +18,10 @@ import org.dodgybits.android.shuffle.util.AlertUtils;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
 
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.util.*;
 
 public class PreferencesRestoreBackupActivity extends Activity
 	implements View.OnClickListener {
@@ -282,10 +273,10 @@ public class PreferencesRestoreBackupActivity extends Activity
 					Log.d(cTag, "Context " + contextName + " already exists - skipping.");
 				} else {
 					Log.d(cTag, "Context " + contextName + " new - adding.");
-					context = Context.buildFromDto(protoContext, getResources());
-					
-					newContexts.add(context);
-					newContextNames.add(contextName);
+//					context = Context.buildFromDto(protoContext, getResources());
+//					
+//					newContexts.add(context);
+//					newContextNames.add(contextName);
 				}
 				contextLocator.addItem(protoContext.getId(), contextName, context);
 				String text = getString(R.string.restore_progress, type, contextName);
@@ -336,9 +327,9 @@ public class PreferencesRestoreBackupActivity extends Activity
 					Log.d(cTag, "Project " + projectName + " already exists - skipping.");
 				} else {
 					Log.d(cTag, "Project " + projectName + " new - adding.");
-					project = Project.buildFromDto(protoProject, contextLocator);
-					
-					newProjects.add(project);
+//					project = Project.buildFromDto(protoProject, contextLocator);
+//
+//					newProjects.add(project);
 					newProjectNames.add(projectName);
 				}
 				projectLocator.addItem(protoProject.getId(), projectName, project);
@@ -374,12 +365,12 @@ public class PreferencesRestoreBackupActivity extends Activity
 	        int total = protoTasks.size();
 			for (org.dodgybits.shuffle.dto.ShuffleProtos.Task protoTask : protoTasks)
 			{
-				Task task = Task.buildFromDto(protoTask, contextLocator, projectLocator);
-				newTasks.add(task);
-				Log.d(cTag, "Adding task " + task.description);
-				String text = getString(R.string.restore_progress, type, task.description);
-				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-            	publishProgress(Progress.createProgress(percent, text));
+				//Task task = Task.buildFromDto(protoTask, contextLocator, projectLocator);
+				//newTasks.add(task);
+				//Log.d(cTag, "Adding task " + task.description);
+				//String text = getString(R.string.restore_progress, type, task.description);
+				//int percent = calculatePercent(progressStart, progressEnd, ++i, total);
+            	//publishProgress(Progress.createProgress(percent, text));
 			}
 			BindingUtils.persistNewTasks(PreferencesRestoreBackupActivity.this, newTasks);
 		}

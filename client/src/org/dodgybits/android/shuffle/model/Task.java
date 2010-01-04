@@ -20,8 +20,7 @@ import org.dodgybits.android.shuffle.service.Locator;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Date;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Task.Builder;
 
-
-public final class Task {
+public final class Task implements TracksCompatible{
 	public Long id;
 	public final String description;
 	public final String details;
@@ -29,6 +28,8 @@ public final class Task {
 	public final Project project;
 	public final long created;
 	public final long modified;
+    public final Long tracksModified;
+    public final Long tracksId;
 	public final long startDate;
 	public final long dueDate;
 	public final String timezone;
@@ -42,7 +43,8 @@ public final class Task {
 	public Task(Long id, String description, String details,
 			Context context, Project project, long created, long modified, 
 			long startDate, long dueDate, String timezone, Boolean allDay, Boolean hasAlarms,
-			Long calEventId, Integer order, Boolean complete) {
+			Long calEventId, Integer order, Boolean complete, 
+			Long tracksId, Long tracksModified ) {
 		this.id = id;
 		this.description = description;
 		this.details = details;
@@ -58,19 +60,38 @@ public final class Task {
 		this.calEventId = calEventId;
 		this.order = order;
 		this.complete = complete;
-	}
+        this.tracksId = tracksId;
+        this.tracksModified = tracksModified;
+    }
 	
 	public Task(String description, String details,
 			Context context, Project project, long created, long modified,
 			long startDate, long dueDate, String timezone, Boolean allDay, 
-			Boolean hasAlarms, Long calEventId, Integer order, Boolean complete) {
+			Boolean hasAlarms, Long calEventId, Integer order, Boolean complete,
+			Long tracksId, Long tracksModified) {
 		this(
 				null, description, details, 
 				context, project, created, modified, 
 				startDate, dueDate, timezone, allDay, 
-				hasAlarms, calEventId, order, complete);
+				hasAlarms, calEventId, order, complete, 
+				tracksId, tracksModified);
 	}
-	
+
+    @Override
+    public Long getTracksId() {
+        return tracksId;
+    }
+
+    @Override
+    public Long getTracksModified() {
+        return tracksModified;
+    }
+
+    @Override
+    public String getLocalName() {
+        return description;
+    }
+    
 	public org.dodgybits.shuffle.dto.ShuffleProtos.Task toDto() {
 		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Task.newBuilder();
 		builder
@@ -100,7 +121,7 @@ public final class Task {
 		}
 		return builder.build();
 	}
-	
+
 	public static Task buildFromDto(
 			org.dodgybits.shuffle.dto.ShuffleProtos.Task dto,
 			Locator<Context> contextLocator,
@@ -113,12 +134,12 @@ public final class Task {
 		if (dto.hasContextId()) {
 			context = contextLocator.findById(dto.getContextId());
 		}
-		
+
 		Project project = null;
 		if (dto.hasProjectId()) {
 			project = projectLocator.findById(dto.getProjectId());
 		}
-		
+
 		long created = fromDate(dto.getCreated());
 		long modified = fromDate(dto.getModified());
 		long startDate = fromDate(dto.getStartDate());
@@ -126,28 +147,29 @@ public final class Task {
 		String timezone = dto.getTimezone();
 		Boolean allDay = dto.getAllDay();
 		Boolean hasAlarms = false;
-		
+
 		Long calEventId = null;
 		if (dto.hasCalEventId()) {
 			calEventId = dto.getCalEventId();
 		}
-		
+
 		Integer order = dto.getOrder();
 		Boolean complete = dto.getComplete();
-		
+
 		return new Task(
-				id, description, details, 
-				context, project, created, modified, 
-				startDate, dueDate, timezone, allDay, 
-				hasAlarms, calEventId, order, complete);
+				id, description, details,
+				context, project, created, modified,
+				startDate, dueDate, timezone, allDay,
+				hasAlarms, calEventId, order, complete,
+				null, null);
 	}
-	
+
 	private static Date toDate(long millis) {
 		return Date.newBuilder()
 			.setMillis(millis)
 			.build();
 	}
-	
+
 	private static long fromDate(Date date) {
 		long millis = 0L;
 		if (date != null) {

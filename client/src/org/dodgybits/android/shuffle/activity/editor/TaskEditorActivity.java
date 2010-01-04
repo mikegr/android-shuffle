@@ -16,23 +16,10 @@
 
 package org.dodgybits.android.shuffle.activity.editor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.TimeZone;
-
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.model.Context;
-import org.dodgybits.android.shuffle.model.Preferences;
-import org.dodgybits.android.shuffle.model.Project;
-import org.dodgybits.android.shuffle.model.State;
-import org.dodgybits.android.shuffle.model.Task;
-import org.dodgybits.android.shuffle.provider.Shuffle;
-import org.dodgybits.android.shuffle.util.BindingUtils;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -50,17 +37,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
+import android.widget.*;
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.model.*;
+import org.dodgybits.android.shuffle.provider.Shuffle;
+import org.dodgybits.android.shuffle.util.BindingUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.TimeZone;
 
 /**
  * A generic activity for editing a task in the database.  This can be used
@@ -95,10 +80,8 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private Spinner mContextSpinner;
     private Spinner mProjectSpinner;
     private EditText mDetailsWidget;
-    
-    private String[] mContextNames;
+
     private long[] mContextIds;
-    private String[] mProjectNames;
     private long[] mProjectIds;
     
     private boolean mSchedulingExpanded;
@@ -318,7 +301,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     	long created;
     	Boolean allDay = mAllDayCheckBox.isChecked();
     	
-        String timezone = null;
+        String timezone;
         long startMillis = 0L;
         long dueMillis = 0L;
         if (allDay) {
@@ -399,12 +382,16 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         	created = mOriginalItem.created;
         }
 		order = calculateTaskOrder(project);
-
-    	Task task  = new Task(description, details, 
-    			context, project, created, modified, 
-    			startMillis, dueMillis, timezone, allDay, hasAlarms,
-    			eventId, order, complete);
-    	return task;
+        Long tracksId = null;
+        if (mOriginalItem != null) {
+            tracksId = mOriginalItem.tracksId;
+        }
+		
+        return new Task(description, details,
+                context, project, created, modified,
+                startMillis, dueMillis, timezone, allDay, hasAlarms,
+                eventId, order, complete,
+                tracksId, modified);
 	}
         
     private Uri addOrUpdateCalendarEvent(Long calEventId, String title, String description,
@@ -631,8 +618,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
 	        if (mCursor == null || mCursor.getCount() == 0) {
 	            // The cursor is empty. This can happen if the event was deleted.
 	            finish();
-	            return;
-	        }
+            }
     	}
     }
     
@@ -725,7 +711,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         int arraySize = contextCursor.getCount() + 1;
         mContextIds = new long[arraySize];
         mContextIds[0] = 0;
-        mContextNames = new String[arraySize];
+        String[] mContextNames = new String[arraySize];
         mContextNames[0] = getText(R.string.none_empty).toString();
         for (int i = 1; i < arraySize; i++) {
         	contextCursor.moveToNext();
@@ -746,7 +732,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         int arraySize = projectCursor.getCount() + 1;
         mProjectIds = new long[arraySize];
         mProjectIds[0] = 0;
-        mProjectNames = new String[arraySize];
+        String[] mProjectNames = new String[arraySize];
         mProjectNames[0] = getText(R.string.none_empty).toString();
         for (int i = 1; i < arraySize; i++) {
         	projectCursor.moveToNext();
@@ -1067,8 +1053,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
      * @param taskId the id of the task whose reminders are being updated
      * @param reminderMinutes the array of reminders set by the user
      * @param originalMinutes the original array of reminders
-     * @param forceSave if true, then save the reminders even if they didn't
-     *   change
      * @return true if the database was updated
      */
     static boolean saveReminders(ContentResolver cr, long taskId,

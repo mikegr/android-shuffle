@@ -21,25 +21,44 @@ import org.dodgybits.shuffle.dto.ShuffleProtos.Context.Builder;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
-public class Context {
+public class Context implements TracksCompatible {
 	public Long id;
 	public final String name;
 	public final int colourIndex;
 	// resource id to icon resource (may be null)
 	public final Icon icon;
+    public final Long tracksId;
+    public final Long tracksModified;
 
-	public Context(Long id, String name, int colourIndex, Icon icon) {
+    public Context(Long id, String name, int colourIndex, Icon icon, Long tracksId, Long tracksModified) {
 		this.id = id;
 		this.name = name;
 		this.colourIndex = colourIndex;
 		this.icon = icon;
-	}
+        this.tracksId = tracksId;
+        this.tracksModified = tracksModified;
+    }
 	
-	public Context(String name, int colour, Icon icon) {
-		this(null, name, colour, icon);
+	public Context(String name, int colour, Icon icon, Long tracksId, Long tracksModified) {
+		this(null, name, colour, icon, tracksId, tracksModified);
 	}
-	
-	public static class Icon {
+
+    @Override
+    public Long getTracksId() {
+        return tracksId;
+    }
+
+    @Override
+    public Long getTracksModified() {
+        return tracksModified;
+    }
+
+    @Override
+    public String getLocalName() {
+        return name;
+    }
+
+    public static class Icon {
 		private static final String cPackage = "org.dodgybits.android.shuffle"; 
 		private static final String cType = "drawable";
 		
@@ -62,10 +81,10 @@ public class Context {
 			return new Icon(iconName, largeId, smallId);
 		}
 	}
-	
+
 	public org.dodgybits.shuffle.dto.ShuffleProtos.Context toDto() {
 		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Context.newBuilder();
-		builder 
+		builder
 			.setId(id)
 			.setName(name)
 			.setColourIndex(colourIndex);
@@ -74,7 +93,7 @@ public class Context {
 		}
 		return builder.build();
 	}
-	
+
 	public static Context buildFromDto(
 			org.dodgybits.shuffle.dto.ShuffleProtos.Context dto,
 			Resources res) {
@@ -84,11 +103,13 @@ public class Context {
 		} else {
 			icon = Icon.NONE;
 		}
-		
+
 		return new Context(
 				dto.getId(),
 				dto.getName(),
 				dto.getColourIndex(),
-				icon);
+				icon,
+				null,
+				null);
 	}
 }

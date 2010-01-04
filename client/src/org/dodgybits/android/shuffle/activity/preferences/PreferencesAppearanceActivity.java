@@ -97,12 +97,12 @@ public class PreferencesAppearanceActivity extends Activity  {
 	
 	private void setupSampleTask() {
         long now = System.currentTimeMillis();
-        Project sampleProject = new Project("Sample project", 0L, false);
+        Project sampleProject = new Project("Sample project", 0L, false, null, null);
         Context sampleContext = ModelUtils.getSampleContext(getResources());
         mSampleTask = new Task("Sample action", "Additional action details", 
         		sampleContext, sampleProject, now, now, 
         		now, now + DateUtils.HOUR_IN_MILLIS * 3, null, false, false,
-        		null, 1, false);
+        		null, 1, false, null, null);
 	}
 	
     @Override

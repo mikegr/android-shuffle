@@ -129,10 +129,7 @@ public class WelcomeActivity extends Activity {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (MenuUtils.checkCommonItemsSelected(item, this, MenuUtils.INBOX_ID)) {
-        	return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return MenuUtils.checkCommonItemsSelected(item, this, MenuUtils.INBOX_ID) || super.onOptionsItemSelected(item);
     }
 
 

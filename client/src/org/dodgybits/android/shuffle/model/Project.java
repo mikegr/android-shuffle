@@ -21,24 +21,48 @@ import org.dodgybits.shuffle.dto.ShuffleProtos.Project.Builder;
 
 import android.text.TextUtils;
 
-public class Project {
+public class Project implements TracksCompatible {
 	public Long id;
 	public final String name;
 	public final Long defaultContextId;
 	public final boolean archived;
-	
-	public Project(Long id, String name, Long defaultContextId, boolean archived) {
+    public final Long tracksId;
+    public final Long tracksModified;
+
+
+    public Project(Long id, String name, 
+            Long defaultContextId, boolean archived, 
+            Long tracksId, Long tracksModified) {
 		this.id = id;
 		this.name = name;
 		this.defaultContextId = defaultContextId;
 		this.archived = archived;
-	}
+        this.tracksId = tracksId;
+        this.tracksModified = tracksModified;
+    }
 	
-	public Project(String name, Long defaultContextId, boolean archived) {
-		this(null, name, defaultContextId, archived);
+	public Project(String name, 
+	        Long defaultContextId, boolean archived, 
+            Long tracksId, Long tracksModified) {
+		this(null, name, defaultContextId, archived, tracksId, tracksModified);
 	}
 
-	@Override
+        @Override
+    public Long getTracksId() {
+        return tracksId;
+    }
+
+    @Override
+    public Long getTracksModified() {
+        return tracksModified;
+    }
+
+    @Override
+    public String getLocalName() {
+        return name;
+    }
+
+    @Override
 	public boolean equals(Object o) {
 		boolean result = false;
 		if (o instanceof Project) {
@@ -59,13 +83,13 @@ public class Project {
 
 	public org.dodgybits.shuffle.dto.ShuffleProtos.Project toDto() {
 		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Project.newBuilder();
-		builder.setId(id).setName(name);  
+		builder.setId(id).setName(name);
 		if (defaultContextId != null) {
 			builder.setDefaultContextId(defaultContextId);
 		}
 		return builder.build();
 	}
-	
+
 	public static Project buildFromDto(
 			org.dodgybits.shuffle.dto.ShuffleProtos.Project dto,
 			Locator<Context> contextLocator
@@ -82,7 +106,9 @@ public class Project {
 				dto.getId(),
 				dto.getName(),
 				defaultContextId,
-				false);
+				false,
+				null,
+				null);
 	}
 	
 }
