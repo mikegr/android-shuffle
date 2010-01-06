@@ -1,13 +1,11 @@
 package org.dodgybits.android.shuffle.server.tracks;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.ContextWrapper;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.util.Xml;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
@@ -18,12 +16,13 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.util.Xml;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Morten Nielsen
@@ -168,6 +167,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
 			if (contextCursor.moveToFirst()) {
 				context = BindingUtils.readContext(contextCursor, activity.getResources());
 			}
+        contextCursor.close();
 		return context;
     }
 

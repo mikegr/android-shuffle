@@ -211,11 +211,12 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
     private Project findProjectByRemoteId(long tracksId) {
         Project context = null;
 
-			Cursor contextCursor = contentResolver.query(
+			Cursor projectCursor = contentResolver.query(
 					Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection, "tracks_id = "+tracksId, null, null);
-			if (contextCursor.moveToFirst()) {
-				context = BindingUtils.readProject(contextCursor);
+			if (projectCursor.moveToFirst()) {
+				context = BindingUtils.readProject(projectCursor);
 			}
+        projectCursor.close();
 		return context;
     }
 
@@ -227,6 +228,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 			if (contextCursor.moveToFirst()) {
 				context = BindingUtils.readContext(contextCursor, activity.getResources());
 			}
+        contextCursor.close();
 		return context;
     }
 
