@@ -21,18 +21,18 @@ import org.dodgybits.shuffle.dto.ShuffleProtos.Project.Builder;
 
 import android.text.TextUtils;
 
-public class Project implements TracksCompatible {
+public class Project extends AbstractEntity implements TracksCompatible {
 	public Long id;
 	public final String name;
 	public final Long defaultContextId;
 	public final boolean archived;
     public final Long tracksId;
-    public final Long modified;
+    public final long modified;
 
 
     public Project(Long id, String name, 
             Long defaultContextId, boolean archived, 
-            Long tracksId, Long modified) {
+            Long tracksId, long modified) {
 		this.id = id;
 		this.name = name;
 		this.defaultContextId = defaultContextId;
@@ -43,17 +43,17 @@ public class Project implements TracksCompatible {
 	
 	public Project(String name, 
 	        Long defaultContextId, boolean archived, 
-            Long tracksId, Long tracksModified) {
-		this(null, name, defaultContextId, archived, tracksId, tracksModified);
+            Long tracksId, long modified) {
+		this(null, name, defaultContextId, archived, tracksId, modified);
 	}
 
-        @Override
+    @Override
     public Long getTracksId() {
         return tracksId;
     }
 
     @Override
-    public Long getModified() {
+    public long getModified() {
         return modified;
     }
 
@@ -83,10 +83,16 @@ public class Project implements TracksCompatible {
 
 	public org.dodgybits.shuffle.dto.ShuffleProtos.Project toDto() {
 		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Project.newBuilder();
-		builder.setId(id).setName(name);
+		builder
+		    .setId(id)
+		    .setName(name)
+		    .setModified(toDate(modified));
 		if (defaultContextId != null) {
 			builder.setDefaultContextId(defaultContextId);
 		}
+        if (tracksId != null) {
+            builder.setTracksId(tracksId);
+        }
 		return builder.build();
 	}
 
@@ -102,12 +108,18 @@ public class Project implements TracksCompatible {
 				defaultContextId = defaultContext.id;
 			}
 		}
+        Long tracksId = null;
+        if (dto.hasTracksId()) {
+            tracksId = dto.getTracksId();
+        }
+        long modified = fromDate(dto.getModified());
+		
 		return new Project(
 				dto.getId(),
 				dto.getName(),
 				defaultContextId,
 				false,
-				null,
-				null);
+				tracksId,
+				modified);
 	}
 }

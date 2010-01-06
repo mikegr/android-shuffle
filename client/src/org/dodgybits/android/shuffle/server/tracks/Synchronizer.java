@@ -194,8 +194,7 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
 
     private void handleRemoteEntity(Entity localContext, Entity remoteContext) {
 
-        if (remoteContext.getModified().equals(
-                localContext.getModified()))
+        if (remoteContext.getModified() == localContext.getModified())
             return;
 
         if (remoteContext.getModified() > localContext

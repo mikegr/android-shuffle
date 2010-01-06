@@ -719,7 +719,7 @@ public class ShuffleProvider extends ContentProvider {
         sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_TRACKS_ID, cContextTableName
 				+ ".tracks_id");
         sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_MODIFIED, cContextTableName
-				+ ".tracks_Modified");
+				+ ".modified");
 
 		sContextListProjectMap = new HashMap<String, String>();
 		sContextListProjectMap.put(Shuffle.Contexts._ID, cContextTableName

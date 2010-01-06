@@ -8,12 +8,16 @@ message Context {
   required string name = 2;
   optional int32 colourIndex = 3;
   optional string icon = 4;
+  optional Date modified = 5;
+  optional int64 tracksId = 6;
 }
 
 message Project {
   required int64 id = 1;
   required string name = 2;
   optional int64 defaultContextId = 3;
+  optional Date modified = 4;
+  optional int64 tracksId = 5;
 }
 
 message Task {
@@ -31,6 +35,7 @@ message Task {
   optional int64 calEventId = 12;
   optional int32 order = 13;
   optional bool complete = 14;
+  optional int64 tracksId = 15;
 }
 
 message Date {

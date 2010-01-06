@@ -48,12 +48,12 @@ public class ModelUtils {
 	private static void initPresetContexts(Resources res) {
 		if (cPresetContexts == null) {
 			cPresetContexts = new Context[] {
-					new Context(res.getText(R.string.context_athome).toString(), 5, createIcon("go_home", res), null, null), // 0
-					new Context(res.getText(R.string.context_atwork).toString(), 19, createIcon("system_file_manager", res), null, null), // 1
-					new Context(res.getText(R.string.context_online).toString(), 1, createIcon("applications_internet", res), null, null), // 2
-					new Context(res.getText(R.string.context_errands).toString(), 14, createIcon("applications_development", res), null, null), // 3
-					new Context( res.getText(R.string.context_contact).toString(), 22, createIcon("system_users", res), null, null), // 4
-					new Context( res.getText(R.string.context_read).toString(), 16, createIcon("format_justify_fill", res), null, null), // 5
+					new Context(res.getText(R.string.context_athome).toString(), 5, createIcon("go_home", res), null, System.currentTimeMillis()), // 0
+					new Context(res.getText(R.string.context_atwork).toString(), 19, createIcon("system_file_manager", res), null, System.currentTimeMillis()), // 1
+					new Context(res.getText(R.string.context_online).toString(), 1, createIcon("applications_internet", res), null, System.currentTimeMillis()), // 2
+					new Context(res.getText(R.string.context_errands).toString(), 14, createIcon("applications_development", res), null, System.currentTimeMillis()), // 3
+					new Context( res.getText(R.string.context_contact).toString(), 22, createIcon("system_users", res), null, System.currentTimeMillis()), // 4
+					new Context( res.getText(R.string.context_read).toString(), 16, createIcon("format_justify_fill", res), null, System.currentTimeMillis()), // 5
 			};
 		}
 	}
@@ -101,7 +101,7 @@ public class ModelUtils {
 		cal.add(Calendar.WEEK_OF_YEAR, 1);
 		long twoWeeks = cal.getTimeInMillis();
 		
-		Project sellBike = new Project("Sell old Powerbook", null, false, null, null);
+		Project sellBike = new Project("Sell old Powerbook", null, false, null, System.currentTimeMillis());
 		insertProject(androidContext, sellBike);
 		insertTask(androidContext, 
 				createTask("Backup data", null, 
@@ -118,7 +118,7 @@ public class ModelUtils {
 		insertTask(androidContext, 
 				createTask("Put up ad", AT_COMPUTER_INDEX, sellBike, twoWeeks));
 
-		Project cleanGarage = new Project("Clean out garage", null, false, null, null);
+		Project cleanGarage = new Project("Clean out garage", null, false, null, System.currentTimeMillis());
 		insertProject(androidContext, cleanGarage);
 		insertTask(androidContext, 
 				createTask("Sort out contents", "Split into keepers and junk", 
@@ -137,7 +137,7 @@ public class ModelUtils {
 						ERRANDS_INDEX, cleanGarage, 
 						now, now));
 
-		Project skiTrip = new Project("Organise ski trip", null, false, null, null);
+		Project skiTrip = new Project("Organise ski trip", null, false, null, System.currentTimeMillis());
 		insertProject(androidContext, skiTrip);
 		insertTask(androidContext, 
 				createTask("Send email to determine best week", null, 
@@ -161,7 +161,7 @@ public class ModelUtils {
 
 		Project discussI8n = 
 			new Project("Discuss internationalization",
-				cPresetContexts[AT_WORK_INDEX].id, false, null, null);
+				cPresetContexts[AT_WORK_INDEX].id, false, null, System.currentTimeMillis());
 		insertProject(androidContext, discussI8n);
 		insertTask(androidContext, 
 				createTask("Read up on options", null, 

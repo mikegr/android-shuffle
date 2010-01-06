@@ -17,10 +17,9 @@
 package org.dodgybits.android.shuffle.model;
 
 import org.dodgybits.android.shuffle.service.Locator;
-import org.dodgybits.shuffle.dto.ShuffleProtos.Date;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Task.Builder;
 
-public final class Task implements TracksCompatible{
+public final class Task extends AbstractEntity implements TracksCompatible{
 	public Long id;
 	public final String description;
 	public final String details;
@@ -82,7 +81,7 @@ public final class Task implements TracksCompatible{
     }
 
     @Override
-    public Long getModified() {
+    public long getModified() {
         return modified;
     }
 
@@ -118,6 +117,9 @@ public final class Task implements TracksCompatible{
 		if (calEventId != null) {
 			builder.setCalEventId(calEventId);
 		}
+        if (tracksId != null) {
+            builder.setTracksId(tracksId);
+        }
 		return builder.build();
 	}
 
@@ -155,26 +157,17 @@ public final class Task implements TracksCompatible{
 		Integer order = dto.getOrder();
 		Boolean complete = dto.getComplete();
 
+		Long tracksId = null;
+		if (dto.hasTracksId()) {
+		    tracksId = dto.getTracksId();
+		}
+		
 		return new Task(
 				id, description, details,
 				context, project, created, modified,
 				startDate, dueDate, timezone, allDay,
 				hasAlarms, calEventId, order, complete,
-				null);
+				tracksId);
 	}
 
-	private static Date toDate(long millis) {
-		return Date.newBuilder()
-			.setMillis(millis)
-			.build();
-	}
-
-	private static long fromDate(Date date) {
-		long millis = 0L;
-		if (date != null) {
-			millis = date.getMillis();
-		}
-		return millis;
-	}
-	
 }

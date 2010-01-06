@@ -281,11 +281,10 @@ public class PreferencesCreateBackupActivity extends Activity
             String type = getString(R.string.context_name);
         	while (cursor.moveToNext()) {
         		Context context = BindingUtils.readContext(cursor, getResources());
-            	//builder.addContext(context.toDto());
+            	builder.addContext(context.toDto());
     			String text = getString(R.string.backup_progress, type, context.name);
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
-            	
         	}
         	cursor.close();
         }
@@ -301,7 +300,7 @@ public class PreferencesCreateBackupActivity extends Activity
             String type = getString(R.string.project_name);
         	while (cursor.moveToNext()) {
         		Project project = BindingUtils.readProject(cursor);
-//            	builder.addProject(project.toDto());
+            	builder.addProject(project.toDto());
     			String text = getString(R.string.backup_progress, type, project.name);
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
@@ -320,7 +319,7 @@ public class PreferencesCreateBackupActivity extends Activity
             String type = getString(R.string.task_name);
         	while (cursor.moveToNext()) {
         		Task task = BindingUtils.readTask(cursor, getResources());
-            	//builder.addTask(task.toDto());
+            	builder.addTask(task.toDto());
     			String text = getString(R.string.backup_progress, type, task.description);
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
@@ -344,7 +343,7 @@ public class PreferencesCreateBackupActivity extends Activity
 	        mProgressText.setText(progress.getDetails());
 
 	        if (progress.isError()) {
-//				AlertUtils.showWarning(PreferencesCreateBackupActivity.this, progress.getDetails());
+				AlertUtils.showWarning(PreferencesCreateBackupActivity.this, progress.getDetails());
         		Runnable action = progress.getErrorUIAction();
 	        	if (action != null) {
 	        		action.run();

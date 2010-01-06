@@ -273,10 +273,10 @@ public class PreferencesRestoreBackupActivity extends Activity
 					Log.d(cTag, "Context " + contextName + " already exists - skipping.");
 				} else {
 					Log.d(cTag, "Context " + contextName + " new - adding.");
-//					context = Context.buildFromDto(protoContext, getResources());
-//					
-//					newContexts.add(context);
-//					newContextNames.add(contextName);
+					context = Context.buildFromDto(protoContext, getResources());
+					
+					newContexts.add(context);
+					newContextNames.add(contextName);
 				}
 				contextLocator.addItem(protoContext.getId(), contextName, context);
 				String text = getString(R.string.restore_progress, type, contextName);
@@ -327,9 +327,9 @@ public class PreferencesRestoreBackupActivity extends Activity
 					Log.d(cTag, "Project " + projectName + " already exists - skipping.");
 				} else {
 					Log.d(cTag, "Project " + projectName + " new - adding.");
-//					project = Project.buildFromDto(protoProject, contextLocator);
-//
-//					newProjects.add(project);
+					project = Project.buildFromDto(protoProject, contextLocator);
+
+					newProjects.add(project);
 					newProjectNames.add(projectName);
 				}
 				projectLocator.addItem(protoProject.getId(), projectName, project);

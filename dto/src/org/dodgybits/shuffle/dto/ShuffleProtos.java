@@ -59,9 +59,26 @@ public final class ShuffleProtos {
     public boolean hasIcon() { return hasIcon; }
     public java.lang.String getIcon() { return icon_; }
     
+    // optional .shuffle.Date modified = 5;
+    public static final int MODIFIED_FIELD_NUMBER = 5;
+    private boolean hasModified;
+    private org.dodgybits.shuffle.dto.ShuffleProtos.Date modified_ = org.dodgybits.shuffle.dto.ShuffleProtos.Date.getDefaultInstance();
+    public boolean hasModified() { return hasModified; }
+    public org.dodgybits.shuffle.dto.ShuffleProtos.Date getModified() { return modified_; }
+    
+    // optional int64 tracksId = 6;
+    public static final int TRACKSID_FIELD_NUMBER = 6;
+    private boolean hasTracksId;
+    private long tracksId_ = 0L;
+    public boolean hasTracksId() { return hasTracksId; }
+    public long getTracksId() { return tracksId_; }
+    
     public final boolean isInitialized() {
       if (!hasId) return false;
       if (!hasName) return false;
+      if (hasModified()) {
+        if (!getModified().isInitialized()) return false;
+      }
       return true;
     }
     
@@ -78,6 +95,12 @@ public final class ShuffleProtos {
       }
       if (hasIcon()) {
         output.writeString(4, getIcon());
+      }
+      if (hasModified()) {
+        output.writeMessage(5, getModified());
+      }
+      if (hasTracksId()) {
+        output.writeInt64(6, getTracksId());
       }
       getUnknownFields().writeTo(output);
     }
@@ -103,6 +126,14 @@ public final class ShuffleProtos {
       if (hasIcon()) {
         size += com.google.protobuf.CodedOutputStream
           .computeStringSize(4, getIcon());
+      }
+      if (hasModified()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getModified());
+      }
+      if (hasTracksId()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(6, getTracksId());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -265,6 +296,12 @@ public final class ShuffleProtos {
         if (other.hasIcon()) {
           setIcon(other.getIcon());
         }
+        if (other.hasModified()) {
+          mergeModified(other.getModified());
+        }
+        if (other.hasTracksId()) {
+          setTracksId(other.getTracksId());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -304,6 +341,19 @@ public final class ShuffleProtos {
             }
             case 34: {
               setIcon(input.readString());
+              break;
+            }
+            case 42: {
+              org.dodgybits.shuffle.dto.ShuffleProtos.Date.Builder subBuilder = org.dodgybits.shuffle.dto.ShuffleProtos.Date.newBuilder();
+              if (hasModified()) {
+                subBuilder.mergeFrom(getModified());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setModified(subBuilder.buildPartial());
+              break;
+            }
+            case 48: {
+              setTracksId(input.readInt64());
               break;
             }
           }
@@ -388,6 +438,61 @@ public final class ShuffleProtos {
         result.icon_ = getDefaultInstance().getIcon();
         return this;
       }
+      
+      // optional .shuffle.Date modified = 5;
+      public boolean hasModified() {
+        return result.hasModified();
+      }
+      public org.dodgybits.shuffle.dto.ShuffleProtos.Date getModified() {
+        return result.getModified();
+      }
+      public Builder setModified(org.dodgybits.shuffle.dto.ShuffleProtos.Date value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasModified = true;
+        result.modified_ = value;
+        return this;
+      }
+      public Builder setModified(org.dodgybits.shuffle.dto.ShuffleProtos.Date.Builder builderForValue) {
+        result.hasModified = true;
+        result.modified_ = builderForValue.build();
+        return this;
+      }
+      public Builder mergeModified(org.dodgybits.shuffle.dto.ShuffleProtos.Date value) {
+        if (result.hasModified() &&
+            result.modified_ != org.dodgybits.shuffle.dto.ShuffleProtos.Date.getDefaultInstance()) {
+          result.modified_ =
+            org.dodgybits.shuffle.dto.ShuffleProtos.Date.newBuilder(result.modified_).mergeFrom(value).buildPartial();
+        } else {
+          result.modified_ = value;
+        }
+        result.hasModified = true;
+        return this;
+      }
+      public Builder clearModified() {
+        result.hasModified = false;
+        result.modified_ = org.dodgybits.shuffle.dto.ShuffleProtos.Date.getDefaultInstance();
+        return this;
+      }
+      
+      // optional int64 tracksId = 6;
+      public boolean hasTracksId() {
+        return result.hasTracksId();
+      }
+      public long getTracksId() {
+        return result.getTracksId();
+      }
+      public Builder setTracksId(long value) {
+        result.hasTracksId = true;
+        result.tracksId_ = value;
+        return this;
+      }
+      public Builder clearTracksId() {
+        result.hasTracksId = false;
+        result.tracksId_ = 0L;
+        return this;
+      }
     }
     
     static {
@@ -444,9 +549,26 @@ public final class ShuffleProtos {
     public boolean hasDefaultContextId() { return hasDefaultContextId; }
     public long getDefaultContextId() { return defaultContextId_; }
     
+    // optional .shuffle.Date modified = 4;
+    public static final int MODIFIED_FIELD_NUMBER = 4;
+    private boolean hasModified;
+    private org.dodgybits.shuffle.dto.ShuffleProtos.Date modified_ = org.dodgybits.shuffle.dto.ShuffleProtos.Date.getDefaultInstance();
+    public boolean hasModified() { return hasModified; }
+    public org.dodgybits.shuffle.dto.ShuffleProtos.Date getModified() { return modified_; }
+    
+    // optional int64 tracksId = 5;
+    public static final int TRACKSID_FIELD_NUMBER = 5;
+    private boolean hasTracksId;
+    private long tracksId_ = 0L;
+    public boolean hasTracksId() { return hasTracksId; }
+    public long getTracksId() { return tracksId_; }
+    
     public final boolean isInitialized() {
       if (!hasId) return false;
       if (!hasName) return false;
+      if (hasModified()) {
+        if (!getModified().isInitialized()) return false;
+      }
       return true;
     }
     
@@ -460,6 +582,12 @@ public final class ShuffleProtos {
       }
       if (hasDefaultContextId()) {
         output.writeInt64(3, getDefaultContextId());
+      }
+      if (hasModified()) {
+        output.writeMessage(4, getModified());
+      }
+      if (hasTracksId()) {
+        output.writeInt64(5, getTracksId());
       }
       getUnknownFields().writeTo(output);
     }
@@ -481,6 +609,14 @@ public final class ShuffleProtos {
       if (hasDefaultContextId()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(3, getDefaultContextId());
+      }
+      if (hasModified()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, getModified());
+      }
+      if (hasTracksId()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(5, getTracksId());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -640,6 +776,12 @@ public final class ShuffleProtos {
         if (other.hasDefaultContextId()) {
           setDefaultContextId(other.getDefaultContextId());
         }
+        if (other.hasModified()) {
+          mergeModified(other.getModified());
+        }
+        if (other.hasTracksId()) {
+          setTracksId(other.getTracksId());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -675,6 +817,19 @@ public final class ShuffleProtos {
             }
             case 24: {
               setDefaultContextId(input.readInt64());
+              break;
+            }
+            case 34: {
+              org.dodgybits.shuffle.dto.ShuffleProtos.Date.Builder subBuilder = org.dodgybits.shuffle.dto.ShuffleProtos.Date.newBuilder();
+              if (hasModified()) {
+                subBuilder.mergeFrom(getModified());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setModified(subBuilder.buildPartial());
+              break;
+            }
+            case 40: {
+              setTracksId(input.readInt64());
               break;
             }
           }
@@ -736,6 +891,61 @@ public final class ShuffleProtos {
       public Builder clearDefaultContextId() {
         result.hasDefaultContextId = false;
         result.defaultContextId_ = 0L;
+        return this;
+      }
+      
+      // optional .shuffle.Date modified = 4;
+      public boolean hasModified() {
+        return result.hasModified();
+      }
+      public org.dodgybits.shuffle.dto.ShuffleProtos.Date getModified() {
+        return result.getModified();
+      }
+      public Builder setModified(org.dodgybits.shuffle.dto.ShuffleProtos.Date value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasModified = true;
+        result.modified_ = value;
+        return this;
+      }
+      public Builder setModified(org.dodgybits.shuffle.dto.ShuffleProtos.Date.Builder builderForValue) {
+        result.hasModified = true;
+        result.modified_ = builderForValue.build();
+        return this;
+      }
+      public Builder mergeModified(org.dodgybits.shuffle.dto.ShuffleProtos.Date value) {
+        if (result.hasModified() &&
+            result.modified_ != org.dodgybits.shuffle.dto.ShuffleProtos.Date.getDefaultInstance()) {
+          result.modified_ =
+            org.dodgybits.shuffle.dto.ShuffleProtos.Date.newBuilder(result.modified_).mergeFrom(value).buildPartial();
+        } else {
+          result.modified_ = value;
+        }
+        result.hasModified = true;
+        return this;
+      }
+      public Builder clearModified() {
+        result.hasModified = false;
+        result.modified_ = org.dodgybits.shuffle.dto.ShuffleProtos.Date.getDefaultInstance();
+        return this;
+      }
+      
+      // optional int64 tracksId = 5;
+      public boolean hasTracksId() {
+        return result.hasTracksId();
+      }
+      public long getTracksId() {
+        return result.getTracksId();
+      }
+      public Builder setTracksId(long value) {
+        result.hasTracksId = true;
+        result.tracksId_ = value;
+        return this;
+      }
+      public Builder clearTracksId() {
+        result.hasTracksId = false;
+        result.tracksId_ = 0L;
         return this;
       }
     }
@@ -871,6 +1081,13 @@ public final class ShuffleProtos {
     public boolean hasComplete() { return hasComplete; }
     public boolean getComplete() { return complete_; }
     
+    // optional int64 tracksId = 15;
+    public static final int TRACKSID_FIELD_NUMBER = 15;
+    private boolean hasTracksId;
+    private long tracksId_ = 0L;
+    public boolean hasTracksId() { return hasTracksId; }
+    public long getTracksId() { return tracksId_; }
+    
     public final boolean isInitialized() {
       if (!hasId) return false;
       if (!hasDescription) return false;
@@ -932,6 +1149,9 @@ public final class ShuffleProtos {
       }
       if (hasComplete()) {
         output.writeBool(14, getComplete());
+      }
+      if (hasTracksId()) {
+        output.writeInt64(15, getTracksId());
       }
       getUnknownFields().writeTo(output);
     }
@@ -997,6 +1217,10 @@ public final class ShuffleProtos {
       if (hasComplete()) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(14, getComplete());
+      }
+      if (hasTracksId()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(15, getTracksId());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1189,6 +1413,9 @@ public final class ShuffleProtos {
         if (other.hasComplete()) {
           setComplete(other.getComplete());
         }
+        if (other.hasTracksId()) {
+          setTracksId(other.getTracksId());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -1288,6 +1515,10 @@ public final class ShuffleProtos {
             }
             case 112: {
               setComplete(input.readBool());
+              break;
+            }
+            case 120: {
+              setTracksId(input.readInt64());
               break;
             }
           }
@@ -1629,6 +1860,24 @@ public final class ShuffleProtos {
       public Builder clearComplete() {
         result.hasComplete = false;
         result.complete_ = false;
+        return this;
+      }
+      
+      // optional int64 tracksId = 15;
+      public boolean hasTracksId() {
+        return result.hasTracksId();
+      }
+      public long getTracksId() {
+        return result.getTracksId();
+      }
+      public Builder setTracksId(long value) {
+        result.hasTracksId = true;
+        result.tracksId_ = value;
+        return this;
+      }
+      public Builder clearTracksId() {
+        result.hasTracksId = false;
+        result.tracksId_ = 0L;
         return this;
       }
     }
@@ -2439,18 +2688,21 @@ public final class ShuffleProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rshuffle.proto\022\007shuffle\"F\n\007Context\022\n\n\002i" +
+      "\n\rshuffle.proto\022\007shuffle\"y\n\007Context\022\n\n\002i" +
       "d\030\001 \002(\003\022\014\n\004name\030\002 \002(\t\022\023\n\013colourIndex\030\003 \001" +
-      "(\005\022\014\n\004icon\030\004 \001(\t\"=\n\007Project\022\n\n\002id\030\001 \002(\003\022" +
-      "\014\n\004name\030\002 \002(\t\022\030\n\020defaultContextId\030\003 \001(\003\"" +
-      "\270\002\n\004Task\022\n\n\002id\030\001 \002(\003\022\023\n\013description\030\002 \002(" +
-      "\t\022\017\n\007details\030\003 \001(\t\022\021\n\tcontextId\030\004 \001(\003\022\021\n" +
-      "\tprojectId\030\005 \001(\003\022\036\n\007created\030\006 \001(\0132\r.shuf" +
-      "fle.Date\022\037\n\010modified\030\007 \001(\0132\r.shuffle.Dat" +
-      "e\022 \n\tstartDate\030\010 \001(\0132\r.shuffle.Date\022\036\n\007d" +
-      "ueDate\030\t \001(\0132\r.shuffle.Date\022\020\n\010timezone\030",
-      "\n \001(\t\022\016\n\006allDay\030\013 \001(\010\022\022\n\ncalEventId\030\014 \001(" +
-      "\003\022\r\n\005order\030\r \001(\005\022\020\n\010complete\030\016 \001(\010\"\026\n\004Da" +
+      "(\005\022\014\n\004icon\030\004 \001(\t\022\037\n\010modified\030\005 \001(\0132\r.shu" +
+      "ffle.Date\022\020\n\010tracksId\030\006 \001(\003\"p\n\007Project\022\n" +
+      "\n\002id\030\001 \002(\003\022\014\n\004name\030\002 \002(\t\022\030\n\020defaultConte" +
+      "xtId\030\003 \001(\003\022\037\n\010modified\030\004 \001(\0132\r.shuffle.D" +
+      "ate\022\020\n\010tracksId\030\005 \001(\003\"\312\002\n\004Task\022\n\n\002id\030\001 \002" +
+      "(\003\022\023\n\013description\030\002 \002(\t\022\017\n\007details\030\003 \001(\t" +
+      "\022\021\n\tcontextId\030\004 \001(\003\022\021\n\tprojectId\030\005 \001(\003\022\036" +
+      "\n\007created\030\006 \001(\0132\r.shuffle.Date\022\037\n\010modifi",
+      "ed\030\007 \001(\0132\r.shuffle.Date\022 \n\tstartDate\030\010 \001" +
+      "(\0132\r.shuffle.Date\022\036\n\007dueDate\030\t \001(\0132\r.shu" +
+      "ffle.Date\022\020\n\010timezone\030\n \001(\t\022\016\n\006allDay\030\013 " +
+      "\001(\010\022\022\n\ncalEventId\030\014 \001(\003\022\r\n\005order\030\r \001(\005\022\020" +
+      "\n\010complete\030\016 \001(\010\022\020\n\010tracksId\030\017 \001(\003\"\026\n\004Da" +
       "te\022\016\n\006millis\030\001 \002(\003\"n\n\tCatalogue\022!\n\007conte" +
       "xt\030\001 \003(\0132\020.shuffle.Context\022!\n\007project\030\002 " +
       "\003(\0132\020.shuffle.Project\022\033\n\004task\030\003 \003(\0132\r.sh" +
@@ -2467,7 +2719,7 @@ public final class ShuffleProtos {
           internal_static_shuffle_Context_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_shuffle_Context_descriptor,
-              new java.lang.String[] { "Id", "Name", "ColourIndex", "Icon", },
+              new java.lang.String[] { "Id", "Name", "ColourIndex", "Icon", "Modified", "TracksId", },
               org.dodgybits.shuffle.dto.ShuffleProtos.Context.class,
               org.dodgybits.shuffle.dto.ShuffleProtos.Context.Builder.class);
           internal_static_shuffle_Project_descriptor =
@@ -2475,7 +2727,7 @@ public final class ShuffleProtos {
           internal_static_shuffle_Project_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_shuffle_Project_descriptor,
-              new java.lang.String[] { "Id", "Name", "DefaultContextId", },
+              new java.lang.String[] { "Id", "Name", "DefaultContextId", "Modified", "TracksId", },
               org.dodgybits.shuffle.dto.ShuffleProtos.Project.class,
               org.dodgybits.shuffle.dto.ShuffleProtos.Project.Builder.class);
           internal_static_shuffle_Task_descriptor =
@@ -2483,7 +2735,7 @@ public final class ShuffleProtos {
           internal_static_shuffle_Task_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_shuffle_Task_descriptor,
-              new java.lang.String[] { "Id", "Description", "Details", "ContextId", "ProjectId", "Created", "Modified", "StartDate", "DueDate", "Timezone", "AllDay", "CalEventId", "Order", "Complete", },
+              new java.lang.String[] { "Id", "Description", "Details", "ContextId", "ProjectId", "Created", "Modified", "StartDate", "DueDate", "Timezone", "AllDay", "CalEventId", "Order", "Complete", "TracksId", },
               org.dodgybits.shuffle.dto.ShuffleProtos.Task.class,
               org.dodgybits.shuffle.dto.ShuffleProtos.Task.Builder.class);
           internal_static_shuffle_Date_descriptor =

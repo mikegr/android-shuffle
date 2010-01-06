@@ -463,7 +463,7 @@ public class BindingUtils {
     private static final int COLOUR_INDEX = 2;
     private static final int ICON_INDEX = 3;
     private static final int TRACKS_ID_INDEX = 4;
-    private static final int TRACKS_MODIFIED_INDEX = 5;
+    private static final int CONTEXTS_MODIFIED_INDEX = 5;
 
     public static Context readContext(Cursor cursor, Resources res) {
 		Long id = readLong(cursor, ID_INDEX);
@@ -472,7 +472,7 @@ public class BindingUtils {
 		String iconName = readString(cursor, ICON_INDEX);
 		Icon icon = Icon.createIcon(iconName, res);
         Long tracksId = readLong(cursor,TRACKS_ID_INDEX);
-        Long tracksModified = readLong(cursor,TRACKS_MODIFIED_INDEX);
+        Long tracksModified = readLong(cursor,CONTEXTS_MODIFIED_INDEX);
         return new Context(id, name, colour, icon, tracksId, tracksModified);
 	}
 
@@ -489,7 +489,7 @@ public class BindingUtils {
 
     private static final int ARCHIVED_INDEX = 3;
     private static final int PROJECTS_TRACKS_ID_INDEX = 4;
-    private static final int PROJECTS_TRACKS_MODIFIED_INDEX = 5;
+    private static final int PROJECTS_MODIFIED_INDEX = 5;
 
     public static Project readProject(Cursor cursor) {
 		Long id = readLong(cursor, ID_INDEX);
@@ -497,7 +497,7 @@ public class BindingUtils {
 		Long defaultContextId = readLong(cursor, DEFAULT_CONTEXT_INDEX);
 		Boolean archived = readBoolean(cursor, ARCHIVED_INDEX);
         Long tracksId = readLong(cursor, PROJECTS_TRACKS_ID_INDEX);
-        Long tracksModified = readLong(cursor, PROJECTS_TRACKS_MODIFIED_INDEX);
+        Long tracksModified = readLong(cursor, PROJECTS_MODIFIED_INDEX);
 		return new Project(id, name, defaultContextId, archived, tracksId, tracksModified);
 	}
 	

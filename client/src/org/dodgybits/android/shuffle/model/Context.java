@@ -21,16 +21,16 @@ import org.dodgybits.shuffle.dto.ShuffleProtos.Context.Builder;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
-public class Context implements TracksCompatible {
+public class Context extends AbstractEntity implements TracksCompatible {
 	public Long id;
 	public final String name;
 	public final int colourIndex;
 	// resource id to icon resource (may be null)
 	public final Icon icon;
     public final Long tracksId;
-    public final Long modified;
+    public final long modified;
 
-    public Context(Long id, String name, int colourIndex, Icon icon, Long tracksId, Long modified) {
+    public Context(Long id, String name, int colourIndex, Icon icon, Long tracksId, long modified) {
 		this.id = id;
 		this.name = name;
 		this.colourIndex = colourIndex;
@@ -39,8 +39,8 @@ public class Context implements TracksCompatible {
         this.modified = modified;
     }
 	
-	public Context(String name, int colour, Icon icon, Long tracksId, Long tracksModified) {
-		this(null, name, colour, icon, tracksId, tracksModified);
+	public Context(String name, int colour, Icon icon, Long tracksId, long modified) {
+		this(null, name, colour, icon, tracksId, modified);
 	}
 
     @Override
@@ -49,7 +49,7 @@ public class Context implements TracksCompatible {
     }
 
     @Override
-    public Long getModified() {
+    public long getModified() {
         return modified;
     }
 
@@ -87,7 +87,11 @@ public class Context implements TracksCompatible {
 		builder
 			.setId(id)
 			.setName(name)
-			.setColourIndex(colourIndex);
+			.setColourIndex(colourIndex)
+			.setModified(toDate(modified));
+		if (tracksId != null) {
+		    builder.setTracksId(tracksId);
+		}
 		if (icon != Icon.NONE) {
 			builder.setIcon(icon.iconName);
 		}
@@ -103,13 +107,18 @@ public class Context implements TracksCompatible {
 		} else {
 			icon = Icon.NONE;
 		}
+        Long tracksId = null;
+        if (dto.hasTracksId()) {
+            tracksId = dto.getTracksId();
+        }
+        long modified = fromDate(dto.getModified());
 
 		return new Context(
 				dto.getId(),
 				dto.getName(),
 				dto.getColourIndex(),
 				icon,
-				null,
-				null);
+				tracksId,
+				modified);
 	}    
 }
