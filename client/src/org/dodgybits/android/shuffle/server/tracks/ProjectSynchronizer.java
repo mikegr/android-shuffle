@@ -1,11 +1,13 @@
 package org.dodgybits.android.shuffle.server.tracks;
 
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.util.Xml;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
@@ -16,18 +18,20 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.ContextWrapper;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.util.Xml;
 
+/**
+ * @author Morten Nielsen
+ */
 public final class ProjectSynchronizer extends Synchronizer<Project> {
     private final String tracksUrl;
 
-    public ProjectSynchronizer(ContentResolver contentResolver, Resources resources, WebClient client, Activity activity, TracksSynchronizer tracksSynchronizer, String tracksUrl, int basePercent) {
+    public ProjectSynchronizer(ContentResolver contentResolver, Resources resources, WebClient client, ContextWrapper activity, TracksSynchronizer tracksSynchronizer, String tracksUrl, int basePercent) {
         super(contentResolver, tracksSynchronizer, client, resources, activity, basePercent);
 
         this.tracksUrl = tracksUrl;
@@ -62,7 +66,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
     protected Project createMergedLocalEntity(Project localProject, Project newContext) {
         return new Project(localProject.id, newContext.name,
                 newContext.defaultContextId, localProject.archived,
-                newContext.tracksId, newContext.tracksModified);
+                newContext.tracksId, newContext.modified);
     }
 
     protected String createDocumentForEntity(Project project) {

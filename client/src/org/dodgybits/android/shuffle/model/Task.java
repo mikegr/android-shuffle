@@ -28,7 +28,6 @@ public final class Task implements TracksCompatible{
 	public final Project project;
 	public final long created;
 	public final long modified;
-    public final Long tracksModified;
     public final Long tracksId;
 	public final long startDate;
 	public final long dueDate;
@@ -41,10 +40,10 @@ public final class Task implements TracksCompatible{
 	public final Boolean complete;
 	
 	public Task(Long id, String description, String details,
-			Context context, Project project, long created, long modified, 
-			long startDate, long dueDate, String timezone, Boolean allDay, Boolean hasAlarms,
-			Long calEventId, Integer order, Boolean complete, 
-			Long tracksId, Long tracksModified ) {
+                Context context, Project project, long created, long modified,
+                long startDate, long dueDate, String timezone, Boolean allDay, Boolean hasAlarms,
+                Long calEventId, Integer order, Boolean complete,
+                Long tracksId) {
 		this.id = id;
 		this.description = description;
 		this.details = details;
@@ -61,7 +60,7 @@ public final class Task implements TracksCompatible{
 		this.order = order;
 		this.complete = complete;
         this.tracksId = tracksId;
-        this.tracksModified = tracksModified;
+
     }
 	
 	public Task(String description, String details,
@@ -74,7 +73,7 @@ public final class Task implements TracksCompatible{
 				context, project, created, modified, 
 				startDate, dueDate, timezone, allDay, 
 				hasAlarms, calEventId, order, complete, 
-				tracksId, tracksModified);
+				tracksId);
 	}
 
     @Override
@@ -83,16 +82,16 @@ public final class Task implements TracksCompatible{
     }
 
     @Override
-    public Long getTracksModified() {
-        return tracksModified;
+    public Long getModified() {
+        return modified;
     }
 
     @Override
     public String getLocalName() {
         return description;
     }
-    
-	public org.dodgybits.shuffle.dto.ShuffleProtos.Task toDto() {
+
+    public org.dodgybits.shuffle.dto.ShuffleProtos.Task toDto() {
 		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Task.newBuilder();
 		builder
 			.setId(id)
@@ -161,7 +160,7 @@ public final class Task implements TracksCompatible{
 				context, project, created, modified,
 				startDate, dueDate, timezone, allDay,
 				hasAlarms, calEventId, order, complete,
-				null, null);
+				null);
 	}
 
 	private static Date toDate(long millis) {
@@ -177,6 +176,5 @@ public final class Task implements TracksCompatible{
 		}
 		return millis;
 	}
-	
 	
 }

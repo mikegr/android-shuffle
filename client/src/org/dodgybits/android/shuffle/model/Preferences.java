@@ -49,6 +49,21 @@ public class Preferences {
     public static final String TRACKS_URL = "tracks_url";
     public static final String TRACKS_USER = "tracks_user";
     public static final String TRACKS_PASSWORD = "tracks_password";
+    public static final String TRACKS_INTERVAL = "tracks_interval";
+
+
+    public static boolean validateTracksSettings(Context context) {
+        String url = getTracksUrl(context);
+        String password = getTracksPassword(context);
+        String user = getTracksUser(context);
+        return user.length() != 0 && password.length() != 0 && url.length() != 0;
+
+    }
+
+    public static int getTracksInterval(Context context) {
+             getSharedPreferences(context);
+        return sPrefs.getInt(TRACKS_INTERVAL, 0);
+    }
 
     public enum DeleteCompletedPeriod {
 		hourly, daily, weekly, never
@@ -70,17 +85,18 @@ public class Preferences {
 
     public static String getTracksUrl(Context context) {
         getSharedPreferences(context);
-        return sPrefs.getString(TRACKS_URL, "http://my.gtdify.com");
+        return sPrefs.getString(TRACKS_URL, 
+                context.getString(org.dodgybits.android.shuffle.R.string.tracks_url_settings));
     }
 
        public static String getTracksUser(Context context) {
         getSharedPreferences(context);
-        return sPrefs.getString(TRACKS_USER, "username");
+        return sPrefs.getString(TRACKS_USER, "");
     }
 
         public static String getTracksPassword(Context context) {
         getSharedPreferences(context);
-        return sPrefs.getString(TRACKS_PASSWORD, "password");
+        return sPrefs.getString(TRACKS_PASSWORD, "");
     }
 	
 	public static String getDeleteCompletedPeriod(Context context) {

@@ -314,7 +314,8 @@
             </intent-filter>
 
         </activity-alias>
-                
+
+        <service android:name=".service.SynchronizationService"/>
     </application>
     
 </manifest> 

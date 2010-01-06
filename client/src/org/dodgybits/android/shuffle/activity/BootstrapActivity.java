@@ -17,6 +17,7 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.model.Preferences;
+import org.dodgybits.android.shuffle.service.SynchronizationService;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -42,7 +43,7 @@ public class BootstrapActivity extends Activity {
         
         // start the cleaning service
 //		TaskCleaner.getInstance(this).schedule();
-
+        startService(new Intent(this, SynchronizationService.class));
         startActivity(new Intent(this, activityClass));
 
         // dump layouts

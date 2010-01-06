@@ -27,18 +27,18 @@ public class Project implements TracksCompatible {
 	public final Long defaultContextId;
 	public final boolean archived;
     public final Long tracksId;
-    public final Long tracksModified;
+    public final Long modified;
 
 
     public Project(Long id, String name, 
             Long defaultContextId, boolean archived, 
-            Long tracksId, Long tracksModified) {
+            Long tracksId, Long modified) {
 		this.id = id;
 		this.name = name;
 		this.defaultContextId = defaultContextId;
 		this.archived = archived;
         this.tracksId = tracksId;
-        this.tracksModified = tracksModified;
+        this.modified = modified;
     }
 	
 	public Project(String name, 
@@ -53,8 +53,8 @@ public class Project implements TracksCompatible {
     }
 
     @Override
-    public Long getTracksModified() {
-        return tracksModified;
+    public Long getModified() {
+        return modified;
     }
 
     @Override
@@ -110,5 +110,4 @@ public class Project implements TracksCompatible {
 				null,
 				null);
 	}
-	
 }

@@ -1,20 +1,5 @@
 package org.dodgybits.android.shuffle.server.tracks;
 
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.util.Xml;
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.model.Context;
-import org.dodgybits.android.shuffle.provider.Shuffle;
-import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.android.shuffle.util.ModelUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.ParseException;
@@ -24,10 +9,29 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.model.Context;
+import org.dodgybits.android.shuffle.provider.Shuffle;
+import org.dodgybits.android.shuffle.util.BindingUtils;
+import org.dodgybits.android.shuffle.util.ModelUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
+
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.ContextWrapper;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.util.Xml;
+
+/**
+ * @author Morten Nielsen
+ */
 public class ContextSynchronizer extends Synchronizer<Context> {
     private final String tracksUrl;
 
-    public ContextSynchronizer(ContentResolver contentResolver, Resources resources, WebClient client, Activity activity, TracksSynchronizer tracksSynchronizer, String tracksUrl, int basePercent) {
+    public ContextSynchronizer(ContentResolver contentResolver, Resources resources, WebClient client, ContextWrapper activity, TracksSynchronizer tracksSynchronizer, String tracksUrl, int basePercent) {
         super(contentResolver, tracksSynchronizer, client, resources, activity, basePercent);
 
         this.tracksUrl = tracksUrl;
@@ -70,7 +74,7 @@ public class ContextSynchronizer extends Synchronizer<Context> {
     protected Context createMergedLocalEntity(Context localContext, Context newContext) {
         return new Context(localContext.id, newContext.name,
                 localContext.colourIndex, localContext.icon,
-                newContext.tracksId, newContext.tracksModified);
+                newContext.tracksId, newContext.modified);
     }
     protected String createDocumentForEntity(org.dodgybits.android.shuffle.model.Context localContext) {
         XmlSerializer serializer = Xml.newSerializer();

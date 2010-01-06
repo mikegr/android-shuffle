@@ -55,7 +55,7 @@ public class MenuUtils {
     public static final int CONTEXT_ID = Menu.FIRST + 14;
     public static final int PREFERENCE_ID = Menu.FIRST + 15;
     public static final int HELP_ID = Menu.FIRST + 16;
-   private static final int SYNC_ID = Menu.FIRST + 17;
+   public static final int SYNC_ID = Menu.FIRST + 17;
     public static final int CLEAN_INBOX_ID = Menu.FIRST + 50;
 
     // Menu item for activity specific items
@@ -140,13 +140,15 @@ public class MenuUtils {
         }
 	}
 	
-	public static void addPrefsHelpMenuItems(Menu menu) {
+	public static void addPrefsHelpMenuItems(Context context, Menu menu) {
         menu.add(Menu.NONE, PREFERENCE_ID, PREFERENCE_ORDER, R.string.menu_preferences)
         	.setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('p');
         menu.add(Menu.NONE, HELP_ID, HELP_ORDER, R.string.menu_help)
         	.setIcon(android.R.drawable.ic_menu_help).setAlphabeticShortcut('h');
+
         menu.add(Menu.NONE, SYNC_ID, HELP_ORDER, R.string.menu_sync)
-        	.setIcon(android.R.drawable.ic_menu_rotate).setAlphabeticShortcut('r');
+        	.setIcon(android.R.drawable.ic_menu_rotate).setAlphabeticShortcut('r').setVisible(Preferences.validateTracksSettings(context));
+
 	}
 		
 	public static void addSelectedAlternativeMenuItems(Menu menu, Uri uri, boolean includeView) {

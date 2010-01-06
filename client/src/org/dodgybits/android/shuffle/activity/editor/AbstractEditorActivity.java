@@ -18,6 +18,7 @@ package org.dodgybits.android.shuffle.activity.editor;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.State;
+import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
 import android.app.Activity;
@@ -81,7 +82,7 @@ public abstract class AbstractEditorActivity<T> extends Activity
 		}
 		super.finish();
     }    
-    
+
 //    @Override
 //    protected void onResume() {
 //        Log.d(cTag, "onResume+");
@@ -92,13 +93,24 @@ public abstract class AbstractEditorActivity<T> extends Activity
 //        }
 //        Log.d(cTag, "onResume-");
 //    }
-        
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuItem item = menu.findItem(MenuUtils.SYNC_ID);
+        if (item != null) {
+            item.setVisible(Preferences.validateTracksSettings(this));
+        }
+        return true;
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
         MenuUtils.addEditorMenuItems(menu, mState);
-        MenuUtils.addPrefsHelpMenuItems(menu);
+        MenuUtils.addPrefsHelpMenuItems(this, menu);
 
         return true;
     }

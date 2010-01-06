@@ -199,6 +199,38 @@
     <!-- Toast displayed when an item is saved -->
     <string name="itemDeletedToast"><xliff:g id="itemName">%s</xliff:g> supprimé.</string>
 
+           <!-- synchronization-->
+    <!--TODO start-->
+    <string name="synchronizing">Synchronizing with Tracks</string>
+    <string name="tracksUser">User</string>
+    <string name="tracksInstallation">Target installation</string>
+    <string name="sync_preferences">Synchronization options</string>
+    <string name="changeSynchronizationSettings">Change synchronization settings</string>
+    <string name="tracks_url">Tracks installation</string>
+    <string name="tracks_url_settings">http://my.gtdify.com</string>
+    <string name="tracks_user">User</string>
+    <string name="tracks_pass">Password</string>
+    <string name="readingRemoteTasks">Reading remote tasks</string>
+    <string name="processingTasks">Processing tasks</string>
+    <string name="readingLocalTasks">Reading local tasks</string>
+    <string name="doneWithTasks">Done with tasks</string>
+    <string name="readingRemoteContexts">Reading remote Contexts</string>
+    <string name="processingContexts">Processing Contexts</string>
+    <string name="readingLocalContexts">Reading local Contexts</string>
+    <string name="doneWithContexts">Done with Contexts</string>
+    <string name="readingRemoteProjects">Reading remote Projects</string>
+    <string name="processingProjects">Processing Projects</string>
+    <string name="readingLocalProjects">Reading local Projects</string>
+    <string name="doneWithProjects">Done with Projects</string>
+    <string name="tracks_failed_to_check_url">Could not load contexts using these settings, something is wrong with them</string>
+    <string name="tracks_background_sync">Background synchronization interval</string>
+    <string name="sync_interval_none">No background synchronizer</string>
+    <string name="sync_interval_30min">30 minutes</string>
+    <string name="sync_interval_1h">1 hour</string>
+    <string name="sync_interval_2h">2 hours</string>
+    <string name="sync_interval_3h">3 hours</string>
+    <!--TODO end-->
+
 	<!--  messages -->
     <string name="no_due_date">Aucune échéance</string>
     <string name="no_icon">Pas d\'icône</string>

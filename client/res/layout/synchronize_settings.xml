@@ -14,75 +14,98 @@
      limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:padding="4dip"     android:orientation="vertical"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:paddingBottom="10px" style="@style/editor">
+              android:padding="4dip" android:orientation="vertical"
+              android:layout_width="fill_parent" android:layout_height="fill_parent"
+              android:paddingBottom="10dip" style="@style/editor">
 
-	<TextView android:id="@+id/url_label"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-		android:paddingLeft="5px"
-		android:paddingRight="5px" 
-		android:text="@string/tracks_url"
-		style="@style/preferences_label"
-		/>
+    <TextView android:id="@+id/url_label"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_alignParentTop="true"
+              android:paddingLeft="5dip"
+              android:paddingRight="5dip"
+              android:text="@string/tracks_url"
+              style="@style/preferences_label"
+            />
 
-	<EditText android:id="@+id/url" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-        android:layout_alignParentLeft="true"    
-		android:singleLine="true"
-		android:maxLength="250" 
-		style="@style/text_editable"
-		>
-		<requestFocus />
-	</EditText>
-	<TextView android:id="@+id/user_label"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-		android:paddingLeft="5px"
-		android:paddingRight="5px"
-		android:text="@string/tracks_user"
-		style="@style/preferences_label"
-		/>
+    <EditText android:id="@+id/url" android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:singleLine="true"
+              android:maxLength="250"
+              android:hint="@string/tracks_url_settings"
+              style="@style/text_editable"
+            >
+        <requestFocus/>
+    </EditText>
+    <TextView android:id="@+id/user_label"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_alignParentTop="true"
+              android:paddingLeft="5dip"
+              android:paddingRight="5dip"
+              android:text="@string/tracks_user"
+              style="@style/preferences_label"
+            />
 
-	<EditText android:id="@+id/user" android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-		android:singleLine="true"
-		android:maxLength="250"
-		style="@style/text_editable"
-		>
-	</EditText>
-    	<TextView android:id="@+id/pass_label"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-		android:paddingLeft="5px"
-		android:paddingRight="5px"
-		android:text="@string/tracks_pass"
-		style="@style/preferences_label"
-		/>
+    <EditText android:id="@+id/user" android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:singleLine="true"
+              android:hint="@string/tracks_user"
+              android:maxLength="250"
+              style="@style/text_editable"
+            >
+    </EditText>
+    <TextView android:id="@+id/pass_label"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_alignParentTop="true"
+              android:paddingLeft="5dip"
+              android:paddingRight="5dip"
+              android:text="@string/tracks_pass"
+              style="@style/preferences_label"
+            />
 
-	<EditText android:id="@+id/pass" android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+    <EditText android:id="@+id/pass" android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
 
-		android:singleLine="true"
-		android:maxLength="250"
-		style="@style/text_editable"
-		>
-	</EditText>
+              android:hint="@string/tracks_pass"
+              android:singleLine="true"
+              android:inputType="textPassword"
+              android:maxLength="250"
+              style="@style/text_editable"
+            >
+    </EditText>
 
-    <include android:id="@+id/save_panel" layout="@layout/editor_save_panel" 
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:layout_alignParentBottom="true"
-    />
+    <TextView android:id="@+id/pass_label"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_alignParentTop="true"
+              android:paddingLeft="5dip"
+              android:paddingRight="5dip"
+              android:text="@string/tracks_background_sync"
+              style="@style/preferences_label"
+            />
+
+    <Spinner android:id="@+id/sync_interval"
+             android:layout_alignParentTop="true"
+             android:layout_width="fill_parent"
+         	 android:layout_height="48dip"
+             android:drawSelectorOnTop="true"
+             android:paddingTop="10dip"
+             android:paddingBottom="10dip"/>
+
+    <include android:id="@+id/save_panel" layout="@layout/editor_save_panel"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_alignParentLeft="true"
+             android:layout_alignParentBottom="true"
+            />
 
 </LinearLayout>

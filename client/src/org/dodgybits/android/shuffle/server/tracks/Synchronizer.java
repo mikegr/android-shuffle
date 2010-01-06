@@ -19,6 +19,8 @@ import java.util.Map;
 
 /**
  * Base class for handling synchronization, template method object.
+ *
+ * @author Morten Nielsen
  */
 public abstract class Synchronizer<Entity extends TracksCompatible> {
     private static final String cTag = "Synchronizer";
@@ -192,12 +194,12 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
 
     private void handleRemoteEntity(Entity localContext, Entity remoteContext) {
 
-        if (remoteContext.getTracksModified().equals(
-                localContext.getTracksModified()))
+        if (remoteContext.getModified().equals(
+                localContext.getModified()))
             return;
 
-        if (remoteContext.getTracksModified() > localContext
-                .getTracksModified()) {
+        if (remoteContext.getModified() > localContext
+                .getModified()) {
             saveLocalEntity(createMergedLocalEntity(localContext, remoteContext));
         } else {
             updateTracks(localContext);

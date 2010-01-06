@@ -28,15 +28,15 @@ public class Context implements TracksCompatible {
 	// resource id to icon resource (may be null)
 	public final Icon icon;
     public final Long tracksId;
-    public final Long tracksModified;
+    public final Long modified;
 
-    public Context(Long id, String name, int colourIndex, Icon icon, Long tracksId, Long tracksModified) {
+    public Context(Long id, String name, int colourIndex, Icon icon, Long tracksId, Long modified) {
 		this.id = id;
 		this.name = name;
 		this.colourIndex = colourIndex;
 		this.icon = icon;
         this.tracksId = tracksId;
-        this.tracksModified = tracksModified;
+        this.modified = modified;
     }
 	
 	public Context(String name, int colour, Icon icon, Long tracksId, Long tracksModified) {
@@ -49,8 +49,8 @@ public class Context implements TracksCompatible {
     }
 
     @Override
-    public Long getTracksModified() {
-        return tracksModified;
+    public Long getModified() {
+        return modified;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class Context implements TracksCompatible {
 		}
 	}
 
-	public org.dodgybits.shuffle.dto.ShuffleProtos.Context toDto() {
+    public org.dodgybits.shuffle.dto.ShuffleProtos.Context toDto() {
 		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Context.newBuilder();
 		builder
 			.setId(id)
@@ -111,5 +111,5 @@ public class Context implements TracksCompatible {
 				icon,
 				null,
 				null);
-	}
+	}    
 }

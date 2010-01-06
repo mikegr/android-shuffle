@@ -365,12 +365,12 @@ public class PreferencesRestoreBackupActivity extends Activity
 	        int total = protoTasks.size();
 			for (org.dodgybits.shuffle.dto.ShuffleProtos.Task protoTask : protoTasks)
 			{
-				//Task task = Task.buildFromDto(protoTask, contextLocator, projectLocator);
-				//newTasks.add(task);
-				//Log.d(cTag, "Adding task " + task.description);
-				//String text = getString(R.string.restore_progress, type, task.description);
-				//int percent = calculatePercent(progressStart, progressEnd, ++i, total);
-            	//publishProgress(Progress.createProgress(percent, text));
+				Task task = Task.buildFromDto(protoTask, contextLocator, projectLocator);
+				newTasks.add(task);
+				Log.d(cTag, "Adding task " + task.description);
+				String text = getString(R.string.restore_progress, type, task.description);
+				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
+            	publishProgress(Progress.createProgress(percent, text));
 			}
 			BindingUtils.persistNewTasks(PreferencesRestoreBackupActivity.this, newTasks);
 		}

@@ -17,6 +17,7 @@
 package org.dodgybits.android.shuffle.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.util.MenuUtils;
 
@@ -151,6 +152,15 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuItem item = menu.findItem(MenuUtils.SYNC_ID);
+        if (item != null) {
+            item.setVisible(Preferences.validateTracksSettings(this));
+        }
+        return true;
+    }
 
 
 	@Override
@@ -159,7 +169,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 
 		MenuUtils.addInsertMenuItems(menu, getListConfig().getItemName(this), getListConfig().isTaskList(), this);
 		MenuUtils.addViewMenuItems(menu, getListConfig().getCurrentViewMenuId());
-		MenuUtils.addPrefsHelpMenuItems(menu);
+		MenuUtils.addPrefsHelpMenuItems(this, menu);
 
 		return true;
 	}

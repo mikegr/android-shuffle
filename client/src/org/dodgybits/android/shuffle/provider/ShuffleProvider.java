@@ -16,22 +16,7 @@
 
 package org.dodgybits.android.shuffle.provider;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.dodgybits.android.shuffle.model.Preferences;
-import org.dodgybits.android.shuffle.provider.Shuffle.Contexts;
-import org.dodgybits.android.shuffle.provider.Shuffle.Projects;
-import org.dodgybits.android.shuffle.provider.Shuffle.Reminders;
-import org.dodgybits.android.shuffle.provider.Shuffle.Tasks;
-
-import android.content.ContentProvider;
-import android.content.ContentUris;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.UriMatcher;
+import android.content.*;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -41,6 +26,16 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
+import org.dodgybits.android.shuffle.model.Preferences;
+import org.dodgybits.android.shuffle.provider.Shuffle.Contexts;
+import org.dodgybits.android.shuffle.provider.Shuffle.Projects;
+import org.dodgybits.android.shuffle.provider.Shuffle.Reminders;
+import org.dodgybits.android.shuffle.provider.Shuffle.Tasks;
+
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Provides access to database for all task related data.
@@ -142,19 +137,17 @@ public class ShuffleProvider extends ContentProvider {
 				createTaskCleanupTrigger(db);
                 // no break since we want it to fall through
 
-			case 12: // Shuffle v1.1.1 (2nd release)
-                   db.execSQL("ALTER TABLE " + cTaskTableName
+			case 12: // Shuffle v1.2.0
+                db.execSQL("ALTER TABLE " + cTaskTableName
 						+ " ADD COLUMN tracks_id INTEGER;");
-                   db.execSQL("ALTER TABLE " + cTaskTableName
-						+ " ADD COLUMN tracks_modified INTEGER;");
                 db.execSQL("ALTER TABLE " + cContextTableName
 						+ " ADD COLUMN tracks_id INTEGER;");
-                   db.execSQL("ALTER TABLE " + cContextTableName
-						+ " ADD COLUMN tracks_modified INTEGER;");
+                db.execSQL("ALTER TABLE " + cContextTableName
+						+ " ADD COLUMN modified INTEGER;");
                 db.execSQL("ALTER TABLE " + cProjectTableName
 						+ " ADD COLUMN tracks_id INTEGER;");
-                   db.execSQL("ALTER TABLE " + cProjectTableName
-						+ " ADD COLUMN tracks_modified INTEGER;");
+                db.execSQL("ALTER TABLE " + cProjectTableName
+						+ " ADD COLUMN modified INTEGER;");
                 break;
                 
 			default: // unknown version - use destructive upgrade
@@ -169,7 +162,7 @@ public class ShuffleProvider extends ContentProvider {
 			db.execSQL("CREATE TABLE " + cContextTableName + " ("
 					+ "_id INTEGER PRIMARY KEY," + "name TEXT,"
 					+ "colour INTEGER," + "iconName TEXT," +
-                    "tracks_id INTEGER," + "tracks_modified INTEGER" + ");");
+                    "tracks_id INTEGER," + "modified INTEGER" + ");");
 		}
 
 		private void createProjectTable(SQLiteDatabase db) {
@@ -177,7 +170,7 @@ public class ShuffleProvider extends ContentProvider {
 			db.execSQL("CREATE TABLE " + cProjectTableName + " ("
 					+ "_id INTEGER PRIMARY KEY," + "name TEXT,"
 					+ "archived INTEGER," + "defaultContextId INTEGER," +
-                    "tracks_id INTEGER," + "tracks_modified INTEGER" + ");");
+                    "tracks_id INTEGER," + "modified INTEGER" + ");");
 		}
 
 		private void createTaskTable(SQLiteDatabase db) {
@@ -192,9 +185,8 @@ public class ShuffleProvider extends ContentProvider {
 					+ "allDay INTEGER NOT NULL DEFAULT 0,"
 					+ "hasAlarm INTEGER NOT NULL DEFAULT 0,"
 					+ "calEventId INTEGER,"
-					+ "displayOrder INTEGER," + "complete INTEGER," +
-                    "tracks_id INTEGER," + "tracks_modified INTEGER" + 
-					");");
+					+ "displayOrder INTEGER," + "complete INTEGER," 
+					+ "tracks_id INTEGER" + ");");
 		}
 
 		private void createTaskProjectIdIndex(SQLiteDatabase db) {
@@ -706,11 +698,8 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".allDay");
 		sTaskListProjectMap.put(Shuffle.Tasks.HAS_ALARM, cTaskTableName
 				+ ".hasAlarm");
-        sTaskListProjectMap.put(Shuffle.Tasks.TRACKSID, cTaskTableName
+        sTaskListProjectMap.put(Shuffle.Tasks.TRACKS_ID, cTaskTableName
 				+ ".tracks_id");
-        sTaskListProjectMap.put(Shuffle.Tasks.TRACKSMODIFIED, cTaskTableName
-				+ ".tracks_modified");
-
 		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_NAME, cProjectTableName
 				+ ".name");
 		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_DEFAULT_CONTEXT_ID,
@@ -719,8 +708,8 @@ public class ShuffleProvider extends ContentProvider {
 				cProjectTableName + ".archived");
         sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_TRACKS_ID,
 				cProjectTableName + ".tracks_id");
-		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_TRACKS_MODIFIED,
-				cProjectTableName + ".tracks_modified");
+		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_MODIFIED,
+				cProjectTableName + ".modified");
 		sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_NAME, cContextTableName
 				+ ".name");
 		sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_COLOUR, cContextTableName
@@ -729,7 +718,7 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".iconName");
         sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_TRACKS_ID, cContextTableName
 				+ ".tracks_id");
-        sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_TRACKS_MODIFIED, cContextTableName
+        sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_MODIFIED, cContextTableName
 				+ ".tracks_Modified");
 
 		sContextListProjectMap = new HashMap<String, String>();
@@ -740,9 +729,11 @@ public class ShuffleProvider extends ContentProvider {
 		sContextListProjectMap.put(Shuffle.Contexts.COLOUR, cContextTableName
 				+ ".colour");
 		sContextListProjectMap.put(Shuffle.Contexts.ICON, cContextTableName
-				+ ".iconName");		sContextListProjectMap.put(Shuffle.Contexts.TRACKS_ID, cContextTableName
-				+ ".tracks_id");		sContextListProjectMap.put(Shuffle.Contexts.TRACKS_MODIFIED, cContextTableName
-				+ ".tracks_modified");
+				+ ".iconName");		
+		sContextListProjectMap.put(Shuffle.Contexts.TRACKS_ID, cContextTableName
+				+ ".tracks_id");		
+		sContextListProjectMap.put(Shuffle.Contexts.MODIFIED, cContextTableName
+				+ ".modified");
 
 		sProjectListProjectMap = new HashMap<String, String>();
 		sProjectListProjectMap.put(Shuffle.Projects._ID, cProjectTableName
@@ -755,8 +746,8 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".archived");
         sProjectListProjectMap.put(Shuffle.Projects.TRACKS_ID, cProjectTableName
 				+ ".tracks_id");
-        sProjectListProjectMap.put(Shuffle.Projects.TRACKS_MODIFIED, cProjectTableName
-				+ ".tracks_modified");
+        sProjectListProjectMap.put(Shuffle.Projects.MODIFIED, cProjectTableName
+				+ ".modified");
 		
 		sReminderListProjectMap = new HashMap<String, String>();
 		sReminderListProjectMap.put(Shuffle.Reminders._ID, cReminderTableName

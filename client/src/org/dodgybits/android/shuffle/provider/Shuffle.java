@@ -65,16 +65,16 @@ public class Shuffle {
         public static final String PROJECT_DEFAULT_CONTEXT_ID = "project_default_context_id";
         public static final String PROJECT_ARCHIVED = "project_archived";
         public static final String PROJECT_TRACKS_ID = "project_tracks_id";
-        public static final String PROJECT_TRACKS_MODIFIED = "project_tracks_modified";
+        public static final String PROJECT_MODIFIED = "project_modified";
         
         public static final String CONTEXT_NAME = "context_name";
         public static final String CONTEXT_COLOUR = "context_colour";
         public static final String CONTEXT_ICON = "context_icon";
         public static final String CONTEXT_TRACKS_ID = "context_tracks_id";
-        public static final String CONTEXT_TRACKS_MODIFIED = "context_tracks_modified";
+        public static final String CONTEXT_MODIFIED = "context_modified";
 
-        public static final String TRACKSID = "tracks_id";
-        public static final String TRACKSMODIFIED = "tracks_modified";
+        public static final String TRACKS_ID = "tracks_id";
+
         /**
          * Projection for all the columns of a task.
          */
@@ -94,8 +94,7 @@ public class Shuffle {
                 COMPLETE,
                 ALL_DAY,
                 HAS_ALARM,
-                TRACKSID,
-                TRACKSMODIFIED
+                TRACKS_ID
         };
         /**
          * All columns task plus columns from project and context from outer joins
@@ -116,20 +115,19 @@ public class Shuffle {
             COMPLETE,
             ALL_DAY,
             HAS_ALARM,
-                   TRACKSID,
-                TRACKSMODIFIED,
+            TRACKS_ID,
 
             PROJECT_NAME,
             PROJECT_DEFAULT_CONTEXT_ID,
             PROJECT_ARCHIVED,
-                PROJECT_TRACKS_ID,
-                PROJECT_TRACKS_MODIFIED,
+            PROJECT_TRACKS_ID,
+            PROJECT_MODIFIED,
 
             CONTEXT_NAME,
             CONTEXT_COLOUR,
             CONTEXT_ICON,
-                CONTEXT_TRACKS_ID,
-                CONTEXT_TRACKS_MODIFIED
+            CONTEXT_TRACKS_ID,
+            CONTEXT_MODIFIED
         };
     }
     
@@ -157,7 +155,7 @@ public class Shuffle {
 
         public static String TRACKS_ID="tracks_id";
 
-        public static String TRACKS_MODIFIED="tracks_modified";
+        public static String MODIFIED = "modified";
 
         /**
          * Projection for all the columns of a project.
@@ -168,7 +166,7 @@ public class Shuffle {
                 DEFAULT_CONTEXT_ID,
                 ARCHIVED,
                 TRACKS_ID,
-                TRACKS_MODIFIED
+                MODIFIED
         };
         public static final String TASK_COUNT = "count";
         /**
@@ -203,7 +201,7 @@ public class Shuffle {
 
         public static final String TRACKS_ID = "tracks_id";
 
-        public static final String TRACKS_MODIFIED="tracks_modified";
+        public static final String MODIFIED = "modified";
 
         /**
          * Projection for all the columns of a context.
@@ -214,7 +212,7 @@ public class Shuffle {
                 COLOUR,
                 ICON,
                 TRACKS_ID,
-                TRACKS_MODIFIED
+                MODIFIED
         };
 
 

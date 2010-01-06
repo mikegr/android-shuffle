@@ -3,10 +3,7 @@ package org.dodgybits.android.shuffle.server.tracks;
 import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
+import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
@@ -21,9 +18,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 
 /**
  * Handles communication to the REST service
+ * 
+ * @author Morten Nielsen
  */
 public class WebClient {
     private String sUserAgent;
@@ -31,8 +31,7 @@ public class WebClient {
     private final String tracksUser;
     private final String tracksPassword;
 
-    public WebClient(ContextWrapper context, String tracksUser,
-            String tracksPassword) throws ApiException {
+    public WebClient(ContextWrapper context, String tracksUser, String tracksPassword) throws ApiException {
         this.tracksUser = tracksUser;
         this.tracksPassword = tracksPassword;
         PackageManager manager = context.getPackageManager();
@@ -43,9 +42,10 @@ public class WebClient {
 
         }
         if (info != null) {
-            sUserAgent = String.format("%1$s %2$s", info.packageName,
-                    info.versionName);
+            sUserAgent = String.format("%1$s %2$s",
+                    info.packageName, info.versionName);
         }
+
 
     }
 
@@ -55,12 +55,15 @@ public class WebClient {
         }
 
         // Create client and set our specific user-agent string
-        HttpClient client = createClient();
-        HttpDelete request = new HttpDelete(url);
+        HttpClient client = CreateClient();
+        java.net.URI uri = URI.create(url);
+        HttpHost host = GetHost(uri);
+        HttpDelete request = new HttpDelete( uri.getPath());
         request.setHeader("User-Agent", sUserAgent);
 
+
         try {
-            HttpResponse response = client.execute(request);
+            HttpResponse response = client.execute(host,request);
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
@@ -72,31 +75,35 @@ public class WebClient {
         }
     }
 
-    private HttpClient createClient() {
+    private HttpClient CreateClient() {
         DefaultHttpClient client = new DefaultHttpClient();
-        client.getCredentialsProvider().setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials(tracksUser, tracksPassword));
+        client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(tracksUser, tracksPassword));
         return client;
     }
 
-    protected synchronized String getUrlContent(String url) throws ApiException {
+    public synchronized String getUrlContent(String url) throws ApiException {
         if (sUserAgent == null) {
             throw new ApiException("User-Agent string must be prepared");
         }
 
         // Create client and set our specific user-agent string
-        HttpClient client = createClient();
-        HttpGet request = new HttpGet(url);
+        HttpClient client = CreateClient();
+        java.net.URI uri = URI.create(url);
+        HttpHost host = GetHost(uri);
+
+
+        HttpGet request = new HttpGet(uri.getPath());
         request.setHeader("User-Agent", sUserAgent);
 
+
         try {
-            HttpResponse response = client.execute(request);
+            HttpResponse response = client.execute(host, request);
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
             if (status.getStatusCode() != HttpStatus.SC_OK) {
-                throw new ApiException("Invalid response from server: "
-                        + status.toString());
+                throw new ApiException("Invalid response from server: " +
+                        status.toString());
             }
 
             // Pull content stream from response
@@ -117,17 +124,30 @@ public class WebClient {
         }
     }
 
-    protected synchronized String postContentToUrl(String url, String content)
-            throws ApiException {
+    private HttpHost GetHost(URI uri) {
+        HttpHost host;
+        if (uri.getScheme().equalsIgnoreCase("https"))
+            host = new HttpHost(uri.getHost(), 443, uri.getScheme());
+        else
+            host = new HttpHost(uri.getHost());
+        return host;
+    }
+
+    protected synchronized String postContentToUrl(String url, String content) throws ApiException {
         if (sUserAgent == null) {
             throw new ApiException("User-Agent string must be prepared");
         }
 
         // Create client and set our specific user-agent string
-        HttpClient client = createClient();
-        HttpPost request = new HttpPost(url);
+        HttpClient client = CreateClient();
+              java.net.URI uri = URI.create(url);
+        HttpHost host = GetHost(uri);
+        HttpPost request = new HttpPost( uri.getPath());
+
+
         request.setHeader("User-Agent", sUserAgent);
         request.setHeader("Content-Type", "text/xml");
+
 
         HttpEntity ent;
         try {
@@ -138,13 +158,13 @@ public class WebClient {
         request.setEntity(ent);
 
         try {
-            HttpResponse response = client.execute(request);
+            HttpResponse response = client.execute(host, request);
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
             if (status.getStatusCode() != HttpStatus.SC_CREATED) {
-                throw new ApiException("Invalid response from server: "
-                        + status.toString());
+                throw new ApiException("Invalid response from server: " +
+                        status.toString());
             }
             // Pull returnContent stream from response
             HttpEntity entity = response.getEntity();
@@ -164,15 +184,16 @@ public class WebClient {
         }
     }
 
-    protected synchronized String putContentToUrl(String url, String content)
-            throws ApiException {
+    protected synchronized String putContentToUrl(String url, String content) throws ApiException {
         if (sUserAgent == null) {
             throw new ApiException("User-Agent string must be prepared");
         }
 
         // Create client and set our specific user-agent string
-        HttpClient client = createClient();
-        HttpPut request = new HttpPut(url);
+        HttpClient client = CreateClient();
+              java.net.URI uri = URI.create(url);
+        HttpHost host = GetHost(uri);
+        HttpPut request = new HttpPut(uri.getPath());
         request.setHeader("User-Agent", sUserAgent);
         request.setHeader("Content-Type", "text/xml");
 
@@ -185,13 +206,13 @@ public class WebClient {
         request.setEntity(ent);
 
         try {
-            HttpResponse response = client.execute(request);
+            HttpResponse response = client.execute(host, request);
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
             if (status.getStatusCode() != HttpStatus.SC_OK) {
-                throw new ApiException("Invalid response from server: "
-                        + status.toString());
+                throw new ApiException("Invalid response from server: " +
+                        status.toString());
             }
 
             // Pull returnContent stream from response
@@ -212,12 +233,12 @@ public class WebClient {
         }
     }
 
+    @SuppressWarnings("serial")
     public class ApiException extends Exception {
         private final String reason;
 
         public ApiException(String reason) {
-            // To change body of created methods use File | Settings | File
-            // Templates.
+            //To change body of created methods use File | Settings | File Templates.
 
             this.reason = reason;
         }

@@ -122,7 +122,7 @@ public class WelcomeActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuUtils.addPrefsHelpMenuItems(menu);
+        MenuUtils.addPrefsHelpMenuItems(this, menu);
 
         return true;
     }

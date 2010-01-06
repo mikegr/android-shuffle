@@ -1,8 +1,8 @@
 package org.dodgybits.android.shuffle.server.tracks;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.util.Xml;
@@ -25,10 +25,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Morten Nielsen
+ */
 public final class TaskSynchronizer extends Synchronizer<Task> {
     private final String tracksUrl;
 
-    public TaskSynchronizer(ContentResolver contentResolver, Resources resources, WebClient client, Activity activity, TracksSynchronizer tracksSynchronizer, String tracksUrl, int basePercent) {
+    public TaskSynchronizer(ContentResolver contentResolver, Resources resources, WebClient client, ContextWrapper activity, TracksSynchronizer tracksSynchronizer, String tracksUrl, int basePercent) {
         super(contentResolver, tracksSynchronizer, client, resources, activity, basePercent);
 
         this.tracksUrl = tracksUrl;
@@ -64,7 +67,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
         return new Task(localTask.id, newTask.description, newTask.details, newTask.context, newTask.project, localTask.created, newTask.modified,
                 newTask.startDate, newTask.dueDate, localTask.timezone,
                 localTask.allDay, localTask.hasAlarms, localTask.calEventId, localTask.order, localTask.complete,
-                newTask.tracksId, newTask.tracksModified);
+                newTask.tracksId);
     }
 
     protected String createDocumentForEntity(Task task) {
@@ -191,7 +194,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 
                             return new Task(null, taskDescription, taskNotes,
                                     context, project, created,  trackModifiedDate, showAt, due, "UTC",true,false,null,0,false,
-                                    trackId, trackModifiedDate);
+                                    trackId);
                         }
                         break;
                 }

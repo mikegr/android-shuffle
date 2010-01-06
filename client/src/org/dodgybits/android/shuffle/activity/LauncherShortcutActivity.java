@@ -1,13 +1,5 @@
 package org.dodgybits.android.shuffle.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.provider.Shuffle;
-import org.dodgybits.android.shuffle.util.MenuUtils;
-import org.dodgybits.android.shuffle.view.IconArrayAdapter;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +7,13 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.provider.Shuffle;
+import org.dodgybits.android.shuffle.util.MenuUtils;
+import org.dodgybits.android.shuffle.view.IconArrayAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LauncherShortcutActivity extends ListActivity {
 	private static final String cScreenId = "screenId";
@@ -47,6 +46,7 @@ public class LauncherShortcutActivity extends ListActivity {
             mLabels.add("  " + label);
         	
         }
+
         if (!Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
         	int screenId = intent.getExtras().getInt(cScreenId, -1);
         	if (screenId < INBOX && screenId > CONTEXTS) {
