@@ -27,7 +27,7 @@ public class Context extends AbstractEntity implements TracksCompatible {
 	public final int colourIndex;
 	// resource id to icon resource (may be null)
 	public final Icon icon;
-    public final Long tracksId;
+    public Long tracksId;
     public final long modified;
 
     public Context(Long id, String name, int colourIndex, Icon icon, Long tracksId, long modified) {
@@ -56,6 +56,11 @@ public class Context extends AbstractEntity implements TracksCompatible {
     @Override
     public String getLocalName() {
         return name;
+    }
+
+    @Override
+    public void setTracksId(Long id) {
+        tracksId = id;
     }
 
     public static class Icon {

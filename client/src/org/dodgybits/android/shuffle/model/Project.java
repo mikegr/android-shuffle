@@ -26,7 +26,7 @@ public class Project extends AbstractEntity implements TracksCompatible {
 	public final String name;
 	public final Long defaultContextId;
 	public final boolean archived;
-    public final Long tracksId;
+    public Long tracksId;
     public final long modified;
 
 
@@ -60,6 +60,11 @@ public class Project extends AbstractEntity implements TracksCompatible {
     @Override
     public String getLocalName() {
         return name;
+    }
+
+    @Override
+    public void setTracksId(Long id) {
+        tracksId = id;
     }
 
     @Override

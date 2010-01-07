@@ -3,6 +3,7 @@ package org.dodgybits.android.shuffle.server.tracks;
 import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -30,6 +31,7 @@ public class WebClient {
     private byte[] sBuffer = new byte[512];
     private final String tracksUser;
     private final String tracksPassword;
+    private final String cTag="WebClient";
 
     public WebClient(ContextWrapper context, String tracksUser, String tracksPassword) throws ApiException {
         this.tracksUser = tracksUser;
@@ -67,7 +69,7 @@ public class WebClient {
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
-
+            Log.i(cTag, "delete with response " + status.toString());
             return status.getStatusCode() == HttpStatus.SC_OK;
 
         } catch (IOException e) {
@@ -101,6 +103,7 @@ public class WebClient {
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
+             Log.i(cTag, "get with response " + status.toString());
             if (status.getStatusCode() != HttpStatus.SC_OK) {
                 throw new ApiException("Invalid response from server: " +
                         status.toString());
@@ -162,22 +165,15 @@ public class WebClient {
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
+             Log.i(cTag, "post with response " + status.toString());
             if (status.getStatusCode() != HttpStatus.SC_CREATED) {
                 throw new ApiException("Invalid response from server: " +
                         status.toString());
             }
-            // Pull returnContent stream from response
-            HttpEntity entity = response.getEntity();
-            InputStream inputStream = entity.getContent();
-
-            ByteArrayOutputStream returnContent = new ByteArrayOutputStream();
-
-            // Read response into a buffered stream
-            int readBytes;
-            while ((readBytes = inputStream.read(sBuffer)) != -1) {
-                returnContent.write(sBuffer, 0, readBytes);
-            }
-            return new String(returnContent.toByteArray());
+            Header[] header = response.getHeaders("Location");
+            if(header.length !=0) return header[0].getValue();
+            else             return null;
+      
 
         } catch (IOException e) {
             throw new ApiException("Problem communicating with API");
@@ -210,6 +206,8 @@ public class WebClient {
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
+
+             Log.i(cTag, "put with response " + status.toString());
             if (status.getStatusCode() != HttpStatus.SC_OK) {
                 throw new ApiException("Invalid response from server: " +
                         status.toString());

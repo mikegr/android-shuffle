@@ -66,6 +66,7 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
     }
 
     public void RegisterListener(SyncProgressListener listener) {
+        if(!progressListeners.contains(listener))
         progressListeners.add(listener);
     }
 

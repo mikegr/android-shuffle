@@ -40,22 +40,22 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 
     @Override
     protected String readingRemoteText() {
-        return resources.getString( R.string.readingRemoteTasks);
+        return resources.getString(R.string.readingRemoteTasks);
     }
 
     @Override
     protected String processingText() {
-        return resources.getString( R.string.processingTasks);
+        return resources.getString(R.string.processingTasks);
     }
 
     @Override
     protected String readingLocalText() {
-        return resources.getString( R.string.readingLocalTasks);
+        return resources.getString(R.string.readingLocalTasks);
     }
 
     @Override
     protected String stageFinishedText() {
-        return resources.getString( R.string.doneWithTasks);
+        return resources.getString(R.string.doneWithTasks);
     }
 
     @Override
@@ -81,23 +81,25 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 
             serializer.startTag("", "todo");
             Date date = new Date(task.created);
-            if(task.complete)
-            serializer.startTag("", "completed-at").attribute("", "type", "datetime").text(simpleDateFormat.format(new Date(task.modified))).endTag("", "completed-at");
-            
+            if (task.complete)
+                serializer.startTag("", "completed-at").attribute("", "type", "datetime").text(simpleDateFormat.format(new Date(task.modified))).endTag("", "completed-at");
+
             String contextId = findContextRemoteId(task);
-            if(contextId != null)            serializer.startTag("", "context-id").attribute("", "type", "integer").text(contextId).endTag("", "context-id");
+            if (contextId != null)
+                serializer.startTag("", "context-id").attribute("", "type", "integer").text(contextId).endTag("", "context-id");
 
             serializer.startTag("", "created-at").attribute("", "type", "datetime").text(simpleDateFormat.format(date)).endTag("", "created-at");
             serializer.startTag("", "description").text(task.description).endTag("", "description");
-            if(task.dueDate != 0)
-            serializer.startTag("", "due").attribute("", "type", "datetime").text(simpleDateFormat.format(new Date(task.dueDate))).endTag("", "due");
-         
+            if (task.dueDate != 0)
+                serializer.startTag("", "due").attribute("", "type", "datetime").text(simpleDateFormat.format(new Date(task.dueDate))).endTag("", "due");
 
-            serializer.startTag("", "notes").text(task.details != null? task.details:"").endTag("", "notes");
+
+            serializer.startTag("", "notes").text(task.details != null ? task.details : "").endTag("", "notes");
 
             String projectId = findProjectRemoteId(task);
-            if(projectId != null)            serializer.startTag("", "project-id").attribute("", "type", "integer").text(projectId).endTag("", "project-id");
-            serializer.startTag("", "state").text((task.complete == null || !task.complete) ? "active": "completed").endTag("", "state");
+            if (projectId != null)
+                serializer.startTag("", "project-id").attribute("", "type", "integer").text(projectId).endTag("", "project-id");
+            serializer.startTag("", "state").text((task.complete == null || !task.complete) ? "active" : "completed").endTag("", "state");
             serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(simpleDateFormat.format(new Date(task.modified))).endTag("", "updated-at");
 
 
@@ -113,17 +115,18 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
     }
 
     private String findProjectRemoteId(Task task) {
-                if(task.project != null && task.project.tracksId != null)
-            return task.project.tracksId.toString();
-        else
-            return null;
+
+        if (task.project != null) {
+            if (task.project.tracksId != null) return task.project.tracksId.toString();
+        }
+        return null;
     }
 
     private String findContextRemoteId(Task task) {
-        if(task.context != null && task.context.tracksId != null)
-            return task.context.tracksId.toString();
-        else
-            return null;
+        if (task.context != null) {
+            if (task.context.tracksId != null) return task.context.tracksId.toString();
+        }
+        return null;
     }
 
 
@@ -134,15 +137,15 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
             String taskNotes = null;
             Long trackId = null;
             Long trackModifiedDate = null;
-            
-            Context context=null;
-            Project project=null;
+
+            Context context = null;
+            Project project = null;
 
 
-                        long created = 0;
+            long created = 0;
             long showAt = 0;
-                            long due = 0;
-            
+            long due = 0;
+
             SimpleDateFormat format = simpleDateFormat;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 String name = parser.getName();
@@ -162,29 +165,27 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
                             trackModifiedDate = format.parse(parser.nextText()).getTime();
                         } else if (name.equalsIgnoreCase("context-id")) {
                             String tokenValue = parser.nextText();
-                            if(tokenValue != null && !tokenValue.equals(""))
-                            context = findContextByRemoteId( Long.parseLong(tokenValue));
+                            if (tokenValue != null && !tokenValue.equals(""))
+                                context = findContextByRemoteId(Long.parseLong(tokenValue));
                         } else if (name.equalsIgnoreCase("project-id")) {
                             String tokenValue = parser.nextText();
-                            if(tokenValue != null && !tokenValue.equals(""))
-                            project = findProjectByRemoteId( Long.parseLong(tokenValue));
-                        }else if (name.equalsIgnoreCase("notes")) {
+                            if (tokenValue != null && !tokenValue.equals(""))
+                                project = findProjectByRemoteId(Long.parseLong(tokenValue));
+                        } else if (name.equalsIgnoreCase("notes")) {
                             taskNotes = parser.nextText();
-                        }else if (name.equalsIgnoreCase("created-at")) {
+                        } else if (name.equalsIgnoreCase("created-at")) {
                             created = format.parse(parser.nextText()).getTime();
-                        }else if (name.equalsIgnoreCase("due")) {
+                        } else if (name.equalsIgnoreCase("due")) {
 
                             String textToken = parser.nextText();
-                            if( textToken != null && !textToken.equals(""))
-                            due = format.parse(textToken).getTime();
-                        }else if (name.equalsIgnoreCase("show-from")) {
+                            if (textToken != null && !textToken.equals(""))
+                                due = format.parse(textToken).getTime();
+                        } else if (name.equalsIgnoreCase("show-from")) {
 
                             String textToken = parser.nextText();
-                            if( textToken != null && !textToken.equals(""))
-                            showAt = format.parse(textToken).getTime();
+                            if (textToken != null && !textToken.equals(""))
+                                showAt = format.parse(textToken).getTime();
                         }
-
-
 
 
                         break;
@@ -193,7 +194,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 
 
                             return new Task(null, taskDescription, taskNotes,
-                                    context, project, created,  trackModifiedDate, showAt, due, "UTC",true,false,null,0,false,
+                                    context, project, created, trackModifiedDate, showAt, due, "UTC", true, false, null, 0, false,
                                     trackId);
                         }
                         break;
@@ -211,30 +212,30 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
     private Project findProjectByRemoteId(long tracksId) {
         Project context = null;
 
-			Cursor projectCursor = contentResolver.query(
-					Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection, "tracks_id = "+tracksId, null, null);
-			if (projectCursor.moveToFirst()) {
-				context = BindingUtils.readProject(projectCursor);
-			}
+        Cursor projectCursor = contentResolver.query(
+                Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection, "tracks_id = " + tracksId, null, null);
+        if (projectCursor.moveToFirst()) {
+            context = BindingUtils.readProject(projectCursor);
+        }
         projectCursor.close();
-		return context;
+        return context;
     }
 
     private Context findContextByRemoteId(long tracksId) {
-       		Context context = null;
+        Context context = null;
 
-			Cursor contextCursor = contentResolver.query(
-					Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection, "tracks_id = "+tracksId, null, null);
-			if (contextCursor.moveToFirst()) {
-				context = BindingUtils.readContext(contextCursor, activity.getResources());
-			}
+        Cursor contextCursor = contentResolver.query(
+                Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection, "tracks_id = " + tracksId, null, null);
+        if (contextCursor.moveToFirst()) {
+            context = BindingUtils.readContext(contextCursor, activity.getResources());
+        }
         contextCursor.close();
-		return context;
+        return context;
     }
 
     @Override
     protected String createEntityUrl(Task project) {
-        return tracksUrl+"/todos/" + project.tracksId + ".xml";
+        return tracksUrl + "/todos/" + project.tracksId + ".xml";
     }
 
 
@@ -245,7 +246,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 
     @Override
     protected String entityIndexUrl() {
-        return tracksUrl+"/todos.xml";
+        return tracksUrl + "/todos.xml";
     }
 
     protected boolean removeLocalEntity(Task task) {

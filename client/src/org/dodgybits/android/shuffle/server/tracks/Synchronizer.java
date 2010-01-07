@@ -215,21 +215,25 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
         }
     }
 
-    private Entity createEntityInTracks(Entity context) {
-        Entity entity = null;
-        String document = createDocumentForEntity(context);
+    private Entity createEntityInTracks(Entity entity) {
+        String document = createDocumentForEntity(entity);
         try {
-            String tracksContextXml = client.postContentToUrl(entityIndexUrl(),
+            String location = client.postContentToUrl(entityIndexUrl(),
                     document);
-            if (!TextUtils.isEmpty(tracksContextXml.trim())) {
-                entity = parseEntity(tracksContextXml);
+            if (!TextUtils.isEmpty(location.trim())) {
+                Long id = parseIdFromLocation(location);
+                entity.setTracksId(id);
             }
         } catch (WebClient.ApiException ignored) {
             Log.w(cTag, ignored);
-        } catch (ParseException e) {
-            Log.w(cTag, e);
         }
         return entity;
+    }
+
+    private Long parseIdFromLocation(String location) {
+        String[] parts = location.split("/");
+        String document = parts[parts.length - 1];
+        return Long.parseLong( document );
     }
 
 }

@@ -51,16 +51,7 @@ public class SynchronizationService extends Service implements SyncProgressListe
         contentView.setImageViewResource(R.id.image, R.drawable.shuffle_icon);
 
 
-        try {
-            synchronizer = TracksSynchronizer.getActiveSynchronizer(this);
-        } catch (WebClient.ApiException ignored) {
 
-        }
-        if (synchronizer != null) {
-            synchronizer.RegisterListener(this);
-
-        }
-        scheduleSynchronization();
         preferencersTimer = new Timer();
         preferencersTimer.scheduleAtFixedRate(new TimerTask() {
 
@@ -122,7 +113,12 @@ public class SynchronizationService extends Service implements SyncProgressListe
             synchronizer = TracksSynchronizer.getActiveSynchronizer(this);
         } catch (WebClient.ApiException ignored) {
 
+        }  
+        if (synchronizer != null) {
+            synchronizer.RegisterListener(this);
+
         }
+        scheduleSynchronization();
 
 
         if (synchronizer != null && Preferences.validateTracksSettings(this)) {

@@ -27,7 +27,7 @@ public final class Task extends AbstractEntity implements TracksCompatible{
 	public final Project project;
 	public final long created;
 	public final long modified;
-    public final Long tracksId;
+    public Long tracksId;
 	public final long startDate;
 	public final long dueDate;
 	public final String timezone;
@@ -88,6 +88,11 @@ public final class Task extends AbstractEntity implements TracksCompatible{
     @Override
     public String getLocalName() {
         return description;
+    }
+
+    @Override
+    public void setTracksId(Long id) {
+        tracksId = id;
     }
 
     public org.dodgybits.shuffle.dto.ShuffleProtos.Task toDto() {
