@@ -33,24 +33,34 @@
         android:lines="1" 
         style="@style/list_sub_text_1" />
 
+    <TextView android:id="@+id/due_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="5dip" 
+        android:paddingRight="0dip"
+        android:paddingBottom="1dip" 
+        style="@style/due_date" />
+
     <TextView android:id="@+id/details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="5dip" 
-        android:paddingRight="70dip"
+        android:paddingRight="5dip"
         android:paddingBottom="1dip" 
+        android:layout_toLeftOf="@+id/due_date"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:singleLine="true"
         android:ellipsize="marquee"
         style="@style/list_sub_text_2" />
     
-
 	<TextView android:id="@+id/description"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_above="@id/details"
+        android:layout_above="@+id/details"
 		android:paddingBottom="0dip" 
 		android:paddingLeft="5dip" 
 		android:paddingRight="5dip"
@@ -70,14 +80,5 @@
         android:paddingRight="3dip"
         style="@style/context" />
 
-	<TextView android:id="@+id/due_date"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" 
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-		android:paddingLeft="5dip" 
-		android:paddingRight="0dip"
-		style="@style/due_date" />
-	
 		
 </RelativeLayout>
