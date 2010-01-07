@@ -92,7 +92,7 @@
 
     <style name="list_text" parent="ShuffleTheme">
         <item name="android:textColor">@drawable/description</item>
-        <item name="android:typeface">serif</item>
+        <item name="android:typeface">sans</item>
         <item name="android:textScaleX">0.9</item>
     	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
 	</style>
