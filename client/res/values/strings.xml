@@ -309,7 +309,7 @@ Overdue actions are shown in all views.
     <string name="help6">
 A number of aspects of Shuffle are user-configurable. The <b>Settings</b> screen is available from all Perspectives via the menu. \n
 <b>List layout</b>  - Show projects and contexts in two screens (drill-down) or in a tree structure (expandable). \n
-<b>Action appearance</b> - Lets you custom what information to display for actions in each perspective.  \n
+<b>Action appearance</b> - Lets you customize what information to display for actions in each perspective.  \n
 <b>Clean up</b> - Delete completed actions or delete everything. \n
     </string>
     <string name="help7">
