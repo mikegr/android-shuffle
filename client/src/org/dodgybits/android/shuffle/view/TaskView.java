@@ -122,7 +122,7 @@ public class TaskView extends ItemView<Task> {
 			}
 			mDueDate.setVisibility(View.VISIBLE);
 		} else {
-			mDueDate.setVisibility(View.GONE);
+			mDueDate.setVisibility(View.INVISIBLE);
 		}
 	}
 	
@@ -140,7 +140,7 @@ public class TaskView extends ItemView<Task> {
 			mDetails.setText(task.details);
 			mDetails.setVisibility(View.VISIBLE);
 		} else {
-			mDetails.setVisibility(View.GONE);
+			mDetails.setVisibility(View.INVISIBLE);
 		}
 	}
 }

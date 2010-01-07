@@ -75,8 +75,8 @@ public class BindingUtils {
 		String iconName = icicle.getString(Shuffle.Contexts.ICON);
 		Icon icon = Icon.createIcon(iconName, res);
         Long tracksId = getLong(icicle, Shuffle.Contexts.TRACKS_ID);
-        Long tracksModified = getLong(icicle, Shuffle.Contexts.MODIFIED);
-		return new Context(id, name, colour, icon, tracksId, tracksModified);
+        long modified = icicle.getLong(Shuffle.Contexts.MODIFIED, 0L);
+		return new Context(id, name, colour, icon, tracksId, modified);
 	}
 
     public static Project restoreProject(Bundle icicle) {
@@ -86,8 +86,8 @@ public class BindingUtils {
 		Long defaultContextId = getLong(icicle, Shuffle.Projects.DEFAULT_CONTEXT_ID);
 		Boolean archived = icicle.getBoolean(Shuffle.Projects.ARCHIVED);
         Long tracksId = getLong(icicle, Shuffle.Projects.TRACKS_ID);
-           Long tracksModified = getLong(icicle, Shuffle.Projects.MODIFIED);
-		return new Project(id, name, defaultContextId, archived, tracksId, tracksModified);
+        long modified = icicle.getLong(Shuffle.Projects.MODIFIED, 0L);
+		return new Project(id, name, defaultContextId, archived, tracksId, modified);
 	}
 
     public static Bundle saveTask(Bundle icicle, Task task) {
@@ -224,9 +224,9 @@ public class BindingUtils {
 		Long defaultContextId = readLong(cursor, PROJECT_DEFAULT_CONTEXT_ID_INDEX);
 		Boolean archived = readBoolean(cursor, PROJECT_ARCHIVED_INDEX);
 		Long tracksId = readLong(cursor, PROJECT_TRACKS_ID_INDEX);
-        Long tracksModified = readLong(cursor, PROJECT_TRACKS_MODIFIED_INDEX);
+		long modified = readLong(cursor, PROJECT_TRACKS_MODIFIED_INDEX, 0L);
 
-        return new Project(projectId, name, defaultContextId, archived, tracksId, tracksModified);
+        return new Project(projectId, name, defaultContextId, archived, tracksId, modified);
 
 	}
 
@@ -239,8 +239,8 @@ public class BindingUtils {
 		Icon icon = Icon.createIcon(iconName, res);
 
         Long tracksId = readLong(cursor,CONTEXT_TRACKS_ID);
-        Long tracksModified = readLong(cursor,CONTEXT_TRACKS_MODIFIED);
-        return new Context(contextId, name, colour, icon, tracksId, tracksModified);
+        long modified = readLong(cursor,CONTEXT_TRACKS_MODIFIED, 0L);
+        return new Context(contextId, name, colour, icon, tracksId, modified);
 	}
 
     public static Project fetchProjectById(android.content.Context androidContext, Long projectId) {
@@ -388,7 +388,7 @@ public class BindingUtils {
 		Boolean newValue = !readBoolean(cursor, COMPLETE_INDEX);
         ContentValues values = new ContentValues();
 		writeBoolean(values, Shuffle.Tasks.COMPLETE, newValue);
-		writeLong(values, Shuffle.Tasks.MODIFIED_DATE, new Date().getTime());
+		writeLong(values, Shuffle.Tasks.MODIFIED_DATE, System.currentTimeMillis());
         androidContext.getContentResolver().update(listUri, values,
         		Shuffle.Tasks._ID + "=?", new String[] { String.valueOf(taskId) });
 		return newValue;
@@ -472,8 +472,8 @@ public class BindingUtils {
 		String iconName = readString(cursor, ICON_INDEX);
 		Icon icon = Icon.createIcon(iconName, res);
         Long tracksId = readLong(cursor,TRACKS_ID_INDEX);
-        Long tracksModified = readLong(cursor,CONTEXTS_MODIFIED_INDEX);
-        return new Context(id, name, colour, icon, tracksId, tracksModified);
+        long modified = readLong(cursor,CONTEXTS_MODIFIED_INDEX, 0L);
+        return new Context(id, name, colour, icon, tracksId, modified);
 	}
 
     public static void writeContext(ContentValues values, Context context) {
@@ -497,8 +497,8 @@ public class BindingUtils {
 		Long defaultContextId = readLong(cursor, DEFAULT_CONTEXT_INDEX);
 		Boolean archived = readBoolean(cursor, ARCHIVED_INDEX);
         Long tracksId = readLong(cursor, PROJECTS_TRACKS_ID_INDEX);
-        Long tracksModified = readLong(cursor, PROJECTS_MODIFIED_INDEX);
-		return new Project(id, name, defaultContextId, archived, tracksId, tracksModified);
+        long modified = readLong(cursor, PROJECTS_MODIFIED_INDEX, 0L);
+		return new Project(id, name, defaultContextId, archived, tracksId, modified);
 	}
 	
 	public static void writeProject(ContentValues values, Project project) {
@@ -507,7 +507,7 @@ public class BindingUtils {
 		writeLong(values, Shuffle.Projects.DEFAULT_CONTEXT_ID, project.defaultContextId);
 		writeBoolean(values, Shuffle.Projects.ARCHIVED, project.archived);
         writeLong(values, Shuffle.Projects.TRACKS_ID, project.tracksId);
-        writeLong(values, Shuffle.Projects.MODIFIED, project.modified        );
+        writeLong(values, Shuffle.Projects.MODIFIED, project.modified);
 	}
 	
 	private static final int TASK_COUNT_INDEX = 1;
@@ -520,9 +520,17 @@ public class BindingUtils {
 		}
 		return countMap;
 	}
+
+    private static Long readLong(Cursor cursor, int index) {
+        return readLong(cursor, index, null);
+    }
 	
-	private static Long readLong(Cursor cursor, int index) {
-		return (cursor.isNull(index) ? null : cursor.getLong(index));
+	private static Long readLong(Cursor cursor, int index, Long defaultValue) {
+	    Long result = defaultValue;
+	    if (!cursor.isNull(index)) {
+	        result = cursor.getLong(index);
+	    }
+		return result;
 	}
 	
 	private static Integer readInteger(Cursor cursor, int index) {

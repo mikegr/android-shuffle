@@ -24,59 +24,60 @@
 	android:gravity="center_vertical"
 	android:baselineAligned="false">
 
+    <TextView android:id="@+id/project"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingTop="1dip" 
+        android:lines="1" 
+        style="@style/list_sub_text_1" />
+
+    <TextView android:id="@+id/details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dip" 
+        android:paddingRight="70dip"
+        android:paddingBottom="1dip" 
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        style="@style/list_sub_text_2" />
+    
+
 	<TextView android:id="@+id/description"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-		android:paddingTop="1dip" 
+        android:layout_above="@id/details"
+		android:paddingBottom="0dip" 
 		android:paddingLeft="5dip" 
-		android:paddingRight="10dip"
+		android:paddingRight="5dip"
 		android:singleLine="true"
 		android:ellipsize="middle"
 		style="@style/list_text" />
 
-	<TextView android:id="@+id/details"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingLeft="5dip" 
-		android:paddingRight="10dip"
-        android:layout_alignParentLeft="true"
-		android:layout_below="@+id/description"        
-		android:singleLine="true"
-		android:ellipsize="marquee"
-		style="@style/list_sub_text_2" />
-	
-	<TextView android:id="@+id/project"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-		android:paddingLeft="5dip" 
-		android:paddingBottom="1dip" 
-		android:lines="1" 
-		style="@style/list_sub_text_1" />
+    <org.dodgybits.android.shuffle.view.LabelView
+        android:id="@+id/context" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="2dip"
+        android:drawablePadding="2dip"
+        android:paddingLeft="3dip"
+        android:paddingRight="3dip"
+        style="@style/context" />
 
 	<TextView android:id="@+id/due_date"
 		android:layout_width="wrap_content"
-		android:layout_height="fill_parent" 
+		android:layout_height="wrap_content" 
         android:layout_alignParentRight="true"
-        android:gravity="bottom"
+        android:layout_alignParentBottom="true"
 		android:paddingLeft="5dip" 
 		android:paddingRight="0dip"
 		style="@style/due_date" />
 	
-	<org.dodgybits.android.shuffle.view.LabelView
-		android:id="@+id/context" 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" 
-		android:layout_toLeftOf="@+id/due_date"
-		android:layout_alignWithParentIfMissing="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="1dip"
-		android:drawablePadding="2dip"
-		android:paddingLeft="3dip"
-		android:paddingRight="3dip"
-		style="@style/context" />
 		
 </RelativeLayout>

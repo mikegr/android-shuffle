@@ -18,6 +18,11 @@
 	<drawable name="even_stripe">#e5edfa</drawable>
 	<drawable name="odd_stripe">#ffffffff</drawable>
 
+    <drawable name="list_background">#dce3ef</drawable>
+    <drawable name="project">#0063be</drawable>
+    <drawable name="description">#002663</drawable>
+    <drawable name="details">#002663</drawable>
+    
 	<drawable name="pale_yellow">#f8f7df</drawable>
 	<drawable name="pale_weak_cyan">#e5dff8</drawable>
 	<drawable name="light_blue">#80d0ff</drawable>
