@@ -59,7 +59,7 @@ public class BindingUtils {
 		Long calEventId = getLong(icicle, Shuffle.Tasks.CAL_EVENT_ID);
 		int order = icicle.getInt(Shuffle.Tasks.DISPLAY_ORDER);
 		Boolean complete = icicle.getBoolean(Shuffle.Tasks.COMPLETE);
-		Long tracksId = icicle.getLong(Shuffle.Tasks.TRACKS_ID);
+		Long tracksId = getLong(icicle, Shuffle.Tasks.TRACKS_ID);
 		return new Task(
 				id, description, details,
 				context, project, created, modified,
@@ -112,7 +112,7 @@ public class BindingUtils {
 		icicle.putBoolean(Shuffle.Tasks.HAS_ALARM, task.hasAlarms);
 		putInteger(icicle, Shuffle.Tasks.DISPLAY_ORDER, task.order);
 		icicle.putBoolean(Shuffle.Tasks.COMPLETE, task.complete);
-		icicle.putLong(Shuffle.Tasks.TRACKS_ID, task.tracksId);
+        putLong(icicle, Shuffle.Tasks.TRACKS_ID, task.tracksId);
 		return icicle;
 	}
 
@@ -137,8 +137,7 @@ public class BindingUtils {
 		icicle.putString(Shuffle.Contexts.NAME, context.name);
 		putInteger(icicle, Shuffle.Contexts.COLOUR, context.colourIndex);
 		icicle.putString(Shuffle.Contexts.ICON, context.icon.iconName);
-
-		icicle.putLong(Shuffle.Contexts.TRACKS_ID, context.tracksId);
+		putLong(icicle, Shuffle.Contexts.TRACKS_ID, context.tracksId);
 		icicle.putLong(Shuffle.Contexts.MODIFIED, context.modified);
 		return icicle;
 	}
@@ -148,7 +147,7 @@ public class BindingUtils {
 		icicle.putString(Shuffle.Projects.NAME, project.name);
 		putLong(icicle, Shuffle.Projects.DEFAULT_CONTEXT_ID, project.defaultContextId);
 		icicle.putBoolean(Shuffle.Projects.ARCHIVED, project.archived);
-		icicle.putLong(Shuffle.Projects.TRACKS_ID, project.tracksId);
+        putLong(icicle, Shuffle.Projects.TRACKS_ID, project.tracksId);
 		icicle.putLong(Shuffle.Projects.MODIFIED, project.modified);
 		return icicle;
 	}
