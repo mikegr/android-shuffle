@@ -338,12 +338,15 @@ public class PreferencesCreateBackupActivity extends Activity
                 
 		@Override
 		public void onProgressUpdate (Progress... progresses) {
-			Progress progress = progresses[0];
+		    Progress progress = progresses[0];
+            String details = progress.getDetails();
 	        mProgressBar.setProgress(progress.getProgressPercent());
-	        mProgressText.setText(progress.getDetails());
+	        mProgressText.setText(details);
 
 	        if (progress.isError()) {
-				AlertUtils.showWarning(PreferencesCreateBackupActivity.this, progress.getDetails());
+	            if (!TextUtils.isEmpty(details)) {
+	                AlertUtils.showWarning(PreferencesCreateBackupActivity.this, details);
+	            }
         		Runnable action = progress.getErrorUIAction();
 	        	if (action != null) {
 	        		action.run();

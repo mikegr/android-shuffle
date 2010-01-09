@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -387,11 +388,14 @@ public class PreferencesRestoreBackupActivity extends Activity
 		@Override
 		public void onProgressUpdate (Progress... progresses) {
 			Progress progress = progresses[0];
+            String details = progress.getDetails();
 	        mProgressBar.setProgress(progress.getProgressPercent());
-	        mProgressText.setText(progress.getDetails());
+	        mProgressText.setText(details);
 
 	        if (progress.isError()) {
-				AlertUtils.showWarning(PreferencesRestoreBackupActivity.this, progress.getDetails());
+                if (!TextUtils.isEmpty(details)) {
+                    AlertUtils.showWarning(PreferencesRestoreBackupActivity.this, details);
+                }
         		Runnable action = progress.getErrorUIAction();
 	        	if (action != null) {
 	        		action.run();
