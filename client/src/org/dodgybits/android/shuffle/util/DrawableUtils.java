@@ -25,15 +25,19 @@ public class DrawableUtils {
 	private DrawableUtils() {
 		//deny
 	}
-	
+
     public static GradientDrawable createGradient(int colour, Orientation orientation) {
+        return createGradient(colour, orientation, 1.1f, 0.9f);
+    }
+
+    public static GradientDrawable createGradient(int colour, Orientation orientation, float startOffset, float endOffset) {
 		int[] colours = new int[2];
 		float[] hsv1 = new float[3];
 		float[] hsv2 = new float[3];
 		Color.colorToHSV(colour, hsv1);
 		Color.colorToHSV(colour, hsv2);
-		hsv1[2] *= 1.1;
-		hsv2[2] *= 0.90;
+		hsv1[2] *= startOffset;
+		hsv2[2] *= endOffset;
 		colours[0] = Color.HSVToColor(hsv1);
 		colours[1] = Color.HSVToColor(hsv2);
     	return new GradientDrawable(orientation, colours);
