@@ -118,7 +118,6 @@ public class SynchronizationService extends Service implements SyncProgressListe
             synchronizer.RegisterListener(this);
 
         }
-        scheduleSynchronization();
 
 
         if (synchronizer != null && Preferences.validateTracksSettings(this)) {

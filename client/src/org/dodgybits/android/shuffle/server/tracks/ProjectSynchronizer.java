@@ -39,7 +39,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
 
     @Override
     protected String readingRemoteText() {
-        return resources.getString(R.string.readingLocalProjects);
+        return resources.getString(R.string.readingRemoteContexts);
     }
 
     @Override

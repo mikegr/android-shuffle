@@ -154,18 +154,6 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
         return foundContext;
     }
     
-    private Entity parseEntity(String tracksContextXml) throws ParseException {
-
-        XmlPullParser parser = Xml.newPullParser();
-        try {
-            parser.setInput(new StringReader(tracksContextXml));
-            return parseSingleEntity(parser);
-        } catch (XmlPullParserException e) {
-            throw new ParseException(
-                    "Unable to parse context, could not set input", 0);
-        }
-    }
-
     private void synchronizeSingle(Map<Long, Entity> remoteEntities,
             Entity localEntity) {
         if (localEntity.getTracksId() == null) {
