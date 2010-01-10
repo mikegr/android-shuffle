@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.os.Looper;
 import android.widget.RemoteViews;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Preferences;
@@ -20,11 +21,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Morten
- * Date: 2010-jan-04
- * Time: 20:13:59
  * This service handles synchronization in the background.
+ * 
+ * @author Morten Nielsen
  */
 public class SynchronizationService extends Service implements SyncProgressListener {
     private NotificationManager mNotificationManager;
@@ -97,10 +96,10 @@ public class SynchronizationService extends Service implements SyncProgressListe
             synchronizationTimer.scheduleAtFixedRate(new TimerTask() {
 
                 public void run() {
-
+                    // AsyncTasks use handlers, so need message handling initialized on this thread
+                    Looper.prepare();
+                    
                     synchronize();
-
-
                 }
 
             }, 0, interval);

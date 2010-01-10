@@ -49,26 +49,26 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
     public void synchronize() {
         tracksSynchronizer.reportProgress(Progress.createProgress(basePercent,
                 readingLocalText()));
-        Map<String, Entity> localContexts = getShuffleEntities(contentResolver,
+        Map<String, Entity> localEntities = getShuffleEntities(contentResolver,
                 resources);
 
         tracksSynchronizer.reportProgress(Progress.createProgress(basePercent,
                 readingRemoteText()));
-        Map<Long, Entity> remoteContexts = getTrackEntities();
-        int startCounter = localContexts.size() + 1;
+        Map<Long, Entity> remoteEntities = getTrackEntities();
+        int startCounter = localEntities.size() + 1;
         int count = 0;
-        for (Entity localContext : localContexts.values()) {
+        for (Entity localEntity : localEntities.values()) {
             count++;
             int percent = basePercent
                     + Math.round(((count * 100) / startCounter) * 0.33f);
             tracksSynchronizer.reportProgress(Progress.createProgress(percent,
                     processingText()));
-            synchronizeSingle(remoteContexts, localContext);
+            synchronizeSingle(remoteEntities, localEntity);
 
         }
 
-        for (Entity remoteContext : remoteContexts.values()) {
-            saveLocalEntityFromRemote(remoteContext);
+        for (Entity remoteEntity : remoteEntities.values()) {
+            saveLocalEntityFromRemote(remoteEntity);
         }
 
         tracksSynchronizer.reportProgress(Progress.createProgress(
@@ -83,7 +83,7 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
 
     protected abstract String stageFinishedText();
 
-    protected abstract void saveLocalEntityFromRemote(Entity remoteContext);
+    protected abstract void saveLocalEntityFromRemote(Entity remoteEntity);
 
     protected abstract String endIndexTag();
 
@@ -96,36 +96,36 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
     protected abstract Map<String, Entity> getShuffleEntities(
             ContentResolver contentResolver, Resources resources);
     
-    protected abstract Entity createMergedLocalEntity(Entity localContext,
-            Entity newContext);
+    protected abstract Entity createMergedLocalEntity(Entity localEntity,
+            Entity newEntity);
     
-    protected abstract String createEntityUrl(Entity localContext);
+    protected abstract String createEntityUrl(Entity localEntity);
 
-    protected abstract String createDocumentForEntity(Entity localContext);
+    protected abstract String createDocumentForEntity(Entity localEntity);
 
     protected abstract Entity parseSingleEntity(XmlPullParser parser)
         throws ParseException;
     
     protected Map<Long, Entity> getTrackEntities() {
-        Map<Long, Entity> contexts = new HashMap<Long, Entity>();
-        String tracksContextXml;
+        Map<Long, Entity> entities = new HashMap<Long, Entity>();
+        String tracksEntityXml;
         try {
-            tracksContextXml = client.getUrlContent(entityIndexUrl());
+            tracksEntityXml = client.getUrlContent(entityIndexUrl());
         } catch (WebClient.ApiException e) {
             Log.w(cTag, e);
-            return contexts;
+            return entities;
         }
 
         XmlPullParser parser = Xml.newPullParser();
         try {
-            parser.setInput(new StringReader(tracksContextXml));
+            parser.setInput(new StringReader(tracksEntityXml));
 
             int eventType = parser.getEventType();
             boolean done = false;
             while (eventType != XmlPullParser.END_DOCUMENT && !done) {
-                Entity context = parseSingleEntity(parser);
-                if (null != context)
-                    contexts.put(context.getTracksId(), context);
+                Entity entity = parseSingleEntity(parser);
+                if (null != entity)
+                    entities.put(entity.getTracksId(), entity);
                 eventType = parser.getEventType();
                 String name = parser.getName();
                 switch (eventType) {
@@ -141,32 +141,32 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
         } catch (XmlPullParserException e) {
             Log.w(cTag, e);
         }
-        return contexts;
+        return entities;
     }
 
-    private Entity findEntityByLocalName(Collection<Entity> remoteContexts,
-            Entity localContext) {
-        Entity foundContext = null;
-        for (Entity context : remoteContexts)
-            if (context.getLocalName().equals(localContext.getLocalName())) {
-                foundContext = context;
+    private Entity findEntityByLocalName(Collection<Entity> remoteEntities,
+            Entity localEntity) {
+        Entity foundEntity = null;
+        for (Entity entity : remoteEntities)
+            if (entity.getLocalName().equals(localEntity.getLocalName())) {
+                foundEntity = entity;
             }
-        return foundContext;
+        return foundEntity;
     }
     
     private void synchronizeSingle(Map<Long, Entity> remoteEntities,
             Entity localEntity) {
         if (localEntity.getTracksId() == null) {
 
-            Entity newContext = findEntityByLocalName(remoteEntities.values(),
+            Entity newEntity = findEntityByLocalName(remoteEntities.values(),
                     localEntity);
-            if (newContext != null)
-                remoteEntities.remove(newContext.getTracksId());
+            if (newEntity != null)
+                remoteEntities.remove(newEntity.getTracksId());
             else
-                newContext = createEntityInTracks(localEntity);
+                newEntity = createEntityInTracks(localEntity);
 
-            if (newContext != null) {
-                saveLocalEntity(createMergedLocalEntity(localEntity, newContext));
+            if (newEntity != null) {
+                saveLocalEntity(createMergedLocalEntity(localEntity, newEntity));
 
             }
             return;
@@ -180,24 +180,24 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
         }
     }
 
-    private void handleRemoteEntity(Entity localContext, Entity remoteContext) {
+    private void handleRemoteEntity(Entity localEntity, Entity remoteEntity) {
 
-        if (remoteContext.getModified() == localContext.getModified())
+        if (remoteEntity.getModified() == localEntity.getModified())
             return;
 
-        if (remoteContext.getModified() > localContext
+        if (remoteEntity.getModified() > localEntity
                 .getModified()) {
-            saveLocalEntity(createMergedLocalEntity(localContext, remoteContext));
+            saveLocalEntity(createMergedLocalEntity(localEntity, remoteEntity));
         } else {
-            updateTracks(localContext);
+            updateTracks(localEntity);
         }
 
     }
 
-    private void updateTracks(Entity localContext) {
-        String document = createDocumentForEntity(localContext);
+    private void updateTracks(Entity localEntity) {
+        String document = createDocumentForEntity(localEntity);
         try {
-            client.putContentToUrl(createEntityUrl(localContext), document);
+            client.putContentToUrl(createEntityUrl(localEntity), document);
         } catch (WebClient.ApiException ignored) {
             Log.w(cTag, ignored);
         }
