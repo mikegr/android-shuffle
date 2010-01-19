@@ -215,6 +215,7 @@
     <string name="processingTasks">Processing tasks</string>
     <string name="readingLocalTasks">Reading local tasks</string>
     <string name="doneWithTasks">Done with tasks</string>
+    <string name="cannotSyncTasksWithoutContext">Cannot synchronize tasks without a context to Tracks</string>
     <string name="readingRemoteContexts">Reading remote Contexts</string>
     <string name="processingContexts">Processing Contexts</string>
     <string name="readingLocalContexts">Reading local Contexts</string>
@@ -246,7 +247,7 @@
     <string name="clean_slate_message">Deleted all actions, projects and custom contexts.</string>
    	<string name="error_title">Error</string>
 	<string name="error_message">Error loading action</string>
-    
+	<string name="web_error_message">Unable to connect to Tracks</string>    
     <string name="welcome1">
 Welcome to Shuffle, a \"Getting Things Done\" inspired personal organization tool.
 If you want to see how best to use Shuffle, click \"Demonstration\" to 

@@ -6,6 +6,7 @@ import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.util.Xml;
+import android.widget.Toast;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
@@ -21,9 +22,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Morten Nielsen
@@ -37,6 +36,23 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
         this.tracksUrl = tracksUrl;
     }
 
+
+    @Override
+    protected void verifyLocalEntities(Map<Long, Task> localEntities) {
+
+        LinkedList<Long> tasksWithoutContext = new LinkedList<Long>();
+        for(Task t : localEntities.values()) {
+            if(t.context == null) {
+                tasksWithoutContext.add(t.id);
+            }
+        }
+        if (tasksWithoutContext.size() <= 0) {
+            return;
+        }
+        tracksSynchronizer.postSyncMessage(R.string.cannotSyncTasksWithoutContext);
+
+        for(Long id : tasksWithoutContext) localEntities.remove(id);
+    }
 
     @Override
     protected String readingRemoteText() {
@@ -261,7 +277,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
         contentResolver.update(Shuffle.Tasks.CONTENT_URI, values, Shuffle.Tasks._ID + "=?", new String[]{String.valueOf(task.id)});
     }
 
-    protected Map<String, Task> getShuffleEntities(ContentResolver contentResolver, Resources resources) {
+    protected Map<Long, Task> getShuffleEntities(ContentResolver contentResolver, Resources resources) {
 
 
         Cursor cursor = contentResolver.query(
@@ -269,12 +285,12 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
                 null, null, null);
 
 
-        Map<String, Task> list = new HashMap<String, Task>();
+        Map<Long, Task> list = new HashMap<Long, Task>();
 
         while (cursor.moveToNext()) {
             Task task = BindingUtils.readTask(cursor, resources);
 
-            list.put(task.description, task);
+            list.put(task.id, task);
 
 
         }

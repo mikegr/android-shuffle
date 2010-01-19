@@ -46,15 +46,16 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     }
 
-    public void synchronize() {
+    public void synchronize() throws WebClient.ApiException {
         tracksSynchronizer.reportProgress(Progress.createProgress(basePercent,
                 readingLocalText()));
-        Map<String, Entity> localEntities = getShuffleEntities(contentResolver,
+        Map<Long, Entity> localEntities = getShuffleEntities(contentResolver,
                 resources);
-
+        verifyLocalEntities(localEntities);
         tracksSynchronizer.reportProgress(Progress.createProgress(basePercent,
                 readingRemoteText()));
-        Map<Long, Entity> remoteEntities = getTrackEntities();
+        Map<Long, Entity> remoteEntities =
+                getTrackEntities();
         int startCounter = localEntities.size() + 1;
         int count = 0;
         for (Entity localEntity : localEntities.values()) {
@@ -75,6 +76,8 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
                 basePercent + 33, stageFinishedText()));
     }
 
+    protected abstract void verifyLocalEntities(Map<Long, Entity> localEntities);
+
     protected abstract String readingRemoteText();
 
     protected abstract String processingText();
@@ -93,7 +96,7 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
 
     protected abstract void saveLocalEntity(Entity entity);
 
-    protected abstract Map<String, Entity> getShuffleEntities(
+    protected abstract Map<Long, Entity> getShuffleEntities(
             ContentResolver contentResolver, Resources resources);
     
     protected abstract Entity createMergedLocalEntity(Entity localEntity,
@@ -106,14 +109,14 @@ public abstract class Synchronizer<Entity extends TracksCompatible> {
     protected abstract Entity parseSingleEntity(XmlPullParser parser)
         throws ParseException;
     
-    protected Map<Long, Entity> getTrackEntities() {
+    protected Map<Long, Entity> getTrackEntities() throws WebClient.ApiException {
         Map<Long, Entity> entities = new HashMap<Long, Entity>();
         String tracksEntityXml;
         try {
             tracksEntityXml = client.getUrlContent(entityIndexUrl());
         } catch (WebClient.ApiException e) {
             Log.w(cTag, e);
-            return entities;
+            throw e;
         }
 
         XmlPullParser parser = Xml.newPullParser();

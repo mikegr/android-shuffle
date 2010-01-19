@@ -212,6 +212,7 @@
     <string name="processingTasks">Processing tasks</string>
     <string name="readingLocalTasks">Reading local tasks</string>
     <string name="doneWithTasks">Done with tasks</string>
+    <string name="cannotSyncTasksWithoutContext">Cannot synchronize tasks without a context to Tracks</string>
     <string name="readingRemoteContexts">Reading remote Contexts</string>
     <string name="processingContexts">Processing Contexts</string>
     <string name="readingLocalContexts">Reading local Contexts</string>
@@ -243,6 +244,8 @@
     <string name="clean_slate_message">Alle Handlungen, Projekte und selbsterstellte Kategorien wurden entfernt.</string>
    	<string name="error_title">Fehler</string>
 	<string name="error_message">Fehler beim Laden der Handlung</string>
+    <!--TODO-->
+	<string name="web_error_message">Unable to connect to Tracks</string>
     
     <string name="welcome1">
 Willkommen in Shuffle, einem Organisationsprogramm, das von \"Getting Things Done\" inspiriert wurde.

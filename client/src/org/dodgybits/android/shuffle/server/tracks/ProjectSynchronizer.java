@@ -38,6 +38,11 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
 
 
     @Override
+    protected void verifyLocalEntities(Map<Long, Project> localEntities) {
+        
+    }
+
+    @Override
     protected String readingRemoteText() {
         return resources.getString(R.string.readingRemoteContexts);
     }
@@ -200,7 +205,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
                 Shuffle.Projects._ID + "=?", new String[]{String.valueOf(project.id)});
     }
 
-    protected Map<String, Project> getShuffleEntities(ContentResolver contentResolver, Resources resources) {
+    protected Map<Long, Project> getShuffleEntities(ContentResolver contentResolver, Resources resources) {
 
 
         Cursor cursor = contentResolver.query(
@@ -208,12 +213,12 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
                 null, null, null);
 
 
-        Map<String, Project> list = new HashMap<String, Project>();
+        Map<Long, Project> list = new HashMap<Long, Project>();
 
         while (cursor.moveToNext()) {
             Project context = BindingUtils.readProject(cursor);
 
-            list.put(context.name, context);
+            list.put(context.id, context);
 
 
         }

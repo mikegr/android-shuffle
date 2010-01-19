@@ -47,6 +47,10 @@ public class ContextSynchronizer extends Synchronizer<Context> {
     }
 
     @Override
+    protected void verifyLocalEntities(Map<Long, Context> localEntities) {
+    }
+
+    @Override
     protected String readingRemoteText() {
         return resources.getString(R.string.readingRemoteContexts);
     }
@@ -184,7 +188,7 @@ public class ContextSynchronizer extends Synchronizer<Context> {
         contentResolver.update(Shuffle.Contexts.CONTENT_URI, values, Shuffle.Contexts._ID + "=?", new String[]{String.valueOf(context.id)});
     }
 
-    protected Map<String, org.dodgybits.android.shuffle.model.Context> getShuffleEntities(ContentResolver contentResolver, Resources resources) {
+    protected Map<Long, org.dodgybits.android.shuffle.model.Context> getShuffleEntities(ContentResolver contentResolver, Resources resources) {
 
 
         Cursor cursor = contentResolver.query(
@@ -192,12 +196,12 @@ public class ContextSynchronizer extends Synchronizer<Context> {
                 null, null, null);
 
 
-        Map<String, org.dodgybits.android.shuffle.model.Context> list = new HashMap<String, org.dodgybits.android.shuffle.model.Context>();
+        Map<Long, org.dodgybits.android.shuffle.model.Context> list = new HashMap<Long, org.dodgybits.android.shuffle.model.Context>();
 
         while (cursor.moveToNext()) {
             org.dodgybits.android.shuffle.model.Context context = BindingUtils.readContext(cursor, resources);
 
-            list.put(context.name, context);
+            list.put(context.id, context);
 
 
         }
