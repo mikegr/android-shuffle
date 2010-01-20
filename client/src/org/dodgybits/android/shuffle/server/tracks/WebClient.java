@@ -23,7 +23,7 @@ import java.net.URI;
 
 /**
  * Handles communication to the REST service
- * 
+ *
  * @author Morten Nielsen
  */
 public class WebClient {
@@ -31,7 +31,7 @@ public class WebClient {
     private byte[] sBuffer = new byte[512];
     private final String tracksUser;
     private final String tracksPassword;
-    private final String cTag="WebClient";
+    private final String cTag = "WebClient";
 
     public WebClient(ContextWrapper context, String tracksUser, String tracksPassword) throws ApiException {
         this.tracksUser = tracksUser;
@@ -60,12 +60,12 @@ public class WebClient {
         HttpClient client = CreateClient();
         java.net.URI uri = URI.create(url);
         HttpHost host = GetHost(uri);
-        HttpDelete request = new HttpDelete( uri.getPath());
+        HttpDelete request = new HttpDelete(uri.getPath());
         request.setHeader("User-Agent", sUserAgent);
 
 
         try {
-            HttpResponse response = client.execute(host,request);
+            HttpResponse response = client.execute(host, request);
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
@@ -103,7 +103,7 @@ public class WebClient {
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
-             Log.i(cTag, "get with response " + status.toString());
+            Log.i(cTag, "get with response " + status.toString());
             if (status.getStatusCode() != HttpStatus.SC_OK) {
                 throw new ApiException("Invalid response from server: " +
                         status.toString());
@@ -129,10 +129,12 @@ public class WebClient {
 
     private HttpHost GetHost(URI uri) {
         HttpHost host;
-        if (uri.getScheme().equalsIgnoreCase("https"))
-            host = new HttpHost(uri.getHost(), 443, uri.getScheme());
-        else
-            host = new HttpHost(uri.getHost());
+        int port = uri.getPort();
+        if (port == -1) {
+            port = uri.getScheme().equalsIgnoreCase("https") ? 443 : 80;
+        }
+
+        host = new HttpHost(uri.getHost(), port, uri.getScheme());
         return host;
     }
 
@@ -143,9 +145,9 @@ public class WebClient {
 
         // Create client and set our specific user-agent string
         HttpClient client = CreateClient();
-              java.net.URI uri = URI.create(url);
+        java.net.URI uri = URI.create(url);
         HttpHost host = GetHost(uri);
-        HttpPost request = new HttpPost( uri.getPath());
+        HttpPost request = new HttpPost(uri.getPath());
 
 
         request.setHeader("User-Agent", sUserAgent);
@@ -165,15 +167,15 @@ public class WebClient {
 
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
-             Log.i(cTag, "post with response " + status.toString());
+            Log.i(cTag, "post with response " + status.toString());
             if (status.getStatusCode() != HttpStatus.SC_CREATED) {
                 throw new ApiException("Invalid response from server: " +
                         status.toString());
             }
             Header[] header = response.getHeaders("Location");
-            if(header.length !=0) return header[0].getValue();
-            else             return null;
-      
+            if (header.length != 0) return header[0].getValue();
+            else return null;
+
 
         } catch (IOException e) {
             throw new ApiException("Problem communicating with API");
@@ -187,7 +189,7 @@ public class WebClient {
 
         // Create client and set our specific user-agent string
         HttpClient client = CreateClient();
-              java.net.URI uri = URI.create(url);
+        java.net.URI uri = URI.create(url);
         HttpHost host = GetHost(uri);
         HttpPut request = new HttpPut(uri.getPath());
         request.setHeader("User-Agent", sUserAgent);
@@ -207,7 +209,7 @@ public class WebClient {
             // Check if server response is valid
             StatusLine status = response.getStatusLine();
 
-             Log.i(cTag, "put with response " + status.toString());
+            Log.i(cTag, "put with response " + status.toString());
             if (status.getStatusCode() != HttpStatus.SC_OK) {
                 throw new ApiException("Invalid response from server: " +
                         status.toString());
