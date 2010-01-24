@@ -44,9 +44,8 @@
 				    <ListView android:id="@+id/android:list"
 				              android:layout_width="fill_parent" 
 				              android:layout_height="wrap_content"
-				              android:drawSelectorOnTop="false"
-				              style="@style/list"  
 				              android:layout_weight="10"         
+				              style="@style/list"  
 				              />
 				
 				    <TextView android:id="@+id/android:empty"
