@@ -6,7 +6,6 @@ import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.util.Xml;
-import android.widget.Toast;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Context;
 import org.dodgybits.android.shuffle.model.Project;
