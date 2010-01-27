@@ -70,7 +70,7 @@ public class SynchronizationService extends Service implements SyncProgressListe
                 scheduleSynchronization();
             }
             
-            mHandler.postDelayed(this, 1L * DateUtils.MINUTE_IN_MILLIS);
+            mHandler.postDelayed(this, 5L * DateUtils.MINUTE_IN_MILLIS);
         }
 
         private long calculateIntervalInMilliseconds(int selected) {
