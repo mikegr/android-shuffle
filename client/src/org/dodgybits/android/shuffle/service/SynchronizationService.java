@@ -1,5 +1,12 @@
 package org.dodgybits.android.shuffle.service;
 
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.activity.SynchronizeActivity;
+import org.dodgybits.android.shuffle.model.Preferences;
+import org.dodgybits.android.shuffle.server.tracks.SyncProgressListener;
+import org.dodgybits.android.shuffle.server.tracks.TracksSynchronizer;
+import org.dodgybits.android.shuffle.server.tracks.WebClient;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,18 +14,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.widget.RemoteViews;
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.model.Preferences;
-import org.dodgybits.android.shuffle.activity.SynchronizeActivity;
-import org.dodgybits.android.shuffle.server.tracks.SyncProgressListener;
-import org.dodgybits.android.shuffle.server.tracks.TracksSynchronizer;
-import org.dodgybits.android.shuffle.server.tracks.WebClient;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * This service handles synchronization in the background.
@@ -26,16 +26,18 @@ import java.util.TimerTask;
  * @author Morten Nielsen
  */
 public class SynchronizationService extends Service implements SyncProgressListener {
+    private static final String cTag = "SynchronizationService";
+    
     private NotificationManager mNotificationManager;
-    private Timer synchronizationTimer = null;
-    private Timer preferencersTimer = null;
+    private Handler mHandler;
+    private CheckTimer mCheckTimer;
+    private PerformSynch mPerformSynch;
     private long interval = 0;
     private TracksSynchronizer synchronizer = null;
     private RemoteViews contentView;
 
     @Override
     public IBinder onBind(Intent intent) {
-
         return null;
     }
 
@@ -49,65 +51,67 @@ public class SynchronizationService extends Service implements SyncProgressListe
         contentView.setProgressBar(R.id.progress_horizontal, 100, 50, true);
         contentView.setImageViewResource(R.id.image, R.drawable.shuffle_icon);
 
-
-
-        preferencersTimer = new Timer();
-        preferencersTimer.scheduleAtFixedRate(new TimerTask() {
-
-            public void run() {
-
-                updateTimers();
-
-
+        mHandler = new Handler();
+        mCheckTimer = new CheckTimer();
+        mPerformSynch = new PerformSynch();
+        
+        mHandler.post(mCheckTimer);
+    }
+    
+    private class CheckTimer implements Runnable {
+        @Override
+        public void run() {
+            Log.d(cTag, "Checking preferences");
+            
+            long newInterval = calculateIntervalInMilliseconds(
+                    Preferences.getTracksInterval(SynchronizationService.this));
+            if (interval != newInterval) {
+                interval = newInterval;
+                scheduleSynchronization();
             }
+            
+            mHandler.postDelayed(this, 1L * DateUtils.MINUTE_IN_MILLIS);
+        }
 
-        }, 0, 5 * 60 * 1000);
-    }
-
-    private void updateTimers() {
-        int newInterval = calcualteIntervalInMiliseconds(Preferences.getTracksInterval(this));
-        if (interval != newInterval) {
-            interval = newInterval;
-            scheduleSynchronization();
+        private long calculateIntervalInMilliseconds(int selected) {
+            long result = 0L;
+            switch (selected) {
+                case 1: // 30min
+                    result = 30L * DateUtils.MINUTE_IN_MILLIS;
+                    break;
+                case 2: // 1hr
+                    result = DateUtils.HOUR_IN_MILLIS;
+                    break;
+                case 3:
+                    result = 2L * DateUtils.HOUR_IN_MILLIS;
+                    break;
+                case 4:
+                    result = 3L * DateUtils.HOUR_IN_MILLIS;
+                    break;
+            }
+            return result;
         }
     }
 
-    private int calcualteIntervalInMiliseconds(int selected) {
-
-        switch (selected) {
-            case 1:
-                return 30 * 60 * 1000;
-            case 2:
-                return 60 * 60 * 1000;
-            case 3:
-                return 2 * 60 * 60 * 1000;
-            case 4:
-                return 3 * 60 * 60 * 1000;
-            default:
-                return 0;
+    private class PerformSynch implements Runnable
+    {
+        @Override
+        public void run() {
+            synchronize();
         }
+        
     }
 
     private void scheduleSynchronization() {
-        if (synchronizationTimer != null)
-            synchronizationTimer.cancel();
-        if (interval != 0) {
-            synchronizationTimer = new Timer();
-            synchronizationTimer.scheduleAtFixedRate(new TimerTask() {
-
-                public void run() {
-                    // AsyncTasks use handlers, so need message handling initialized on this thread
-                    Looper.prepare();
-                    
-                    synchronize();
-                }
-
-            }, 0, interval);
+        mHandler.removeCallbacks(mPerformSynch);
+        if (interval != 0L) {
+            mHandler.post(mPerformSynch);
         }
     }
 
     private void synchronize() {
-
+        Log.d(cTag, "Starting synch");
+        
         try {
             synchronizer = TracksSynchronizer.getActiveSynchronizer(this);
         } catch (WebClient.ApiException ignored) {
@@ -125,7 +129,9 @@ public class SynchronizationService extends Service implements SyncProgressListe
 
         }
 
+        mHandler.postDelayed(mPerformSynch, interval);
     }
+    
 
     private static final int NOTIFICATION_ID = 1;
 
@@ -143,7 +149,6 @@ public class SynchronizationService extends Service implements SyncProgressListe
         notification.contentView = contentView;
 
         mNotificationManager.notify(NOTIFICATION_ID, notification);
-
     }
 
     private void clearNotification() {
@@ -153,10 +158,8 @@ public class SynchronizationService extends Service implements SyncProgressListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (synchronizationTimer != null)
-            synchronizationTimer.cancel();
-        if (preferencersTimer != null)
-            preferencersTimer.cancel();
+        mHandler.removeCallbacks(mCheckTimer);
+        mHandler.removeCallbacks(mPerformSynch);
         if (synchronizer != null) {
             synchronizer.unRegisterListener(this);
         }
