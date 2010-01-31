@@ -75,7 +75,7 @@ public class ModelUtils {
 		Log.d(cTag, "Deleted " + deletedRows + " completed tasks.");
 		return deletedRows;
 	}
-
+	
 	/**
 	 * Clean out the current data and populate the database with a set of sample
 	 * data.
@@ -101,7 +101,7 @@ public class ModelUtils {
 		cal.add(Calendar.WEEK_OF_YEAR, 1);
 		long twoWeeks = cal.getTimeInMillis();
 		
-		Project sellBike = new Project("Sell old Powerbook", null, false, null, System.currentTimeMillis());
+		Project sellBike = createProject("Sell old Powerbook", null);
 		insertProject(androidContext, sellBike);
 		insertTask(androidContext, 
 				createTask("Backup data", null, 
@@ -118,7 +118,7 @@ public class ModelUtils {
 		insertTask(androidContext, 
 				createTask("Put up ad", AT_COMPUTER_INDEX, sellBike, twoWeeks));
 
-		Project cleanGarage = new Project("Clean out garage", null, false, null, System.currentTimeMillis());
+		Project cleanGarage = createProject("Clean out garage", null);
 		insertProject(androidContext, cleanGarage);
 		insertTask(androidContext, 
 				createTask("Sort out contents", "Split into keepers and junk", 
@@ -137,7 +137,7 @@ public class ModelUtils {
 						ERRANDS_INDEX, cleanGarage, 
 						now, now));
 
-		Project skiTrip = new Project("Organise ski trip", null, false, null, System.currentTimeMillis());
+		Project skiTrip = createProject("Organise ski trip", null);
 		insertProject(androidContext, skiTrip);
 		insertTask(androidContext, 
 				createTask("Send email to determine best week", null, 
@@ -159,9 +159,7 @@ public class ModelUtils {
 				createTask("Get board waxed", 
 						ERRANDS_INDEX, skiTrip, 0L));
 
-		Project discussI8n = 
-			new Project("Discuss internationalization",
-				cPresetContexts[AT_WORK_INDEX].id, false, null, System.currentTimeMillis());
+		Project discussI8n = createProject("Discuss internationalization", cPresetContexts[AT_WORK_INDEX].id);
 		insertProject(androidContext, discussI8n);
 		insertTask(androidContext, 
 				createTask("Read up on options", null, 
@@ -218,6 +216,10 @@ public class ModelUtils {
 				null, created);  
 	}
 	
+    private static Project createProject(String name, Long defaultContextId) {
+        return new Project(name, defaultContextId, false, null, System.currentTimeMillis(), false);
+    }
+
 	/**
 	 * Delete any existing projects, contexts and tasks and create the standard
 	 * contexts.

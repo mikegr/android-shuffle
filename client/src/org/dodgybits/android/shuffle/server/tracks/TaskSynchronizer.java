@@ -157,9 +157,9 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
             Project project = null;
 
 
-            long created = 0;
-            long showAt = 0;
-            long due = 0;
+            long created = 0L;
+            long showAt = 0L;
+            long due = 0L;
 
             SimpleDateFormat format = simpleDateFormat;
             while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -206,10 +206,9 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
                         break;
                     case XmlPullParser.END_TAG:
                         if (name.equalsIgnoreCase("todo") && taskDescription != null) {
-
-
+                            boolean allDay = showAt > 0L || due > 0L;
                             return new Task(null, taskDescription, taskNotes,
-                                    context, project, created, trackModifiedDate, showAt, due, "UTC", true, false, null, 0, false,
+                                    context, project, created, trackModifiedDate, showAt, due, "UTC", allDay, false, null, 0, false,
                                     trackId);
                         }
                         break;

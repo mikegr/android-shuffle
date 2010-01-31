@@ -44,7 +44,7 @@ public class ShuffleProvider extends ContentProvider {
 	private static final String cTag = "ShuffleProvider";
 
 	public static final String cDatabaseName = "shuffle.db";
-	private static final int cDatabaseVersion = 13; // v1.4.0
+	private static final int cDatabaseVersion = 14; // v1.5.0
 
 	static final String cTaskTableName = "task";
 	static final String cProjectTableName = "project";
@@ -148,6 +148,11 @@ public class ShuffleProvider extends ContentProvider {
 						+ " ADD COLUMN tracks_id INTEGER;");
                 db.execSQL("ALTER TABLE " + cProjectTableName
 						+ " ADD COLUMN modified INTEGER;");
+                
+			case 13: // Shuffle v1.4.0
+                db.execSQL("ALTER TABLE " + cProjectTableName
+                        + " ADD COLUMN parallel INTEGER NOT NULL DEFAULT 0;");
+                
                 break;
                 
 			default: // unknown version - use destructive upgrade
@@ -159,34 +164,55 @@ public class ShuffleProvider extends ContentProvider {
 
 		private void createContextTable(SQLiteDatabase db) {
 			db.execSQL("DROP TABLE IF EXISTS " + cContextTableName);
-			db.execSQL("CREATE TABLE " + cContextTableName + " ("
-					+ "_id INTEGER PRIMARY KEY," + "name TEXT,"
-					+ "colour INTEGER," + "iconName TEXT," +
-                    "tracks_id INTEGER," + "modified INTEGER" + ");");
+			db.execSQL("CREATE TABLE " 
+			        + cContextTableName 
+			        + " ("
+					+ "_id INTEGER PRIMARY KEY," 
+					+ "name TEXT,"
+					+ "colour INTEGER," 
+					+ "iconName TEXT," 
+					+ "tracks_id INTEGER," 
+					+ "modified INTEGER" 
+					+ ");");
 		}
 
 		private void createProjectTable(SQLiteDatabase db) {
 			db.execSQL("DROP TABLE IF EXISTS " + cProjectTableName);
-			db.execSQL("CREATE TABLE " + cProjectTableName + " ("
-					+ "_id INTEGER PRIMARY KEY," + "name TEXT,"
-					+ "archived INTEGER," + "defaultContextId INTEGER," +
-                    "tracks_id INTEGER," + "modified INTEGER" + ");");
+			db.execSQL("CREATE TABLE " 
+			        + cProjectTableName 
+			        + " ("
+					+ "_id INTEGER PRIMARY KEY," 
+					+ "name TEXT,"
+					+ "archived INTEGER," 
+					+ "defaultContextId INTEGER," 
+					+ "tracks_id INTEGER," 
+					+ "modified INTEGER," 
+					+ "parallel INTEGER NOT NULL DEFAULT 0" 
+					+ ");");
 		}
 
 		private void createTaskTable(SQLiteDatabase db) {
 			db.execSQL("DROP TABLE IF EXISTS " + cTaskTableName);
-			db.execSQL("CREATE TABLE " + cTaskTableName + " ("
-					+ "_id INTEGER PRIMARY KEY," + "description TEXT,"
-					+ "details TEXT," + "contextId INTEGER,"
-					+ "projectId INTEGER," + "created INTEGER,"
-					+ "modified INTEGER," + "due INTEGER,"
+			db.execSQL("CREATE TABLE " 
+			        + cTaskTableName 
+			        + " ("
+					+ "_id INTEGER PRIMARY KEY," 
+					+ "description TEXT,"
+					+ "details TEXT," 
+					+ "contextId INTEGER,"
+					+ "projectId INTEGER," 
+					+ "created INTEGER,"
+					+ "modified INTEGER," 
+					+ "due INTEGER,"
 					+ "start INTEGER," // created, modified, due, start in millis since epoch
                     + "timezone TEXT," // timezone for task
 					+ "allDay INTEGER NOT NULL DEFAULT 0,"
 					+ "hasAlarm INTEGER NOT NULL DEFAULT 0,"
 					+ "calEventId INTEGER,"
-					+ "displayOrder INTEGER," + "complete INTEGER," 
-					+ "tracks_id INTEGER" + ");");
+					+ "displayOrder INTEGER," 
+					+ "complete INTEGER," 
+					+ "tracks_id INTEGER" 
+					+ ");");
 		}
 
 		private void createTaskProjectIdIndex(SQLiteDatabase db) {
@@ -257,7 +283,7 @@ public class ShuffleProvider extends ContentProvider {
 			qb.setTables(cTaskJoinTableNames);
 			qb.setProjectionMap(sTaskListProjectMap);
 			long lastCleanMS = Preferences.getLastInboxClean(getContext());
-			qb.appendWhere("(projectId is null) OR (created > " + lastCleanMS
+			qb.appendWhere("(projectId is null AND contextId is null) OR (created > " + lastCleanMS
 					+ ")");
 			break;
 		case DUE_TASKS:
@@ -277,11 +303,14 @@ public class ShuffleProvider extends ContentProvider {
 			qb.setTables(cTaskJoinTableNames);
 			qb.setProjectionMap(sTaskListProjectMap);
 
-			qb.appendWhere("(complete = 0) AND (");
-			qb.appendWhere("  projectId not null AND");
-			qb.appendWhere("  task._id = (select t2._id FROM task t2 WHERE " +
-					"t2.projectId = task.projectId AND t2.complete = 0 " +
-					"ORDER BY due ASC, displayOrder ASC limit 1))");
+			qb.appendWhere(
+			        "(complete = 0) AND (" +
+			        "   (projectId is null) OR " +
+			        "   (projectId IN (select p._id from project p where p.parallel = 1)) OR " +
+			        "   (task._id = (select t2._id FROM task t2 WHERE " +
+				 	"      t2.projectId = task.projectId AND t2.complete = 0 " +
+				    "      ORDER BY due ASC, displayOrder ASC limit 1))" +
+				    ")");
 			break;
 		case CONTEXTS:
 			qb.setTables(cContextTableName);
@@ -710,6 +739,8 @@ public class ShuffleProvider extends ContentProvider {
 				cProjectTableName + ".tracks_id");
 		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_MODIFIED,
 				cProjectTableName + ".modified");
+		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_PARALLEL,
+		        cProjectTableName + ".parallel");
 		sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_NAME, cContextTableName
 				+ ".name");
 		sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_COLOUR, cContextTableName
@@ -748,6 +779,8 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".tracks_id");
         sProjectListProjectMap.put(Shuffle.Projects.MODIFIED, cProjectTableName
 				+ ".modified");
+        sProjectListProjectMap.put(Shuffle.Projects.PARALLEL, cProjectTableName
+                + ".parallel");
 		
 		sReminderListProjectMap = new HashMap<String, String>();
 		sReminderListProjectMap.put(Shuffle.Reminders._ID, cReminderTableName

@@ -67,11 +67,28 @@
 		android:drawSelectorOnTop="true"
 			/>
 			
+    <View android:id="@+id/parallel_divider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/default_context"        
+        android:background="@android:drawable/divider_horizontal_bright"
+    />
+
+    <CheckBox android:id="@+id/parallel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/parallel_divider"        
+        android:text="@string/parallel_title"
+    />
+			
     <View android:id="@+id/save_divider"
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:layout_alignParentLeft="true"
-		android:layout_below="@+id/default_context"        
+		android:layout_below="@+id/parallel"        
         android:background="@android:drawable/divider_horizontal_bright"
     />
 			

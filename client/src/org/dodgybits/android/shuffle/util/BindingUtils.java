@@ -87,7 +87,8 @@ public class BindingUtils {
 		Boolean archived = icicle.getBoolean(Shuffle.Projects.ARCHIVED);
         Long tracksId = getLong(icicle, Shuffle.Projects.TRACKS_ID);
         long modified = icicle.getLong(Shuffle.Projects.MODIFIED, 0L);
-		return new Project(id, name, defaultContextId, archived, tracksId, modified);
+        boolean isParallel = icicle.getBoolean(Shuffle.Projects.PARALLEL, false);
+		return new Project(id, name, defaultContextId, archived, tracksId, modified, isParallel);
 	}
 
     public static Bundle saveTask(Bundle icicle, Task task) {
@@ -149,6 +150,7 @@ public class BindingUtils {
 		icicle.putBoolean(Shuffle.Projects.ARCHIVED, project.archived);
         putLong(icicle, Shuffle.Projects.TRACKS_ID, project.tracksId);
 		icicle.putLong(Shuffle.Projects.MODIFIED, project.modified);
+		icicle.putBoolean(Shuffle.Projects.PARALLEL, project.isParallel);
 		return icicle;
 	}
 
@@ -178,8 +180,9 @@ public class BindingUtils {
     private static final int PROJECT_ARCHIVED_INDEX = PROJECT_DEFAULT_CONTEXT_ID_INDEX + 1;
     private static final int PROJECT_TRACKS_ID_INDEX = PROJECT_ARCHIVED_INDEX + 1 ;
     private static final int PROJECT_TRACKS_MODIFIED_INDEX = PROJECT_TRACKS_ID_INDEX +1;
+    private static final int PROJECT_PARALLEL_INDEX = PROJECT_TRACKS_MODIFIED_INDEX +1;
 
-    private static final int CONTEXT_NAME_INDEX = PROJECT_TRACKS_MODIFIED_INDEX + 1;
+    private static final int CONTEXT_NAME_INDEX = PROJECT_PARALLEL_INDEX + 1;
 
     private static final int CONTEXT_COLOUR_INDEX = CONTEXT_NAME_INDEX + 1;
     private static final int CONTEXT_ICON_INDEX = CONTEXT_COLOUR_INDEX + 1;
@@ -224,8 +227,9 @@ public class BindingUtils {
 		Boolean archived = readBoolean(cursor, PROJECT_ARCHIVED_INDEX);
 		Long tracksId = readLong(cursor, PROJECT_TRACKS_ID_INDEX);
 		long modified = readLong(cursor, PROJECT_TRACKS_MODIFIED_INDEX, 0L);
+		boolean isParallel = readBoolean(cursor, PROJECT_PARALLEL_INDEX);
 
-        return new Project(projectId, name, defaultContextId, archived, tracksId, modified);
+        return new Project(projectId, name, defaultContextId, archived, tracksId, modified, isParallel);
 
 	}
 
@@ -489,6 +493,7 @@ public class BindingUtils {
     private static final int ARCHIVED_INDEX = 3;
     private static final int PROJECTS_TRACKS_ID_INDEX = 4;
     private static final int PROJECTS_MODIFIED_INDEX = 5;
+    private static final int PROJECTS_PARALLEL_INDEX = 6;
 
     public static Project readProject(Cursor cursor) {
 		Long id = readLong(cursor, ID_INDEX);
@@ -497,7 +502,8 @@ public class BindingUtils {
 		Boolean archived = readBoolean(cursor, ARCHIVED_INDEX);
         Long tracksId = readLong(cursor, PROJECTS_TRACKS_ID_INDEX);
         long modified = readLong(cursor, PROJECTS_MODIFIED_INDEX, 0L);
-		return new Project(id, name, defaultContextId, archived, tracksId, modified);
+        boolean isParallel = readBoolean(cursor, PROJECTS_PARALLEL_INDEX);
+		return new Project(id, name, defaultContextId, archived, tracksId, modified, isParallel);
 	}
 	
 	public static void writeProject(ContentValues values, Project project) {
@@ -507,6 +513,7 @@ public class BindingUtils {
 		writeBoolean(values, Shuffle.Projects.ARCHIVED, project.archived);
         writeLong(values, Shuffle.Projects.TRACKS_ID, project.tracksId);
         writeLong(values, Shuffle.Projects.MODIFIED, project.modified);
+        writeBoolean(values, Shuffle.Projects.PARALLEL, project.isParallel);
 	}
 	
 	private static final int TASK_COUNT_INDEX = 1;

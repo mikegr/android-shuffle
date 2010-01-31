@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -38,10 +39,11 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
    
     private EditText mNameWidget;
     private Spinner mDefaultContextSpinner;
+    private CheckBox mParallelCheckBox;
     
     private String[] mContextNames;
     private long[] mContextIds;
-
+    
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
@@ -93,10 +95,11 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         if (mOriginalItem != null) {
             tracksId = mOriginalItem.tracksId;
         }
-
+        boolean isParallel = mParallelCheckBox.isChecked();
+        
         return new Project(
                 name, defaultContextId, archived, 
-                tracksId, System.currentTimeMillis());
+                tracksId, System.currentTimeMillis(), isParallel);
     }
     
     @Override
@@ -118,6 +121,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         		}
         	}
         }
+        mParallelCheckBox.setChecked(project.isParallel);
     }
     
     /**
@@ -188,6 +192,8 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         		this, android.R.layout.simple_list_item_1, mContextNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDefaultContextSpinner.setAdapter(adapter);
+        
+        mParallelCheckBox = (CheckBox)findViewById(R.id.parallel);
     }        
 
 }

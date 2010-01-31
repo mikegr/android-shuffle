@@ -28,23 +28,25 @@ public class Project extends AbstractEntity implements TracksCompatible {
 	public final boolean archived;
     public Long tracksId;
     public final long modified;
+    public final boolean isParallel;
 
 
     public Project(Long id, String name, 
             Long defaultContextId, boolean archived, 
-            Long tracksId, long modified) {
+            Long tracksId, long modified, boolean isParallel) {
 		this.id = id;
 		this.name = name;
 		this.defaultContextId = defaultContextId;
 		this.archived = archived;
         this.tracksId = tracksId;
         this.modified = modified;
+        this.isParallel = isParallel;
     }
 	
 	public Project(String name, 
 	        Long defaultContextId, boolean archived, 
-            Long tracksId, long modified) {
-		this(null, name, defaultContextId, archived, tracksId, modified);
+            Long tracksId, long modified, boolean isParallel) {
+		this(null, name, defaultContextId, archived, tracksId, modified, isParallel);
 	}
 
     @Override
@@ -91,13 +93,15 @@ public class Project extends AbstractEntity implements TracksCompatible {
 		builder
 		    .setId(id)
 		    .setName(name)
-		    .setModified(toDate(modified));
+		    .setModified(toDate(modified))
+		    .setParallel(isParallel);
 		if (defaultContextId != null) {
 			builder.setDefaultContextId(defaultContextId);
 		}
         if (tracksId != null) {
             builder.setTracksId(tracksId);
         }
+        
 		return builder.build();
 	}
 
@@ -119,12 +123,18 @@ public class Project extends AbstractEntity implements TracksCompatible {
         }
         long modified = fromDate(dto.getModified());
 		
+        boolean parallel = false;
+		if (dto.hasParallel()) {
+		    parallel = dto.getParallel();
+		}
+		
 		return new Project(
 				dto.getId(),
 				dto.getName(),
 				defaultContextId,
 				false,
 				tracksId,
-				modified);
+				modified,
+				parallel);
 	}
 }

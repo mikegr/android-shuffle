@@ -18,6 +18,7 @@ message Project {
   optional int64 defaultContextId = 3;
   optional Date modified = 4;
   optional int64 tracksId = 5;
+  optional bool parallel = 6;
 }
 
 message Task {

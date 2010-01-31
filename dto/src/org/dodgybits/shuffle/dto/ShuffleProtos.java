@@ -563,6 +563,13 @@ public final class ShuffleProtos {
     public boolean hasTracksId() { return hasTracksId; }
     public long getTracksId() { return tracksId_; }
     
+    // optional bool parallel = 6;
+    public static final int PARALLEL_FIELD_NUMBER = 6;
+    private boolean hasParallel;
+    private boolean parallel_ = false;
+    public boolean hasParallel() { return hasParallel; }
+    public boolean getParallel() { return parallel_; }
+    
     public final boolean isInitialized() {
       if (!hasId) return false;
       if (!hasName) return false;
@@ -588,6 +595,9 @@ public final class ShuffleProtos {
       }
       if (hasTracksId()) {
         output.writeInt64(5, getTracksId());
+      }
+      if (hasParallel()) {
+        output.writeBool(6, getParallel());
       }
       getUnknownFields().writeTo(output);
     }
@@ -617,6 +627,10 @@ public final class ShuffleProtos {
       if (hasTracksId()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(5, getTracksId());
+      }
+      if (hasParallel()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(6, getParallel());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -782,6 +796,9 @@ public final class ShuffleProtos {
         if (other.hasTracksId()) {
           setTracksId(other.getTracksId());
         }
+        if (other.hasParallel()) {
+          setParallel(other.getParallel());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -830,6 +847,10 @@ public final class ShuffleProtos {
             }
             case 40: {
               setTracksId(input.readInt64());
+              break;
+            }
+            case 48: {
+              setParallel(input.readBool());
               break;
             }
           }
@@ -946,6 +967,24 @@ public final class ShuffleProtos {
       public Builder clearTracksId() {
         result.hasTracksId = false;
         result.tracksId_ = 0L;
+        return this;
+      }
+      
+      // optional bool parallel = 6;
+      public boolean hasParallel() {
+        return result.hasParallel();
+      }
+      public boolean getParallel() {
+        return result.getParallel();
+      }
+      public Builder setParallel(boolean value) {
+        result.hasParallel = true;
+        result.parallel_ = value;
+        return this;
+      }
+      public Builder clearParallel() {
+        result.hasParallel = false;
+        result.parallel_ = false;
         return this;
       }
     }
@@ -2691,23 +2730,23 @@ public final class ShuffleProtos {
       "\n\rshuffle.proto\022\007shuffle\"y\n\007Context\022\n\n\002i" +
       "d\030\001 \002(\003\022\014\n\004name\030\002 \002(\t\022\023\n\013colourIndex\030\003 \001" +
       "(\005\022\014\n\004icon\030\004 \001(\t\022\037\n\010modified\030\005 \001(\0132\r.shu" +
-      "ffle.Date\022\020\n\010tracksId\030\006 \001(\003\"p\n\007Project\022\n" +
-      "\n\002id\030\001 \002(\003\022\014\n\004name\030\002 \002(\t\022\030\n\020defaultConte" +
-      "xtId\030\003 \001(\003\022\037\n\010modified\030\004 \001(\0132\r.shuffle.D" +
-      "ate\022\020\n\010tracksId\030\005 \001(\003\"\312\002\n\004Task\022\n\n\002id\030\001 \002" +
-      "(\003\022\023\n\013description\030\002 \002(\t\022\017\n\007details\030\003 \001(\t" +
-      "\022\021\n\tcontextId\030\004 \001(\003\022\021\n\tprojectId\030\005 \001(\003\022\036" +
-      "\n\007created\030\006 \001(\0132\r.shuffle.Date\022\037\n\010modifi",
-      "ed\030\007 \001(\0132\r.shuffle.Date\022 \n\tstartDate\030\010 \001" +
-      "(\0132\r.shuffle.Date\022\036\n\007dueDate\030\t \001(\0132\r.shu" +
-      "ffle.Date\022\020\n\010timezone\030\n \001(\t\022\016\n\006allDay\030\013 " +
-      "\001(\010\022\022\n\ncalEventId\030\014 \001(\003\022\r\n\005order\030\r \001(\005\022\020" +
-      "\n\010complete\030\016 \001(\010\022\020\n\010tracksId\030\017 \001(\003\"\026\n\004Da" +
-      "te\022\016\n\006millis\030\001 \002(\003\"n\n\tCatalogue\022!\n\007conte" +
-      "xt\030\001 \003(\0132\020.shuffle.Context\022!\n\007project\030\002 " +
-      "\003(\0132\020.shuffle.Project\022\033\n\004task\030\003 \003(\0132\r.sh" +
-      "uffle.TaskB*\n\031org.dodgybits.shuffle.dtoB" +
-      "\rShuffleProtos"
+      "ffle.Date\022\020\n\010tracksId\030\006 \001(\003\"\202\001\n\007Project\022" +
+      "\n\n\002id\030\001 \002(\003\022\014\n\004name\030\002 \002(\t\022\030\n\020defaultCont" +
+      "extId\030\003 \001(\003\022\037\n\010modified\030\004 \001(\0132\r.shuffle." +
+      "Date\022\020\n\010tracksId\030\005 \001(\003\022\020\n\010parallel\030\006 \001(\010" +
+      "\"\312\002\n\004Task\022\n\n\002id\030\001 \002(\003\022\023\n\013description\030\002 \002" +
+      "(\t\022\017\n\007details\030\003 \001(\t\022\021\n\tcontextId\030\004 \001(\003\022\021" +
+      "\n\tprojectId\030\005 \001(\003\022\036\n\007created\030\006 \001(\0132\r.shu",
+      "ffle.Date\022\037\n\010modified\030\007 \001(\0132\r.shuffle.Da" +
+      "te\022 \n\tstartDate\030\010 \001(\0132\r.shuffle.Date\022\036\n\007" +
+      "dueDate\030\t \001(\0132\r.shuffle.Date\022\020\n\010timezone" +
+      "\030\n \001(\t\022\016\n\006allDay\030\013 \001(\010\022\022\n\ncalEventId\030\014 \001" +
+      "(\003\022\r\n\005order\030\r \001(\005\022\020\n\010complete\030\016 \001(\010\022\020\n\010t" +
+      "racksId\030\017 \001(\003\"\026\n\004Date\022\016\n\006millis\030\001 \002(\003\"n\n" +
+      "\tCatalogue\022!\n\007context\030\001 \003(\0132\020.shuffle.Co" +
+      "ntext\022!\n\007project\030\002 \003(\0132\020.shuffle.Project" +
+      "\022\033\n\004task\030\003 \003(\0132\r.shuffle.TaskB*\n\031org.dod" +
+      "gybits.shuffle.dtoB\rShuffleProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2727,7 +2766,7 @@ public final class ShuffleProtos {
           internal_static_shuffle_Project_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_shuffle_Project_descriptor,
-              new java.lang.String[] { "Id", "Name", "DefaultContextId", "Modified", "TracksId", },
+              new java.lang.String[] { "Id", "Name", "DefaultContextId", "Modified", "TracksId", "Parallel", },
               org.dodgybits.shuffle.dto.ShuffleProtos.Project.class,
               org.dodgybits.shuffle.dto.ShuffleProtos.Project.Builder.class);
           internal_static_shuffle_Task_descriptor =

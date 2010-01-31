@@ -106,12 +106,14 @@
     <string name="update_gcal_title">Update Google Calendar</string>
     <string name="update_gcal_detail">Updated entry will load after saving</string>
     <string name="completed_title">Completed</string>
+    <string name="clear_title">Clear dates</string>
 
 	<!--  project & context edit screens -->
     <string name="colour_title">Color</string>
     <string name="archived_title">Archived</string>
     <string name="icon_title">Icon</string>
     <string name="name_title">Name</string>
+    <string name="parallel_title">Actions executed in parallel</string>
     <string name="default_context_title">Default context</string>
     <string name="preview_title">Preview</string>
     <string name="context_errands">Errands</string>
@@ -243,7 +245,7 @@
     <string name="delete_completed_warning">Delete all completed tasks?</string>
     <string name="clean_slate_warning">Delete <i>all</i> actions, projects and custom contexts?</string>
     <string name="clean_task_message">Deleted %d completed actions.</string>
-    <string name="clean_inbox_message">Cleared out actions with projects from Inbox.</string>
+    <string name="clean_inbox_message">Cleared out actions with projects or contexts from Inbox.</string>
     <string name="clean_slate_message">Deleted all actions, projects and custom contexts.</string>
    	<string name="error_title">Error</string>
 	<string name="error_message">Error loading action</string>

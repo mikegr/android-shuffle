@@ -38,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.*;
 import org.dodgybits.android.shuffle.provider.Shuffle;
@@ -89,8 +90,9 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private Button mDueDateButton;
     private Button mStartTimeButton;
     private Button mDueTimeButton;
+    private Button mClearButton;
     private CheckBox mAllDayCheckBox;
-
+    
     private boolean mShowStart;
     private Time mStartTime;
     private boolean mShowDue;
@@ -556,6 +558,16 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 break;
             }
             
+            case R.id.clear_dates: {
+                mAllDayCheckBox.setChecked(false);
+                mStartTime = new Time();
+                mDueTime = new Time();
+                setWhenDefaults();
+                populateWhen();
+                updateCalendarPanel();
+                break;
+            }
+            
             case R.id.reminder_remove: {
                 LinearLayout reminderItem = (LinearLayout) v.getParent();
                 LinearLayout parent = (LinearLayout) reminderItem.getParent();
@@ -666,6 +678,9 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
 
         mAllDayCheckBox = (CheckBox) findViewById(R.id.is_all_day);
         mAllDayCheckBox.setOnCheckedChangeListener(this);            
+
+        mClearButton = (Button) findViewById(R.id.clear_dates);
+        mClearButton.setOnClickListener(this);
 
         ViewGroup schedulingSection = (ViewGroup) findViewById(R.id.scheduling_section);
         View schedulingEntry = findViewById(R.id.scheduling_entry);

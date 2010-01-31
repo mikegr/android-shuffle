@@ -70,7 +70,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
     protected Project createMergedLocalEntity(Project localProject, Project newContext) {
         return new Project(localProject.id, newContext.name,
                 newContext.defaultContextId, localProject.archived,
-                newContext.tracksId, newContext.modified);
+                newContext.tracksId, newContext.modified, localProject.isParallel);
     }
 
     protected String createDocumentForEntity(Project project) {
@@ -148,8 +148,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
                         break;
                     case XmlPullParser.END_TAG:
                         if (name.equalsIgnoreCase("project") && projectName != null) {
-
-                            return new Project(null, projectName, defaultContextId, activeState, trackId, trackModifiedDate);
+                            return new Project(null, projectName, defaultContextId, activeState, trackId, trackModifiedDate, false);
                         }
                         break;
                 }

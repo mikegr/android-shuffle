@@ -66,6 +66,7 @@ public class Shuffle {
         public static final String PROJECT_ARCHIVED = "project_archived";
         public static final String PROJECT_TRACKS_ID = "project_tracks_id";
         public static final String PROJECT_MODIFIED = "project_modified";
+        public static final String PROJECT_PARALLEL = "project_parallel";
         
         public static final String CONTEXT_NAME = "context_name";
         public static final String CONTEXT_COLOUR = "context_colour";
@@ -122,6 +123,7 @@ public class Shuffle {
             PROJECT_ARCHIVED,
             PROJECT_TRACKS_ID,
             PROJECT_MODIFIED,
+            PROJECT_PARALLEL,
 
             CONTEXT_NAME,
             CONTEXT_COLOUR,
@@ -156,6 +158,7 @@ public class Shuffle {
         public static String TRACKS_ID="tracks_id";
 
         public static String MODIFIED = "modified";
+        public static String PARALLEL = "parallel";
 
         /**
          * Projection for all the columns of a project.
@@ -166,7 +169,8 @@ public class Shuffle {
                 DEFAULT_CONTEXT_ID,
                 ARCHIVED,
                 TRACKS_ID,
-                MODIFIED
+                MODIFIED,
+                PARALLEL
         };
         public static final String TASK_COUNT = "count";
         /**
