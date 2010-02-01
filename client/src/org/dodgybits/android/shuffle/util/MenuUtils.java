@@ -55,7 +55,8 @@ public class MenuUtils {
     public static final int CONTEXT_ID = Menu.FIRST + 14;
     public static final int PREFERENCE_ID = Menu.FIRST + 15;
     public static final int HELP_ID = Menu.FIRST + 16;
-   public static final int SYNC_ID = Menu.FIRST + 17;
+    public static final int SYNC_ID = Menu.FIRST + 17;
+    public static final int SEARCH_ID = Menu.FIRST + 18;
     public static final int CLEAN_INBOX_ID = Menu.FIRST + 50;
 
     // Menu item for activity specific items
@@ -87,7 +88,9 @@ public class MenuUtils {
     // General menus
     private static final int PERSPECTIVE_ORDER = 201;
     private static final int PREFERENCE_ORDER = 202;
-    private static final int HELP_ORDER = 203;
+    private static final int SYNCH_ORDER = 203;
+    private static final int SEARCH_ORDER = 204;
+    private static final int HELP_ORDER = 205;
     
 	public static void addInsertMenuItems(Menu menu, String itemName, boolean isTaskList, Context context) {
 		String menuName = context.getResources().getString(R.string.menu_insert, itemName);
@@ -145,12 +148,18 @@ public class MenuUtils {
         	.setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('p');
         menu.add(Menu.NONE, HELP_ID, HELP_ORDER, R.string.menu_help)
         	.setIcon(android.R.drawable.ic_menu_help).setAlphabeticShortcut('h');
-
-        menu.add(Menu.NONE, SYNC_ID, HELP_ORDER, R.string.menu_sync)
-        	.setIcon(android.R.drawable.ic_menu_rotate).setAlphabeticShortcut('r').setVisible(Preferences.validateTracksSettings(context));
-
 	}
-		
+	
+    public static void addSyncMenuItem(Context context, Menu menu) {
+        menu.add(Menu.NONE, SYNC_ID, SYNCH_ORDER, R.string.menu_sync)
+        .setIcon(android.R.drawable.ic_menu_rotate).setVisible(Preferences.validateTracksSettings(context));
+    }
+
+    public static void addSearchMenuItem(Context context, Menu menu) {
+        menu.add(Menu.NONE, SEARCH_ID, SEARCH_ORDER, R.string.menu_search)
+        .setIcon(android.R.drawable.ic_menu_search).setAlphabeticShortcut('s');
+    }
+    
 	public static void addSelectedAlternativeMenuItems(Menu menu, Uri uri, boolean includeView) {
         // Build menu...  always starts with the EDIT action...
 		
@@ -274,17 +283,15 @@ public class MenuUtils {
 	    	Intent intent = new Intent(activity, HelpActivity.class);
 	    	intent.putExtra(HelpActivity.cHelpPage, getHelpScreen(currentViewMenuId));
 	    	activity.startActivity(intent);
-	    	
-	    	
 	    	return true;
-
         case SYNC_ID:
-                  Log.d(cTag, "starting sync");
-
-
-
+            Log.d(cTag, "starting sync");
 	    	activity.startActivity(new Intent(activity, SynchronizeActivity.class));
-                        return true;
+            return true;
+        case SEARCH_ID:
+            Log.d(cTag, "starting search");
+            activity.onSearchRequested();
+            return true;
 
         }
         return false;

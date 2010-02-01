@@ -16,6 +16,7 @@
 
 package org.dodgybits.android.shuffle.provider;
 
+import android.app.SearchManager;
 import android.content.*;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -26,6 +27,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
+
 import org.dodgybits.android.shuffle.model.Preferences;
 import org.dodgybits.android.shuffle.provider.Shuffle.Contexts;
 import org.dodgybits.android.shuffle.provider.Shuffle.Projects;
@@ -58,7 +60,8 @@ public class ShuffleProvider extends ContentProvider {
 	private static Map<String, String> sContextListProjectMap;
 	private static Map<String, String> sProjectListProjectMap;
 	private static Map<String, String> sReminderListProjectMap;
-
+	private static final HashMap<String, String> sSuggestionProjectionMap;
+	
 	private static final int TASKS = 1;
 	private static final int TASK_ID = 2;
 	private static final int TOP_TASKS = 3;
@@ -75,6 +78,8 @@ public class ShuffleProvider extends ContentProvider {
 
 	private static final int REMINDERS = 301;
 	private static final int REMINDER_ID = 302;
+	
+	private static final int SEARCH = 401;
 	
 	private static final UriMatcher cUriMatcher;
 
@@ -348,7 +353,19 @@ public class ShuffleProvider extends ContentProvider {
 			qb.setTables(cReminderTableName);
 			qb.appendWhere("_id=" + uri.getPathSegments().get(1));
 			break;
-			
+        case SEARCH:
+            qb.setTables(cTaskTableName);
+            String query = uri.getLastPathSegment();
+            if (!TextUtils.isEmpty(query)) {
+                qb.appendWhere(Shuffle.Tasks.DESCRIPTION + " LIKE ");
+                qb.appendWhereEscapeString('%' + query + '%');
+                qb.appendWhere(" OR ");
+                qb.appendWhere(Shuffle.Tasks.DETAILS + " LIKE ");
+                qb.appendWhereEscapeString('%' + query + '%');
+            }
+            qb.setProjectionMap(sSuggestionProjectionMap);
+            break;
+            
 		default:
 			throw new IllegalArgumentException("Unknown URL " + uri);
 		}
@@ -360,6 +377,7 @@ public class ShuffleProvider extends ContentProvider {
 			case TASKS:
 			case TASK_ID:
 			case INBOX_TASKS:
+			case SEARCH:
 				orderBy = Shuffle.Tasks.DEFAULT_SORT_ORDER;
 				break;
 			case TOP_TASKS:
@@ -696,6 +714,9 @@ public class ShuffleProvider extends ContentProvider {
 		cUriMatcher.addURI(Shuffle.PACKAGE, "reminders", REMINDERS);
 		cUriMatcher.addURI(Shuffle.PACKAGE, "reminders/#", REMINDER_ID);
 
+		cUriMatcher.addURI(Shuffle.PACKAGE, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH);
+		cUriMatcher.addURI(Shuffle.PACKAGE, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH);
+		
 		// ugh - these mapping lists smell bad. Are they even needed?
 		sTaskListProjectMap = new HashMap<String, String>();
 		sTaskListProjectMap.put(Shuffle.Tasks._ID, cTaskTableName + "._id");
@@ -791,5 +812,15 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".minutes");
 		sReminderListProjectMap.put(Shuffle.Reminders.METHOD, cReminderTableName
 				+ ".method");
+		
+        sSuggestionProjectionMap = new HashMap<String, String>();
+        sSuggestionProjectionMap.put(SearchManager.SUGGEST_COLUMN_TEXT_1,
+                Shuffle.Tasks.DESCRIPTION + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_1);
+        sSuggestionProjectionMap.put(SearchManager.SUGGEST_COLUMN_TEXT_2,
+                Shuffle.Tasks.DETAILS + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_2);
+        sSuggestionProjectionMap.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID,
+                Shuffle.Tasks._ID + " AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
+        sSuggestionProjectionMap.put(Shuffle.Tasks._ID, Shuffle.Tasks._ID);
+		
 	}
 }

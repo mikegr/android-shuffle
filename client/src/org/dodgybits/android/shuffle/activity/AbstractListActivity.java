@@ -170,7 +170,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		MenuUtils.addInsertMenuItems(menu, getListConfig().getItemName(this), getListConfig().isTaskList(), this);
 		MenuUtils.addViewMenuItems(menu, getListConfig().getCurrentViewMenuId());
 		MenuUtils.addPrefsHelpMenuItems(this, menu);
-
+		MenuUtils.addSearchMenuItem(this, menu);
 		return true;
 	}
 

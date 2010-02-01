@@ -127,6 +127,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         		mConfig.getChildName(this), this);
         MenuUtils.addViewMenuItems(menu, mConfig.getCurrentViewMenuId());
         MenuUtils.addPrefsHelpMenuItems(this, menu);
+        MenuUtils.addSearchMenuItem(this, menu);
         
         return true;
     }

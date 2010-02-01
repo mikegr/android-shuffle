@@ -81,6 +81,9 @@ public class TopLevelActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuUtils.addPrefsHelpMenuItems(this, menu);
+        MenuUtils.addSearchMenuItem(this, menu);
+        MenuUtils.addSyncMenuItem(this, menu);
+        
         return true;
     }
 
