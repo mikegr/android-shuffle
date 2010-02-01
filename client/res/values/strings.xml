@@ -113,6 +113,7 @@
     <string name="archived_title">Archived</string>
     <string name="icon_title">Icon</string>
     <string name="name_title">Name</string>
+    <string name="sequence_title">Actions executed in sequence</string>
     <string name="parallel_title">Actions executed in parallel</string>
     <string name="default_context_title">Default context</string>
     <string name="preview_title">Preview</string>

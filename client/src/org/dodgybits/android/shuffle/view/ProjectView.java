@@ -22,10 +22,13 @@ import org.dodgybits.android.shuffle.model.Project;
 import android.content.Context;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ProjectView extends ItemView<Project> {
 	private TextView mName;
+	private ImageView mParallelIcon;
+	
 	private SparseIntArray mTaskCountArray;
 	
 	public ProjectView(Context androidContext) {
@@ -36,10 +39,11 @@ public class ProjectView extends ItemView<Project> {
         vi.inflate(getViewResourceId(), this, true); 
 		
 		mName = (TextView) findViewById(R.id.name);
+		mParallelIcon = (ImageView) findViewById(R.id.parallel_image);
 	}
 	
 	protected int getViewResourceId() {
-		return R.layout.list_item_view;
+		return R.layout.list_project_view;
 	}
 
 	
@@ -55,6 +59,14 @@ public class ProjectView extends ItemView<Project> {
 			mName.setText(project.name + " (" + count + ")");
 		} else {
 			mName.setText(project.name);
+		}
+		
+		if (mParallelIcon != null) {
+    		if (project.isParallel) {
+    		    mParallelIcon.setImageResource(R.drawable.parallel);
+    		} else {
+                mParallelIcon.setImageResource(R.drawable.sequence);
+    		}
 		}
 		
 	}

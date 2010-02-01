@@ -13,11 +13,12 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
     android:layout_width="fill_parent" 
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:baselineAligned="false"
-    android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+	android:layout_height="?android:attr/listPreferredItemHeight"
+	android:baselineAligned="false"
+	android:paddingLeft="10dip"
     >
 
     <ImageView android:id="@+id/parallel_image" 
@@ -29,16 +30,17 @@
         android:paddingRight="10dip" 
         />
 
-    <TextView android:id="@+id/name" 
-      android:layout_width="wrap_content" 
-      android:layout_height="fill_parent"
-      android:layout_alignParentLeft="true"
-      android:layout_toLeftOf="@+id/parallel_image" 
-      android:gravity="center_vertical"
-      android:paddingLeft="5dip" 
-      android:paddingRight="5dip"
-      style="@style/list_text"
-      />
+	<TextView android:id="@+id/name" 
+	  android:layout_width="wrap_content" 
+	  android:layout_height="fill_parent"
+	  android:layout_alignParentLeft="true"
+	  android:layout_toLeftOf="@+id/parallel_image" 
+	  android:gravity="center_vertical"
+	  android:paddingLeft="5dip" 
+	  android:paddingRight="5dip"
+	  style="@style/list_text"
+	  />
+    
 
  </RelativeLayout>
-  
+ 

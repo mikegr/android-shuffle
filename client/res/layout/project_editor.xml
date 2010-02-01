@@ -75,20 +75,49 @@
         android:background="@android:drawable/divider_horizontal_bright"
     />
 
-    <CheckBox android:id="@+id/parallel"
-        android:layout_width="wrap_content"
+    <RelativeLayout android:id="@+id/parallel_entry"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/parallel_divider"        
-        android:text="@string/parallel_title"
-    />
+        android:paddingRight="?android:attr/scrollbarSize"
+        android:background="@android:drawable/list_selector_background"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:focusable="true"
+        android:clickable="true"
+        >
+
+        <ImageView android:id="@+id/parallel_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="10dip"
+            android:duplicateParentState="true"
+             />
+
+
+	    <TextView android:id="@+id/parallel_label"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_toLeftOf="@+id/parallel_icon"
+	        android:layout_centerVertical="true"
+	        android:text="@string/sequence_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:maxLines="2"
+            android:duplicateParentState="true"
+            android:paddingLeft="10dip"
+	    />
+	    
+    </RelativeLayout>    
 			
     <View android:id="@+id/save_divider"
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:layout_alignParentLeft="true"
-		android:layout_below="@+id/parallel"        
+		android:layout_below="@+id/parallel_entry"        
         android:background="@android:drawable/divider_horizontal_bright"
     />
 			

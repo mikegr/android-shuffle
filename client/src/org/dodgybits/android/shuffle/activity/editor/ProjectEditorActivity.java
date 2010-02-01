@@ -28,10 +28,13 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
 
@@ -39,10 +42,13 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
    
     private EditText mNameWidget;
     private Spinner mDefaultContextSpinner;
-    private CheckBox mParallelCheckBox;
+    private RelativeLayout mParallelEntry;
+    private TextView mParallelLabel;
+    private ImageView mParallelButton;
     
     private String[] mContextNames;
     private long[] mContextIds;
+    private boolean isParallel;
     
     @Override
     protected void onCreate(Bundle icicle) {
@@ -64,6 +70,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
                 mNameWidget.setText(getText(R.string.error_message));
             }
         } else if (mState == State.STATE_INSERT) {
+            isParallel = false;
             setTitle(R.string.title_new_project);
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
@@ -95,7 +102,6 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         if (mOriginalItem != null) {
             tracksId = mOriginalItem.tracksId;
         }
-        boolean isParallel = mParallelCheckBox.isChecked();
         
         return new Project(
                 name, defaultContextId, archived, 
@@ -121,7 +127,25 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         		}
         	}
         }
-        mParallelCheckBox.setChecked(project.isParallel);
+        
+        isParallel = project.isParallel;
+        updateParallelSection();
+    }
+    
+    
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.parallel_entry: {
+                isParallel = !isParallel;
+                updateParallelSection();
+                break;
+            }
+
+            default:
+                super.onClick(v);
+                break;
+        }
     }
     
     /**
@@ -193,7 +217,21 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDefaultContextSpinner.setAdapter(adapter);
         
-        mParallelCheckBox = (CheckBox)findViewById(R.id.parallel);
+        mParallelLabel = (TextView) findViewById(R.id.parallel_label);
+        mParallelButton = (ImageView) findViewById(R.id.parallel_icon);
+        mParallelEntry = (RelativeLayout) findViewById(R.id.parallel_entry);
+        mParallelEntry.setOnClickListener(this);
     }        
 
+    private void updateParallelSection() {
+        if (isParallel) {
+            mParallelLabel.setText(R.string.parallel_title);
+            mParallelButton.setImageResource(R.drawable.parallel);
+        } else {
+            mParallelLabel.setText(R.string.sequence_title);
+            mParallelButton.setImageResource(R.drawable.sequence);
+        }
+    }
+    
+    
 }
