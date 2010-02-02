@@ -55,35 +55,28 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="5dip">
+        android:paddingBottom="5dip"
+        >
+        
         <Button android:id="@+id/clear_dates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:text="@string/clear_title"
             />
 
         <CheckBox android:id="@+id/is_all_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:paddingTop="15dip"
             android:paddingBottom="15dip"
-            android:paddingRight="1dip"
+            android:paddingRight="10dip"
+            android:text="@string/all_day_title"
             />
         
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/is_all_day"
-            android:layout_centerVertical="true"
-            android:text="@string/all_day_title"
-            android:paddingTop="1dip"
-            android:paddingRight="7dip"
-            style="?android:attr/textAppearanceMedium"
-            />
     </RelativeLayout>
 
     <!-- REMINDERS -->

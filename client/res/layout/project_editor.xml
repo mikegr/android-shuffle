@@ -77,7 +77,7 @@
 
     <RelativeLayout android:id="@+id/parallel_entry"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dip"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/parallel_divider"        
         android:paddingRight="?android:attr/scrollbarSize"

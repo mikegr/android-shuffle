@@ -37,7 +37,7 @@ import android.widget.TextView;
 public class TaskView extends ItemView<Task> {
     protected LabelView mContext;
     protected TextView mDescription;
-    protected TextView mDueDate;
+    protected TextView mDateDisplay;
     protected TextView mProject;
     protected TextView mDetails;
     protected boolean mShowContext;
@@ -52,7 +52,7 @@ public class TaskView extends ItemView<Task> {
         
         mContext = (LabelView) findViewById(R.id.context);
         mDescription = (TextView) findViewById(R.id.description);
-        mDueDate = (TextView) findViewById(R.id.due_date);
+        mDateDisplay = (TextView) findViewById(R.id.due_date);
         mProject = (TextView) findViewById(R.id.project);
         mDetails = (TextView) findViewById(R.id.details);
         mShowContext = true;
@@ -120,19 +120,21 @@ public class TaskView extends ItemView<Task> {
 
     private void updateWhen(Task task) {
         if (Preferences.displayDueDate(getContext())) {
-            long displayDate = task.startDate > 0L ? task.startDate : task.dueDate;
-            mDueDate.setText(DateUtils.displayShortDateTime(getContext(), displayDate));
-            if (displayDate < System.currentTimeMillis()) {
+            CharSequence dateRange = DateUtils.displayDateRange(
+                    getContext(), task.startDate, task.dueDate, !task.allDay);
+            mDateDisplay.setText(dateRange);
+            if (task.dueDate < System.currentTimeMillis()) {
                 // task is overdue
-                mDueDate.setTypeface(Typeface.DEFAULT_BOLD);
-                mDueDate.setTextColor(Color.RED);
+                mDateDisplay.setTypeface(Typeface.DEFAULT_BOLD);
+                mDateDisplay.setTextColor(Color.RED);
             } else {
-                mDueDate.setTypeface(Typeface.DEFAULT);
-                mDueDate.setTextColor(getContext().getResources().getColor(R.drawable.dark_blue));
+                mDateDisplay.setTypeface(Typeface.DEFAULT);
+                mDateDisplay.setTextColor(
+                        getContext().getResources().getColor(R.drawable.dark_blue));
             }
-            mDueDate.setVisibility(View.VISIBLE);
+            mDateDisplay.setVisibility(View.VISIBLE);
         } else {
-            mDueDate.setVisibility(View.INVISIBLE);
+            mDateDisplay.setVisibility(View.INVISIBLE);
         }
     }
     

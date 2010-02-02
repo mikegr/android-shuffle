@@ -381,11 +381,10 @@ public class ShuffleProvider extends ContentProvider {
 				orderBy = Shuffle.Tasks.DEFAULT_SORT_ORDER;
 				break;
 			case TOP_TASKS:
-				orderBy = sTaskListProjectMap.get(Shuffle.Tasks.PROJECT_NAME)
-						+ " ASC";
+                orderBy = Shuffle.Tasks.DUE_DATE + " ASC";
 				break;
 			case DUE_TASKS:
-				orderBy = Shuffle.Tasks.START_DATE + " ASC";
+				orderBy = Shuffle.Tasks.DUE_DATE + " ASC";
 				break;
 			case CONTEXTS:
 			case CONTEXT_ID:

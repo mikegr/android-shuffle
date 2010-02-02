@@ -119,8 +119,8 @@
     <string name="archived_title">Archived</string>
     <string name="icon_title">Icon</string>
     <string name="name_title">Name</string>
-    <string name="sequence_title">Actions executed in sequence</string>
-    <string name="parallel_title">Actions executed in parallel</string>
+    <string name="sequence_title">Actions completed in sequence</string>
+    <string name="parallel_title">Actions completed in parallel</string>
     <string name="default_context_title">Default context</string>
     <string name="preview_title">Preview</string>
     <string name="context_errands">Errands</string>
@@ -142,22 +142,27 @@
     <string name="due_date_title">Due Date</string>
 
 
-    <string name="general_preferences">General settings</string>
+    <string name="general_preferences">Google settings</string>
     
-    <string name="title_calendar_preference">Select calendar</string>
+    <string name="title_calendar_preference">Calendar selection</string>
     <string name="summary_calendar_preference">For new Google Calendar entries</string>
 
 
 	<string name="layout_preferences">Layout settings</string>
 
-	<string name="title_project_view_preference">Project View</string>
+	<string name="title_project_view_preference">Project view</string>
 	<string name="summary_project_view_preference">Display project actions on separate screen</string>
 
-	<string name="title_context_view_preference">Context View</string>
+	<string name="title_context_view_preference">Context view</string>
 	<string name="summary_context_view_preference">Display context actions on separate screen</string>
 
 	<string name="title_action_appearance_preference">Action appearance</string>
 	<string name="summary_action_appearance_preference">Customize display of actions in lists</string>
+
+
+    <string name="sync_preferences">Synchronization settings</string>
+
+    <string name="changeSynchronizationSettings">Tracks settings</string>
 
 
 	<string name="backup_preferences">Backup settings</string>
@@ -210,12 +215,9 @@
     <string name="itemDeletedToast"><xliff:g id="itemName">%s</xliff:g> deleted.</string>
     
    <!-- synchronization-->
-    <string name="sync_preferences">Synchronization settings</string>
-
     <string name="synchronizing">Synchronizing with Tracks</string>
     <string name="tracksUser">User</string>
     <string name="tracksInstallation">Target installation</string>
-    <string name="changeSynchronizationSettings">Change synchronization settings</string>
     <string name="tracks_url">Tracks installation</string>
     <string name="tracks_url_settings">http://my.gtdify.com</string>
     <string name="tracks_user">User</string>
@@ -283,7 +285,7 @@ add new actions and reorder any remaining actions depending on your current prio
 This is the best place to add your actions. 
 The <b>Inbox</b> is where all actions start off before they are processed.
 Try to regularly scan the Inbox, analyzing each action and either discard it, do it or assign it
-to a project.\n
+to a project and/or context.\n
 Once you\'ve processed the list, select <i>Clean up Inbox</i> from the menu to
 clear out all the categorized actions from your Inbox. 
     </string>
@@ -291,6 +293,9 @@ clear out all the categorized actions from your Inbox.
 The <b>Project</b> perspective lists all your projects, and allows you to drill-down 
 into each project to view its actions. In addition to the standard adding, editing and deleting
 of actions, the project view also supports rearranging actions in the order you intend to complete them.
+\n
+For some projects it makes sense for actions to completed one after the other in strict order. For other
+projects,  actions can be completed in any order. This is configurable when creating or editing a project.
 \n
 Projects, like contexts, can be viewed in two different modes: drill-down or expandable view. 
 In drill down mode, clicking on a project takes you to another 
@@ -306,9 +311,11 @@ Like the Projects perspective, contexts can be viewed in either drill-down or ex
     </string>
     <string name="help4">
 <b>Next actions</b> is the best place to look to determine what needs to be done. \n
-It shows the first action for each of your projects. 
-If you\'ve organized each of your projects actions in the order you intend to complete them, 
-this list quickly shows you the most important actions for you could get started on now.
+It shows the following actions\n
+- those without a project\n
+- the first action for sequential projects\n
+- all actions for parallel projects\n
+This list quickly shows you the most important actions for you to get started on now.
     </string>
     <string name="help5">
 <b>Due actions</b> lets you keep track of actions you have given an explicit due date. 
@@ -318,9 +325,15 @@ Overdue actions are shown in all views.
     </string>
     <string name="help6">
 A number of aspects of Shuffle are user-configurable. The <b>Settings</b> screen is available from all Perspectives via the menu. \n
-<b>List layout</b>  - Show projects and contexts in two screens (drill-down) or in a tree structure (expandable). \n
+<b>Calendar</b>  - Select a calendar to use when integrating actions with Google Calendar. \n
+<b>Project/Context view</b>  - Show projects and contexts in two screens (drill-down) or in a tree structure (expandable). \n
 <b>Action appearance</b> - Lets you customize what information to display for actions in each perspective.  \n
-<b>Clean up</b> - Delete completed actions or delete everything. \n
+<b>Tracks settings</b> - Configure synchronization with a Tracks server . \n
+<b>Backup to SD Card</b> - Save all your actions, contexts and projects to your SD Card. You can them back this up to your computer. \n
+<b>Restore from SD Card</b> - Restores all your data from a backup. No attempt is made to avoid duplicate actions, 
+so it's best to restore onto a clean Shuffle instance. \n
+<b>Delete completed actions</b> - Permanently delete all completed actions. \n
+<b>Delete everything!</b> - Permanently delete all actions, projects and custom contexts. \n
     </string>
     <string name="help7">
 Some handy Shuffle features you may not know about:\n
@@ -328,12 +341,13 @@ Some handy Shuffle features you may not know about:\n
 2) Hitting the Back button saves before closing.\n
 3) Use the <i>Save and New</i> menu to create a bunch of actions in one go.\n
 4) You can mark an action as complete by swiping your finger over it in a list.\n
-5) Create a shortcut on the Home Screen to create a new action\n
+5) Create shortcuts on your Home Screens for various Shuffle views and actions\n
+6) In Global Settings &gt; Search, enable Shuffle for actions to appear in Quick Search Box queries (Android 1.6+ only)
     </string>
     <string name="help8">
 Thanks to the team behind the Tango Desktop Project, an open source collection of icons used in Shuffle.
-Thanks also to David Gibb for providing some great feedback on the design and to Gudrun for tolerating my nights and weekends
-spent tinkering with Android.\n
+Thanks also to David Gibb for providing some great feedback on the design, Morten Nielson for the Tracks synch work,
+and to Gudrun for tolerating my nights and weekends spent tinkering with Android.\n
 \n
 For feedback or bug reports, please check http://code.google.com/p/android-shuffle/issues/list or email me at andy@dodgybits.org
     </string>

@@ -29,35 +29,58 @@ public class DateUtils {
 		return Time.getJulianDay(millisX, 0) == Time.getJulianDay(millisY, 0);
 	}
 		
-	/**
-	 * Display date time in short format using the user's date format settings
-	 * as a guideline.
-	 * 
-	 * For epoch, display nothing.
-	 * For today, only show the time.
-	 * Otherwise, only show the day and month.
-	 * 
-	 * @param context
-	 * @param timeInMs datetime to display
-	 * @return local specific representation
-	 */
-	public static CharSequence displayShortDateTime(Context context, long timeInMs) {
-		long now = System.currentTimeMillis();
-		CharSequence result;
-		if (timeInMs == 0L) {
-			result = "";
-		} else {
-			int flags;
-			if (isSameDay(timeInMs, now)) {
-				flags = FORMAT_SHOW_TIME | FORMAT_ABBREV_TIME;
-			} else {
-				flags = FORMAT_SHOW_DATE | FORMAT_ABBREV_MONTH;
-			}
-			result = android.text.format.DateUtils.formatDateRange(
-					context, timeInMs, timeInMs, flags);
+	public static CharSequence displayDateRange(Context context, long startMs, long endMs, boolean includeTime) {
+		CharSequence result = "";
+		final boolean includeStart = startMs > 0L;
+		final boolean includeEnd = endMs > 0L;
+		
+		if (includeStart) {
+		    if (includeEnd) {
+	            int flags = FORMAT_SHOW_DATE | FORMAT_ABBREV_MONTH;
+	            if (includeTime) {
+	                flags |= FORMAT_SHOW_TIME | FORMAT_ABBREV_TIME; 
+	            }
+	            result = android.text.format.DateUtils.formatDateRange(
+	                    context, startMs, endMs, flags);
+		    } else {
+		        result = displayShortDateTime(context, startMs);
+		    }
+		} else if (includeEnd) {
+            result = displayShortDateTime(context, endMs);
 		}
+		
 		return result;
 	}
+	
+    /**
+     * Display date time in short format using the user's date format settings
+     * as a guideline.
+     * 
+     * For epoch, display nothing.
+     * For today, only show the time.
+     * Otherwise, only show the day and month.
+     * 
+     * @param context
+     * @param timeInMs datetime to display
+     * @return locale specific representation
+     */
+    public static CharSequence displayShortDateTime(Context context, long timeInMs) {
+        long now = System.currentTimeMillis();
+        CharSequence result;
+        if (timeInMs == 0L) {
+            result = "";
+        } else {
+            int flags;
+            if (isSameDay(timeInMs, now)) {
+                flags = FORMAT_SHOW_TIME | FORMAT_ABBREV_TIME;
+            } else {
+                flags = FORMAT_SHOW_DATE | FORMAT_ABBREV_MONTH;
+            }
+            result = android.text.format.DateUtils.formatDateRange(
+                    context, timeInMs, timeInMs, flags);
+        }
+        return result;
+    }
 	
 	
 }
