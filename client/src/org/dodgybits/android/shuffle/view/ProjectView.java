@@ -20,6 +20,9 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.model.Project;
 
 import android.content.Context;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -30,6 +33,7 @@ public class ProjectView extends ItemView<Project> {
 	private ImageView mParallelIcon;
 	
 	private SparseIntArray mTaskCountArray;
+	private ForegroundColorSpan mSpan;
 	
 	public ProjectView(Context androidContext) {
 		super(androidContext);
@@ -40,6 +44,10 @@ public class ProjectView extends ItemView<Project> {
 		
 		mName = (TextView) findViewById(R.id.name);
 		mParallelIcon = (ImageView) findViewById(R.id.parallel_image);
+		
+        int colour = getResources().getColor(R.drawable.pale_blue);
+        mSpan = new ForegroundColorSpan(colour);
+		
 	}
 	
 	protected int getViewResourceId() {
@@ -56,7 +64,12 @@ public class ProjectView extends ItemView<Project> {
 		if (mTaskCountArray != null) {
 			Integer count = mTaskCountArray.get(project.id.intValue());
 			if (count == null) count = 0;
-			mName.setText(project.name + " (" + count + ")");
+			
+            CharSequence label = project.name + "  (" + count + ")";
+            SpannableString spannable = new SpannableString(label);
+            spannable.setSpan(mSpan, project.name.length(),
+                    label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+			mName.setText(spannable);
 		} else {
 			mName.setText(project.name);
 		}
