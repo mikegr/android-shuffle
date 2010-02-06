@@ -24,11 +24,11 @@ import android.os.Handler;
 import android.text.format.DateUtils;
 import android.util.Log;
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.model.Context;
-import org.dodgybits.android.shuffle.model.Context.Icon;
-import org.dodgybits.android.shuffle.model.Project;
-import org.dodgybits.android.shuffle.model.Task;
-import org.dodgybits.android.shuffle.provider.Shuffle;
+import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.Context.Icon;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -248,7 +248,7 @@ public class ModelUtils {
 
 	public static boolean insertContext(
 			android.content.Context androidContext,
-			org.dodgybits.android.shuffle.model.Context context) {
+			org.dodgybits.shuffle.android.core.model.Context context) {
 		Uri uri = androidContext.getContentResolver().insert(
 				Shuffle.Contexts.CONTENT_URI, null);
 		long id = ContentUris.parseId(uri);

@@ -25,11 +25,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.SparseIntArray;
-import org.dodgybits.android.shuffle.model.Context;
-import org.dodgybits.android.shuffle.model.Context.Icon;
-import org.dodgybits.android.shuffle.model.Project;
-import org.dodgybits.android.shuffle.model.Task;
-import org.dodgybits.android.shuffle.provider.Shuffle;
+
+import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.Context.Icon;
+import org.dodgybits.shuffle.android.core.util.StringUtils;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
 import java.util.*;
 

@@ -22,10 +22,10 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.model.Context;
-import org.dodgybits.android.shuffle.provider.Shuffle;
 import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.android.shuffle.util.MenuUtils;
+import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
 public class ContextListConfig implements DrilldownListConfig<Context> {
 

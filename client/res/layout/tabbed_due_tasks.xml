@@ -30,7 +30,7 @@
 			android:layout_width="fill_parent" android:layout_height="0dip"
 			android:layout_weight="1">
 
-			<org.dodgybits.android.shuffle.view.SwipeListItemWrapper
+			<org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper
 				android:id="@+id/swipe_wrapper"
 				android:layout_width="fill_parent"
 				android:layout_height="fill_parent"
@@ -57,7 +57,7 @@
 				                            
 				</LinearLayout>
 
-			</org.dodgybits.android.shuffle.view.SwipeListItemWrapper>
+			</org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper>
 				
 		</FrameLayout>
 

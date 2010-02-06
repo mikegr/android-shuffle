@@ -51,7 +51,7 @@
 
             <intent android:action="android.intent.action.MAIN" 
                 android:targetPackage="org.dodgybits.android.shuffle" 
-            	android:targetClass="org.dodgybits.android.shuffle.activity.preferences.PreferencesAppearanceActivity" />
+            	android:targetClass="org.dodgybits.shuffle.android.preference.activity.PreferencesAppearanceActivity" />
         </PreferenceScreen>
 
     </PreferenceCategory>
@@ -64,7 +64,7 @@
 
             <intent android:action="android.intent.action.MAIN"
                 android:targetPackage="org.dodgybits.android.shuffle"
-            	android:targetClass="org.dodgybits.android.shuffle.activity.preferences.SynchronizationSettingsActivity" />
+            	android:targetClass="org.dodgybits.shuffle.android.preference.activity.SynchronizationSettingsActivity" />
         </PreferenceScreen>
 
     </PreferenceCategory>
@@ -78,7 +78,7 @@
 
             <intent android:action="android.intent.action.MAIN" 
                 android:targetPackage="org.dodgybits.android.shuffle" 
-            	android:targetClass="org.dodgybits.android.shuffle.activity.preferences.PreferencesCreateBackupActivity" />
+            	android:targetClass="org.dodgybits.shuffle.android.preference.activity.PreferencesCreateBackupActivity" />
         </PreferenceScreen>
 
         <PreferenceScreen
@@ -87,7 +87,7 @@
 
             <intent android:action="android.intent.action.MAIN" 
                 android:targetPackage="org.dodgybits.android.shuffle" 
-            	android:targetClass="org.dodgybits.android.shuffle.activity.preferences.PreferencesRestoreBackupActivity" />
+            	android:targetClass="org.dodgybits.shuffle.android.preference.activity.PreferencesRestoreBackupActivity" />
         </PreferenceScreen>
 
     </PreferenceCategory>
@@ -100,7 +100,7 @@
 
             <intent android:action="android.intent.action.MAIN" 
                 android:targetPackage="org.dodgybits.android.shuffle" 
-            	android:targetClass="org.dodgybits.android.shuffle.activity.preferences.PreferencesDeleteCompletedActivity" />
+            	android:targetClass="org.dodgybits.shuffle.android.preference.activity.PreferencesDeleteCompletedActivity" />
         </PreferenceScreen>
 
         <PreferenceScreen
@@ -109,7 +109,7 @@
 
             <intent android:action="android.intent.action.MAIN" 
                 android:targetPackage="org.dodgybits.android.shuffle" 
-            	android:targetClass="org.dodgybits.android.shuffle.activity.preferences.PreferencesDeleteAllActivity" />
+            	android:targetClass="org.dodgybits.shuffle.android.preference.activity.PreferencesDeleteAllActivity" />
         </PreferenceScreen>
 
     </PreferenceCategory>

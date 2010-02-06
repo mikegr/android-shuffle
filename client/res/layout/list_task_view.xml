@@ -68,7 +68,7 @@
 		android:ellipsize="middle"
 		style="@style/list_text" />
 
-    <org.dodgybits.android.shuffle.view.LabelView
+    <org.dodgybits.shuffle.android.list.view.LabelView
         android:id="@+id/context" 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
