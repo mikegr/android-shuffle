@@ -76,7 +76,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 		    
 		    public String createTitle(ContextWrapper context)
 		    {
-		    	return context.getString(R.string.title_context_tasks, mContext.name);
+		    	return context.getString(R.string.title_context_tasks, mContext.getName());
 		    }
 			
 		};
@@ -116,7 +116,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     	Intent intent = super.getInsertIntent();
     	Bundle extras = intent.getExtras();
     	if (extras == null) extras = new Bundle();
-    	extras.putLong(Shuffle.Tasks.CONTEXT_ID, mContext.id);
+    	extras.putLong(Shuffle.Tasks.CONTEXT_ID, mContext.getLocalId().getId());
     	intent.putExtras(extras);
     	return intent;
     }    

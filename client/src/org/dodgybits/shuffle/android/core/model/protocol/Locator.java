@@ -1,4 +1,4 @@
-package org.dodgybits.shuffle.android.core.model.encoding;
+package org.dodgybits.shuffle.android.core.model.protocol;
 
 public interface Locator<T> {
 	

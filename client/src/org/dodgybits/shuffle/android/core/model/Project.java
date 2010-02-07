@@ -16,126 +16,151 @@
 
 package org.dodgybits.shuffle.android.core.model;
 
-import org.dodgybits.shuffle.android.core.model.encoding.Locator;
-import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksCompatible;
-import org.dodgybits.shuffle.dto.ShuffleProtos.Project.Builder;
+import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
 
 import android.text.TextUtils;
 
-public class Project extends AbstractEntity implements TracksCompatible {
-	public Long id;
-	public final String name;
-	public final Long defaultContextId;
-	public final boolean archived;
-    public Long tracksId;
-    public final long modified;
-    public final boolean isParallel;
+public class Project implements TracksEntity {
+	private Id mLocalId = Id.NONE;
+	private String mName;
+	private Id mDefaultContextId = Id.NONE;
+    private long mModifiedDate;
+    private boolean mParallel;
+    private Id mTracksId = Id.NONE;
 
+    private Project() {
+    };
 
-    public Project(Long id, String name, 
-            Long defaultContextId, boolean archived, 
-            Long tracksId, long modified, boolean isParallel) {
-		this.id = id;
-		this.name = name;
-		this.defaultContextId = defaultContextId;
-		this.archived = archived;
-        this.tracksId = tracksId;
-        this.modified = modified;
-        this.isParallel = isParallel;
-    }
-	
-	public Project(String name, 
-	        Long defaultContextId, boolean archived, 
-            Long tracksId, long modified, boolean isParallel) {
-		this(null, name, defaultContextId, archived, tracksId, modified, isParallel);
-	}
-
-    @Override
-    public Long getTracksId() {
-        return tracksId;
+    public final Id getLocalId() {
+        return mLocalId;
     }
 
-    @Override
-    public long getModified() {
-        return modified;
+    public final String getName() {
+        return mName;
     }
 
-    @Override
-    public String getLocalName() {
-        return name;
+    public final Id getDefaultContextId() {
+        return mDefaultContextId;
+    }
+    
+    public final long getModifiedDate() {
+        return mModifiedDate;
     }
 
-    @Override
-    public void setTracksId(Long id) {
-        tracksId = id;
+    public final boolean isParallel() {
+        return mParallel;
     }
 
-    @Override
-	public boolean equals(Object o) {
-		boolean result = false;
-		if (o instanceof Project) {
-			result = TextUtils.equals(((Project)o).name, name );
-		}
-		return result;
-	}
+    public final Id getTracksId() {
+        return mTracksId;
+    }
 
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
+    public final String getLocalName() {
+        return mName;
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    public static Builder newBuilder() {
+        return Builder.create();
+    }
 
-	public org.dodgybits.shuffle.dto.ShuffleProtos.Project toDto() {
-		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Project.newBuilder();
-		builder
-		    .setId(id)
-		    .setName(name)
-		    .setModified(toDate(modified))
-		    .setParallel(isParallel);
-		if (defaultContextId != null) {
-			builder.setDefaultContextId(defaultContextId);
-		}
-        if (tracksId != null) {
-            builder.setTracksId(tracksId);
+    public final boolean isInitialized() {
+        if (TextUtils.isEmpty(mName)) {
+            return false;
+        }
+        return true;
+    }
+
+    public static class Builder {
+
+        private Builder() {
+        }
+
+        private Project result;
+
+        private static Builder create() {
+            Builder builder = new Builder();
+            builder.result = new Project();
+            return builder;
+        }
+
+        public Id getLocalId() {
+            return result.mLocalId;
+        }
+
+        public Builder setLocalId(Id value) {
+            result.mLocalId = value;
+            return this;
+        }
+
+        public String getName() {
+            return result.mName;
+        }
+
+        public Builder setName(String value) {
+            result.mName = value;
+            return this;
         }
         
-		return builder.build();
-	}
-
-	public static Project buildFromDto(
-			org.dodgybits.shuffle.dto.ShuffleProtos.Project dto,
-			Locator<Context> contextLocator
-			) {
-		// use locator to find default context since we may be mapping ids
-		Long defaultContextId = null;
-		if (dto.hasDefaultContextId()) {
-			Context defaultContext = contextLocator.findById(dto.getDefaultContextId());
-			if (defaultContext != null) {
-				defaultContextId = defaultContext.id;
-			}
-		}
-        Long tracksId = null;
-        if (dto.hasTracksId()) {
-            tracksId = dto.getTracksId();
+        public Id getDefaultContextId() {
+            return result.mDefaultContextId;
         }
-        long modified = fromDate(dto.getModified());
-		
-        boolean parallel = false;
-		if (dto.hasParallel()) {
-		    parallel = dto.getParallel();
-		}
-		
-		return new Project(
-				dto.getId(),
-				dto.getName(),
-				defaultContextId,
-				false,
-				tracksId,
-				modified,
-				parallel);
-	}
+
+        public Builder setDefaultContextId(Id value) {
+            result.mDefaultContextId = value;
+            return this;
+        }
+
+        public long getModifiedDate() {
+            return result.mModifiedDate;
+        }
+
+        public Builder setModifiedDate(long value) {
+            result.mModifiedDate = value;
+            return this;
+        }
+
+        public boolean isParallel() {
+            return result.mParallel;
+        }
+
+        public Builder setParallel(boolean value) {
+            result.mParallel = value;
+            return this;
+        }
+
+        public Id getTracksId() {
+            return result.mTracksId;
+        }
+
+        public Builder setTracksId(Id value) {
+            result.mTracksId = value;
+            return this;
+        }
+
+        public final boolean isInitialized() {
+            return result.isInitialized();
+        }
+
+        public Project build() {
+            if (result == null) {
+                throw new IllegalStateException(
+                        "build() has already been called on this Builder.");
+            }
+            Project returnMe = result;
+            result = null;
+            return returnMe;
+        }
+        
+        public Builder mergeFrom(Project project) {
+            setLocalId(project.mLocalId);
+            setName(project.mName);
+            setDefaultContextId(project.mDefaultContextId);
+            setModifiedDate(project.mModifiedDate);
+            setParallel(project.mParallel);
+            setTracksId(project.mTracksId);
+            return this;
+        }
+
+    }
+
 }

@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.list.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
 import java.util.ArrayList;

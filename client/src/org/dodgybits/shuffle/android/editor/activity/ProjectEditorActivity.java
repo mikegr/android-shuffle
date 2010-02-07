@@ -18,7 +18,9 @@ package org.dodgybits.shuffle.android.editor.activity;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.util.BindingUtils;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.Project.Builder;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
@@ -88,24 +90,26 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     	super.doDeleteAction();
         mNameWidget.setText("");
     }
-    
+        
     @Override
     protected Project createItemFromUI() {
-        String name = mNameWidget.getText().toString();
-    	Long defaultContextId = null;
+        Builder builder = Project.newBuilder();
+        if (mOriginalItem != null) {
+            builder.mergeFrom(mOriginalItem);
+        }
+
+        builder.setName(mNameWidget.getText().toString());
+        builder.setModifiedDate(System.currentTimeMillis());
+        builder.setParallel(isParallel);
+        
+    	Id defaultContextId = Id.NONE;
     	int selectedItemPosition = mDefaultContextSpinner.getSelectedItemPosition();
 		if (selectedItemPosition > 0) {
-    		defaultContextId = mContextIds[selectedItemPosition];
+    		defaultContextId = Id.create(mContextIds[selectedItemPosition]);
     	}
-    	boolean archived = false;
-        Long tracksId = null;
-        if (mOriginalItem != null) {
-            tracksId = mOriginalItem.tracksId;
-        }
+		builder.setDefaultContextId(defaultContextId);
         
-        return new Project(
-                name, defaultContextId, archived, 
-                tracksId, System.currentTimeMillis(), isParallel);
+        return builder.build();
     }
     
     @Override
@@ -115,20 +119,20 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     
     @Override
     protected void updateUIFromItem(Project project) {
-        mNameWidget.setTextKeepState(project.name);
-        Long defaultContextId = project.defaultContextId;
-        if (defaultContextId == null) {
-        	mDefaultContextSpinner.setSelection(0);
+        mNameWidget.setTextKeepState(project.getName());
+        Id defaultContextId = project.getDefaultContextId();
+        if (defaultContextId.isInitialised()) {
+            for (int i = 1; i < mContextIds.length; i++) {
+                if (mContextIds[i] == defaultContextId.getId()) {
+                    mDefaultContextSpinner.setSelection(i);
+                    break;
+                }
+            }
         } else {
-        	for (int i = 1; i < mContextIds.length; i++) {
-        		if (mContextIds[i] == defaultContextId) {
-        			mDefaultContextSpinner.setSelection(i);
-        			break;
-        		}
-        	}
+        	mDefaultContextSpinner.setSelection(0);
         }
         
-        isParallel = project.isParallel;
+        isParallel = project.isParallel();
         updateParallelSection();
     }
     

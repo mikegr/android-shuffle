@@ -26,10 +26,6 @@ import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.SparseIntArray;
 
-import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.core.model.Project;
-import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.Context.Icon;
 import org.dodgybits.shuffle.android.core.util.StringUtils;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
@@ -44,30 +40,6 @@ public class BindingUtils {
 		// deny
 	}
 
-    public static Task restoreTask(Bundle icicle, Resources res) {
-		if (icicle == null) return null;
-		Long id = getLong(icicle, Shuffle.Tasks._ID);
-		String description = icicle.getString(Shuffle.Tasks.DESCRIPTION);
-		String details = icicle.getString(Shuffle.Tasks.DETAILS);
-		Context context = restoreContext(icicle.getBundle(Shuffle.Tasks.CONTEXT_ID), res);
-		Project project = restoreProject(icicle.getBundle(Shuffle.Tasks.PROJECT_ID));
-		long created = icicle.getLong(Shuffle.Tasks.CREATED_DATE, 0L);
-		long modified = icicle.getLong(Shuffle.Tasks.MODIFIED_DATE, 0L);
-		long startDate = icicle.getLong(Shuffle.Tasks.START_DATE, 0L);
-		long dueDate = icicle.getLong(Shuffle.Tasks.DUE_DATE, 0L);
-		String timezone = icicle.getString(Shuffle.Tasks.TIMEZONE);
-		Boolean allDay = icicle.getBoolean(Shuffle.Tasks.ALL_DAY);
-		Boolean hasAlarms = icicle.getBoolean(Shuffle.Tasks.HAS_ALARM);
-		Long calEventId = getLong(icicle, Shuffle.Tasks.CAL_EVENT_ID);
-		int order = icicle.getInt(Shuffle.Tasks.DISPLAY_ORDER);
-		Boolean complete = icicle.getBoolean(Shuffle.Tasks.COMPLETE);
-		Long tracksId = getLong(icicle, Shuffle.Tasks.TRACKS_ID);
-		return new Task(
-				id, description, details,
-				context, project, created, modified,
-				startDate, dueDate, timezone, allDay, hasAlarms,
-				calEventId, order, complete, tracksId);
-	}
 
     public static Context restoreContext(Bundle icicle, Resources res) {
 		if (icicle == null) return null;
@@ -93,47 +65,7 @@ public class BindingUtils {
 		return new Project(id, name, defaultContextId, archived, tracksId, modified, isParallel);
 	}
 
-    public static Bundle saveTask(Bundle icicle, Task task) {
-		putLong(icicle, Shuffle.Tasks._ID, task.id);
-		icicle.putString(Shuffle.Tasks.DESCRIPTION, task.description);
-		icicle.putString(Shuffle.Tasks.DETAILS, task.details);
-		if (task.context != null) {
-			icicle.putBundle(Shuffle.Tasks.CONTEXT_ID, saveContext(new Bundle(), task.context));
-		}
-		if (task.project != null) {
-			icicle.putBundle(Shuffle.Tasks.PROJECT_ID, saveProject(new Bundle(), task.project));
-		}
-		icicle.putLong(Shuffle.Tasks.CREATED_DATE, task.created);
-		icicle.putLong(Shuffle.Tasks.MODIFIED_DATE, task.modified);
-		icicle.putLong(Shuffle.Tasks.START_DATE, task.startDate);
-		icicle.putLong(Shuffle.Tasks.DUE_DATE, task.dueDate);
-		icicle.putString(Shuffle.Tasks.TIMEZONE, task.timezone);
-		if (task.calEventId != null) {
-			icicle.putLong(Shuffle.Tasks.CAL_EVENT_ID, task.calEventId);
-		}
-		icicle.putBoolean(Shuffle.Tasks.ALL_DAY, task.allDay);
-		icicle.putBoolean(Shuffle.Tasks.HAS_ALARM, task.hasAlarms);
-		putInteger(icicle, Shuffle.Tasks.DISPLAY_ORDER, task.order);
-		icicle.putBoolean(Shuffle.Tasks.COMPLETE, task.complete);
-        putLong(icicle, Shuffle.Tasks.TRACKS_ID, task.tracksId);
-		return icicle;
-	}
 
-    private static Long getLong(Bundle icicle, String key) {
-		return icicle.containsKey(key) ? icicle.getLong(key) : null;
-	}
-
-    private static Integer getInteger(Bundle icicle, String key) {
-		return icicle.containsKey(key) ? icicle.getInt(key) : null;
-	}
-
-    private static void putInteger(Bundle icicle, String key, Integer value) {
-		if (value != null) icicle.putInt(key, value);
-	}
-
-    private static void putLong(Bundle icicle, String key, Long value) {
-		if (value != null) icicle.putLong(key, value);
-	}
 
     public static Bundle saveContext(Bundle icicle, Context context) {
 		putLong(icicle, Shuffle.Contexts._ID, context.id);

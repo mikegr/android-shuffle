@@ -22,9 +22,9 @@ import java.util.TimeZone;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
@@ -96,7 +96,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private Spinner mProjectSpinner;
     private EditText mDetailsWidget;
 
+    private String[] mContextNames;
     private long[] mContextIds;
+    
+    private String[] mProjectNames;
     private long[] mProjectIds;
     
     private boolean mSchedulingExpanded;
@@ -230,39 +233,44 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         	mOriginalItem = task;
         }
     	
-        mDetailsWidget.setTextKeepState(task.details == null ? "" : task.details);
+        final String details = task.getDetails();
+        mDetailsWidget.setTextKeepState(details == null ? "" : details);
         
-        mDescriptionWidget.setTextKeepState(task.description);
-        if (task.context != null) {
-        	setSpinnerSelection(mContextSpinner, mContextIds, task.context.id);
+        mDescriptionWidget.setTextKeepState(task.getDescription());
+        
+        final Id contextId = task.getContextId();
+        if (contextId.isInitialised()) {
+        	setSpinnerSelection(mContextSpinner, mContextIds, contextId.getId());
         }
-        if (task.project != null) {
-        	setSpinnerSelection(mProjectSpinner, mProjectIds, task.project.id);
+        
+        final Id projectId = task.getProjectId();
+        if (projectId.isInitialised()) {
+        	setSpinnerSelection(mProjectSpinner, mProjectIds, projectId.getId());
         }
                          
-        Boolean allDay = task.allDay;
+        boolean allDay = task.isAllDay();
 		if (allDay) {
             String tz = mStartTime.timezone;
             mStartTime.timezone = Time.TIMEZONE_UTC;
-            mStartTime.set(task.startDate);
+            mStartTime.set(task.getStartDate());
             mStartTime.timezone = tz;
 
             // Calling normalize to calculate isDst
             mStartTime.normalize(true);
         } else {
-            mStartTime.set(task.startDate);
+            mStartTime.set(task.getStartDate());
         }
 
         if (allDay) {
             String tz = mStartTime.timezone;
             mDueTime.timezone = Time.TIMEZONE_UTC;
-            mDueTime.set(task.dueDate);
+            mDueTime.set(task.getDueDate());
             mDueTime.timezone = tz;
 
             // Calling normalize to calculate isDst
             mDueTime.normalize(true);
         } else {
-            mDueTime.set(task.dueDate);
+            mDueTime.set(task.getDueDate());
         }
 
         setWhenDefaults();   
@@ -275,16 +283,16 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mAllDayCheckBox.setChecked(allDay);
         updateTimeVisibility(!allDay);
         
-        mCompletedCheckBox.setChecked(task.complete);
+        mCompletedCheckBox.setChecked(task.isComplete());
 
         updateCalendarPanel();
         
         // Load reminders (if there are any)
-        if (task.hasAlarms) {
+        if (task.hasAlarms()) {
             Uri uri = Shuffle.Reminders.CONTENT_URI;
             ContentResolver cr = getContentResolver();
             Cursor reminderCursor = cr.query(uri, Shuffle.Reminders.cFullProjection, 
-            		REMINDERS_WHERE, new String[] {String.valueOf(task.id)}, null);
+            		REMINDERS_WHERE, new String[] {String.valueOf(task.getLocalId().getId())}, null);
             try {
                 // First pass: collect all the custom reminder minutes (e.g.,
                 // a reminder of 8 minutes) into a global list.
@@ -310,16 +318,41 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     
     @Override
     protected Task createItemFromUI() {
-        String description = mDescriptionWidget.getText().toString();
+        Builder builder = Task.newBuilder();
+        if (mOriginalItem != null) {
+            builder.mergeFrom(mOriginalItem);
+        }
+        
+        final String description = mDescriptionWidget.getText().toString();
+        final long modified = System.currentTimeMillis();
+        final String details = mDetailsWidget.getText().toString();
+        final Id contextId = getSpinnerSelectedId(mContextSpinner, mContextIds);
+        final Id projectId = getSpinnerSelectedId(mProjectSpinner, mProjectIds);
+        final boolean allDay = mAllDayCheckBox.isChecked();
+        final boolean complete = mCompletedCheckBox.isChecked();
+        final boolean hasAlarms = !mReminderItems.isEmpty();
+        final int order = calculateTaskOrder(projectId);
 
-        // Bump the modification time to now.
-    	long modified = System.currentTimeMillis();
-    	long created;
-    	Boolean allDay = mAllDayCheckBox.isChecked();
-    	
+        builder
+            .setDescription(description)
+            .setModifiedDate(modified)
+            .setDetails(details)
+            .setContextId(contextId)
+            .setProjectId(projectId)
+            .setAllDay(allDay)
+            .setComplete(complete)
+            .setHasAlarm(hasAlarms)
+            .setOrder(order);
+
+        // If we are creating a new task, set the creation date
+        if (mState == State.STATE_INSERT) {
+            builder.setCreatedDate(modified);
+        }
+        
         String timezone;
         long startMillis = 0L;
         long dueMillis = 0L;
+        
         if (allDay) {
             // Reset start and end time, increment the monthDay by 1, and set
             // the timezone to UTC, as required for all-day events.
@@ -351,7 +384,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         	}
         	else
         	{
-        		timezone = mOriginalItem.timezone;
+        		timezone = mOriginalItem.getTimezone();
                 
                 // The timezone might be null if we are changing an existing
                 // all-day task to a non-all-day event.  We need to assign
@@ -362,59 +395,40 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             }
         }
         
-    	Integer order;
-    	String details = mDetailsWidget.getText().toString();
-    	
-    	Long contextId = getSpinnerSelectedId(mContextSpinner, mContextIds);
-		Context context = BindingUtils.fetchContextById(this, contextId);
-
-    	Long projectId = getSpinnerSelectedId(mProjectSpinner, mProjectIds);
-		Project project = BindingUtils.fetchProjectById(this, projectId);
-		
-    	Boolean complete = mCompletedCheckBox.isChecked();
-    	Boolean updateCalendar = mUpdateCalendarCheckBox.isChecked();
-    	Long eventId = mOriginalItem == null ? null : mOriginalItem.calEventId;
-    	Boolean hasAlarms = !mReminderItems.isEmpty();
-    	
+        builder
+            .setTimezone(timezone)
+            .setStartDate(startMillis)
+            .setDueDate(dueMillis);
+        
+        
+        Id eventId = mOriginalItem == null ? Id.NONE : mOriginalItem.getCalendarEventId();
+        final boolean updateCalendar = mUpdateCalendarCheckBox.isChecked();
+        
     	if (updateCalendar) {
     		Uri calEntryUri = addOrUpdateCalendarEvent(
     				eventId, description, details,
-    				project, context, timezone, startMillis, 
+    				projectId, contextId, timezone, startMillis, 
     				dueMillis, allDay);
     		if (calEntryUri != null) {
-    			eventId = ContentUris.parseId(calEntryUri);
+    			eventId = Id.create(ContentUris.parseId(calEntryUri));
     			mNextIntent = new Intent(Intent.ACTION_EDIT, calEntryUri);
     			mNextIntent.putExtra("beginTime", startMillis);
     			mNextIntent.putExtra("endTime", dueMillis);
     		}
     		Log.i(cTag, "Updated calendar event " + eventId);
     	}
-    	
-        // If we are creating a new task, set the creation date
-    	if (mState == State.STATE_INSERT) {
-    		created = modified;
-        } else {
-        	assert mOriginalItem != null;
-        	created = mOriginalItem.created;
-        }
-		order = calculateTaskOrder(project);
-        Long tracksId = null;
-        if (mOriginalItem != null) {
-            tracksId = mOriginalItem.tracksId;
-        }
+		builder.setCalendarEventId(eventId);
 		
-        return new Task(description, details,
-                context, project, created, modified,
-                startMillis, dueMillis, timezone, allDay, hasAlarms,
-                eventId, order, complete,
-                tracksId, modified);
+		return builder.build();
 	}
         
-    private Uri addOrUpdateCalendarEvent(Long calEventId, String title, String description,
-    		Project project, Context context,
+    private Uri addOrUpdateCalendarEvent(
+            Id calEventId, String title, String description,
+    		Id projectId, Id contextId,
     		String timezone, long start, long end, boolean allDay) {
-        if (project != null) {
-        	title = project.name + " - " + title;
+        if (projectId.isInitialised()) {
+            String projectName = getProjectName(projectId);
+        	title = projectName + " - " + title;
         }
         if (description == null) {
         	description = "";
@@ -437,16 +451,17 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         values.put("hasAlarm", 0);
         values.put("transparency", 0);
         values.put("visibility", 0);
-        if (context != null) {
-        	values.put("eventLocation", context.name);
+        if (contextId.isInitialised()) {
+            String contextName = getContextName(contextId);
+        	values.put("eventLocation", contextName);
         }
         
         Uri baseUri = Uri.parse("content://calendar/events");
         ContentResolver cr = getContentResolver();
         int updateCount = 0;
         Uri eventUri = null;
-        if (calEventId != null && calEventId > 0L) {
-        	eventUri = ContentUris.appendId(baseUri.buildUpon(), calEventId).build();
+        if (calEventId.isInitialised()) {
+        	eventUri = ContentUris.appendId(baseUri.buildUpon(), calEventId.getId()).build();
             // it's possible the old event was deleted, check number of records updated
             updateCount = cr.update(eventUri, values, null, null);
         }
@@ -455,7 +470,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         }
         return eventUri;
     }
-
+    
     @Override
     protected Intent getInsertIntent() {
     	Intent intent = new Intent(Intent.ACTION_INSERT, Shuffle.Tasks.CONTENT_URI);
@@ -463,14 +478,14 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     	Bundle extras = intent.getExtras();
     	if (extras == null) extras = new Bundle();
     	
-    	Long contextId = getSpinnerSelectedId(mContextSpinner, mContextIds);
-		if (contextId != null) {
-    		extras.putLong(Shuffle.Tasks.CONTEXT_ID, contextId);    		
+    	Id contextId = getSpinnerSelectedId(mContextSpinner, mContextIds);
+		if (contextId.isInitialised()) {
+    		extras.putLong(Shuffle.Tasks.CONTEXT_ID, contextId.getId());    		
 		}
 		
-    	Long projectId = getSpinnerSelectedId(mProjectSpinner, mProjectIds);
-    	if (projectId != null) {
-    		extras.putLong(Shuffle.Tasks.PROJECT_ID, projectId);    		
+    	Id projectId = getSpinnerSelectedId(mProjectSpinner, mProjectIds);
+    	if (projectId.isInitialised()) {
+    		extras.putLong(Shuffle.Tasks.PROJECT_ID, projectId.getId());    		
     	}
 
     	intent.putExtras(extras);
@@ -740,7 +755,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         int arraySize = contextCursor.getCount() + 1;
         mContextIds = new long[arraySize];
         mContextIds[0] = 0;
-        String[] mContextNames = new String[arraySize];
+        mContextNames = new String[arraySize];
         mContextNames[0] = getText(R.string.none_empty).toString();
         for (int i = 1; i < arraySize; i++) {
         	contextCursor.moveToNext();
@@ -761,7 +776,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         int arraySize = projectCursor.getCount() + 1;
         mProjectIds = new long[arraySize];
         mProjectIds[0] = 0;
-        String[] mProjectNames = new String[arraySize];
+        mProjectNames = new String[arraySize];
         mProjectNames[0] = getText(R.string.none_empty).toString();
         for (int i = 1; i < arraySize; i++) {
         	projectCursor.moveToNext();
@@ -775,11 +790,11 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mProjectSpinner.setAdapter(adapter);    	
     }
     
-    private Long getSpinnerSelectedId(Spinner spinner, long[] ids) {
-    	Long id = null;
+    private Id getSpinnerSelectedId(Spinner spinner, long[] ids) {
+    	Id id = Id.NONE;
     	int selectedItemPosition = spinner.getSelectedItemPosition();
 		if (selectedItemPosition > 0) {
-			id = ids[selectedItemPosition];
+			id = Id.create(ids[selectedItemPosition]);
     	}
     	return id;
     }
@@ -796,6 +811,32 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         	}
         }    	
     }    
+    
+    private String getContextName(Id contextId) {
+        String name = "";
+        final long id = contextId.getId();
+        for(int i = 0; i < mContextIds.length; i++) {
+            long currentId = mContextIds[i];
+            if (currentId == id) {
+                name = mContextNames[i];
+                break;
+            }
+        }
+        return name;
+    }
+
+    private String getProjectName(Id projectId) {
+        String name = "";
+        final long id = projectId.getId();
+        for(int i = 0; i < mProjectIds.length; i++) {
+            long currentId = mProjectIds[i];
+            if (currentId == id) {
+                name = mProjectNames[i];
+                break;
+            }
+        }
+        return name;
+    }
     
     private void addReminder() {
         if (mDefaultReminderMinutes == 0) {
@@ -940,16 +981,16 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
      * @param newProject the project selected for this task
      * @return 0-indexed order of task when displayed in the project view
      */
-    private Integer calculateTaskOrder(Project newProject) {
-    	if (newProject == null) return -1;
+    private Integer calculateTaskOrder(Id projectId) {
+    	if (!projectId.isInitialised()) return -1;
     	int order;
-    	if (mState == State.STATE_INSERT || !newProject.equals(mOriginalItem.project)) {
+    	if (mState == State.STATE_INSERT || !projectId.equals(mOriginalItem.getProjectId())) {
     		// get current highest order value    		
     		Cursor cursor =  getContentResolver().query(
     				Shuffle.Tasks.CONTENT_URI, 
     				new String[] {Shuffle.Tasks.PROJECT_ID, Shuffle.Tasks.DISPLAY_ORDER}, 
     				Shuffle.Tasks.PROJECT_ID + " = ?", 
-    				new String[] {newProject.id.toString()}, 
+    				new String[] {String.valueOf(projectId.getId())}, 
     				Shuffle.Tasks.DISPLAY_ORDER + " desc");
     		if (cursor.moveToFirst()) {
     			// first entry is current highest value
@@ -961,7 +1002,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     		}
     		cursor.close();
     	} else {
-    		order = mOriginalItem.order; 
+    		order = mOriginalItem.getOrder(); 
     	}
     	return order;
     }
@@ -1045,8 +1086,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private void updateCalendarPanel() {
     	boolean enabled = true;
         if (mOriginalItem != null && 
-        		mOriginalItem.calEventId != null && 
-        		mOriginalItem.calEventId > 0L) {
+        		mOriginalItem.getCalendarEventId().isInitialised()) {
             mCalendarLabel.setText(getString(R.string.update_gcal_title));
             mCalendarDetail.setText(getString(R.string.update_gcal_detail));
         } else if (mShowDue && mShowStart) {

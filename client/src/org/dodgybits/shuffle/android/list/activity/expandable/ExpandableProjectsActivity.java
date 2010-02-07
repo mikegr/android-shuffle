@@ -19,7 +19,7 @@ package org.dodgybits.shuffle.android.list.activity.expandable;
 import org.dodgybits.android.shuffle.activity.config.ExpandableListConfig;
 import org.dodgybits.android.shuffle.activity.config.ProjectExpandableListConfig;
 import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
@@ -91,12 +91,11 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	@Override
 	protected void updateInsertExtras(Bundle extras, Project project) {
-    	extras.putLong(Shuffle.Tasks.PROJECT_ID, project.id);
-    	if (project.defaultContextId != null) {
-    		Context context = BindingUtils.fetchContextById(this, project.defaultContextId);
-    		if (context != null) {
-        		extras.putLong(Shuffle.Tasks.CONTEXT_ID, context.id);
-    		}
+    	extras.putLong(Shuffle.Tasks.PROJECT_ID, project.getLocalId().getId());
+    	
+    	final Id defaultContextId = project.getDefaultContextId();
+    	if (defaultContextId.isInitialised()) {
+    		extras.putLong(Shuffle.Tasks.CONTEXT_ID, defaultContextId.getId());
     	}
 	}
 	

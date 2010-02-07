@@ -62,20 +62,20 @@ public class ProjectView extends ItemView<Project> {
 	@Override
 	public void updateView(Project project) {
 		if (mTaskCountArray != null) {
-			Integer count = mTaskCountArray.get(project.id.intValue());
+			Integer count = mTaskCountArray.get((int)project.getLocalId().getId());
 			if (count == null) count = 0;
 			
-            CharSequence label = project.name + "  (" + count + ")";
+            CharSequence label = project.getName() + "  (" + count + ")";
             SpannableString spannable = new SpannableString(label);
-            spannable.setSpan(mSpan, project.name.length(),
+            spannable.setSpan(mSpan, project.getName().length(),
                     label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 			mName.setText(spannable);
 		} else {
-			mName.setText(project.name);
+			mName.setText(project.getName());
 		}
 		
 		if (mParallelIcon != null) {
-    		if (project.isParallel) {
+    		if (project.isParallel()) {
     		    mParallelIcon.setImageResource(R.drawable.parallel);
     		} else {
                 mParallelIcon.setImageResource(R.drawable.sequence);

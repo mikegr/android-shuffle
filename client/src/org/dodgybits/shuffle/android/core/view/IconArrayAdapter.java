@@ -1,4 +1,4 @@
-package org.dodgybits.shuffle.android.list.view;
+package org.dodgybits.shuffle.android.core.view;
 
 import org.dodgybits.android.shuffle.R;
 

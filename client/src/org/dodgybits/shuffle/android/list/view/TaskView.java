@@ -92,8 +92,8 @@ public class TaskView extends ItemView<Task> {
         boolean displayContext = Preferences.displayContextName(getContext());
         boolean displayIcon = Preferences.displayContextIcon(getContext());
         if (mShowContext && context != null && (displayContext || displayIcon)) {           
-            mContext.setText(displayContext ? context.name : "");
-            mContext.setColourIndex(context.colourIndex);
+            mContext.setText(displayContext ? context.getName() : "");
+            mContext.setColourIndex(context.getColourIndex());
             // add context icon if preferences indicate to
             int id = context.icon.smallIconId;
             if (id > 0 && displayIcon) {
@@ -108,8 +108,8 @@ public class TaskView extends ItemView<Task> {
     }
     
     private void updateDescription(Task task) {
-        CharSequence description = task.description;
-        if (task.complete) {
+        CharSequence description = task.getDescription();
+        if (task.isComplete()) {
             // add strike-through for completed tasks
             SpannableString desc = new SpannableString(description);
             desc.setSpan(new StrikethroughSpan(), 0, description.length(), Spanned.SPAN_PARAGRAPH);
@@ -121,9 +121,9 @@ public class TaskView extends ItemView<Task> {
     private void updateWhen(Task task) {
         if (Preferences.displayDueDate(getContext())) {
             CharSequence dateRange = DateUtils.displayDateRange(
-                    getContext(), task.startDate, task.dueDate, !task.allDay);
+                    getContext(), task.getStartDate(), task.getDueDate(), !task.isAllDay());
             mDateDisplay.setText(dateRange);
-            if (task.dueDate < System.currentTimeMillis()) {
+            if (task.getDueDate() < System.currentTimeMillis()) {
                 // task is overdue
                 mDateDisplay.setTypeface(Typeface.DEFAULT_BOLD);
                 mDateDisplay.setTextColor(Color.RED);
@@ -148,8 +148,9 @@ public class TaskView extends ItemView<Task> {
     }
     
     private void updateDetails(Task task) {
-        if (Preferences.displayDetails(getContext()) && (task.details != null)) {
-            mDetails.setText(task.details);
+        final String details = task.getDetails();
+        if (Preferences.displayDetails(getContext()) && (details != null)) {
+            mDetails.setText(details);
             mDetails.setVisibility(View.VISIBLE);
         } else {
             mDetails.setVisibility(View.INVISIBLE);

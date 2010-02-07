@@ -16,115 +16,152 @@
 
 package org.dodgybits.shuffle.android.core.model;
 
-import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksCompatible;
-import org.dodgybits.shuffle.dto.ShuffleProtos.Context.Builder;
+import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
 
-import android.content.res.Resources;
 import android.text.TextUtils;
 
-public class Context extends AbstractEntity implements TracksCompatible {
-	public Long id;
-	public final String name;
-	public final int colourIndex;
-	// resource id to icon resource (may be null)
-	public final Icon icon;
-    public Long tracksId;
-    public final long modified;
 
-    public Context(Long id, String name, int colourIndex, Icon icon, Long tracksId, long modified) {
-		this.id = id;
-		this.name = name;
-		this.colourIndex = colourIndex;
-		this.icon = icon;
-        this.tracksId = tracksId;
-        this.modified = modified;
-    }
-	
-	public Context(String name, int colour, Icon icon, Long tracksId, long modified) {
-		this(null, name, colour, icon, tracksId, modified);
-	}
+public class Context implements TracksEntity {
+    private Id mLocalId = Id.NONE;
+    private String mName;
+    private int mColourIndex;
+    private String mIconName;
+    private long mModifiedDate;
+    private Id mTracksId = Id.NONE;
 
-    @Override
-    public Long getTracksId() {
-        return tracksId;
+    private Context() {
+    };
+
+    public final Id getLocalId() {
+        return mLocalId;
     }
 
-    @Override
-    public long getModified() {
-        return modified;
+    public final String getName() {
+        return mName;
     }
 
-    @Override
-    public String getLocalName() {
-        return name;
+    public final int getColourIndex() {
+        return mColourIndex;
+    }
+    
+    public final String getIconName() {
+        return mIconName;
+    }
+    
+    public final long getModifiedDate() {
+        return mModifiedDate;
     }
 
-    @Override
-    public void setTracksId(Long id) {
-        tracksId = id;
+    public final Id getTracksId() {
+        return mTracksId;
     }
 
-    public static class Icon {
-		private static final String cPackage = "org.dodgybits.android.shuffle"; 
-		private static final String cType = "drawable";
-		
-		public static final Icon NONE = new Icon(null, 0, 0);
-		
-		public final String iconName;
-		public final int largeIconId;
-		public final int smallIconId;
-		
-		private Icon(String iconName, int largeIconId, int smallIconId) {
-			this.iconName = iconName;
-			this.largeIconId = largeIconId;
-			this.smallIconId = smallIconId;
-		}
-		
-		public static Icon createIcon(String iconName, Resources res) {
-			if (TextUtils.isEmpty(iconName)) return NONE;
-			int largeId = res.getIdentifier(iconName, cType, cPackage);
-			int smallId = res.getIdentifier(iconName + "_small", cType, cPackage);
-			return new Icon(iconName, largeId, smallId);
-		}
-	}
+    public final String getLocalName() {
+        return mName;
+    }
 
-    public org.dodgybits.shuffle.dto.ShuffleProtos.Context toDto() {
-		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Context.newBuilder();
-		builder
-			.setId(id)
-			.setName(name)
-			.setColourIndex(colourIndex)
-			.setModified(toDate(modified));
-		if (tracksId != null) {
-		    builder.setTracksId(tracksId);
-		}
-		if (icon != Icon.NONE) {
-			builder.setIcon(icon.iconName);
-		}
-		return builder.build();
-	}
+    public static Builder newBuilder() {
+        return Builder.create();
+    }
 
-	public static Context buildFromDto(
-			org.dodgybits.shuffle.dto.ShuffleProtos.Context dto,
-			Resources res) {
-		Icon icon;
-		if (dto.hasIcon()) {
-			icon = Icon.createIcon(dto.getIcon(), res);
-		} else {
-			icon = Icon.NONE;
-		}
-        Long tracksId = null;
-        if (dto.hasTracksId()) {
-            tracksId = dto.getTracksId();
+    public final boolean isInitialized() {
+        if (TextUtils.isEmpty(mName)) {
+            return false;
         }
-        long modified = fromDate(dto.getModified());
+        return true;
+    }
 
-		return new Context(
-				dto.getId(),
-				dto.getName(),
-				dto.getColourIndex(),
-				icon,
-				tracksId,
-				modified);
-	}    
+    public static class Builder {
+
+        private Builder() {
+        }
+
+        private Context result;
+
+        private static Builder create() {
+            Builder builder = new Builder();
+            builder.result = new Context();
+            return builder;
+        }
+
+        public Id getLocalId() {
+            return result.mLocalId;
+        }
+
+        public Builder setLocalId(Id value) {
+            result.mLocalId = value;
+            return this;
+        }
+
+        public String getName() {
+            return result.mName;
+        }
+
+        public Builder setName(String value) {
+            result.mName = value;
+            return this;
+        }
+        
+        public int getColourIndex() {
+            return result.mColourIndex;
+        }
+
+        public Builder setColourIndex(int value) {
+            result.mColourIndex = value;
+            return this;
+        }
+
+        public String getIconName() {
+            return result.mIconName;
+        }
+
+        public Builder setIconName(String value) {
+            result.mIconName = value;
+            return this;
+        }
+        
+        public long getModifiedDate() {
+            return result.mModifiedDate;
+        }
+
+        public Builder setModifiedDate(long value) {
+            result.mModifiedDate = value;
+            return this;
+        }
+
+        public Id getTracksId() {
+            return result.mTracksId;
+        }
+
+        public Builder setTracksId(Id value) {
+            result.mTracksId = value;
+            return this;
+        }
+
+        public final boolean isInitialized() {
+            return result.isInitialized();
+        }
+
+        public Context build() {
+            if (result == null) {
+                throw new IllegalStateException(
+                        "build() has already been called on this Builder.");
+            }
+            Context returnMe = result;
+            result = null;
+            return returnMe;
+        }
+        
+        public Builder mergeFrom(Context context) {
+            setLocalId(context.mLocalId);
+            setName(context.mName);
+            setColourIndex(context.mColourIndex);
+            setIconName(context.mIconName);
+            setModifiedDate(context.mModifiedDate);
+            setTracksId(context.mTracksId);
+            return this;
+        }
+
+    }
+
 }

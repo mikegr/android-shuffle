@@ -20,7 +20,7 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.activity.config.AbstractTaskListConfig;
 import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
@@ -77,7 +77,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 		    
 		    public String createTitle(ContextWrapper context)
 		    {
-		    	return context.getString(R.string.title_project_tasks, mProject.name);
+		    	return context.getString(R.string.title_project_tasks, mProject.getName());
 		    }
 			
 		};
@@ -113,14 +113,16 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     protected Intent getInsertIntent() {
     	Intent intent = super.getInsertIntent();
     	Bundle extras = intent.getExtras();
-    	if (extras == null) extras = new Bundle();
-    	extras.putLong(Shuffle.Tasks.PROJECT_ID, mProject.id);
-    	if (mProject.defaultContextId != null) {
-    		Context context = BindingUtils.fetchContextById(this, mProject.defaultContextId);
-    		if (context != null) {
-        		extras.putLong(Shuffle.Tasks.CONTEXT_ID, context.id);
-    		}
+    	if (extras == null) {
+    	    extras = new Bundle();
     	}
+    	extras.putLong(Shuffle.Tasks.PROJECT_ID, mProject.getLocalId().getId());
+    	
+    	final Id defaultContextId = mProject.getDefaultContextId();
+    	if (defaultContextId.isInitialised()) {
+       		extras.putLong(Shuffle.Tasks.CONTEXT_ID, defaultContextId.getId());
+    	}
+    	
     	intent.putExtras(extras);
     	return intent;
     }

@@ -16,164 +16,303 @@
 
 package org.dodgybits.shuffle.android.core.model;
 
-import org.dodgybits.shuffle.android.core.model.encoding.Locator;
-import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksCompatible;
-import org.dodgybits.shuffle.dto.ShuffleProtos.Task.Builder;
+import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
 
-public final class Task extends AbstractEntity implements TracksCompatible{
-	public Long id;
-	public final String description;
-	public final String details;
-	public final Context context;
-	public final Project project;
-	public final long created;
-	public final long modified;
-    public Long tracksId;
-	public final long startDate;
-	public final long dueDate;
-	public final String timezone;
-	public final Boolean allDay;
-	public final Boolean hasAlarms;
-	public final Long calEventId;
-	// 0-indexed order within a project. 
-	public final Integer order;
-	public final Boolean complete;
-	
-	public Task(Long id, String description, String details,
-                Context context, Project project, long created, long modified,
-                long startDate, long dueDate, String timezone, Boolean allDay, Boolean hasAlarms,
-                Long calEventId, Integer order, Boolean complete,
-                Long tracksId) {
-		this.id = id;
-		this.description = description;
-		this.details = details;
-		this.context = context;
-		this.project = project;
-		this.created = created;
-		this.modified = modified;
-		this.startDate = startDate;
-		this.dueDate = dueDate;
-		this.timezone = timezone;
-		this.allDay = allDay;
-		this.hasAlarms = hasAlarms;
-		this.calEventId = calEventId;
-		this.order = order;
-		this.complete = complete;
-        this.tracksId = tracksId;
+import android.text.TextUtils;
 
-    }
-	
-	public Task(String description, String details,
-			Context context, Project project, long created, long modified,
-			long startDate, long dueDate, String timezone, Boolean allDay, 
-			Boolean hasAlarms, Long calEventId, Integer order, Boolean complete,
-			Long tracksId, Long tracksModified) {
-		this(
-				null, description, details, 
-				context, project, created, modified, 
-				startDate, dueDate, timezone, allDay, 
-				hasAlarms, calEventId, order, complete, 
-				tracksId);
-	}
+public final class Task implements TracksEntity {
+    private Id mLocalId = Id.NONE;
+    private String mDescription;
+    private String mDetails;
+    private Id mContextId = Id.NONE;
+    private Id mProjectId = Id.NONE;
+    private long mCreatedDate;
+    private long mModifiedDate;
+    private long mStartDate;
+    private long mDueDate;
+    private String mTimezone;
+    private boolean mAllDay;
+    private boolean mHasAlarms;
+    private Id mCalendarEventId = Id.NONE;
+    // 0-indexed order within a project.
+    private int mOrder;
+    private boolean mComplete;
+    private Id mTracksId = Id.NONE;
 
-    @Override
-    public Long getTracksId() {
-        return tracksId;
+    private Task() {
+    };
+
+    public final Id getLocalId() {
+        return mLocalId;
     }
 
-    @Override
-    public long getModified() {
-        return modified;
+    public final String getDescription() {
+        return mDescription;
     }
 
-    @Override
-    public String getLocalName() {
-        return description;
+    public final String getDetails() {
+        return mDetails;
     }
 
-    @Override
-    public void setTracksId(Long id) {
-        tracksId = id;
+    public final Id getContextId() {
+        return mContextId;
     }
 
-    public org.dodgybits.shuffle.dto.ShuffleProtos.Task toDto() {
-		Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Task.newBuilder();
-		builder
-			.setId(id)
-			.setDescription(description)
-			.setCreated(toDate(created))
-			.setModified(toDate(modified))
-			.setStartDate(toDate(startDate))
-			.setDueDate(toDate(dueDate))
-			.setAllDay(allDay)
-			.setOrder(order)
-			.setComplete(complete);
-		if (details != null) {
-			builder.setDetails(details);
-		}
-		if (context != null) {
-			builder.setContextId(context.id);
-		}
-		if (project != null) {
-			builder.setProjectId(project.id);
-		}
-		if (timezone != null) {
-			builder.setTimezone(timezone);
-		}
-		if (calEventId != null) {
-			builder.setCalEventId(calEventId);
-		}
-        if (tracksId != null) {
-            builder.setTracksId(tracksId);
+    public final Id getProjectId() {
+        return mProjectId;
+    }
+
+    public final long getCreatedDate() {
+        return mCreatedDate;
+    }
+
+    public final long getModifiedDate() {
+        return mModifiedDate;
+    }
+
+    public final long getStartDate() {
+        return mStartDate;
+    }
+
+    public final long getDueDate() {
+        return mDueDate;
+    }
+
+    public final String getTimezone() {
+        return mTimezone;
+    }
+
+    public final boolean isAllDay() {
+        return mAllDay;
+    }
+
+    public final boolean hasAlarms() {
+        return mHasAlarms;
+    }
+
+    public final Id getCalendarEventId() {
+        return mCalendarEventId;
+    }
+
+    public final int getOrder() {
+        return mOrder;
+    }
+
+    public final boolean isComplete() {
+        return mComplete;
+    }
+
+    public final Id getTracksId() {
+        return mTracksId;
+    }
+
+    public final String getLocalName() {
+        return mDescription;
+    }
+
+    public static Builder newBuilder() {
+        return Builder.create();
+    }
+
+    public final boolean isInitialized() {
+        if (TextUtils.isEmpty(mDescription)) {
+            return false;
         }
-		return builder.build();
-	}
+        return true;
+    }
 
-	public static Task buildFromDto(
-			org.dodgybits.shuffle.dto.ShuffleProtos.Task dto,
-			Locator<Context> contextLocator,
-			Locator<Project> projectLocator) {
-		Long id = dto.getId();
-		String description = dto.getDescription();
-		String details = dto.getDetails();
+    public static class Builder {
 
-		Context context = null;
-		if (dto.hasContextId()) {
-			context = contextLocator.findById(dto.getContextId());
-		}
+        private Builder() {
+        }
 
-		Project project = null;
-		if (dto.hasProjectId()) {
-			project = projectLocator.findById(dto.getProjectId());
-		}
+        private Task result;
 
-		long created = fromDate(dto.getCreated());
-		long modified = fromDate(dto.getModified());
-		long startDate = fromDate(dto.getStartDate());
-		long dueDate = fromDate(dto.getDueDate());
-		String timezone = dto.getTimezone();
-		Boolean allDay = dto.getAllDay();
-		Boolean hasAlarms = false;
+        private static Builder create() {
+            Builder builder = new Builder();
+            builder.result = new Task();
+            return builder;
+        }
 
-		Long calEventId = null;
-		if (dto.hasCalEventId()) {
-			calEventId = dto.getCalEventId();
-		}
+        public Id getLocalId() {
+            return result.mLocalId;
+        }
 
-		Integer order = dto.getOrder();
-		Boolean complete = dto.getComplete();
+        public Builder setLocalId(Id value) {
+            result.mLocalId = value;
+            return this;
+        }
 
-		Long tracksId = null;
-		if (dto.hasTracksId()) {
-		    tracksId = dto.getTracksId();
-		}
-		
-		return new Task(
-				id, description, details,
-				context, project, created, modified,
-				startDate, dueDate, timezone, allDay,
-				hasAlarms, calEventId, order, complete,
-				tracksId);
-	}
+        public String getDescription() {
+            return result.mDescription;
+        }
+
+        public Builder setDescription(String value) {
+            result.mDescription = value;
+            return this;
+        }
+
+        public String getDetails() {
+            return result.mDetails;
+        }
+
+        public Builder setDetails(String value) {
+            result.mDetails = value;
+            return this;
+        }
+
+        public Id getContextId() {
+            return result.mContextId;
+        }
+
+        public Builder setContextId(Id value) {
+            result.mContextId = value;
+            return this;
+        }
+
+        public Id getProjectId() {
+            return result.mProjectId;
+        }
+
+        public Builder setProjectId(Id value) {
+            result.mProjectId = value;
+            return this;
+        }
+
+        public long getCreatedDate() {
+            return result.mCreatedDate;
+        }
+
+        public Builder setCreatedDate(long value) {
+            result.mCreatedDate = value;
+            return this;
+        }
+
+        public long getModifiedDate() {
+            return result.mModifiedDate;
+        }
+
+        public Builder setModifiedDate(long value) {
+            result.mModifiedDate = value;
+            return this;
+        }
+
+        public long getStartDate() {
+            return result.mStartDate;
+        }
+
+        public Builder setStartDate(long value) {
+            result.mStartDate = value;
+            return this;
+        }
+
+        public long getDueDate() {
+            return result.mDueDate;
+        }
+
+        public Builder setDueDate(long value) {
+            result.mDueDate = value;
+            return this;
+        }
+
+        public String getTimezone() {
+            return result.mTimezone;
+        }
+
+        public Builder setTimezone(String value) {
+            result.mTimezone = value;
+            return this;
+        }
+
+        public boolean isAllDay() {
+            return result.mAllDay;
+        }
+
+        public Builder setAllDay(boolean value) {
+            result.mAllDay = value;
+            return this;
+        }
+
+        public boolean hasAlarms() {
+            return result.mHasAlarms;
+        }
+
+        public Builder setHasAlarm(boolean value) {
+            result.mHasAlarms = value;
+            return this;
+        }
+
+        public Id getCalendarEventId() {
+            return result.mCalendarEventId;
+        }
+
+        public Builder setCalendarEventId(Id value) {
+            result.mCalendarEventId = value;
+            return this;
+        }
+
+        public int getOrder() {
+            return result.mOrder;
+        }
+
+        public Builder setOrder(int value) {
+            result.mOrder = value;
+            return this;
+        }
+
+        public boolean isComplete() {
+            return result.mComplete;
+        }
+
+        public Builder setComplete(boolean value) {
+            result.mComplete = value;
+            return this;
+        }
+
+        public Id getTracksId() {
+            return result.mTracksId;
+        }
+
+        public Builder setTracksId(Id value) {
+            result.mTracksId = value;
+            return this;
+        }
+
+        public final boolean isInitialized() {
+            return result.isInitialized();
+        }
+
+        public Task build() {
+            if (result == null) {
+                throw new IllegalStateException(
+                        "build() has already been called on this Builder.");
+            }
+            Task returnMe = result;
+            result = null;
+            return returnMe;
+        }
+        
+        public Builder mergeFrom(Task task) {
+            setLocalId(task.mLocalId);
+            setDescription(task.mDescription);
+            setDetails(task.mDetails);
+            setContextId(task.mContextId);
+            setProjectId(task.mProjectId);
+            setCreatedDate(task.mCreatedDate);
+            setModifiedDate(task.mModifiedDate);
+            setStartDate(task.mStartDate);
+            setDueDate(task.mDueDate);
+            setTimezone(task.mTimezone);
+            setAllDay(task.mAllDay);
+            setHasAlarm(task.mHasAlarms);
+            setCalendarEventId(task.mCalendarEventId);
+            setOrder(task.mOrder);
+            setComplete(task.mComplete);
+            setTracksId(task.mTracksId);
+            return this;
+        }
+
+    }
+
 
 }

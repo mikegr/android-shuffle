@@ -7,7 +7,7 @@ import android.util.Log;
 import android.util.Xml;
 
 import org.dodgybits.shuffle.android.preference.view.Progress;
-import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksCompatible;
+import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -23,7 +23,7 @@ import java.util.Map;
  *
  * @author Morten Nielsen
  */
-public abstract class Synchronizer<Entity extends TracksCompatible> {
+public abstract class Synchronizer<Entity extends TracksEntity> {
     private static final String cTag = "Synchronizer";
     
     protected ContentResolver contentResolver;

@@ -19,6 +19,7 @@ package org.dodgybits.shuffle.android.list.view;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.util.TextColours;
+import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.core.view.DrawableUtils;
 
 import android.graphics.drawable.GradientDrawable;
@@ -70,7 +71,8 @@ public class ContextView extends ItemView<Context> {
 	@Override
 	public void updateView(Context context) {
 		// add context icon
-		int iconResource = context.icon.largeIconId;
+	    ContextIcon icon = ContextIcon.createIcon(context.getIconName(), getResources());
+		int iconResource = icon.largeIconId;
 		if (iconResource > 0) {
 			mIcon.setImageResource(iconResource);
 			mIcon.setVisibility(View.VISIBLE);
@@ -78,16 +80,16 @@ public class ContextView extends ItemView<Context> {
 			mIcon.setVisibility(View.INVISIBLE);
 		}
 		if (mTaskCountArray != null) {
-			Integer count = mTaskCountArray.get(context.id.intValue());
+			Integer count = mTaskCountArray.get((int)context.getLocalId().getId());
 			if (count == null) count = 0;
-			mName.setText(context.name + " (" + count + ")");
+			mName.setText(context.getName() + " (" + count + ")");
 		} else {
-			mName.setText(context.name);
+			mName.setText(context.getName());
 		}
-    	int textColour = mTextColours.getTextColour(context.colourIndex);
+    	int textColour = mTextColours.getTextColour(context.getColourIndex());
 		mName.setTextColor(textColour);
 
-		int bgColour = mTextColours.getBackgroundColour(context.colourIndex);
+		int bgColour = mTextColours.getBackgroundColour(context.getColourIndex());
     	GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM);
     	drawable.setCornerRadius(12.0f);
     	mColour.setBackgroundDrawable(drawable);

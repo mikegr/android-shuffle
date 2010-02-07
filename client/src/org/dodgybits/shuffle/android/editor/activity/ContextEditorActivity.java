@@ -19,8 +19,9 @@ package org.dodgybits.shuffle.android.editor.activity;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.core.model.Context.Icon;
+import org.dodgybits.shuffle.android.core.model.Context.Builder;
 import org.dodgybits.shuffle.android.core.util.TextColours;
+import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.core.view.DrawableUtils;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.list.view.ContextView;
@@ -50,7 +51,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     private static final int ICON_PICKER = 1;
     
     private int mColourIndex;
-    private Icon mIcon;
+    private ContextIcon mIcon;
     
     private EditText mNameWidget;
 
@@ -111,7 +112,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         	if (resultCode == Activity.RESULT_OK) {
     			if (data != null) {
     				String iconName = data.getStringExtra("iconName");
-    				mIcon = Icon.createIcon(iconName, getResources());
+    				mIcon = ContextIcon.createIcon(iconName, getResources());
     				displayIcon();
     	        	updatePreview();
     			}
@@ -166,14 +167,17 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     
     @Override
     protected Context createItemFromUI() {
-        String name = mNameWidget.getText().toString();
-        Long tracksId = null;
+        Builder builder = Context.newBuilder();
         if (mOriginalItem != null) {
-            tracksId = mOriginalItem.tracksId;
+            builder.mergeFrom(mOriginalItem);
         }
-        return new Context(
-                name, mColourIndex, mIcon, 
-                tracksId, System.currentTimeMillis());
+        
+        builder.setName(mNameWidget.getText().toString());
+        builder.setModifiedDate(System.currentTimeMillis());
+        builder.setColourIndex(mColourIndex);
+        builder.setIconName(mIcon.iconName);
+        
+        return builder.build();
     }
     
     @Override
@@ -189,12 +193,15 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     
     @Override
     protected void updateUIFromItem(Context context) {
-        mNameWidget.setTextKeepState(context.name);
-       	mColourIndex = context.colourIndex;
-        mIcon = context.icon;
+        mNameWidget.setTextKeepState(context.getName());
+        
+       	mColourIndex = context.getColourIndex();
+       	displayColour();
+       	
+       	final String iconName = context.getIconName();
+       	mIcon = ContextIcon.createIcon(iconName, getResources());
+       	displayIcon();
 
-        displayColour();
-    	displayIcon();
     	updatePreview();
 
         if (mOriginalItem == null) {
@@ -223,7 +230,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         
         mIconWidget = (ImageView) findViewById(R.id.icon_display);
         mIconNoneWidget = (TextView) findViewById(R.id.icon_none);
-        mIcon = Icon.NONE;
+        mIcon = ContextIcon.NONE;
 
         View colourEntry = findViewById(R.id.colour_entry);
         colourEntry.setOnClickListener(this);
@@ -260,7 +267,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
             }
                     
             case R.id.icon_clear_button: {
-	        	mIcon = Icon.NONE;
+	        	mIcon = ContextIcon.NONE;
 	        	displayIcon();
 	        	updatePreview();
 	        	break;
@@ -280,7 +287,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     }
 
 	private void displayIcon() {
-    	if (mIcon == Icon.NONE) {
+    	if (mIcon == ContextIcon.NONE) {
     		mIconNoneWidget.setVisibility(View.VISIBLE);
     		mIconWidget.setVisibility(View.GONE);
     		mClearIconButton.setEnabled(false);
