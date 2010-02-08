@@ -50,7 +50,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	protected Cursor createItemQuery() {
 		Log.d(cTag, "Creating a cursor to find tasks for the given context");
 		return managedQuery(getListConfig().getListContentUri(), 
-				Shuffle.Tasks.cExpandedProjection,
+				Shuffle.Tasks.cFullProjection,
 				Shuffle.Tasks.CONTEXT_ID + " = ?", 
 				new String[] {String.valueOf(mContextId)}, 
 				Shuffle.Tasks.CREATED_DATE + " ASC");

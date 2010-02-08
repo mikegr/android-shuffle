@@ -131,7 +131,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 	@Override
 	protected Cursor createItemQuery() {
 		return managedQuery(getListConfig().getListContentUri(), 
-				Shuffle.Tasks.cExpandedProjection, null, null, null);
+				Shuffle.Tasks.cFullProjection, null, null, null);
 	}
 	
 	@Override

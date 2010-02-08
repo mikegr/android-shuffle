@@ -20,6 +20,7 @@ import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.activity.config.ProjectListConfig;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.list.activity.task.ProjectTasksActivity;
 import org.dodgybits.shuffle.android.list.view.ProjectView;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
@@ -74,6 +75,8 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	
 	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
+	    final ProjectPersister persister = new ProjectPersister();
+	    
 		ListAdapter adapter =
 			new SimpleCursorAdapter(this,
 					android.R.layout.simple_list_item_1, cursor,
@@ -82,7 +85,7 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 
 			public View getView(int position, View convertView, ViewGroup parent) {
 				Cursor cursor = (Cursor)getItem(position);
-				Project project = BindingUtils.readProject(cursor);
+				Project project = persister.read(cursor);
 				ProjectView projectView;
 				if (convertView instanceof ProjectView) {
 					projectView = (ProjectView) convertView;

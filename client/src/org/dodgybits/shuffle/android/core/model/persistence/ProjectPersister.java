@@ -1,5 +1,48 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
-public class ProjectPersister {
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.DEFAULT_CONTEXT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.MODIFIED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.NAME;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.PARALLEL;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.TRACKS_ID;
 
+import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.Project.Builder;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+
+public class ProjectPersister extends AbstractEntityPersister implements EntityPersister<Project> {
+
+    private static final int ID_INDEX = 0;
+    private static final int NAME_INDEX = 1;
+    private static final int DEFAULT_CONTEXT_INDEX = 2;
+    private static final int TRACKS_ID_INDEX = 3;
+    private static final int MODIFIED_INDEX = 4;
+    private static final int PARALLEL_INDEX = 5;
+    
+    @Override
+    public Project read(Cursor cursor) {
+        Builder builder = Project.newBuilder();
+        builder
+            .setLocalId(readId(cursor, ID_INDEX))
+            .setModifiedDate(cursor.getLong(MODIFIED_INDEX))
+            .setTracksId(readId(cursor, TRACKS_ID_INDEX))
+            .setName(readString(cursor, NAME_INDEX))
+            .setDefaultContextId(readId(cursor, DEFAULT_CONTEXT_INDEX))
+            .setParallel(readBoolean(cursor, PARALLEL_INDEX));
+        
+        return builder.build();
+    }
+    
+    @Override
+    public void write(ContentValues values, Project project) {
+        // never write id since it's auto generated
+        values.put(MODIFIED_DATE, project.getModifiedDate());
+        writeId(values, TRACKS_ID, project.getTracksId());
+        writeString(values, NAME, project.getName());
+        writeId(values, DEFAULT_CONTEXT_ID, project.getDefaultContextId());
+        writeBoolean(values, PARALLEL, project.isParallel());
+    }
+    
 }

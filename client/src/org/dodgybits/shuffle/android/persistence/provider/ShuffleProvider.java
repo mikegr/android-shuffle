@@ -749,28 +749,6 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".hasAlarm");
         sTaskListProjectMap.put(Shuffle.Tasks.TRACKS_ID, cTaskTableName
 				+ ".tracks_id");
-		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_NAME, cProjectTableName
-				+ ".name");
-		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_DEFAULT_CONTEXT_ID,
-				cProjectTableName + ".defaultContextId");
-		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_ARCHIVED,
-				cProjectTableName + ".archived");
-        sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_TRACKS_ID,
-				cProjectTableName + ".tracks_id");
-		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_MODIFIED,
-				cProjectTableName + ".modified");
-		sTaskListProjectMap.put(Shuffle.Tasks.PROJECT_PARALLEL,
-		        cProjectTableName + ".parallel");
-		sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_NAME, cContextTableName
-				+ ".name");
-		sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_COLOUR, cContextTableName
-				+ ".colour");
-		sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_ICON, cContextTableName
-				+ ".iconName");
-        sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_TRACKS_ID, cContextTableName
-				+ ".tracks_id");
-        sTaskListProjectMap.put(Shuffle.Tasks.CONTEXT_MODIFIED, cContextTableName
-				+ ".modified");
 
 		sContextListProjectMap = new HashMap<String, String>();
 		sContextListProjectMap.put(Shuffle.Contexts._ID, cContextTableName
@@ -783,7 +761,7 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".iconName");		
 		sContextListProjectMap.put(Shuffle.Contexts.TRACKS_ID, cContextTableName
 				+ ".tracks_id");		
-		sContextListProjectMap.put(Shuffle.Contexts.MODIFIED, cContextTableName
+		sContextListProjectMap.put(Shuffle.Contexts.MODIFIED_DATE, cContextTableName
 				+ ".modified");
 
 		sProjectListProjectMap = new HashMap<String, String>();
@@ -793,11 +771,9 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".name");
 		sProjectListProjectMap.put(Shuffle.Projects.DEFAULT_CONTEXT_ID,
 				cProjectTableName + ".defaultContextId");
-		sProjectListProjectMap.put(Shuffle.Projects.ARCHIVED, cProjectTableName
-				+ ".archived");
         sProjectListProjectMap.put(Shuffle.Projects.TRACKS_ID, cProjectTableName
 				+ ".tracks_id");
-        sProjectListProjectMap.put(Shuffle.Projects.MODIFIED, cProjectTableName
+        sProjectListProjectMap.put(Shuffle.Projects.MODIFIED_DATE, cProjectTableName
 				+ ".modified");
         sProjectListProjectMap.put(Shuffle.Projects.PARALLEL, cProjectTableName
                 + ".parallel");

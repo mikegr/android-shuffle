@@ -5,7 +5,7 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Project.Builder;
 
-public class ProjectProtocolTranslator implements ProtocolTranslator<Project, org.dodgybits.shuffle.dto.ShuffleProtos.Project> {
+public class ProjectProtocolTranslator implements EntityProtocolTranslator<Project, org.dodgybits.shuffle.dto.ShuffleProtos.Project> {
 
     private Locator<Context> mContextLocator;
     

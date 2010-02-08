@@ -73,7 +73,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	@Override
 	protected Cursor createChildQuery(long groupId) {
-		Cursor cursor = managedQuery(Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cExpandedProjection,
+		Cursor cursor = managedQuery(Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cFullProjection,
 				Shuffle.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)}, 
 				Shuffle.Tasks.CREATED_DATE + " ASC");
 		mChildIdColumnIndex = cursor.getColumnIndex(Shuffle.Tasks._ID);

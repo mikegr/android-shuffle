@@ -655,7 +655,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         // Get the task if we're editing
     	if (mUri != null && mState == State.STATE_EDIT)
     	{
-	        mCursor = managedQuery(mUri, Shuffle.Tasks.cExpandedProjection, null, null, null);
+	        mCursor = managedQuery(mUri, Shuffle.Tasks.cFullProjection, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {
 	            // The cursor is empty. This can happen if the event was deleted.
 	            finish();

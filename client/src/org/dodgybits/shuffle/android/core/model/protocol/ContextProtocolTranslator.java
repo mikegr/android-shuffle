@@ -4,7 +4,7 @@ import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Context.Builder;
 
-public class ContextProtocolTranslator  implements ProtocolTranslator<Context , org.dodgybits.shuffle.dto.ShuffleProtos.Context>{
+public class ContextProtocolTranslator  implements EntityProtocolTranslator<Context , org.dodgybits.shuffle.dto.ShuffleProtos.Context>{
 
     public org.dodgybits.shuffle.dto.ShuffleProtos.Context toMessage(Context context) {
         Builder builder = org.dodgybits.shuffle.dto.ShuffleProtos.Context.newBuilder();

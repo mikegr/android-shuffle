@@ -56,7 +56,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	protected Cursor createItemQuery() {
 		Log.d(cTag, "Creating a cursor to find tasks for the given context");
 		return managedQuery(getListConfig().getListContentUri(), 
-				Shuffle.Tasks.cExpandedProjection,
+				Shuffle.Tasks.cFullProjection,
 				Shuffle.Tasks.PROJECT_ID + " = ?", 
 				new String[] {String.valueOf(mProjectId)}, 
 				Shuffle.Tasks.DUE_DATE + " ASC," + Shuffle.Tasks.DISPLAY_ORDER + " ASC");

@@ -46,6 +46,8 @@ public class PreferencesAppearanceActivity extends Activity  {
 	
     private TaskView mTaskView;
     private Task mSampleTask;
+    private Project mSampleProject;
+    private Context mSampleContext;
 	private CheckBox mDisplayIconCheckbox;
 	private CheckBox mDisplayContextCheckbox;
 	private CheckBox mDisplayDueDateCheckbox;
@@ -73,7 +75,7 @@ public class PreferencesAppearanceActivity extends Activity  {
         // need to add task view programatically due to issues adding via XML
         
         mTaskView = new TaskView(this);
-        mTaskView.updateView(mSampleTask);
+        mTaskView.updateView(mSampleTask); // todo pass in project and context
         LayoutParams taskLayout = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT );
         LinearLayout layout = (LinearLayout)findViewById(R.id.appearance_layout);
         layout.addView(mTaskView, 0, taskLayout);
@@ -97,12 +99,16 @@ public class PreferencesAppearanceActivity extends Activity  {
 	
 	private void setupSampleTask() {
         long now = System.currentTimeMillis();
-        Project sampleProject = new Project("Sample project", null, false, null, System.currentTimeMillis(), false);
-        Context sampleContext = ModelUtils.getSampleContext(getResources());
-        mSampleTask = new Task("Sample action", "Additional action details", 
-        		sampleContext, sampleProject, now, now, 
-        		now, now + DateUtils.HOUR_IN_MILLIS * 3, null, false, false,
-        		null, 1, false, null, null);
+        mSampleProject = Project.newBuilder().setName("Sample project").build();
+        mSampleContext = ModelUtils.getSampleContext(getResources());
+        mSampleTask = Task.newBuilder()
+            .setDescription("Sample action")
+            .setDetails("Additional action details")
+            .setCreatedDate(now)
+            .setModifiedDate(now)
+            .setStartDate(now)
+            .setDueDate(now + DateUtils.HOUR_IN_MILLIS * 3)
+            .build();
 	}
 	
     @Override

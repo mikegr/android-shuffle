@@ -279,7 +279,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 
 
         Cursor cursor = contentResolver.query(
-                Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cExpandedProjection,
+                Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cFullProjection,
                 null, null, null);
 
 

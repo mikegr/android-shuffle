@@ -1,5 +1,28 @@
 package org.dodgybits.shuffle.android.preference.activity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.protocol.ContextProtocolTranslator;
+import org.dodgybits.shuffle.android.core.model.protocol.ProjectProtocolTranslator;
+import org.dodgybits.shuffle.android.core.model.protocol.TaskProtocolTranslator;
+import org.dodgybits.shuffle.android.core.view.AlertUtils;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.preference.view.Progress;
+import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
+import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue.Builder;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -15,23 +38,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.core.model.Project;
-import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.view.AlertUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
-import org.dodgybits.shuffle.android.preference.view.Progress;
-import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
-import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue.Builder;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class PreferencesCreateBackupActivity extends Activity 
 	implements View.OnClickListener {
@@ -279,10 +285,12 @@ public class PreferencesCreateBackupActivity extends Activity
             int i = 0;
             int total = cursor.getCount();
             String type = getString(R.string.context_name);
+            ContextPersister persister = new ContextPersister();
+            ContextProtocolTranslator translator = new ContextProtocolTranslator();
         	while (cursor.moveToNext()) {
-        		Context context = BindingUtils.readContext(cursor, getResources());
-            	builder.addContext(context.toDto());
-    			String text = getString(R.string.backup_progress, type, context.name);
+        	    Context context = persister.read(cursor);
+            	builder.addContext(translator.toMessage(context));
+    			String text = getString(R.string.backup_progress, type, context.getName());
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
         	}
@@ -298,10 +306,12 @@ public class PreferencesCreateBackupActivity extends Activity
             int i = 0;
             int total = cursor.getCount();
             String type = getString(R.string.project_name);
+            ProjectPersister persister = new ProjectPersister();
+            ProjectProtocolTranslator translator = new ProjectProtocolTranslator(null);
         	while (cursor.moveToNext()) {
-        		Project project = BindingUtils.readProject(cursor);
-            	builder.addProject(project.toDto());
-    			String text = getString(R.string.backup_progress, type, project.name);
+        		Project project = persister.read(cursor);
+            	builder.addProject(translator.toMessage(project));
+    			String text = getString(R.string.backup_progress, type, project.getName());
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
         	}
@@ -312,15 +322,17 @@ public class PreferencesCreateBackupActivity extends Activity
         {
 	    	Log.d(cTag, "Writing tasks");
             Cursor cursor = getContentResolver().query(
-            		Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cExpandedProjection, 
+            		Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cFullProjection, 
             		null, null, null);
             int i = 0;
             int total = cursor.getCount();
             String type = getString(R.string.task_name);
+            TaskPersister persister = new TaskPersister();
+            TaskProtocolTranslator translator = new TaskProtocolTranslator(null, null);
         	while (cursor.moveToNext()) {
-        		Task task = BindingUtils.readTask(cursor, getResources());
-            	builder.addTask(task.toDto());
-    			String text = getString(R.string.backup_progress, type, task.description);
+        		Task task = persister.read(cursor);
+            	builder.addTask(translator.toMessage(task));
+    			String text = getString(R.string.backup_progress, type, task.getDescription());
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
         	}

@@ -22,55 +22,57 @@ import org.dodgybits.shuffle.android.core.model.Task.Builder;
 
 import android.os.Bundle;
 
-public class TaskEncoder implements Encoder<Task> {
-
+public class TaskEncoder extends AbstractEntityEncoder implements
+        EntityEncoder<Task> {
+    
+    @Override
     public Bundle save(Task task) {
         Bundle icicle = new Bundle();
-        BundleUtil.putId(icicle, _ID, task.getLocalId());
-        BundleUtil.putId(icicle, TRACKS_ID, task.getTracksId());
+        putId(icicle, _ID, task.getLocalId());
+        putId(icicle, TRACKS_ID, task.getTracksId());
         icicle.putLong(MODIFIED_DATE, task.getModifiedDate());
 
-        BundleUtil.putString(icicle, DESCRIPTION, task.getDescription());
-        BundleUtil.putString(icicle, DETAILS, task.getDetails());
-        BundleUtil.putId(icicle, CONTEXT_ID, task.getContextId());
-        BundleUtil.putId(icicle, PROJECT_ID, task.getProjectId());
+        putString(icicle, DESCRIPTION, task.getDescription());
+        putString(icicle, DETAILS, task.getDetails());
+        putId(icicle, CONTEXT_ID, task.getContextId());
+        putId(icicle, PROJECT_ID, task.getProjectId());
         icicle.putLong(CREATED_DATE, task.getCreatedDate());
         icicle.putLong(START_DATE, task.getStartDate());
         icicle.putLong(DUE_DATE, task.getDueDate());
-        BundleUtil.putString(icicle, TIMEZONE, task.getTimezone());
-        BundleUtil.putId(icicle, CAL_EVENT_ID, task.getCalendarEventId());
+        putString(icicle, TIMEZONE, task.getTimezone());
+        putId(icicle, CAL_EVENT_ID, task.getCalendarEventId());
         icicle.putBoolean(ALL_DAY, task.isAllDay());
         icicle.putBoolean(HAS_ALARM, task.hasAlarms());
         icicle.putInt(DISPLAY_ORDER, task.getOrder());
         icicle.putBoolean(COMPLETE, task.isComplete());
-        
+
         return icicle;
     }
-    
+
+    @Override
     public Task restore(Bundle icicle) {
         if (icicle == null) return null;
 
         Builder builder = Task.newBuilder();
-        builder.setLocalId(BundleUtil.getId(icicle, _ID));
+        builder.setLocalId(getId(icicle, _ID));
         builder.setModifiedDate(icicle.getLong(MODIFIED_DATE, 0L));
-        builder.setTracksId(BundleUtil.getId(icicle, TRACKS_ID));
+        builder.setTracksId(getId(icicle, TRACKS_ID));
 
-        builder.setDescription(BundleUtil.getString(icicle, DESCRIPTION));
-        builder.setDetails(BundleUtil.getString(icicle, DETAILS));
-        builder.setContextId(BundleUtil.getId(icicle, CONTEXT_ID));
-        builder.setProjectId(BundleUtil.getId(icicle, PROJECT_ID));
+        builder.setDescription(getString(icicle, DESCRIPTION));
+        builder.setDetails(getString(icicle, DETAILS));
+        builder.setContextId(getId(icicle, CONTEXT_ID));
+        builder.setProjectId(getId(icicle, PROJECT_ID));
         builder.setCreatedDate(icicle.getLong(CREATED_DATE, 0L));
         builder.setStartDate(icicle.getLong(START_DATE, 0L));
         builder.setDueDate(icicle.getLong(DUE_DATE, 0L));
-        builder.setTimezone(BundleUtil.getString(icicle, TIMEZONE));
+        builder.setTimezone(getString(icicle, TIMEZONE));
+        builder.setCalendarEventId(getId(icicle, CAL_EVENT_ID));
         builder.setAllDay(icicle.getBoolean(ALL_DAY));
         builder.setHasAlarm(icicle.getBoolean(HAS_ALARM));
-        builder.setCalendarEventId(BundleUtil.getId(icicle, CAL_EVENT_ID));
         builder.setOrder(icicle.getInt(DISPLAY_ORDER));
         builder.setComplete(icicle.getBoolean(COMPLETE));
-        
+
         return builder.build();
     }
-    
-    
+
 }

@@ -21,6 +21,7 @@ import org.dodgybits.android.shuffle.activity.config.ContextListConfig;
 import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.list.activity.task.ContextTasksActivity;
 import org.dodgybits.shuffle.android.list.view.ContextView;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
@@ -74,6 +75,8 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	
 	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
+	    final ContextPersister persister = new ContextPersister();
+	    
 		ListAdapter adapter =
 				new SimpleCursorAdapter(this,
 						android.R.layout.simple_list_item_1, cursor,
@@ -82,7 +85,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 			
 			public View getView(int position, View convertView, ViewGroup parent) {
 				Cursor cursor = (Cursor)getItem(position);
-				Context context = BindingUtils.readContext(cursor,getResources());
+				Context context = persister.read(cursor);
 				ContextView contextView;
 				if (convertView instanceof ContextView) {
 					contextView = (ContextView) convertView;

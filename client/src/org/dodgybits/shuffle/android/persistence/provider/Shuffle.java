@@ -60,20 +60,6 @@ public class Shuffle {
         public static final String COMPLETE = "complete";
         public static final String ALL_DAY = "allDay";
         public static final String HAS_ALARM = "hasAlarm";
-
-        public static final String PROJECT_NAME = "project_name";
-        public static final String PROJECT_DEFAULT_CONTEXT_ID = "project_default_context_id";
-        public static final String PROJECT_ARCHIVED = "project_archived";
-        public static final String PROJECT_TRACKS_ID = "project_tracks_id";
-        public static final String PROJECT_MODIFIED = "project_modified";
-        public static final String PROJECT_PARALLEL = "project_parallel";
-        
-        public static final String CONTEXT_NAME = "context_name";
-        public static final String CONTEXT_COLOUR = "context_colour";
-        public static final String CONTEXT_ICON = "context_icon";
-        public static final String CONTEXT_TRACKS_ID = "context_tracks_id";
-        public static final String CONTEXT_MODIFIED = "context_modified";
-
         public static final String TRACKS_ID = "tracks_id";
 
         /**
@@ -97,40 +83,7 @@ public class Shuffle {
                 HAS_ALARM,
                 TRACKS_ID
         };
-        /**
-         * All columns task plus columns from project and context from outer joins
-         */
-        public static final String[] cExpandedProjection = new String[] {
-            _ID,
-            DESCRIPTION,
-            DETAILS,
-            PROJECT_ID,
-            CONTEXT_ID,
-            CREATED_DATE,
-            MODIFIED_DATE,
-            START_DATE,
-            DUE_DATE,
-            TIMEZONE,
-            CAL_EVENT_ID,
-            DISPLAY_ORDER,
-            COMPLETE,
-            ALL_DAY,
-            HAS_ALARM,
-            TRACKS_ID,
 
-            PROJECT_NAME,
-            PROJECT_DEFAULT_CONTEXT_ID,
-            PROJECT_ARCHIVED,
-            PROJECT_TRACKS_ID,
-            PROJECT_MODIFIED,
-            PROJECT_PARALLEL,
-
-            CONTEXT_NAME,
-            CONTEXT_COLOUR,
-            CONTEXT_ICON,
-            CONTEXT_TRACKS_ID,
-            CONTEXT_MODIFIED
-        };
     }
     
 	/**
@@ -153,12 +106,9 @@ public class Shuffle {
 
         public static final String NAME = "name";
         public static final String DEFAULT_CONTEXT_ID = "defaultContextId";
-        public static final String ARCHIVED = "archived";
-
-        public static String TRACKS_ID="tracks_id";
-
-        public static String MODIFIED = "modified";
-        public static String PARALLEL = "parallel";
+        public static final String TRACKS_ID = "tracks_id";
+        public static final String MODIFIED_DATE = "modified";
+        public static final String PARALLEL = "parallel";
 
         /**
          * Projection for all the columns of a project.
@@ -167,9 +117,8 @@ public class Shuffle {
                 _ID,
                 NAME,
                 DEFAULT_CONTEXT_ID,
-                ARCHIVED,
                 TRACKS_ID,
-                MODIFIED,
+                MODIFIED_DATE,
                 PARALLEL
         };
         public static final String TASK_COUNT = "count";
@@ -202,10 +151,8 @@ public class Shuffle {
         public static final String NAME = "name";
         public static final String COLOUR = "colour";
         public static final String ICON = "iconName";
-
         public static final String TRACKS_ID = "tracks_id";
-
-        public static final String MODIFIED = "modified";
+        public static final String MODIFIED_DATE = "modified";
 
         /**
          * Projection for all the columns of a context.
@@ -216,7 +163,7 @@ public class Shuffle {
                 COLOUR,
                 ICON,
                 TRACKS_ID,
-                MODIFIED
+                MODIFIED_DATE
         };
 
 
