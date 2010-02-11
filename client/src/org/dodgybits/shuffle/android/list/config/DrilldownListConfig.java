@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dodgybits.android.shuffle.activity.config;
+package org.dodgybits.shuffle.android.list.config;
 
 import android.content.ContextWrapper;
 import android.net.Uri;

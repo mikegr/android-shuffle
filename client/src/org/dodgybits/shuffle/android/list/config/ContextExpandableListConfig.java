@@ -14,63 +14,56 @@
  * limitations under the License.
  */
 
-package org.dodgybits.android.shuffle.activity.config;
+package org.dodgybits.shuffle.android.list.config;
+
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.android.shuffle.util.BindingUtils;
+import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
 import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+public class ContextExpandableListConfig implements ExpandableListConfig<Context, Task> {
 
-public class ContextListConfig implements DrilldownListConfig<Context> {
-
-	public String createTitle(ContextWrapper context) {
-    	return context.getString(R.string.title_context);
+	public Uri getChildContentUri() {
+		return Shuffle.Tasks.CONTENT_URI;
 	}
 
-	public Uri getContentUri() {
-		return Shuffle.Contexts.CONTENT_URI;
+	public String getChildName(ContextWrapper context) {
+		return context.getString(R.string.task_name);
 	}
 
 	public int getContentViewResId() {
-		return R.layout.contexts;
+		return R.layout.expandable_contexts;
 	}
 
 	public int getCurrentViewMenuId() {
     	return MenuUtils.CONTEXT_ID;
 	}
 
-	public String getItemName(ContextWrapper context) {
-		return context.getString(R.string.context_name);
-	}
-
-	public Uri getListContentUri() {
+	public Uri getGroupContentUri() {
 		return Shuffle.Contexts.CONTENT_URI;
 	}
 
-	public boolean isTaskList() {
-		return false;
+	public String getGroupIdColumnName() {
+		return Shuffle.Tasks.CONTEXT_ID;
 	}
 
-	public Context readItem(Cursor cursor, Resources res) {
+	public String getGroupName(ContextWrapper context) {
+		return context.getString(R.string.context_name);
+	}
+	
+	public Task readChild(Cursor cursor, Resources res) {
+        return BindingUtils.readTask(cursor, res);
+	}
+
+	public Context readGroup(Cursor cursor, Resources res) {
         return BindingUtils.readContext(cursor, res);
 	}
-
-	public boolean supportsViewAction() {
-		return false;
-	}
 	
-	public Uri getChildContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
-	
-	public String getChildName(ContextWrapper context) {
-		return context.getString(R.string.task_name);
-	}		
-
 }

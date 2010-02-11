@@ -17,11 +17,11 @@
 package org.dodgybits.shuffle.android.list.activity.task;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.activity.config.AbstractTaskListConfig;
-import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
+import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
 import android.content.ContentUris;

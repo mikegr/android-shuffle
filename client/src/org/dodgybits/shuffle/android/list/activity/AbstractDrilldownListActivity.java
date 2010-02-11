@@ -16,8 +16,8 @@
 
 package org.dodgybits.shuffle.android.list.activity;
 
-import org.dodgybits.android.shuffle.activity.config.DrilldownListConfig;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
+import org.dodgybits.shuffle.android.list.config.DrilldownListConfig;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;

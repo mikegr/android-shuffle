@@ -16,12 +16,12 @@
 
 package org.dodgybits.shuffle.android.list.activity;
 
-import org.dodgybits.android.shuffle.activity.config.ListConfig;
-import org.dodgybits.android.shuffle.activity.config.ProjectListConfig;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.list.activity.task.ProjectTasksActivity;
+import org.dodgybits.shuffle.android.list.config.ListConfig;
+import org.dodgybits.shuffle.android.list.config.ProjectListConfig;
 import org.dodgybits.shuffle.android.list.view.ProjectView;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 

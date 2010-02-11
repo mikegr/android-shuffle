@@ -16,13 +16,13 @@
 
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
-import org.dodgybits.android.shuffle.activity.config.ExpandableListConfig;
-import org.dodgybits.android.shuffle.activity.config.ProjectExpandableListConfig;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.config.ExpandableListConfig;
+import org.dodgybits.shuffle.android.list.config.ProjectExpandableListConfig;
 import org.dodgybits.shuffle.android.list.view.ExpandableProjectView;
 import org.dodgybits.shuffle.android.list.view.ExpandableTaskView;
 import org.dodgybits.shuffle.android.list.view.ProjectView;

@@ -17,10 +17,10 @@
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.activity.config.ExpandableListConfig;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.config.ExpandableListConfig;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemListener;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
 import org.dodgybits.shuffle.android.preference.model.Preferences;

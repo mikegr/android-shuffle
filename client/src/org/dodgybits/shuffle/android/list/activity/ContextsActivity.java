@@ -17,12 +17,12 @@
 package org.dodgybits.shuffle.android.list.activity;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.activity.config.ContextListConfig;
-import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.list.activity.task.ContextTasksActivity;
+import org.dodgybits.shuffle.android.list.config.ContextListConfig;
+import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.view.ContextView;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 

@@ -17,8 +17,8 @@
 package org.dodgybits.shuffle.android.list.activity;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.activity.config.ListConfig;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.app.Activity;
