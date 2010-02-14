@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 public interface EntityEncoder<Entity> {
     
-    Bundle save(Entity e);
+    void save(Bundle icicle, Entity e);
     Entity restore(Bundle icicle);
 
 }

@@ -17,7 +17,7 @@
 package org.dodgybits.shuffle.android.preference.activity;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.ModelUtils;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +37,8 @@ public class PreferencesDeleteCompletedActivity extends PreferencesDeleteActivit
     
 	@Override
 	protected void onDelete() {
-    	int deletedTasks = ModelUtils.deleteCompletedTasks(this);
+	    TaskPersister persister = new TaskPersister(getContentResolver());
+    	int deletedTasks = persister.deleteCompletedTasks();
 		CharSequence message = getString(R.string.clean_task_message, new Object[] {deletedTasks});
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 		finish();

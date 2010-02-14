@@ -121,7 +121,7 @@ public final class Task implements TracksEntity {
         return true;
     }
 
-    public static class Builder {
+    public static class Builder implements EntityBuilder<Task> {
 
         private Builder() {
         }

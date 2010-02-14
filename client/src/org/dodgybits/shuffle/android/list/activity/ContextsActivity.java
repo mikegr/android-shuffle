@@ -17,9 +17,8 @@
 package org.dodgybits.shuffle.android.list.activity;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.list.activity.task.ContextTasksActivity;
 import org.dodgybits.shuffle.android.list.config.ContextListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
@@ -49,19 +48,20 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 		Cursor cursor = getContentResolver().query(
 				Shuffle.Contexts.cContextTasksContentURI,
 				Shuffle.Contexts.cFullTaskProjection, null, null, null);
-		mTaskCountArray = BindingUtils.readCountArray(cursor);
+		mTaskCountArray = getDrilldownListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
 	
 	@Override
 	protected ListConfig<Context> createListConfig()
 	{
-		return new ContextListConfig();
+		return new ContextListConfig(getContentResolver());
 	}
 	
 	@Override
-	protected void deleteChildren(long groupId) {
-		getContentResolver().delete(getDrilldownListConfig().getChildContentUri(), 
+	protected void deleteChildren(Id groupId) {
+		getContentResolver().delete(
+		        getDrilldownListConfig().getChildPersister().getContentUri(), 
 				Shuffle.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)});
 	}
 
@@ -75,8 +75,6 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	
 	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
-	    final ContextPersister persister = new ContextPersister();
-	    
 		ListAdapter adapter =
 				new SimpleCursorAdapter(this,
 						android.R.layout.simple_list_item_1, cursor,
@@ -85,7 +83,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 			
 			public View getView(int position, View convertView, ViewGroup parent) {
 				Cursor cursor = (Cursor)getItem(position);
-				Context context = persister.read(cursor);
+				Context context = getListConfig().getPersister().read(cursor);
 				ContextView contextView;
 				if (convertView instanceof ContextView) {
 					contextView = (ContextView) convertView;

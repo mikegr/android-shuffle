@@ -1,10 +1,17 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks;
 
-import android.content.ContextWrapper;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.util.Log;
-import org.apache.http.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
@@ -15,11 +22,10 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.util.Log;
 
 /**
  * Handles communication to the REST service
@@ -33,7 +39,7 @@ public class WebClient {
     private final String tracksPassword;
     private final String cTag = "WebClient";
 
-    public WebClient(ContextWrapper context, String tracksUser, String tracksPassword) throws ApiException {
+    public WebClient(Context context, String tracksUser, String tracksPassword) throws ApiException {
         this.tracksUser = tracksUser;
         this.tracksPassword = tracksPassword;
         PackageManager manager = context.getPackageManager();
@@ -47,8 +53,6 @@ public class WebClient {
             sUserAgent = String.format("%1$s %2$s",
                     info.packageName, info.versionName);
         }
-
-
     }
 
     protected synchronized boolean deleteUrl(String url) throws ApiException {
@@ -62,7 +66,6 @@ public class WebClient {
         HttpHost host = GetHost(uri);
         HttpDelete request = new HttpDelete(uri.getPath());
         request.setHeader("User-Agent", sUserAgent);
-
 
         try {
             HttpResponse response = client.execute(host, request);

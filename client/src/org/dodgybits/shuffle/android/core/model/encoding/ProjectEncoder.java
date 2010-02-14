@@ -1,6 +1,7 @@
 package org.dodgybits.shuffle.android.core.model.encoding;
 
 import static android.provider.BaseColumns._ID;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.ARCHIVED;
 import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.DEFAULT_CONTEXT_ID;
 import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.MODIFIED_DATE;
 import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.NAME;
@@ -15,17 +16,15 @@ import android.os.Bundle;
 public class ProjectEncoder extends AbstractEntityEncoder implements EntityEncoder<Project> {
 
     @Override
-    public Bundle save(Project project) {
-        Bundle icicle = new Bundle();
+    public void save(Bundle icicle, Project project) {
         putId(icicle, _ID, project.getLocalId());
         putId(icicle, TRACKS_ID, project.getTracksId());
         icicle.putLong(MODIFIED_DATE, project.getModifiedDate());
 
         putString(icicle, NAME, project.getName());
         putId(icicle, DEFAULT_CONTEXT_ID, project.getDefaultContextId());
+        icicle.putBoolean(ARCHIVED, project.isArchived());
         icicle.putBoolean(PARALLEL, project.isParallel());
-        
-        return icicle;
     }
     
     @Override
@@ -39,6 +38,7 @@ public class ProjectEncoder extends AbstractEntityEncoder implements EntityEncod
 
         builder.setName(getString(icicle, NAME));
         builder.setDefaultContextId(getId(icicle, DEFAULT_CONTEXT_ID));
+        builder.setArchived(icicle.getBoolean(ARCHIVED));
         builder.setParallel(icicle.getBoolean(PARALLEL));
         
         return builder.build();

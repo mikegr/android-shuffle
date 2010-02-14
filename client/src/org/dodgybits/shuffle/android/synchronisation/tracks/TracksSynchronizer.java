@@ -1,15 +1,15 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks;
 
-import android.content.ContentResolver;
-import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.os.AsyncTask;
-import android.widget.Toast;
+import java.util.LinkedList;
+
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 
-import java.util.LinkedList;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.os.AsyncTask;
+import android.widget.Toast;
 
 
 /**
@@ -20,12 +20,13 @@ import java.util.LinkedList;
 public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
     private static TracksSynchronizer synchronizer;
     private static LinkedList<SyncProgressListener> progressListeners = new LinkedList<SyncProgressListener>();
-    private ContextWrapper activity;
-    private LinkedList<Integer> messages;
+    
+    private final Context mContext;
+    private final LinkedList<Integer> mMessages;
+    private final ContextSynchronizer mContextSynchronizer;
+    private final ProjectSynchronizer mProjectSynchronizer;
+    private final TaskSynchronizer mTaskSynchronizer;
 
-    private TracksSynchronizer(ContextWrapper activity, WebClient client, String tracksUrl) {
-        this(activity.getContentResolver(), activity.getResources(), client, activity, tracksUrl);
-    }
 
     public static TracksSynchronizer getActiveSynchronizer(ContextWrapper context) throws WebClient.ApiException {
         TracksSynchronizer synchronizer = getSingletonSynchronizer(context);
@@ -35,30 +36,25 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
         return synchronizer;
     }
 
-    private static TracksSynchronizer getSingletonSynchronizer(ContextWrapper activity) throws WebClient.ApiException {
+    private static TracksSynchronizer getSingletonSynchronizer(Context context) throws WebClient.ApiException {
         if (synchronizer == null || synchronizer.getStatus() == Status.FINISHED) {
 
-            synchronizer = new TracksSynchronizer(activity, new WebClient(activity, Preferences.getTracksUser(activity), Preferences.getTracksPassword(activity)), Preferences.getTracksUrl(activity));
+            synchronizer = new TracksSynchronizer(
+                    context, 
+                    new WebClient(context, Preferences.getTracksUser(context), Preferences.getTracksPassword(context)), 
+                    Preferences.getTracksUrl(context));
         }
         return synchronizer;
     }
 
 
-    private final ContextSynchronizer contextSynchronizer;
-    private final ProjectSynchronizer projectSynchronizer;
-    private final TaskSynchronizer taskSynchronizer;
-    private final Resources resources;
+    private TracksSynchronizer(Context context, WebClient client, String tracksUrl) {
+        mContextSynchronizer = new ContextSynchronizer(this, client, context, 0, tracksUrl);
+        mProjectSynchronizer = new ProjectSynchronizer(this, client, context, 33, tracksUrl);
+        mTaskSynchronizer = new TaskSynchronizer(this, client, context, 66, tracksUrl);
 
-    private TracksSynchronizer(ContentResolver contentResolver, Resources resources, WebClient client, ContextWrapper activity, String tracksUrl) {
-        this.contextSynchronizer = new ContextSynchronizer(contentResolver, resources, client, activity, this, tracksUrl, 0);
-        this.projectSynchronizer = new ProjectSynchronizer(contentResolver, resources, client, activity, this, tracksUrl, 33);
-        this.taskSynchronizer = new TaskSynchronizer(contentResolver, resources, client, activity, this, tracksUrl, 66);
-
-        this.resources = resources;
-
-        this.activity = activity;
-        messages = new LinkedList<Integer>();
-
+        mContext = context;
+        mMessages = new LinkedList<Integer>();
     }
 
     @Override
@@ -68,7 +64,7 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
         }
     }
 
-    public void RegisterListener(SyncProgressListener listener) {
+    public void registerListener(SyncProgressListener listener) {
         if (!progressListeners.contains(listener))
             progressListeners.add(listener);
     }
@@ -82,14 +78,14 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
     @Override
     protected Void doInBackground(String... strings) {
         try {
-            contextSynchronizer.synchronize();
-            projectSynchronizer.synchronize();
-            taskSynchronizer.synchronize();
+            mContextSynchronizer.synchronize();
+            mProjectSynchronizer.synchronize();
+            mTaskSynchronizer.synchronize();
             publishProgress(Progress.createProgress(100, "Synchronization Complete"));
         } catch (WebClient.ApiException e) {
-            publishProgress(Progress.createErrorProgress(resources.getString(R.string.web_error_message)));
+            publishProgress(Progress.createErrorProgress(mContext.getString(R.string.web_error_message)));
         } catch (Exception e) {
-            publishProgress(Progress.createErrorProgress(resources.getString(R.string.error_message)));
+            publishProgress(Progress.createErrorProgress(mContext.getString(R.string.error_message)));
         }
         return null;
 
@@ -97,26 +93,25 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        if (messages.size() > 0) {
-            for (Integer textId : messages) {
-                Toast toast = Toast.makeText(activity.getApplicationContext(), textId
+        if (mMessages.size() > 0) {
+            for (Integer textId : mMessages) {
+                Toast toast = Toast.makeText(mContext.getApplicationContext(), textId
                         , Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
         try {
-            synchronizer = getSingletonSynchronizer(activity);
+            synchronizer = getSingletonSynchronizer(mContext);
         } catch (WebClient.ApiException ignored) {
 
         }
     }
-
 
     public void reportProgress(Progress progress) {
         publishProgress(progress);
     }
 
     public void postSyncMessage(int toastMessage) {
-        messages.add(toastMessage);
+        mMessages.add(toastMessage);
     }
 }

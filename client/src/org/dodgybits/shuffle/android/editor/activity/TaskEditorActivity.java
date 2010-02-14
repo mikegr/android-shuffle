@@ -21,10 +21,13 @@ import java.util.Arrays;
 import java.util.TimeZone;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
+import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
+import org.dodgybits.shuffle.android.core.model.encoding.TaskEncoder;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
@@ -148,18 +151,13 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         findViewsAndAddListeners();
         
         if (mState == State.STATE_EDIT) {
-            if (mCursor != null) {
-                // Make sure we are at the one and only row in the cursor.
-                mCursor.moveToFirst();
-                // Modify our overall title depending on the mode we are running in.
-                setTitle(R.string.title_edit_task);
-                mCompleteEntry.setVisibility(View.VISIBLE);    
-                mOriginalItem = BindingUtils.readTask(mCursor,getResources());
-              	updateUIFromItem(mOriginalItem);
-            } else {
-                setTitle(getText(R.string.error_title));
-                mDescriptionWidget.setText(getText(R.string.error_message));
-            }
+            // Make sure we are at the one and only row in the cursor.
+            mCursor.moveToFirst();
+            // Modify our overall title depending on the mode we are running in.
+            setTitle(R.string.title_edit_task);
+            mCompleteEntry.setVisibility(View.VISIBLE);    
+            mOriginalItem = mPersister.read(mCursor);
+          	updateUIFromItem(mOriginalItem);
         } else if (mState == State.STATE_INSERT) {
             setTitle(R.string.title_new_task);
             mCompleteEntry.setVisibility(View.GONE);
@@ -167,6 +165,15 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
         }
+    }
+    @Override
+    protected EntityEncoder<Task> createEncoder() {
+        return new TaskEncoder();
+    }
+    
+    @Override
+    protected EntityPersister<Task> createPersister() {
+        return new TaskPersister(getContentResolver());
     }
     
     @Override
@@ -524,21 +531,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     @Override
     protected int getContentViewResId() {
     	return R.layout.task_editor;
-    }
-
-    @Override
-    protected Task restoreItem(Bundle icicle) {
-    	return BindingUtils.restoreTask(icicle,getResources());
-    }
-    
-    @Override
-    protected void saveItem(Bundle outState, Task item) {
-    	BindingUtils.saveTask(outState, item);
-    }
-    
-    @Override
-    protected void writeItem(ContentValues values, Task task) {
-    	BindingUtils.writeTask(values, task);
     }
 
     @Override

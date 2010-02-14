@@ -17,10 +17,10 @@
 package org.dodgybits.shuffle.android.list.activity.task;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
@@ -55,7 +55,8 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected Cursor createItemQuery() {
 		Log.d(cTag, "Creating a cursor to find tasks for the given context");
-		return managedQuery(getListConfig().getListContentUri(), 
+		return managedQuery(
+		        getListConfig().getPersister().getContentUri(), 
 				Shuffle.Tasks.cFullProjection,
 				Shuffle.Tasks.PROJECT_ID + " = ?", 
 				new String[] {String.valueOf(mProjectId)}, 
@@ -65,11 +66,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig() {
-
-			public Uri getListContentUri() {
-				return Shuffle.Tasks.CONTENT_URI;
-			}
+		return new AbstractTaskListConfig(getContentResolver()) {
 
 		    public int getCurrentViewMenuId() {
 		    	return 0;
@@ -89,7 +86,8 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 		Cursor cursor = getContentResolver().query(Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection,
 				Shuffle.Projects._ID + " = ?", new String[] {String.valueOf(mProjectId)}, null);
 		if (cursor.moveToNext()) {
-			mProject = BindingUtils.readProject(cursor);
+		    ProjectPersister persister = new ProjectPersister(getContentResolver());
+			mProject = persister.read(cursor);
 		}
 		cursor.close();
 		
@@ -174,14 +172,14 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     protected final void moveUp(int selection) {
     	if (moveUpPermitted(selection)) {
     		Cursor cursor = (Cursor) getListAdapter().getItem(selection);
-    		BindingUtils.swapTaskPositions(this, cursor, selection - 1, selection);
+    		getTaskPersister().swapTaskPositions(cursor, selection - 1, selection);
     	}
     }
     
     protected final void moveDown(int selection) {
     	if (moveDownPermitted(selection)) {
     		Cursor cursor = (Cursor) getListAdapter().getItem(selection);
-    		BindingUtils.swapTaskPositions(this, cursor, selection, selection + 1);
+            getTaskPersister().swapTaskPositions(cursor, selection, selection + 1);
     	}
     }
 

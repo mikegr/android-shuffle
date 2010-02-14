@@ -17,38 +17,46 @@
 package org.dodgybits.shuffle.android.list.config;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 
+import android.content.ContentResolver;
 import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.net.Uri;
 
-public abstract class AbstractTaskListConfig implements ListConfig<Task> {
+public abstract class AbstractTaskListConfig implements TaskListConfig {
 
+    private TaskPersister mPersister;
+    
+    public AbstractTaskListConfig(ContentResolver resolver) {
+        mPersister = new TaskPersister(resolver);
+    }
+    
+    @Override
 	public int getContentViewResId() {
 		return R.layout.task_list;
 	}
-
-	public Uri getContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
 	
+    @Override
 	public String getItemName(ContextWrapper context) {
 		return context.getString(R.string.task_name);
 	}
 	
-	public Task readItem(Cursor c, Resources res) {
-        return BindingUtils.readTask(c,res);
+	@Override
+	public EntityPersister<Task> getPersister() {
+	    return mPersister;
+	}
+
+    public TaskPersister getTaskPersister() {
+        return mPersister;
     }
-    
-  
+	
+    @Override
     public boolean supportsViewAction() {
 		return true;
 	}
     
+    @Override
     public boolean isTaskList() {
     	return true;
     }

@@ -16,7 +16,6 @@
 
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
@@ -41,7 +40,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
-public class ExpandableProjectsActivity extends AbstractExpandableActivity<Project, Task> {
+public class ExpandableProjectsActivity extends AbstractExpandableActivity<Project> {
 	private static final String cTag = "ExpandableProjectsActivity";
 
 	private int mChildIdColumnIndex; 
@@ -49,8 +48,8 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	private SparseIntArray mTaskCountArray;
 
 	@Override
-	protected ExpandableListConfig<Project, Task> createListConfig() {
-		return new ProjectExpandableListConfig();
+	protected ExpandableListConfig<Project> createListConfig() {
+		return new ProjectExpandableListConfig(getContentResolver());
 	}
 	
 	@Override
@@ -58,7 +57,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 		Cursor cursor = getContentResolver().query(
 				Shuffle.Projects.cProjectTasksContentURI, 
 				Shuffle.Projects.cFullTaskProjection, null, null, null);
-		mTaskCountArray = BindingUtils.readCountArray(cursor);
+		mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
 		
@@ -112,12 +111,12 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getChild(groupPosition, childPosition);
-				Task task = getListConfig().readChild(cursor, getResources());
+				Task task = getListConfig().getChildPersister().read(cursor);
 				TaskView taskView;
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
 				} else {
-					taskView = new ExpandableTaskView(parent.getContext());
+					taskView = new ExpandableTaskView(parent.getContext(), null, null);
 				}
 				taskView.setShowContext(true);
 				taskView.setShowProject(false);
@@ -127,7 +126,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getGroup(groupPosition);
-				Project project = getListConfig().readGroup(cursor, getResources());
+				Project project = getListConfig().getGroupPersister().read(cursor);
 				ProjectView projectView;
 				if (convertView instanceof ExpandableProjectView) {
 					projectView = (ExpandableProjectView) convertView;
@@ -200,7 +199,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
     	if (moveUpPermitted(groupPosition, childPosition)) {
     		Cursor cursor = (Cursor) getExpandableListAdapter().getChild(
     				groupPosition, childPosition);
-    		BindingUtils.swapTaskPositions(this, cursor, childPosition - 1, childPosition);
+            getListConfig().getChildPersister().swapTaskPositions(cursor, childPosition - 1, childPosition);
     	}
     }
     
@@ -210,7 +209,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
     	if (moveDownPermitted(groupPosition, childPosition)) {
     		Cursor cursor = (Cursor) getExpandableListAdapter().getChild(
     				groupPosition, childPosition);
-    		BindingUtils.swapTaskPositions(this, cursor, childPosition, childPosition + 1);
+            getListConfig().getChildPersister().swapTaskPositions(cursor, childPosition, childPosition + 1);
     	}	
     }
 	

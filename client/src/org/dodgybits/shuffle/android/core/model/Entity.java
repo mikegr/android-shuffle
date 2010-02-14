@@ -12,6 +12,6 @@ public interface Entity {
      */
     long getModifiedDate();
     
-
+    boolean isInitialized();
     
 }

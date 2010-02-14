@@ -2,85 +2,88 @@ package org.dodgybits.shuffle.android.synchronisation.tracks;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.android.shuffle.util.ModelUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.core.model.EntityBuilder;
+import org.dodgybits.shuffle.android.core.model.Id;
+import org.dodgybits.shuffle.android.core.model.Context.Builder;
+import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.util.Xml;
 
 /**
  * @author Morten Nielsen
  */
 public class ContextSynchronizer extends Synchronizer<Context> {
-    private final String tracksUrl;
+    private final String mTracksUrl;
+    
+    public ContextSynchronizer(
+            TracksSynchronizer tracksSynchronizer, 
+            WebClient client, 
+            android.content.Context context, 
+            int basePercent, 
+            String tracksUrl) {
+        super(tracksSynchronizer, client, context, basePercent);
 
-    public ContextSynchronizer(ContentResolver contentResolver, Resources resources, WebClient client, ContextWrapper activity, TracksSynchronizer tracksSynchronizer, String tracksUrl, int basePercent) {
-        super(contentResolver, tracksSynchronizer, client, resources, activity, basePercent);
-
-        this.tracksUrl = tracksUrl;
+        mTracksUrl = tracksUrl;
     }
-
-        protected Context FindContextByName(Collection<Context> remoteContexts, Context localContext) {
-        Context foundContext = null;
-        for (Context context : remoteContexts)
-            if (context.name.equals(localContext.name)) {
-                foundContext = context;
-            }
-        return foundContext;
-    }
-
+    
     @Override
-    protected void verifyLocalEntities(Map<Long, Context> localEntities) {
+    protected EntityPersister<Context> createPersister() {
+        return new ContextPersister(mContext.getContentResolver());
+    }
+    
+    @Override
+    protected void verifyLocalEntities(Map<Id, Context> localEntities) {
     }
 
     @Override
     protected String readingRemoteText() {
-        return resources.getString(R.string.readingRemoteContexts);
+        return mContext.getString(R.string.readingRemoteContexts);
     }
 
     @Override
     protected String processingText() {
-        return resources.getString(R.string.processingContexts);
+        return mContext.getString(R.string.processingContexts);
     }
 
     @Override
     protected String readingLocalText() {
-        return resources.getString(R.string.readingLocalContexts);
+        return mContext.getString(R.string.readingLocalContexts);
     }
 
     @Override
     protected String stageFinishedText() {
-        return resources.getString(R.string.doneWithContexts);
+        return mContext.getString(R.string.doneWithContexts);
     }
 
     @Override
-    protected void saveLocalEntityFromRemote(Context remoteContext) {
-        ModelUtils.insertContext(activity, remoteContext);
+    protected EntityBuilder<Context> createBuilder() {
+        return Context.newBuilder();
     }
-
+    
+    @Override
     protected Context createMergedLocalEntity(Context localContext, Context newContext) {
-        return new Context(localContext.id, newContext.name,
-                localContext.colourIndex, localContext.icon,
-                newContext.tracksId, newContext.modified);
+        Builder builder = Context.newBuilder();
+        builder.mergeFrom(newContext);
+        builder
+            .setLocalId(localContext.getLocalId())
+            .setColourIndex(localContext.getColourIndex())
+            .setIconName(localContext.getIconName());
+        return builder.build();
     }
-    protected String createDocumentForEntity(org.dodgybits.shuffle.android.core.model.Context localContext) {
+    
+    @Override
+    protected String createDocumentForEntity(Context localContext) {
         XmlSerializer serializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
 
@@ -91,11 +94,11 @@ public class ContextSynchronizer extends Synchronizer<Context> {
 
             serializer.startTag("", "context");
             Date date = new Date();
-            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(simpleDateFormat.format(date)).endTag("", "created-at");
+            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(mDateFormat.format(date)).endTag("", "created-at");
             serializer.startTag("", "hide").attribute("", "type", "boolean").text("false").endTag("", "hide");
-            serializer.startTag("", "name").text(localContext.name).endTag("", "name");
+            serializer.startTag("", "name").text(localContext.getName()).endTag("", "name");
             serializer.startTag("", "position").attribute("", "type", "integer").text("12").endTag("", "position");
-            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(simpleDateFormat.format(date)).endTag("", "updated-at");
+            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(mDateFormat.format(date)).endTag("", "updated-at");
             serializer.endTag("", "context");
             // serializer.endDocument();
             serializer.flush();
@@ -107,7 +110,8 @@ public class ContextSynchronizer extends Synchronizer<Context> {
         return writer.toString();
     }
 
-    protected org.dodgybits.shuffle.android.core.model.Context parseSingleEntity(XmlPullParser parser) throws ParseException {
+    @Override
+    protected Context parseSingleEntity(XmlPullParser parser) throws ParseException {
 
         //               <context>
 //<created-at type="datetime">2009-12-29T21:14:19+00:00</created-at>
@@ -117,36 +121,35 @@ public class ContextSynchronizer extends Synchronizer<Context> {
 //<position type="integer">1</position>
 //<updated-at type="datetime">2009-12-29T21:14:19+00:00</updated-at>
 //</context>
+        Context context = null;
+        
         try {
             int eventType = parser.getEventType();
-            String contextName = null;
-            Long id = null;
-            Long date = null;
-            boolean done = false;
 
-            SimpleDateFormat format = simpleDateFormat;
-            while (eventType != XmlPullParser.END_DOCUMENT && !done) {
+            final DateFormat format = mDateFormat;
+            while (eventType != XmlPullParser.END_DOCUMENT && context == null) {
                 String name = parser.getName();
+                Builder builder = Context.newBuilder();
 
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
-
                         break;
+                        
                     case XmlPullParser.START_TAG:
-
-
                         if (name.equalsIgnoreCase("name")) {
-                            contextName = parser.nextText();
+                            builder.setName(parser.nextText());
                         } else if (name.equalsIgnoreCase("id")) {
-                            id = Long.parseLong(parser.nextText());
+                            Id tracksId = Id.create(Long.parseLong(parser.nextText()));
+                            builder.setTracksId(tracksId);
                         } else if (name.equalsIgnoreCase("updated-at")) {
-                            date = format.parse(parser.nextText()).getTime();
+                            long date = format.parse(parser.nextText()).getTime();
+                            builder.setModifiedDate(date);
                         }
-
                         break;
+                        
                     case XmlPullParser.END_TAG:
-                        if (name.equalsIgnoreCase("context") && contextName != null) {
-                            return new org.dodgybits.shuffle.android.core.model.Context(null, contextName, 1, org.dodgybits.shuffle.android.core.model.Context.Icon.createIcon("network_wireless", resources), id, date);
+                        if (name.equalsIgnoreCase("context")) {
+                            context = builder.build();
                         }
                         break;
                 }
@@ -157,55 +160,22 @@ public class ContextSynchronizer extends Synchronizer<Context> {
         } catch (XmlPullParserException e) {
             throw new ParseException("Unable to parse context", 0);
         }
-        return null;
+        return context;
     }
 
     @Override
     protected String createEntityUrl(Context localContext) {
-        return tracksUrl + "/contexts/" + localContext.tracksId + ".xml";
+        return mTracksUrl + "/contexts/" + localContext.getTracksId().getId() + ".xml";
     }
 
-
-           @Override
+    @Override
     protected String endIndexTag() {
         return "contexts";
     }
 
-            @Override
+    @Override
     protected String entityIndexUrl() {
-        return tracksUrl+"/contexts.xml";
+        return mTracksUrl+"/contexts.xml";
     }
 
-    protected boolean removeLocalEntity(org.dodgybits.shuffle.android.core.model.Context context) {
-        return 1 == contentResolver.delete(
-                Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts._ID + " = " + context.id,
-                null);
-    }
-
-    protected void saveLocalEntity(org.dodgybits.shuffle.android.core.model.Context context) {
-        ContentValues values = new ContentValues();
-        BindingUtils.writeContext(values, context);
-        contentResolver.update(Shuffle.Contexts.CONTENT_URI, values, Shuffle.Contexts._ID + "=?", new String[]{String.valueOf(context.id)});
-    }
-
-    protected Map<Long, org.dodgybits.shuffle.android.core.model.Context> getShuffleEntities(ContentResolver contentResolver, Resources resources) {
-
-
-        Cursor cursor = contentResolver.query(
-                Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection,
-                null, null, null);
-
-
-        Map<Long, org.dodgybits.shuffle.android.core.model.Context> list = new HashMap<Long, org.dodgybits.shuffle.android.core.model.Context>();
-
-        while (cursor.moveToNext()) {
-            org.dodgybits.shuffle.android.core.model.Context context = BindingUtils.readContext(cursor, resources);
-
-            list.put(context.id, context);
-
-
-        }
-        cursor.close();
-        return list;
-    }
 }

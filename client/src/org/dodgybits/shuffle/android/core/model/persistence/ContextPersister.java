@@ -8,11 +8,14 @@ import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Context
 
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 
-public class ContextPersister extends AbstractEntityPersister implements EntityPersister<Context> {
+public class ContextPersister extends AbstractEntityPersister<Context> {
 
     private static final int ID_INDEX = 0;
     private static final int NAME_INDEX = 1;
@@ -20,6 +23,10 @@ public class ContextPersister extends AbstractEntityPersister implements EntityP
     private static final int ICON_INDEX = 3;
     private static final int TRACKS_ID_INDEX = 4;
     private static final int MODIFIED_INDEX = 5;
+    
+    public ContextPersister(ContentResolver resolver) {
+        super(resolver);
+    }
     
     @Override
     public Context read(Cursor cursor) {
@@ -35,7 +42,7 @@ public class ContextPersister extends AbstractEntityPersister implements EntityP
     }
 
     @Override
-    public void write(ContentValues values, Context context) {
+    protected void writeContentValues(ContentValues values, Context context) {
         // never write id since it's auto generated
         values.put(MODIFIED_DATE, context.getModifiedDate());
         writeId(values, TRACKS_ID, context.getTracksId());
@@ -43,6 +50,17 @@ public class ContextPersister extends AbstractEntityPersister implements EntityP
         values.put(COLOUR, context.getColourIndex());
         writeString(values, ICON, context.getIconName());
     }
+    
+    @Override
+    public Uri getContentUri() {
+        return Shuffle.Contexts.CONTENT_URI;
+    }
 
+    @Override
+    public String[] getFullProjection() {
+        return Shuffle.Contexts.cFullProjection;
+    }
+    
+    
     
 }

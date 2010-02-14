@@ -16,7 +16,6 @@
 
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.list.config.ContextExpandableListConfig;
@@ -34,14 +33,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 
-public class ExpandableContextsActivity extends AbstractExpandableActivity<Context, Task> {
+public class ExpandableContextsActivity extends AbstractExpandableActivity<Context> {
     private int mChildIdColumnIndex; 
     private int mGroupIdColumnIndex; 
 	private SparseIntArray mTaskCountArray;
 	
 	@Override
-	protected ExpandableListConfig<Context, Task> createListConfig() {
-		return new ContextExpandableListConfig();
+	protected ExpandableListConfig<Context> createListConfig() {
+		return new ContextExpandableListConfig(getContentResolver());
 	}
 	
 	@Override
@@ -49,7 +48,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 		Cursor cursor = getContentResolver().query(
 				Shuffle.Contexts.cContextTasksContentURI, 
 				Shuffle.Contexts.cFullTaskProjection, null, null, null);
-		mTaskCountArray = BindingUtils.readCountArray(cursor);
+        mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
 	
@@ -98,12 +97,12 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getChild(groupPosition, childPosition);
-				Task task = getListConfig().readChild(cursor, getResources());
+				Task task = getListConfig().getChildPersister().read(cursor);
 				TaskView taskView;
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
 				} else {
-					taskView = new ExpandableTaskView(parent.getContext());
+					taskView = new ExpandableTaskView(parent.getContext(), null, null);
 				}
 				taskView.setShowContext(false);
 				taskView.setShowProject(true);
@@ -113,7 +112,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 	        	Cursor cursor = (Cursor) getGroup(groupPosition);
-	        	Context context = getListConfig().readGroup(cursor, getResources());
+	        	Context context = getListConfig().getGroupPersister().read(cursor);
 				ContextView contextView;
 				if (convertView instanceof ExpandableContextView) {
 					contextView = (ExpandableContextView) convertView;

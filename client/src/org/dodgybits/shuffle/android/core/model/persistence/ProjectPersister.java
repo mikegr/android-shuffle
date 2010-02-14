@@ -1,5 +1,6 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.ARCHIVED;
 import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.DEFAULT_CONTEXT_ID;
 import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.MODIFIED_DATE;
 import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.NAME;
@@ -8,11 +9,14 @@ import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Project
 
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 
-public class ProjectPersister extends AbstractEntityPersister implements EntityPersister<Project> {
+public class ProjectPersister extends AbstractEntityPersister<Project> {
 
     private static final int ID_INDEX = 0;
     private static final int NAME_INDEX = 1;
@@ -20,6 +24,11 @@ public class ProjectPersister extends AbstractEntityPersister implements EntityP
     private static final int TRACKS_ID_INDEX = 3;
     private static final int MODIFIED_INDEX = 4;
     private static final int PARALLEL_INDEX = 5;
+    private static final int ARCHIVED_INDEX = 6;
+    
+    public ProjectPersister(ContentResolver resolver) {
+        super(resolver);
+    }
     
     @Override
     public Project read(Cursor cursor) {
@@ -30,19 +39,31 @@ public class ProjectPersister extends AbstractEntityPersister implements EntityP
             .setTracksId(readId(cursor, TRACKS_ID_INDEX))
             .setName(readString(cursor, NAME_INDEX))
             .setDefaultContextId(readId(cursor, DEFAULT_CONTEXT_INDEX))
-            .setParallel(readBoolean(cursor, PARALLEL_INDEX));
+            .setParallel(readBoolean(cursor, PARALLEL_INDEX))
+            .setArchived(readBoolean(cursor, ARCHIVED_INDEX));
         
         return builder.build();
     }
     
     @Override
-    public void write(ContentValues values, Project project) {
+    protected void writeContentValues(ContentValues values, Project project) {
         // never write id since it's auto generated
         values.put(MODIFIED_DATE, project.getModifiedDate());
         writeId(values, TRACKS_ID, project.getTracksId());
         writeString(values, NAME, project.getName());
         writeId(values, DEFAULT_CONTEXT_ID, project.getDefaultContextId());
         writeBoolean(values, PARALLEL, project.isParallel());
+        writeBoolean(values, ARCHIVED, project.isArchived());
+    }
+    
+    @Override
+    public Uri getContentUri() {
+        return Shuffle.Projects.CONTENT_URI;
+    }
+    
+    @Override
+    public String[] getFullProjection() {
+        return Shuffle.Projects.cFullProjection;
     }
     
 }

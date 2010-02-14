@@ -26,8 +26,7 @@ public class TaskEncoder extends AbstractEntityEncoder implements
         EntityEncoder<Task> {
     
     @Override
-    public Bundle save(Task task) {
-        Bundle icicle = new Bundle();
+    public void save(Bundle icicle, Task task) {
         putId(icicle, _ID, task.getLocalId());
         putId(icicle, TRACKS_ID, task.getTracksId());
         icicle.putLong(MODIFIED_DATE, task.getModifiedDate());
@@ -45,8 +44,6 @@ public class TaskEncoder extends AbstractEntityEncoder implements
         icicle.putBoolean(HAS_ALARM, task.hasAlarms());
         icicle.putInt(DISPLAY_ORDER, task.getOrder());
         icicle.putBoolean(COMPLETE, task.isComplete());
-
-        return icicle;
     }
 
     @Override

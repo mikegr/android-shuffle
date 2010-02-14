@@ -7,10 +7,10 @@ import org.dodgybits.shuffle.dto.ShuffleProtos.Project.Builder;
 
 public class ProjectProtocolTranslator implements EntityProtocolTranslator<Project, org.dodgybits.shuffle.dto.ShuffleProtos.Project> {
 
-    private Locator<Context> mContextLocator;
+    private EntityDirectory<Context> mContextDirectory;
     
-    public ProjectProtocolTranslator(Locator<Context> contextLocator) {
-        mContextLocator = contextLocator;
+    public ProjectProtocolTranslator(EntityDirectory<Context> contextDirectory) {
+        mContextDirectory = contextDirectory;
     }
     
     public org.dodgybits.shuffle.dto.ShuffleProtos.Project toMessage(Project project) {
@@ -44,7 +44,8 @@ public class ProjectProtocolTranslator implements EntityProtocolTranslator<Proje
             .setParallel(dto.getParallel());
             
         if (dto.hasDefaultContextId()) {
-            Context context = mContextLocator.findById(dto.getDefaultContextId());
+            Id defaultContextId = Id.create(dto.getDefaultContextId());
+            Context context = mContextDirectory.findById(defaultContextId);
             builder.setDefaultContextId(context.getLocalId());
         }
 

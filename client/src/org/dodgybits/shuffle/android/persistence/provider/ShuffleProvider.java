@@ -777,6 +777,8 @@ public class ShuffleProvider extends ContentProvider {
 				+ ".modified");
         sProjectListProjectMap.put(Shuffle.Projects.PARALLEL, cProjectTableName
                 + ".parallel");
+        sProjectListProjectMap.put(Shuffle.Projects.ARCHIVED, cProjectTableName
+                + ".archived");
 		
 		sReminderListProjectMap = new HashMap<String, String>();
 		sReminderListProjectMap.put(Shuffle.Reminders._ID, cReminderTableName

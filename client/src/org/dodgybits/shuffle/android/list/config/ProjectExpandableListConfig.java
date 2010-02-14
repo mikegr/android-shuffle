@@ -17,53 +17,58 @@
 package org.dodgybits.shuffle.android.list.config;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Project;
-import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
+import android.content.ContentResolver;
 import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.net.Uri;
 
-public class ProjectExpandableListConfig implements ExpandableListConfig<Project, Task> {
+public class ProjectExpandableListConfig implements ExpandableListConfig<Project> {
+    private ProjectPersister mGroupPersister;
+    private TaskPersister mChildPersister;
+    
+    public ProjectExpandableListConfig(ContentResolver resolver) {
+        mGroupPersister = new ProjectPersister(resolver);
+        mChildPersister = new TaskPersister(resolver);
+    }
 
-	public Uri getChildContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
-
+    @Override
 	public String getChildName(ContextWrapper context) {
 		return context.getString(R.string.task_name);
 	}
 
+    @Override
 	public int getContentViewResId() {
 		return R.layout.expandable_projects;
 	}
 
+    @Override
 	public int getCurrentViewMenuId() {
     	return MenuUtils.PROJECT_ID;
 	}
 
-	public Uri getGroupContentUri() {
-		return Shuffle.Projects.CONTENT_URI;
-	}
-
+    @Override
 	public String getGroupIdColumnName() {
 		return Shuffle.Tasks.PROJECT_ID;
 	}
 
+    @Override
 	public String getGroupName(ContextWrapper context) {
 		return context.getString(R.string.project_name);
 	}
 	
-	public Task readChild(Cursor cursor, Resources res) {
-        return BindingUtils.readTask(cursor, res);
-	}
-
-	public Project readGroup(Cursor cursor, Resources res) {
-        return BindingUtils.readProject(cursor);
-	}
+    @Override
+    public TaskPersister getChildPersister() {
+        return mChildPersister;
+    }
+    
+    @Override
+    public EntityPersister<Project> getGroupPersister() {
+        return mGroupPersister;
+    }
 	
 }

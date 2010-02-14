@@ -20,7 +20,7 @@ public final class Id {
     
     @Override
     public String toString() {
-        return isInitialised() ? String.valueOf(mId) : "Unset";
+        return isInitialised() ? String.valueOf(mId) : "";
     }
     
     @Override

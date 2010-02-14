@@ -16,59 +16,67 @@
 
 package org.dodgybits.shuffle.android.list.config;
 
-import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.net.Uri;
-
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+
+import android.content.ContentResolver;
+import android.content.ContextWrapper;
 
 public class ContextListConfig implements DrilldownListConfig<Context> {
 
+    private ContextPersister mGroupPersister;
+    private TaskPersister mChildPersister;
+    
+    public ContextListConfig(ContentResolver resolver) {
+        mGroupPersister = new ContextPersister(resolver);
+        mChildPersister = new TaskPersister(resolver);
+    }
+    
+    @Override
 	public String createTitle(ContextWrapper context) {
     	return context.getString(R.string.title_context);
 	}
 
-	public Uri getContentUri() {
-		return Shuffle.Contexts.CONTENT_URI;
-	}
-
+    @Override
 	public int getContentViewResId() {
 		return R.layout.contexts;
 	}
 
+    @Override
 	public int getCurrentViewMenuId() {
     	return MenuUtils.CONTEXT_ID;
 	}
 
+    @Override
 	public String getItemName(ContextWrapper context) {
 		return context.getString(R.string.context_name);
 	}
 
-	public Uri getListContentUri() {
-		return Shuffle.Contexts.CONTENT_URI;
-	}
-
+    @Override
 	public boolean isTaskList() {
 		return false;
 	}
 
-	public Context readItem(Cursor cursor, Resources res) {
-        return BindingUtils.readContext(cursor, res);
+	@Override
+	public EntityPersister<Context> getPersister() {
+	    return mGroupPersister;
 	}
-
+	
+	@Override
+	public TaskPersister getChildPersister() {
+	    return mChildPersister;
+	}
+	
+    @Override
 	public boolean supportsViewAction() {
 		return false;
 	}
 	
-	public Uri getChildContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
-	
+    @Override
 	public String getChildName(ContextWrapper context) {
 		return context.getString(R.string.task_name);
 	}		

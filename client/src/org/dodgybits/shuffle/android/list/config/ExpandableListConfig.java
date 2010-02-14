@@ -16,49 +16,31 @@
 
 package org.dodgybits.shuffle.android.list.config;
 
-import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.net.Uri;
+import org.dodgybits.shuffle.android.core.model.Entity;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 
-public interface ExpandableListConfig<G,C> {
+import android.content.ContextWrapper;
+
+public interface ExpandableListConfig<G extends Entity> {
 
 
     /**
      * @return id of layout for this view
      */
-    abstract int getContentViewResId();
+    int getContentViewResId();
+    int getCurrentViewMenuId();
 
-
-    /**
-     * Content type of top level list items.
-     */
-    abstract Uri getGroupContentUri();
-
-
-    /**
-     * Content type of child items.
-     */
-    abstract Uri getChildContentUri();
-
-    abstract int getCurrentViewMenuId();
-
-    abstract String getGroupName(ContextWrapper context);
-    abstract String getChildName(ContextWrapper context);
+    String getGroupName(ContextWrapper context);
+    String getChildName(ContextWrapper context);
     
     /**
      * @return the name of the database column holding the key from the child to the parent
      */
-    abstract String getGroupIdColumnName();
-    /**
-     * Generate a model object for the group item at the current cursor position.
-     */
-    abstract G readGroup(Cursor cursor, Resources res);
-
-    /**
-     * Generate a model object for the child item at the current cursor position.
-     */
-    abstract C readChild(Cursor cursor, Resources res);
+    String getGroupIdColumnName();
+    
+    EntityPersister<G> getGroupPersister();
+    TaskPersister getChildPersister();
 
     
 }

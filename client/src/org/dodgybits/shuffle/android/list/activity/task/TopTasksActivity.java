@@ -21,22 +21,20 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
 import android.content.ContextWrapper;
-import android.net.Uri;
 
 public class TopTasksActivity extends AbstractTaskListActivity {
 
 	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig() {
+		return new AbstractTaskListConfig(getContentResolver()) {
 
-			public Uri getListContentUri() {
-				// Tasks with no projects or created since last clean
-				return Shuffle.Tasks.cTopTasksContentURI;
-			}
+//			public Uri getListContentUri() {
+//				// Tasks with no projects or created since last clean
+//				return Shuffle.Tasks.cTopTasksContentURI;
+//			}
 
 		    public int getCurrentViewMenuId() {
 		    	return MenuUtils.TOP_TASKS_ID;

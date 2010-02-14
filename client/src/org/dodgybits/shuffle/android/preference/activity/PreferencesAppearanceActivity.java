@@ -23,10 +23,10 @@ import static org.dodgybits.shuffle.android.preference.model.Preferences.DISPLAY
 import static org.dodgybits.shuffle.android.preference.model.Preferences.DISPLAY_PROJECT_KEY;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.ModelUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.InitialDataGenerator;
 import org.dodgybits.shuffle.android.list.view.TaskView;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
@@ -74,7 +74,7 @@ public class PreferencesAppearanceActivity extends Activity  {
         
         // need to add task view programatically due to issues adding via XML
         
-        mTaskView = new TaskView(this);
+        mTaskView = new TaskView(this, null, null);
         mTaskView.updateView(mSampleTask); // todo pass in project and context
         LayoutParams taskLayout = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT );
         LinearLayout layout = (LinearLayout)findViewById(R.id.appearance_layout);
@@ -100,7 +100,7 @@ public class PreferencesAppearanceActivity extends Activity  {
 	private void setupSampleTask() {
         long now = System.currentTimeMillis();
         mSampleProject = Project.newBuilder().setName("Sample project").build();
-        mSampleContext = ModelUtils.getSampleContext(getResources());
+        mSampleContext = InitialDataGenerator.getSampleContext(getResources());
         mSampleTask = Task.newBuilder()
             .setDescription("Sample action")
             .setDetails("Additional action details")

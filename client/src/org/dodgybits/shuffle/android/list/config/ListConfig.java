@@ -16,41 +16,28 @@
 
 package org.dodgybits.shuffle.android.list.config;
 
+import org.dodgybits.shuffle.android.core.model.Entity;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+
 import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.net.Uri;
 
-public interface ListConfig<T> {
+public interface ListConfig<T extends Entity> {
 
-    public String createTitle(ContextWrapper context);
+    String createTitle(ContextWrapper context);
 
-	public String getItemName(ContextWrapper context);
+	String getItemName(ContextWrapper context);
 
 	/**
 	 * @return id of layout for this view
 	 */
-	public int getContentViewResId();
+	int getContentViewResId();
 
-	/**
-	 * Content type of list itself.
-	 */
-	public Uri getListContentUri();
-
-	/**
-	 * Content type of list items.
-	 */
-	public Uri getContentUri();
-
-	/**
-	 * Generate a model object for the item at the current cursor position.
-	 */
-	public T readItem(Cursor cursor, Resources res);
-
-	public int getCurrentViewMenuId();
+	EntityPersister<T> getPersister();
 	
-	public boolean supportsViewAction();
+	int getCurrentViewMenuId();
 	
-	public boolean isTaskList();
+	boolean supportsViewAction();
+	
+	boolean isTaskList();
 		
 }

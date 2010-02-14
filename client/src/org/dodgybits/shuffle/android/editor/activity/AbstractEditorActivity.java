@@ -17,12 +17,14 @@
 package org.dodgybits.shuffle.android.editor.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Entity;
+import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -39,7 +41,7 @@ import android.widget.Toast;
  * either to simply view an item (Intent.VIEW_ACTION), view and edit an item
  * (Intent.EDIT_ACTION), or create a new item (Intent.INSERT_ACTION).  
  */
-public abstract class AbstractEditorActivity<T> extends Activity 
+public abstract class AbstractEditorActivity<E extends Entity> extends Activity 
 	implements View.OnClickListener, View.OnFocusChangeListener {
 
     private static final String cTag = "AbstractEditorActivity";
@@ -47,14 +49,20 @@ public abstract class AbstractEditorActivity<T> extends Activity
     protected int mState;
     protected Uri mUri;
     protected Cursor mCursor;
-    protected T mOriginalItem;
+    protected E mOriginalItem;
     protected Intent mNextIntent;
+    
+    protected EntityPersister<E> mPersister;
+    protected EntityEncoder<E> mEncoder;
     
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
         super.onCreate(icicle);
 
+        mPersister = createPersister();
+        mEncoder = createEncoder();
+        
         processIntent();
         
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
@@ -63,6 +71,7 @@ public abstract class AbstractEditorActivity<T> extends Activity
         addSavePanelListeners();
         Log.d(cTag, "onCreate-");
     }
+    
     
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -82,17 +91,6 @@ public abstract class AbstractEditorActivity<T> extends Activity
 		}
 		super.finish();
     }    
-
-//    @Override
-//    protected void onResume() {
-//        Log.d(cTag, "onResume+");
-//        super.onResume();
-//        if (mCursor != null) {
-//        	// need to requery otherwise values saved on onPause are not restored
-//        	mCursor.requery();
-//        }
-//        Log.d(cTag, "onResume-");
-//    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -147,14 +145,14 @@ public abstract class AbstractEditorActivity<T> extends Activity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
     	super.onSaveInstanceState(outState);
-    	T item = createItemFromUI();
+    	E item = createItemFromUI();
     	saveItem(outState, item);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
     	super.onRestoreInstanceState(savedInstanceState);
-    	T item = restoreItem(savedInstanceState);
+    	E item = restoreItem(savedInstanceState);
     	updateUIFromItem(item);
     }
     
@@ -209,12 +207,10 @@ public abstract class AbstractEditorActivity<T> extends Activity
     protected void doRevertAction() {
         if (mCursor != null) {
             if (mState == State.STATE_EDIT) {
-                // Put the original note text back into the database
+                // Put the original item back into the database
                 mCursor.close();
                 mCursor = null;
-                ContentValues values = new ContentValues();
-            	writeItem(values, mOriginalItem);
-                getContentResolver().update(mUri, values, null, null);
+                mPersister.update(mOriginalItem);
             } else if (mState == State.STATE_INSERT) {
             	// if inserting, there's nothing to delete
             }
@@ -252,9 +248,9 @@ public abstract class AbstractEditorActivity<T> extends Activity
     protected Uri create() {
     	Uri uri = null;
     	if (isValid()) {
-    		ContentValues values = prepareContentValues();
-	    	uri = getContentResolver().insert(mUri, values);	
-	    	showSaveToast();
+   	       E item = createItemFromUI();
+   	       uri = mPersister.insert(item);
+   	       showSaveToast();
     	}
     	return uri;
     }
@@ -262,27 +258,33 @@ public abstract class AbstractEditorActivity<T> extends Activity
     protected Uri save() {
     	Uri uri = null;
     	if (isValid()) {
-    		ContentValues values = prepareContentValues();
-	        getContentResolver().update(mUri, values, null, null);    	
+            E item = createItemFromUI();
+            mPersister.update(item);
 	    	showSaveToast();
 	    	uri = mUri;
     	}
     	return uri;
     }
     
+    protected final E restoreItem(Bundle icicle) {
+        return mEncoder.restore(icicle);
+    }
+    
+    protected final void saveItem(Bundle outState, E item) {
+        mEncoder.save(outState, item);
+    }
+        
     /**
      * @return id of layout for this view
      */
     abstract protected int getContentViewResId();
     
-    abstract protected T createItemFromUI();
-    abstract protected void updateUIFromItem(T item);
+    abstract protected E createItemFromUI();
+    abstract protected void updateUIFromItem(E item);
     abstract protected void updateUIFromExtras(Bundle extras);
     
-    abstract protected T restoreItem(Bundle icicle);
-    abstract protected void saveItem(Bundle outState, T item);
-    
-    abstract protected void writeItem(ContentValues values, T item);
+    abstract protected EntityPersister<E> createPersister();
+    abstract protected EntityEncoder<E> createEncoder();
     
     abstract protected Intent getInsertIntent();
     
@@ -314,13 +316,6 @@ public abstract class AbstractEditorActivity<T> extends Activity
         view.setOnClickListener(this);
         view = findViewById(R.id.discardButton);
         view.setOnClickListener(this);
-    }
-    
-    private final ContentValues prepareContentValues() {
-    	T item = createItemFromUI();
-    	ContentValues values = new ContentValues();
-    	writeItem(values, item);
-    	return values;
     }
     
 }

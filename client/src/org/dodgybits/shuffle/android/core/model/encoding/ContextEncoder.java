@@ -15,8 +15,7 @@ import android.os.Bundle;
 public class ContextEncoder extends AbstractEntityEncoder implements EntityEncoder<Context> {
 
     @Override
-    public Bundle save(Context context) {
-        Bundle icicle = new Bundle();
+    public void save(Bundle icicle, Context context) {
         putId(icicle, _ID, context.getLocalId());
         putId(icicle, TRACKS_ID, context.getTracksId());
         icicle.putLong(MODIFIED_DATE, context.getModifiedDate());
@@ -24,8 +23,6 @@ public class ContextEncoder extends AbstractEntityEncoder implements EntityEncod
         putString(icicle, NAME, context.getName());
         icicle.putInt(COLOUR, context.getColourIndex());
         putString(icicle, ICON, context.getIconName());
-        
-        return icicle;
     }
     
     @Override

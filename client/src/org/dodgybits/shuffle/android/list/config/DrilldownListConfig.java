@@ -16,13 +16,15 @@
 
 package org.dodgybits.shuffle.android.list.config;
 
+import org.dodgybits.shuffle.android.core.model.Entity;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+
 import android.content.ContextWrapper;
-import android.net.Uri;
 
-public interface DrilldownListConfig<T> extends ListConfig<T> {
+public interface DrilldownListConfig<G extends Entity> extends ListConfig<G> {
 
-	public Uri getChildContentUri();
-    
 	public String getChildName(ContextWrapper context);
 			
+    TaskPersister getChildPersister();
+	
 }

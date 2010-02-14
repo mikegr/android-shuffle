@@ -8,14 +8,14 @@ import org.dodgybits.shuffle.dto.ShuffleProtos.Task.Builder;
 
 public class TaskProtocolTranslator implements EntityProtocolTranslator<Task, org.dodgybits.shuffle.dto.ShuffleProtos.Task> {
 
-    private final Locator<Context> mContextLocator;
-    private final Locator<Project> mProjectLocator;
+    private final EntityDirectory<Context> mContextDirectory;
+    private final EntityDirectory<Project> mProjectDirectory;
     
     public TaskProtocolTranslator(
-            Locator<Context> contextLocator,
-            Locator<Project> projectLocator) {
-        mContextLocator = contextLocator;
-        mProjectLocator = projectLocator;
+            EntityDirectory<Context> contextDirectory,
+            EntityDirectory<Project> projectDirectory) {
+        mContextDirectory = contextDirectory;
+        mProjectDirectory = projectDirectory;
     }
 
     public org.dodgybits.shuffle.dto.ShuffleProtos.Task toMessage(Task task) {
@@ -82,12 +82,14 @@ public class TaskProtocolTranslator implements EntityProtocolTranslator<Task, or
             .setComplete(dto.getComplete());
             
         if (dto.hasContextId()) {
-            Context context = mContextLocator.findById(dto.getContextId());
+            Id contextId = Id.create(dto.getContextId());
+            Context context = mContextDirectory.findById(contextId);
             builder.setContextId(context.getLocalId());
         }
 
         if (dto.hasProjectId()) {
-            Project project = mProjectLocator.findById(dto.getProjectId());
+            Id projectId = Id.create(dto.getProjectId());
+            Project project = mProjectDirectory.findById(projectId);
             builder.setProjectId(project.getLocalId());
         }
         

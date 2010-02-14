@@ -25,7 +25,6 @@ import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
 import android.content.ContextWrapper;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SimpleCursorAdapter;
@@ -81,17 +80,17 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig() {
+		return new AbstractTaskListConfig(getContentResolver()) {
 
 			@Override
 			public int getContentViewResId() {
 				return R.layout.tabbed_due_tasks;
 			}
 			
-			public Uri getListContentUri() {
-				return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(
-						String.valueOf(mMode)).build();
-			}
+//			public Uri getListContentUri() {
+//				return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(
+//						String.valueOf(mMode)).build();
+//			}
 
 		    public int getCurrentViewMenuId() {
 				return MenuUtils.CALENDAR_ID;

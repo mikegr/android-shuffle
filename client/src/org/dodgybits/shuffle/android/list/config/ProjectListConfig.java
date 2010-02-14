@@ -17,60 +17,67 @@
 package org.dodgybits.shuffle.android.list.config;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
+import android.content.ContentResolver;
 import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.net.Uri;
 
 public class ProjectListConfig implements DrilldownListConfig<Project> {
-
-	public Uri getChildContentUri() {
-		return Shuffle.Tasks.CONTENT_URI;
-	}
-
+    private ProjectPersister mGroupPersister;
+    private TaskPersister mChildPersister;
+    
+    public ProjectListConfig(ContentResolver resolver) {
+        mGroupPersister = new ProjectPersister(resolver);
+        mChildPersister = new TaskPersister(resolver);
+    }
+    
+    @Override
 	public String getChildName(ContextWrapper context) {
 		return context.getString(R.string.task_name);
 	}
 
+    @Override
 	public String createTitle(ContextWrapper context) {
     	return context.getString(R.string.title_project);
 	}
 
-	public Uri getContentUri() {
-		return Shuffle.Projects.CONTENT_URI;
-	}
-
+    @Override
 	public int getContentViewResId() {
 		return R.layout.projects;
 	}
 
+    @Override
 	public int getCurrentViewMenuId() {
     	return MenuUtils.PROJECT_ID;
 	}
 
+    @Override
 	public String getItemName(ContextWrapper context) {
 		return context.getString(R.string.project_name);
 	}
 
-	public Uri getListContentUri() {
-		return Shuffle.Projects.CONTENT_URI;
-	}
-
+    @Override
 	public boolean isTaskList() {
     	return false;
 	}
 
-	public Project readItem(Cursor cursor, Resources res) {
-        return BindingUtils.readProject(cursor);
-	}
-
+    @Override
 	public boolean supportsViewAction() {
 		return false;
+	}
+	
+	@Override
+	public EntityPersister<Project> getPersister() {
+	    return mGroupPersister;
+	}
+	
+	@Override
+	public TaskPersister getChildPersister() {
+	    return mChildPersister;
 	}
 
 }

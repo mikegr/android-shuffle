@@ -17,11 +17,11 @@
 package org.dodgybits.shuffle.android.list.activity.task;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.android.shuffle.util.ModelUtils;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.activity.AbstractListActivity;
+import org.dodgybits.shuffle.android.list.config.TaskListConfig;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemListener;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
 import org.dodgybits.shuffle.android.list.view.TaskView;
@@ -117,8 +117,12 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
         }
     }
     
+    protected TaskPersister getTaskPersister() {
+        return ((TaskListConfig)getListConfig()).getTaskPersister();
+    }
+    
     protected void onOtherButtonClicked() {
-    	int deletedTasks = ModelUtils.deleteCompletedTasks(this);
+        int deletedTasks = getTaskPersister().deleteCompletedTasks();
 		CharSequence message = getString(R.string.clean_task_message, new Object[] {deletedTasks});
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
@@ -130,7 +134,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     
 	@Override
 	protected Cursor createItemQuery() {
-		return managedQuery(getListConfig().getListContentUri(), 
+		return managedQuery(getListConfig().getPersister().getContentUri(), 
 				Shuffle.Tasks.cFullProjection, null, null, null);
 	}
 	
@@ -145,12 +149,12 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 			public View getView(int position, View convertView, ViewGroup parent) {
 				Log.d(cTag, "getView position=" + position + ". Old view=" + convertView);
 				Cursor cursor = (Cursor)getItem(position);
-				Task task = getListConfig().readItem(cursor, getResources());
+				Task task = getListConfig().getPersister().read(cursor);
 				TaskView taskView;
 				if (convertView instanceof TaskView) {
 					taskView = (TaskView) convertView;
 				} else {
-					taskView = new TaskView(parent.getContext());
+					taskView = new TaskView(parent.getContext(), null, null);
 				}
 				taskView.setShowContext(showTaskContext());
 				taskView.setShowProject(showTaskProject());
@@ -173,9 +177,8 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     protected final void toggleComplete(int position) {
     	if (position >= 0 && position < getItemCount())
     	{
-	    	long id = getListAdapter().getItemId(position);
 	    	Cursor c = (Cursor) getListAdapter().getItem(position);
-	        BindingUtils.toggleTaskComplete(this, c, getListConfig().getListContentUri(), id);
+	    	getTaskPersister().toggleTaskComplete(c);
     	}
     }
 	

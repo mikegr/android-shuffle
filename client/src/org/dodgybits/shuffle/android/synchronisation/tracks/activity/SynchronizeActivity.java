@@ -47,7 +47,7 @@ public class SynchronizeActivity extends Activity implements SyncProgressListene
         }
 
         if (synchronizer != null) {
-            synchronizer.RegisterListener(this);
+            synchronizer.registerListener(this);
             if (synchronizer.getStatus() != AsyncTask.Status.RUNNING) {
                 synchronizer.execute();
             }

@@ -17,6 +17,8 @@
 package org.dodgybits.shuffle.android.list.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Entity;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
@@ -28,7 +30,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -42,7 +43,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public abstract class AbstractListActivity<T> extends ListActivity {
+public abstract class AbstractListActivity<T extends Entity> extends ListActivity {
 
 	public static final String cSelectedItem = "SELECTED_ITEM";
 
@@ -54,15 +55,12 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 
 	private ListConfig<T> mConfig;
 
-	public AbstractListActivity()
-	{
-		mConfig = createListConfig();
-	}
-	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		
+        mConfig = createListConfig();
 		
 		setContentView(getListConfig().getContentViewResId());
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
@@ -70,7 +68,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 		// as a MAIN activity), then use our default content provider.
 		Intent intent = getIntent();
 		if (intent.getData() == null) {
-			intent.setData(getListConfig().getContentUri());
+			intent.setData(getListConfig().getPersister().getContentUri());
 		}
 
 		// Inform the view we provide context menus for items
@@ -194,7 +192,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
         // Setup the menu header
         menu.setHeaderTitle(cursor.getString(1));
 
-    	Uri selectedUri = ContentUris.withAppendedId(getListConfig().getContentUri(), info.id);
+    	Uri selectedUri = ContentUris.withAppendedId(getListConfig().getPersister().getContentUri(), info.id);
         MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
         
 		// ... and ends with the delete command.
@@ -214,7 +212,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
         switch (item.getItemId()) {
             case MenuUtils.DELETE_ID: {
                 // Delete the item that the context menu is for
-    			deleteItem(info.id);
+    			deleteItem(Id.create(info.id));
                 return true;
             }
         }
@@ -238,7 +236,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Uri url = ContentUris.withAppendedId(getListConfig().getContentUri(), id);
+		Uri url = ContentUris.withAppendedId(getListConfig().getPersister().getContentUri(), id);
 
 		String action = getIntent().getAction();
 		if (Intent.ACTION_PICK.equals(action)
@@ -275,10 +273,8 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	/**
 	 * Permanently delete the given list item.
 	 */
-	protected void deleteItem(long id) {
-		// use list uri to insure it is notified when value is deleted
-        getContentResolver().delete(getListConfig().getListContentUri(), 
-        		BaseColumns._ID + "=?", new String[] { String.valueOf(id) });
+	protected void deleteItem(Id id) {
+	    getListConfig().getPersister().delete(id);
     	String text = getResources().getString(
     			R.string.itemDeletedToast, getListConfig().getItemName(this));
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();        
@@ -296,7 +292,7 @@ public abstract class AbstractListActivity<T> extends ListActivity {
 	 * on the list type which is all you need most of the time.
 	 */
 	protected Intent getInsertIntent() {
-		return new Intent(Intent.ACTION_INSERT, getListConfig().getContentUri());
+		return new Intent(Intent.ACTION_INSERT, getListConfig().getPersister().getContentUri());
 	}
 	
 	/**

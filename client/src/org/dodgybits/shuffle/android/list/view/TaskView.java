@@ -17,12 +17,15 @@
 package org.dodgybits.shuffle.android.list.view;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityLocator;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
+import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.core.view.DrawableUtils;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -35,6 +38,9 @@ import android.view.View;
 import android.widget.TextView;
 
 public class TaskView extends ItemView<Task> {
+    private EntityLocator<Context> mContextLocator;
+    private EntityLocator<Project> mProjectLocator;
+    
     protected LabelView mContext;
     protected TextView mDescription;
     protected TextView mDateDisplay;
@@ -43,11 +49,16 @@ public class TaskView extends ItemView<Task> {
     protected boolean mShowContext;
     protected boolean mShowProject;
     
-    public TaskView(Context androidContext) {
+    public TaskView(android.content.Context androidContext, 
+            EntityLocator<Context> contextLocator,
+            EntityLocator<Project> projectLocator) {
         super(androidContext);
         
+        mContextLocator = contextLocator;
+        mProjectLocator = projectLocator;
+        
         LayoutInflater vi = (LayoutInflater)androidContext.
-            getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            getSystemService(android.content.Context.LAYOUT_INFLATER_SERVICE);
         vi.inflate(getViewResourceId(), this, true); 
         
         mContext = (LabelView) findViewById(R.id.context);
@@ -60,9 +71,6 @@ public class TaskView extends ItemView<Task> {
         
         int bgColour = getResources().getColor(R.drawable.list_background);
         GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM, 1.1f, 0.95f);
-//        drawable.setCornerRadius(4.0f);
-//        int strokeColour = getResources().getColor(R.drawable.white);
-//        drawable.setStroke(1, strokeColour);
         setBackgroundDrawable(drawable);
     }
         
@@ -80,22 +88,23 @@ public class TaskView extends ItemView<Task> {
     
     
     public void updateView(Task task) {
-        updateContext(task);
+//        updateContext(task);
         updateDescription(task);
         updateWhen(task);
-        updateProject(task);
+//        updateProject(task);
         updateDetails(task);
     }
     
     private void updateContext(Task task) {
-        org.dodgybits.shuffle.android.core.model.Context context = task.context;
+        Context context = mContextLocator.findById(task.getContextId());
         boolean displayContext = Preferences.displayContextName(getContext());
         boolean displayIcon = Preferences.displayContextIcon(getContext());
         if (mShowContext && context != null && (displayContext || displayIcon)) {           
             mContext.setText(displayContext ? context.getName() : "");
             mContext.setColourIndex(context.getColourIndex());
             // add context icon if preferences indicate to
-            int id = context.icon.smallIconId;
+            ContextIcon icon = ContextIcon.createIcon(context.getIconName(), getResources());
+            int id = icon.smallIconId;
             if (id > 0 && displayIcon) {
                 mContext.setIcon(getResources().getDrawable(id));
             } else {
@@ -139,8 +148,9 @@ public class TaskView extends ItemView<Task> {
     }
     
     private void updateProject(Task task) {
-        if (mShowProject && Preferences.displayProject(getContext()) && (task.project != null)) {
-            mProject.setText(task.project.name);
+        Project project = mProjectLocator.findById(task.getProjectId());
+        if (mShowProject && Preferences.displayProject(getContext()) && (project != null)) {
+            mProject.setText(project.getName());
             mProject.setVisibility(View.VISIBLE);
         } else {
             mProject.setVisibility(View.INVISIBLE);

@@ -16,9 +16,8 @@
 
 package org.dodgybits.shuffle.android.list.activity;
 
-import org.dodgybits.android.shuffle.util.BindingUtils;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.list.activity.task.ProjectTasksActivity;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.ProjectListConfig;
@@ -48,20 +47,20 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 		Cursor cursor = getContentResolver().query(
 				Shuffle.Projects.cProjectTasksContentURI, 
 				Shuffle.Projects.cFullTaskProjection, null, null, null);
-		mTaskCountArray = BindingUtils.readCountArray(cursor);
+        mTaskCountArray = getDrilldownListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
 
 	@Override
 	protected ListConfig<Project> createListConfig()
 	{
-		return new ProjectListConfig();
+		return new ProjectListConfig(getContentResolver());
 	}
 
 	@Override
-	protected void deleteChildren(long groupId) {
+	protected void deleteChildren(Id groupId) {
 		getContentResolver().delete(
-				getDrilldownListConfig().getChildContentUri(), 
+				getDrilldownListConfig().getChildPersister().getContentUri(), 
 				Shuffle.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(groupId)});
 	}
 	
@@ -75,8 +74,6 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	
 	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
-	    final ProjectPersister persister = new ProjectPersister();
-	    
 		ListAdapter adapter =
 			new SimpleCursorAdapter(this,
 					android.R.layout.simple_list_item_1, cursor,
@@ -85,7 +82,7 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 
 			public View getView(int position, View convertView, ViewGroup parent) {
 				Cursor cursor = (Cursor)getItem(position);
-				Project project = persister.read(cursor);
+				Project project = getListConfig().getPersister().read(cursor);
 				ProjectView projectView;
 				if (convertView instanceof ProjectView) {
 					projectView = (ProjectView) convertView;

@@ -1,76 +1,88 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.ContextWrapper;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.util.Xml;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Map;
+
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
-import org.dodgybits.android.shuffle.util.ModelUtils;
-import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.EntityBuilder;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.core.model.Project.Builder;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import android.util.Log;
+import android.util.Xml;
 
 /**
  * @author Morten Nielsen
  */
 public final class ProjectSynchronizer extends Synchronizer<Project> {
-    private final String tracksUrl;
+    private static final String cTag = "ProjectSynchronizer";
+    
+    private final String mTracksUrl;
 
-    public ProjectSynchronizer(ContentResolver contentResolver, Resources resources, WebClient client, ContextWrapper activity, TracksSynchronizer tracksSynchronizer, String tracksUrl, int basePercent) {
-        super(contentResolver, tracksSynchronizer, client, resources, activity, basePercent);
+    public ProjectSynchronizer(
+            TracksSynchronizer tracksSynchronizer, 
+            WebClient client, 
+            android.content.Context context,
+            int basePercent,
+            String tracksUrl) {
+        super(tracksSynchronizer, client, context, basePercent);
 
-        this.tracksUrl = tracksUrl;
+        mTracksUrl = tracksUrl;
+    }
+    
+    @Override
+    protected EntityPersister<Project> createPersister() {
+        return new ProjectPersister(mContext.getContentResolver());
     }
 
 
     @Override
-    protected void verifyLocalEntities(Map<Long, Project> localEntities) {
+    protected void verifyLocalEntities(Map<Id, Project> localEntities) {
         
+    }
+    
+    @Override
+    protected EntityBuilder<Project> createBuilder() {
+        return Project.newBuilder();
     }
 
     @Override
     protected String readingRemoteText() {
-        return resources.getString(R.string.readingRemoteContexts);
+        return mContext.getString(R.string.readingRemoteContexts);
     }
 
     @Override
     protected String processingText() {
-        return resources.getString(R.string.processingProjects);
+        return mContext.getString(R.string.processingProjects);
     }
 
     @Override
     protected String readingLocalText() {
-        return resources.getString(R.string.readingLocalProjects);
+        return mContext.getString(R.string.readingLocalProjects);
     }
 
     @Override
     protected String stageFinishedText() {
-        return resources.getString(R.string.doneWithProjects);
-    }
-
-    @Override
-    protected void saveLocalEntityFromRemote(Project project) {
-        ModelUtils.insertProject(activity, project);
+        return mContext.getString(R.string.doneWithProjects);
     }
 
     protected Project createMergedLocalEntity(Project localProject, Project newContext) {
-        return new Project(localProject.id, newContext.name,
-                newContext.defaultContextId, localProject.archived,
-                newContext.tracksId, newContext.modified, localProject.isParallel);
+        Builder builder = Project.newBuilder();
+        builder.mergeFrom(newContext);
+        builder
+            .setLocalId(localProject.getLocalId())
+            .setParallel(localProject.isParallel());
+        return builder.build();
     }
 
     protected String createDocumentForEntity(Project project) {
@@ -82,73 +94,61 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
 
             serializer.startTag("", "project");
             Date date = new Date();
-            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(simpleDateFormat.format(date)).endTag("", "created-at");
-            String contextId = findContextRemoteId(project);
-            if(contextId != null)            serializer.startTag("", "default-context-id").attribute("", "type", "integer").text(contextId).endTag("", "default-context-id");
-            serializer.startTag("", "name").text(project.name).endTag("", "name");
-            serializer.startTag("", "state").text(project.archived ? "hidden": "active").endTag("", "state");
-            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(simpleDateFormat.format(date)).endTag("", "updated-at");
+            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(mDateFormat.format(date)).endTag("", "created-at");
+            Id contextId = findTracksIdByContextId(project.getDefaultContextId());
+            if(contextId.isInitialised()) {
+                serializer.startTag("", "default-context-id").attribute("", "type", "integer").text(contextId.toString()).endTag("", "default-context-id");
+            }
+            serializer.startTag("", "name").text(project.getName()).endTag("", "name");
+            serializer.startTag("", "state").text(project.isArchived() ? "hidden": "active").endTag("", "state");
+            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(mDateFormat.format(date)).endTag("", "updated-at");
             serializer.endTag("", "project");
 
             serializer.flush();
         } catch (IOException ignored) {
-
+            Log.d(cTag, "Failed to serialize project", ignored);
         }
 
 
         return writer.toString();
     }
 
-    private String findContextRemoteId(Project project) {
-        Context context = BindingUtils.fetchContextById(activity, project.defaultContextId);
-        if(context != null && context.tracksId != null)
-            return context.tracksId.toString();
-        else
-            return null;
-    }
-
-
     protected Project parseSingleEntity(XmlPullParser parser) throws ParseException {
+        final DateFormat format = mDateFormat;
+        Project project = null;
         try {
             int eventType = parser.getEventType();
-            String projectName = null;
-            Long trackId = null;
-            Long trackModifiedDate = null;
-                        boolean activeState = false;
-
-                Long defaultContextId=null;
-            boolean done = false;
-
-            SimpleDateFormat format = simpleDateFormat;
-            while (eventType != XmlPullParser.END_DOCUMENT && !done) {
+            
+            while (eventType != XmlPullParser.END_DOCUMENT && project == null) {
+                Builder builder = Project.newBuilder();
+                builder.setModifiedDate(System.currentTimeMillis());
                 String name = parser.getName();
-
+                
                 switch (eventType) {
-                    case XmlPullParser.START_DOCUMENT:
-
-                        break;
                     case XmlPullParser.START_TAG:
-
-
                         if (name.equalsIgnoreCase("name")) {
-                            projectName = parser.nextText();
+                            builder.setName(parser.nextText());
                         } else if (name.equalsIgnoreCase("id")) {
-                            trackId = Long.parseLong(parser.nextText());
+                            Id tracksId = Id.create(Long.parseLong(parser.nextText()));
+                            builder.setTracksId(tracksId);
                         } else if (name.equalsIgnoreCase("updated-at")) {
-                            trackModifiedDate = format.parse(parser.nextText()).getTime();
+                            long modifiedDate = format.parse(parser.nextText()).getTime();
+                            builder.setModifiedDate(modifiedDate);
                         } else if (name.equalsIgnoreCase("default-context-trackId")) {
-                            defaultContextId = findContextByRemoteId( Long.parseLong(parser.nextText())).id;
-                        }else if (name.equalsIgnoreCase("state")) {
-                            activeState = !parser.nextText().equalsIgnoreCase("active");
+                            Id tracksId = Id.create(Long.parseLong(parser.nextText()));
+                            Id defaultContextId = findContextIdByTracksId(tracksId);
+                            if (defaultContextId.isInitialised()) {
+                                builder.setDefaultContextId(defaultContextId);
+                            }
+                        } else if (name.equalsIgnoreCase("state")) {
+                            boolean archived = !parser.nextText().equalsIgnoreCase("active");
+                            builder.setArchived(archived);
                         }
-
-
-
-
                         break;
+                        
                     case XmlPullParser.END_TAG:
-                        if (name.equalsIgnoreCase("project") && projectName != null) {
-                            return new Project(null, projectName, defaultContextId, activeState, trackId, trackModifiedDate, false);
+                        if (name.equalsIgnoreCase("project")) {
+                            project = builder.build();
                         }
                         break;
                 }
@@ -159,27 +159,13 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
         } catch (XmlPullParserException e) {
             throw new ParseException("Unable to parse context", 0);
         }
-        return null;
-    }
-
-    private Context findContextByRemoteId(long tracksId) {
-       		Context context = null;
-
-			Cursor contextCursor = contentResolver.query(
-					Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection, 
-					"tracks_id = "+tracksId, null, null);
-			if (contextCursor.moveToFirst()) {
-				context = BindingUtils.readContext(contextCursor, activity.getResources());
-			}
-        contextCursor.close();
-		return context;
+        return project;
     }
 
     @Override
     protected String createEntityUrl(Project project) {
-        return tracksUrl+ "/projects/" + project.tracksId + ".xml";
+        return mTracksUrl+ "/projects/" + project.getTracksId().getId() + ".xml";
     }
-
 
     @Override
     protected String endIndexTag() {
@@ -188,40 +174,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
 
     @Override
     protected String entityIndexUrl() {
-        return tracksUrl+ "/projects.xml";
+        return mTracksUrl+ "/projects.xml";
     }
 
-    protected boolean removeLocalEntity(Project project) {
-        return 1 == contentResolver.delete(
-                Shuffle.Projects.CONTENT_URI, Shuffle.Projects._ID + " = " + project.id,
-                null);
-    }
-
-    protected void saveLocalEntity(Project project) {
-        ContentValues values = new ContentValues();
-        BindingUtils.writeProject(values, project);
-        contentResolver.update(Shuffle.Projects.CONTENT_URI, values, 
-                Shuffle.Projects._ID + "=?", new String[]{String.valueOf(project.id)});
-    }
-
-    protected Map<Long, Project> getShuffleEntities(ContentResolver contentResolver, Resources resources) {
-
-
-        Cursor cursor = contentResolver.query(
-                Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection,
-                null, null, null);
-
-
-        Map<Long, Project> list = new HashMap<Long, Project>();
-
-        while (cursor.moveToNext()) {
-            Project context = BindingUtils.readProject(cursor);
-
-            list.put(context.id, context);
-
-
-        }
-        cursor.close();
-        return list;
-    }
 }

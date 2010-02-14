@@ -119,7 +119,7 @@ public class SynchronizationService extends Service implements SyncProgressListe
 
         }  
         if (synchronizer != null) {
-            synchronizer.RegisterListener(this);
+            synchronizer.registerListener(this);
 
         }
 

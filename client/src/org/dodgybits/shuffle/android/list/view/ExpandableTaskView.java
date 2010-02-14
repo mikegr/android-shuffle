@@ -17,14 +17,19 @@
 package org.dodgybits.shuffle.android.list.view;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityLocator;
 
-import android.content.Context;
 import android.widget.RelativeLayout;
 
 public class ExpandableTaskView extends TaskView {
 
-	public ExpandableTaskView(Context androidContext) {
-		super(androidContext);
+	public ExpandableTaskView(
+	        android.content.Context androidContext,
+            EntityLocator<Context> contextLocator,
+            EntityLocator<Project> projectLocator) {
+		super(androidContext, contextLocator, projectLocator);
 		
 		RelativeLayout layout = (RelativeLayout) findViewById(R.id.relLayout);
 		// 36 is the current value of ?android:attr/expandableListPreferredItemPaddingLeft

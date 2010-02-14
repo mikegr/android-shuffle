@@ -26,6 +26,7 @@ public class Project implements TracksEntity {
 	private Id mDefaultContextId = Id.NONE;
     private long mModifiedDate;
     private boolean mParallel;
+    private boolean mArchived;
     private Id mTracksId = Id.NONE;
 
     private Project() {
@@ -51,6 +52,10 @@ public class Project implements TracksEntity {
         return mParallel;
     }
 
+    public final boolean isArchived() {
+        return mArchived;
+    }
+    
     public final Id getTracksId() {
         return mTracksId;
     }
@@ -70,7 +75,7 @@ public class Project implements TracksEntity {
         return true;
     }
 
-    public static class Builder {
+    public static class Builder implements EntityBuilder<Project> {
 
         private Builder() {
         }
@@ -128,6 +133,15 @@ public class Project implements TracksEntity {
             return this;
         }
 
+        public boolean isArchived() {
+            return result.mArchived;
+        }
+
+        public Builder setArchived(boolean value) {
+            result.mArchived = value;
+            return this;
+        }
+        
         public Id getTracksId() {
             return result.mTracksId;
         }
@@ -157,6 +171,7 @@ public class Project implements TracksEntity {
             setDefaultContextId(project.mDefaultContextId);
             setModifiedDate(project.mModifiedDate);
             setParallel(project.mParallel);
+            setArchived(project.mArchived);
             setTracksId(project.mTracksId);
             return this;
         }

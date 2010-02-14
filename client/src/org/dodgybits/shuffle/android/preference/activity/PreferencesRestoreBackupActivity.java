@@ -13,14 +13,15 @@ import java.util.Set;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
-import org.dodgybits.shuffle.android.core.model.protocol.BaseLocator;
 import org.dodgybits.shuffle.android.core.model.protocol.ContextProtocolTranslator;
-import org.dodgybits.shuffle.android.core.model.protocol.Locator;
+import org.dodgybits.shuffle.android.core.model.protocol.EntityDirectory;
+import org.dodgybits.shuffle.android.core.model.protocol.HashEntityDirectory;
 import org.dodgybits.shuffle.android.core.model.protocol.ProjectProtocolTranslator;
 import org.dodgybits.shuffle.android.core.model.protocol.TaskProtocolTranslator;
 import org.dodgybits.shuffle.android.core.util.StringUtils;
@@ -30,7 +31,6 @@ import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -253,8 +253,8 @@ public class PreferencesRestoreBackupActivity extends Activity
     			
     			Log.d(cTag, catalogue.toString());
     			
-    			Locator<Context> contextLocator = addContexts(catalogue.getContextList(), 10, 20);
-    			Locator<Project> projectLocator = addProjects(catalogue.getProjectList(), contextLocator, 20, 30);
+    			EntityDirectory<Context> contextLocator = addContexts(catalogue.getContextList(), 10, 20);
+    			EntityDirectory<Project> projectLocator = addProjects(catalogue.getProjectList(), contextLocator, 20, 30);
     			addTasks(catalogue.getTaskList(), contextLocator, projectLocator, 30, 100);
     			
             	message = getString(R.string.status_restore_complete);
@@ -267,10 +267,10 @@ public class PreferencesRestoreBackupActivity extends Activity
             return null;
         }
     	
-    	private Locator<Context> addContexts(
+    	private EntityDirectory<Context> addContexts(
 				List<org.dodgybits.shuffle.dto.ShuffleProtos.Context> protoContexts,
 				int progressStart, int progressEnd) {
-            ContextPersister persister = new ContextPersister();
+            ContextPersister persister = new ContextPersister(getContentResolver());
             ContextProtocolTranslator translator = new ContextProtocolTranslator();
     	    
 			Set<String> allContextNames = new HashSet<String>();
@@ -281,7 +281,7 @@ public class PreferencesRestoreBackupActivity extends Activity
 			Map<String,Context> existingContexts = fetchContextsByName(allContextNames, persister);
 			
 			// build up the locator and list of new contacts
-			BaseLocator<Context> contextLocator = new BaseLocator<Context>();
+			HashEntityDirectory<Context> contextLocator = new HashEntityDirectory<Context>();
 			List<Context> newContexts = new ArrayList<Context>();
 			Set<String> newContextNames = new HashSet<String>();
 	        int i = 0;
@@ -301,12 +301,13 @@ public class PreferencesRestoreBackupActivity extends Activity
 					newContexts.add(context);
 					newContextNames.add(contextName);
 				}
-				contextLocator.addItem(protoContext.getId(), contextName, context);
+				Id contextId = Id.create(protoContext.getId());
+				contextLocator.addItem(contextId, contextName, context);
 				String text = getString(R.string.restore_progress, type, contextName);
 				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
 			}
-			persistNewContexts(newContexts, persister);
+            persister.bulkInsert(newContexts);
 			
 			// we need to fetch all the newly created contexts to retrieve their new ids
 			// and update the locator accordingly
@@ -314,7 +315,7 @@ public class PreferencesRestoreBackupActivity extends Activity
 			for (String contextName : newContextNames) {
 				Context savedContext = savedContexts.get(contextName);
 				Context restoredContext = contextLocator.findByName(contextName);
-				contextLocator.addItem(restoredContext.getLocalId().getId(), contextName, savedContext);
+				contextLocator.addItem(restoredContext.getLocalId(), contextName, savedContext);
 			}
 			
 			return contextLocator;
@@ -346,28 +347,11 @@ public class PreferencesRestoreBackupActivity extends Activity
             return contexts;
         }
         
-        private void persistNewContexts(List<Context> contexts, ContextPersister persister) {
-            int numNewContexts = contexts.size();
-            if (numNewContexts > 0) {
-                ContentValues[] valuesArray = new ContentValues[numNewContexts];
-                for (int i = 0; i < numNewContexts; i++) {
-                    Context newContext = contexts.get(i);
-                    ContentValues values = new ContentValues();
-                    persister.write(values, newContext);
-                    valuesArray[i] = values;
-                }
-                getContentResolver().bulkInsert(
-                        Shuffle.Contexts.CONTENT_URI, valuesArray);
-            }
-        }
-        
-    	
-		
-		private Locator<Project> addProjects(
+		private EntityDirectory<Project> addProjects(
 				List<org.dodgybits.shuffle.dto.ShuffleProtos.Project> protoProjects,
-				Locator<Context> contextLocator,
+				EntityDirectory<Context> contextLocator,
 				int progressStart, int progressEnd) {
-            ProjectPersister persister = new ProjectPersister();
+            ProjectPersister persister = new ProjectPersister(getContentResolver());
             ProjectProtocolTranslator translator = new ProjectProtocolTranslator(contextLocator);
             
 			Set<String> allProjectNames = new HashSet<String>();
@@ -378,7 +362,7 @@ public class PreferencesRestoreBackupActivity extends Activity
 			Map<String,Project> existingProjects = fetchProjectsByName(allProjectNames, persister);
 			
 			// build up the locator and list of new projects
-			BaseLocator<Project> projectLocator = new BaseLocator<Project>();
+			HashEntityDirectory<Project> projectLocator = new HashEntityDirectory<Project>();
 			List<Project> newProjects = new ArrayList<Project>();
 			Set<String> newProjectNames = new HashSet<String>();
 	        int i = 0;
@@ -398,20 +382,21 @@ public class PreferencesRestoreBackupActivity extends Activity
 					newProjects.add(project);
 					newProjectNames.add(projectName);
 				}
-				projectLocator.addItem(protoProject.getId(), projectName, project);
+				Id projectId = Id.create(protoProject.getId());
+				projectLocator.addItem(projectId, projectName, project);
 				String text = getString(R.string.restore_progress, type, projectName);
 				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
 			}
-			persistNewProjects(newProjects, persister);
-			
+            persister.bulkInsert(newProjects);
+
 			// we need to fetch all the newly created contexts to retrieve their new ids
 			// and update the locator accordingly
 			Map<String,Project> savedProjects = fetchProjectsByName(newProjectNames, persister);
 			for (String projectName : newProjectNames) {
 				Project savedProject = savedProjects.get(projectName);
 				Project restoredProject = projectLocator.findByName(projectName);
-				projectLocator.addItem(restoredProject.getLocalId().getId(), projectName, savedProject);
+				projectLocator.addItem(restoredProject.getLocalId(), projectName, savedProject);
 			}
 			
 			return projectLocator;
@@ -441,30 +426,13 @@ public class PreferencesRestoreBackupActivity extends Activity
 	        }
 	        return projects;
 	    }
-	    
-	    private void persistNewProjects(List<Project> projects, ProjectPersister persister) {
-	        int numNewProjects = projects.size();
-	        if (numNewProjects > 0) {
-	            ContentValues[] valuesArray = new ContentValues[numNewProjects];
-	            for (int i = 0; i < numNewProjects; i++) {
-	                Project newProject = projects.get(i);
-	                ContentValues values = new ContentValues();
-	                persister.write(values, newProject);
-	                valuesArray[i] = values;
-	            }
-	            getContentResolver().bulkInsert(
-	                    Shuffle.Projects.CONTENT_URI, valuesArray);
-	        }
-	    }
-
-	    
 		
 		private void addTasks(
 				List<org.dodgybits.shuffle.dto.ShuffleProtos.Task> protoTasks,
-				Locator<Context> contextLocator,
-				Locator<Project> projectLocator,
+				EntityDirectory<Context> contextLocator,
+				EntityDirectory<Project> projectLocator,
 				int progressStart, int progressEnd) {
-            TaskPersister persister = new TaskPersister();
+            TaskPersister persister = new TaskPersister(getContentResolver());
             TaskProtocolTranslator translator = new TaskProtocolTranslator(contextLocator, projectLocator);
 		    
 			// add all tasks back, even if they're duplicates
@@ -482,24 +450,9 @@ public class PreferencesRestoreBackupActivity extends Activity
 				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
 			}
-			persistNewTasks(newTasks, persister);
+			persister.bulkInsert(newTasks);
 		}
                 
-	    private void persistNewTasks(List<Task> tasks, TaskPersister persister) {
-	        int numNewTasks = tasks.size();
-	        if (numNewTasks > 0) {
-	            ContentValues[] valuesArray = new ContentValues[numNewTasks];
-	            for (int i = 0; i < numNewTasks; i++) {
-	                Task newTask = tasks.get(i);
-	                ContentValues values = new ContentValues();
-	                persister.write(values, newTask);
-	                valuesArray[i] = values;
-	            }
-	            getContentResolver().bulkInsert(
-	                    Shuffle.Tasks.CONTENT_URI, valuesArray);
-	        }
-	    }
-		
         private int calculatePercent(int start, int end, int current, int total) {
         	return start + (end - start) * current / total;
         }

@@ -2,16 +2,25 @@ package org.dodgybits.shuffle.android.core.model.persistence;
 
 import java.util.TimeZone;
 
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+
 import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.*;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.text.format.Time;
+import android.util.Log;
+import android.util.SparseIntArray;
 
-public class TaskPersister extends AbstractEntityPersister implements EntityPersister<Task> {
+public class TaskPersister extends AbstractEntityPersister<Task> {
+    private static final String cTag = "TaskPersister";
 
     private static final int ID_INDEX = 0;
     private static final int DESCRIPTION_INDEX = ID_INDEX + 1;
@@ -29,6 +38,10 @@ public class TaskPersister extends AbstractEntityPersister implements EntityPers
     private static final int ALL_DAY_INDEX = COMPLETE_INDEX + 1;
     private static final int HAS_ALARM_INDEX = ALL_DAY_INDEX + 1;
     private static final int TASK_TRACK_INDEX = HAS_ALARM_INDEX  + 1;
+    
+    public TaskPersister(ContentResolver resolver) {
+        super(resolver);
+    }
     
     @Override
     public Task read(Cursor cursor) {
@@ -55,7 +68,7 @@ public class TaskPersister extends AbstractEntityPersister implements EntityPers
     }
     
     @Override
-    public void write(ContentValues values, Task task) {
+    protected void writeContentValues(ContentValues values, Task task) {
         // never write id since it's auto generated
         writeString(values, DESCRIPTION, task.getDescription());
         writeString(values, DETAILS, task.getDetails());
@@ -85,6 +98,76 @@ public class TaskPersister extends AbstractEntityPersister implements EntityPers
         writeId(values, TRACKS_ID, task.getTracksId());
     }
 
+    @Override
+    public Uri getContentUri() {
+        return Shuffle.Tasks.CONTENT_URI;
+    }
     
+    @Override
+    public String[] getFullProjection() {
+        return Shuffle.Tasks.cFullProjection;
+    }
     
+    public int deleteCompletedTasks() {
+        int deletedRows = mResolver.delete(
+                getContentUri(), 
+                Shuffle.Tasks.COMPLETE + " = 1",
+                null);
+        Log.d(cTag, "Deleted " + deletedRows + " completed tasks.");
+        return deletedRows;
+    }
+
+    /**
+     * Toggle whether the task at the given cursor position is complete.
+     * The cursor is committed and re-queried after the update.
+     *
+     * @param cursor cursor positioned at task to update
+     * @return new value of task completeness
+     */
+    public boolean toggleTaskComplete(Cursor cursor) {
+        Id taskId = readId(cursor, ID_INDEX);
+        boolean newValue = !readBoolean(cursor, COMPLETE_INDEX);
+        ContentValues values = new ContentValues();
+        writeBoolean(values, COMPLETE, newValue);
+        values.put(MODIFIED_DATE, System.currentTimeMillis());
+        mResolver.update(getContentUri(), values,
+                Shuffle.Tasks._ID + "=?", new String[] { String.valueOf(taskId) });
+        return newValue;
+    }
+
+
+    /**
+     * Swap the display order of two tasks at the given cursor positions.
+     * The cursor is committed and re-queried after the update.
+     */
+    public void swapTaskPositions(Cursor cursor, int pos1, int pos2) {
+        cursor.moveToPosition(pos1);
+        Id id1 = readId(cursor, ID_INDEX);
+        int positionValue1 = cursor.getInt(DISPLAY_ORDER_INDEX);
+        cursor.moveToPosition(pos2);
+        Id id2 = readId(cursor, ID_INDEX);
+        int positionValue2 = cursor.getInt(DISPLAY_ORDER_INDEX);
+
+        Uri uri = ContentUris.withAppendedId(getContentUri(), id1.getId());
+        ContentValues values = new ContentValues();
+        values.put(DISPLAY_ORDER, positionValue2);
+        mResolver.update(uri, values, null, null);
+
+        uri = ContentUris.withAppendedId(getContentUri(), id2.getId());
+        values = new ContentValues();
+        values.put(DISPLAY_ORDER, positionValue1);
+        mResolver.update(uri, values, null, null);
+    }
+
+    
+    private static final int TASK_COUNT_INDEX = 1;
+    
+    public SparseIntArray readCountArray(Cursor cursor) {
+        
+        SparseIntArray countMap = new SparseIntArray();
+        while (cursor.moveToNext()) {
+            countMap.put(cursor.getInt(ID_INDEX), cursor.getInt(TASK_COUNT_INDEX));
+        }
+        return countMap;
+    }    
 }

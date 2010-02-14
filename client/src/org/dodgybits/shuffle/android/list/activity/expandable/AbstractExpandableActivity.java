@@ -17,7 +17,9 @@
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
+import org.dodgybits.shuffle.android.core.model.Entity;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.ExpandableListConfig;
@@ -46,22 +48,20 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.Toast;
 
-public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActivity 
+public abstract class AbstractExpandableActivity<G extends Entity> extends ExpandableListActivity 
 	implements SwipeListItemListener {
 	
 	private static final String cTag = "AbstractExpandableActivity";
 
 	protected ExpandableListAdapter mAdapter;
-	private ExpandableListConfig<G,C> mConfig;
+	private ExpandableListConfig<G> mConfig;
 
-	public AbstractExpandableActivity()
-	{
-		mConfig = createListConfig();
-	}
-	
 	@Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        mConfig = createListConfig();
+        
         setContentView(mConfig.getContentViewResId());
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         
@@ -134,6 +134,9 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        final EntityPersister<G> groupPersister = mConfig.getGroupPersister();
+        final TaskPersister childPersister = mConfig.getChildPersister();
+        
         switch (item.getItemId()) {
 	        case MenuUtils.INSERT_CHILD_ID:
 	        	long packedPosition = getSelectedPosition();
@@ -141,16 +144,16 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 	        	if (groupPosition > -1)
 	        	{
 		        	Cursor cursor = (Cursor) getExpandableListAdapter().getGroup(groupPosition);
-		        	G group = getListConfig().readGroup(cursor, getResources());
-	        		insertItem(mConfig.getChildContentUri(), group);	        		
+		        	G group = groupPersister.read(cursor);
+	        		insertItem(childPersister.getContentUri(), group);	        		
 	        	}
 	        	else
 	        	{
-	        		insertItem(mConfig.getChildContentUri());
+	        		insertItem(childPersister.getContentUri());
 	        	}
 	            return true;
 	        case MenuUtils.INSERT_GROUP_ID:
-	            insertItem(mConfig.getGroupContentUri());
+	            insertItem(groupPersister.getContentUri());
 	            return true;
         }
         if (MenuUtils.checkCommonItemsSelected(item, this, mConfig.getCurrentViewMenuId())) return true;
@@ -187,14 +190,14 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         if (isChild)
         {
         	long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
-            Uri selectedUri = ContentUris.withAppendedId(mConfig.getChildContentUri(), childId);
+            Uri selectedUri = ContentUris.withAppendedId(mConfig.getChildPersister().getContentUri(), childId);
             MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
         	MenuUtils.addCompleteMenuItem(menu);
         }
         else
         {
         	long groupId = getExpandableListAdapter().getGroupId(groupPosition);
-            Uri selectedUri = ContentUris.withAppendedId(mConfig.getGroupContentUri(), groupId);
+            Uri selectedUri = ContentUris.withAppendedId(mConfig.getGroupPersister().getContentUri(), groupId);
             MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
             MenuUtils.addInsertMenuItems(menu, mConfig.getChildName(this), true, this);
         }
@@ -224,15 +227,16 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 	            
 	        case MenuUtils.INSERT_ID:
                 int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+                final Uri childContentUri = mConfig.getChildPersister().getContentUri();
 	        	if (groupPosition > -1)
 	        	{
 		        	Cursor cursor = (Cursor) getExpandableListAdapter().getGroup(groupPosition);
-		        	G group = getListConfig().readGroup(cursor, getResources());
-	        		insertItem(mConfig.getChildContentUri(), group);	        		
+		        	G group = getListConfig().getGroupPersister().read(cursor);
+	        		insertItem(childContentUri, group);	        		
 	        	}
 	        	else
 	        	{
-	        		insertItem(mConfig.getChildContentUri());
+	        		insertItem(childContentUri);
 	        	}
 	            return true;
         }
@@ -241,7 +245,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-   		Uri url = ContentUris.withAppendedId(mConfig.getChildContentUri(), id);
+   		Uri url = ContentUris.withAppendedId(mConfig.getChildPersister().getContentUri(), id);
 		// Launch activity to view/edit the currently selected item
 		startActivity(getClickIntent(url));
 		return true;
@@ -280,7 +284,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
         int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
         int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
     	Cursor c = (Cursor) getExpandableListAdapter().getChild(groupPosition, childPosition);
-        BindingUtils.toggleTaskComplete(this, c, mConfig.getChildContentUri(), id);
+    	getListConfig().getChildPersister().toggleTaskComplete(c);
     }
     
 
@@ -306,7 +310,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     	Uri selectedUri = null;
     	Boolean childSelected = isChildSelected(); 
     	if (childSelected != null) {
-    		selectedUri = childSelected ? mConfig.getChildContentUri() : mConfig.getGroupContentUri();
+    		selectedUri = childSelected ? mConfig.getChildPersister().getContentUri() : mConfig.getGroupPersister().getContentUri();
     	}
     	return selectedUri;
     }
@@ -333,12 +337,15 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     	final int type = ExpandableListView.getPackedPositionType(packedPosition);
     	final int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
     	final int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+        final EntityPersister<G> groupPersister = mConfig.getGroupPersister();
+        final TaskPersister childPersister = mConfig.getChildPersister();
+    	
     	switch (type) {
 	    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
 	        	Log.d(cTag, "Deleting child at position " + groupPosition + "," + childPosition);
 				final long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
 		    	Log.i(cTag, "Deleting child id " + childId);
-				Uri childUri = ContentUris.withAppendedId(mConfig.getChildContentUri(), childId);			
+				Uri childUri = ContentUris.withAppendedId(childPersister.getContentUri(), childId);			
 		        getContentResolver().delete(childUri, null, null);		    
 		        showCancelToast(false);
 		        refreshChildCount();
@@ -355,10 +362,10 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 		    				if (which == DialogInterface.BUTTON1) {
 		    					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 		    			    	Log.i(cTag, "Deleting group id " + groupId);
-		    					Uri uri = ContentUris.withAppendedId(mConfig.getGroupContentUri(), groupId);			
+		    					Uri uri = ContentUris.withAppendedId(groupPersister.getContentUri(), groupId);			
 		    			        getContentResolver().delete(uri, null, null);
 		    			    	Log.i(cTag, "Deleting all child for group id " + groupId);
-		    					getContentResolver().delete(mConfig.getChildContentUri(), 
+		    					getContentResolver().delete(childPersister.getContentUri(), 
 		    							mConfig.getGroupIdColumnName() + " = ?", 
 		    							new String[] {String.valueOf(groupId)});
 		    			        showCancelToast(true);
@@ -373,7 +380,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 			    	Log.i(cTag, "Deleting childless group at position " + groupPosition);
 					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 			    	Log.i(cTag, "Deleting group id " + groupId);
-					Uri groupUri = ContentUris.withAppendedId(mConfig.getGroupContentUri(), groupId);			
+					Uri groupUri = ContentUris.withAppendedId(groupPersister.getContentUri(), groupId);			
 			        getContentResolver().delete(groupUri, null, null);
 			        showCancelToast(true);
 	    		}
@@ -407,7 +414,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
 
 	abstract protected void updateInsertExtras(Bundle extras, G group);
 
-	abstract protected ExpandableListConfig<G,C> createListConfig();
+	abstract protected ExpandableListConfig<G> createListConfig();
 	
 	abstract void refreshChildCount();
 
@@ -435,7 +442,7 @@ public abstract class AbstractExpandableActivity<G,C> extends ExpandableListActi
     
 	// custom helper methods
 	
-	protected final ExpandableListConfig<G,C> getListConfig()
+	protected final ExpandableListConfig<G> getListConfig()
 	{
 		return mConfig;
 	}

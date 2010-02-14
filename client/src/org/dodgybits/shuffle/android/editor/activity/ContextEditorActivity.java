@@ -17,9 +17,12 @@
 package org.dodgybits.shuffle.android.editor.activity;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
+import org.dodgybits.shuffle.android.core.model.encoding.ContextEncoder;
+import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
+import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.util.TextColours;
 import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.core.view.DrawableUtils;
@@ -28,7 +31,6 @@ import org.dodgybits.shuffle.android.list.view.ContextView;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
@@ -69,18 +71,13 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         
         loadCursor();
         findViewsAndAddListeners();
-        
+    
         if (mState == State.STATE_EDIT) {
-            if (mCursor != null) {
-                // Make sure we are at the one and only row in the cursor.
-                mCursor.moveToFirst();
-                setTitle(R.string.title_edit_context);
-                mOriginalItem = BindingUtils.readContext(mCursor,getResources());
-              	updateUIFromItem(mOriginalItem);
-            } else {
-                setTitle(getText(R.string.error_title));
-                mNameWidget.setText(getText(R.string.error_message));
-            }
+            // Make sure we are at the one and only row in the cursor.
+            mCursor.moveToFirst();
+            setTitle(R.string.title_edit_context);
+            mOriginalItem = mPersister.read(mCursor);
+          	updateUIFromItem(mOriginalItem);
         } else if (mState == State.STATE_INSERT) {
             setTitle(R.string.title_new_context);
             Bundle extras = getIntent().getExtras();
@@ -88,6 +85,16 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         }
     }
     
+	@Override
+	protected EntityEncoder<Context> createEncoder() {
+	    return new ContextEncoder();
+	}
+
+	@Override
+	protected EntityPersister<Context> createPersister() {
+	    return new ContextPersister(getContentResolver());
+	}
+	
     @Override
     protected boolean isValid() {
         String name = mNameWidget.getText().toString();
@@ -123,11 +130,6 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     	}
 	}
     
-    @Override
-    protected void writeItem(ContentValues values, Context context) {
-    	BindingUtils.writeContext(values, context);
-    }
-
     /**
      * Take care of deleting a context.  Simply deletes the entry.
      */
@@ -143,16 +145,6 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     @Override
     protected int getContentViewResId() {
     	return R.layout.context_editor;
-    }
-
-    @Override
-    protected Context restoreItem(Bundle icicle) {
-    	return BindingUtils.restoreContext(icicle,getResources());
-    }
-    
-    @Override
-    protected void saveItem(Bundle outState, Context item) {
-    	BindingUtils.saveContext(outState, item);
     }
     
     @Override

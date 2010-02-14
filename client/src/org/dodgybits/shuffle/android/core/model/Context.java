@@ -71,7 +71,7 @@ public class Context implements TracksEntity {
         return true;
     }
 
-    public static class Builder {
+    public static class Builder implements EntityBuilder<Context> {
 
         private Builder() {
         }

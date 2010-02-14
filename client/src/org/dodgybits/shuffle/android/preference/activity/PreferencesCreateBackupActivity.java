@@ -285,7 +285,7 @@ public class PreferencesCreateBackupActivity extends Activity
             int i = 0;
             int total = cursor.getCount();
             String type = getString(R.string.context_name);
-            ContextPersister persister = new ContextPersister();
+            ContextPersister persister = new ContextPersister(getContentResolver());
             ContextProtocolTranslator translator = new ContextProtocolTranslator();
         	while (cursor.moveToNext()) {
         	    Context context = persister.read(cursor);
@@ -306,7 +306,7 @@ public class PreferencesCreateBackupActivity extends Activity
             int i = 0;
             int total = cursor.getCount();
             String type = getString(R.string.project_name);
-            ProjectPersister persister = new ProjectPersister();
+            ProjectPersister persister = new ProjectPersister(getContentResolver());
             ProjectProtocolTranslator translator = new ProjectProtocolTranslator(null);
         	while (cursor.moveToNext()) {
         		Project project = persister.read(cursor);
@@ -327,7 +327,7 @@ public class PreferencesCreateBackupActivity extends Activity
             int i = 0;
             int total = cursor.getCount();
             String type = getString(R.string.task_name);
-            TaskPersister persister = new TaskPersister();
+            TaskPersister persister = new TaskPersister(getContentResolver());
             TaskProtocolTranslator translator = new TaskProtocolTranslator(null, null);
         	while (cursor.moveToNext()) {
         		Task task = persister.read(cursor);

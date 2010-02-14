@@ -17,7 +17,7 @@
 package org.dodgybits.shuffle.android.core.activity;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.ModelUtils;
+import org.dodgybits.shuffle.android.core.model.persistence.InitialDataGenerator;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
@@ -98,7 +98,7 @@ public class WelcomeActivity extends Activity {
         setProgressBarVisibility(true);
     	new Thread() {
     		public void run() {
-    	    	ModelUtils.createSampleData(WelcomeActivity.this, mHandler);
+    	    	InitialDataGenerator.createSampleData(WelcomeActivity.this, mHandler);
     		}
     	}.start();
     }
@@ -108,7 +108,7 @@ public class WelcomeActivity extends Activity {
         setProgressBarVisibility(true);
     	new Thread() {
     		public void run() {
-    	    	ModelUtils.cleanSlate(WelcomeActivity.this, mHandler);
+    	    	InitialDataGenerator.cleanSlate(WelcomeActivity.this, mHandler);
     		}
     	}.start();
     }

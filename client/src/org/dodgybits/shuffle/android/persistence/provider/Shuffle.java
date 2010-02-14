@@ -109,6 +109,7 @@ public class Shuffle {
         public static final String TRACKS_ID = "tracks_id";
         public static final String MODIFIED_DATE = "modified";
         public static final String PARALLEL = "parallel";
+        public static final String ARCHIVED = "archived";
 
         /**
          * Projection for all the columns of a project.
@@ -119,7 +120,8 @@ public class Shuffle {
                 DEFAULT_CONTEXT_ID,
                 TRACKS_ID,
                 MODIFIED_DATE,
-                PARALLEL
+                PARALLEL,
+                ARCHIVED
         };
         public static final String TASK_COUNT = "count";
         /**

@@ -17,9 +17,9 @@
 package org.dodgybits.shuffle.android.list.activity.task;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
@@ -49,7 +49,8 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     @Override
 	protected Cursor createItemQuery() {
 		Log.d(cTag, "Creating a cursor to find tasks for the given context");
-		return managedQuery(getListConfig().getListContentUri(), 
+		return managedQuery(
+		        getListConfig().getPersister().getContentUri(), 
 				Shuffle.Tasks.cFullProjection,
 				Shuffle.Tasks.CONTEXT_ID + " = ?", 
 				new String[] {String.valueOf(mContextId)}, 
@@ -64,11 +65,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig() {
-
-			public Uri getListContentUri() {
-				return Shuffle.Tasks.CONTENT_URI;
-			}
+		return new AbstractTaskListConfig(getContentResolver()) {
 
 		    public int getCurrentViewMenuId() {
 		    	return 0;
@@ -89,7 +86,8 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 		Cursor cursor = getContentResolver().query(Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection,
 				Shuffle.Contexts._ID + " = ?", new String[] {String.valueOf(mContextId)}, null);
 		if (cursor.moveToNext()) {
-			mContext = BindingUtils.readContext(cursor,getResources());
+		    ContextPersister persister = new ContextPersister(getContentResolver());
+			mContext = persister.read(cursor);
 		}
 		cursor.close();
 		

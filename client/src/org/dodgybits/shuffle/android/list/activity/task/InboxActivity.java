@@ -21,13 +21,11 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,12 +65,7 @@ public class InboxActivity extends AbstractTaskListActivity {
 	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig() {
-
-			public Uri getListContentUri() {
-				// Tasks with no projects or created since last clean
-				return Shuffle.Tasks.cInboxTasksContentURI;
-			}
+		return new AbstractTaskListConfig(getContentResolver()) {
 
 		    public int getCurrentViewMenuId() {
 		    	return MenuUtils.INBOX_ID;

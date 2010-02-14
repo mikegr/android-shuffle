@@ -16,6 +16,8 @@
 
 package org.dodgybits.shuffle.android.list.activity;
 
+import org.dodgybits.shuffle.android.core.model.Entity;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
 import org.dodgybits.shuffle.android.list.config.DrilldownListConfig;
 
@@ -28,27 +30,27 @@ import android.util.SparseIntArray;
  * A list whose items represent groups that lead to other list.
  * A poor man's ExpandableListActivity. :-)
  */
-public abstract class AbstractDrilldownListActivity<T> extends AbstractListActivity<T> {
+public abstract class AbstractDrilldownListActivity<G extends Entity> extends AbstractListActivity<G> {
 	private static final String cTag = "AbstractDrilldownListActivity";
 
 	protected SparseIntArray mTaskCountArray;
 	
-	protected int getChildCount(long groupId) {
-		return mTaskCountArray.get((int)groupId);
+	protected int getChildCount(Id groupId) {
+		return mTaskCountArray.get((int)groupId.getId());
 	}
 	
-	protected final DrilldownListConfig<T> getDrilldownListConfig()
+    protected final DrilldownListConfig<G> getDrilldownListConfig()
 	{
-		return (DrilldownListConfig<T>)getListConfig();
+		return (DrilldownListConfig<G>)getListConfig();
 	}
 	
-	protected abstract void deleteChildren(long groupId);
+	protected abstract void deleteChildren(Id groupId);
 	
     /**
      * Permanently delete the selected item.
      */
 	@Override
-    protected void deleteItem(final long groupId) {
+    protected void deleteItem(final Id groupId) {
     	int childCount = getChildCount(groupId);
 		if (childCount > 0) {
     		OnClickListener buttonListener = new OnClickListener() {

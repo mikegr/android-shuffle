@@ -17,14 +17,16 @@
 package org.dodgybits.shuffle.android.editor.activity;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.android.shuffle.util.BindingUtils;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
+import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
+import org.dodgybits.shuffle.android.core.model.encoding.ProjectEncoder;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -61,22 +63,27 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         findViewsAndAddListeners();
         
         if (mState == State.STATE_EDIT) {
-            if (mCursor != null) {
-                // Make sure we are at the one and only row in the cursor.
-                mCursor.moveToFirst();
-                setTitle(R.string.title_edit_project);
-                mOriginalItem = BindingUtils.readProject(mCursor);
-              	updateUIFromItem(mOriginalItem);
-            } else {
-                setTitle(getText(R.string.error_title));
-                mNameWidget.setText(getText(R.string.error_message));
-            }
+            // Make sure we are at the one and only row in the cursor.
+            mCursor.moveToFirst();
+            setTitle(R.string.title_edit_project);
+            mOriginalItem = mPersister.read(mCursor);
+          	updateUIFromItem(mOriginalItem);
         } else if (mState == State.STATE_INSERT) {
             isParallel = false;
             setTitle(R.string.title_new_project);
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
         }
+    }
+    
+    @Override
+    protected EntityEncoder<Project> createEncoder() {
+        return new ProjectEncoder();
+    }
+    
+    @Override
+    protected EntityPersister<Project> createPersister() {
+        return new ProjectPersister(getContentResolver());
     }
     
     @Override
@@ -160,21 +167,6 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     	return R.layout.project_editor;
     }
 
-    @Override
-    protected Project restoreItem(Bundle icicle) {
-    	return BindingUtils.restoreProject(icicle);
-    }
-    
-    @Override
-    protected void saveItem(Bundle outState, Project item) {
-    	BindingUtils.saveProject(outState, item);
-    }
-
-    @Override
-    protected void writeItem(ContentValues values, Project project) {
-    	BindingUtils.writeProject(values, project);
-    }
-    
     @Override
     protected Intent getInsertIntent() {
     	return new Intent(Intent.ACTION_INSERT, Shuffle.Projects.CONTENT_URI);
