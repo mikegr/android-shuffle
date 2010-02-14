@@ -9,6 +9,7 @@ import org.dodgybits.shuffle.android.preference.view.Progress;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -18,6 +19,8 @@ import android.widget.Toast;
  * @author Morten Nielsen
  */
 public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
+    private static final String cTag = "TracksSynchronizer";
+    
     private static TracksSynchronizer synchronizer;
     private static LinkedList<SyncProgressListener> progressListeners = new LinkedList<SyncProgressListener>();
     
@@ -83,8 +86,10 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
             mTaskSynchronizer.synchronize();
             publishProgress(Progress.createProgress(100, "Synchronization Complete"));
         } catch (WebClient.ApiException e) {
+            Log.w(cTag, "Tracks call failed", e);
             publishProgress(Progress.createErrorProgress(mContext.getString(R.string.web_error_message)));
         } catch (Exception e) {
+            Log.w(cTag, "Synch failed", e);
             publishProgress(Progress.createErrorProgress(mContext.getString(R.string.error_message)));
         }
         return null;

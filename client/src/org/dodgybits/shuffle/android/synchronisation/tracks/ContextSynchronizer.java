@@ -122,6 +122,7 @@ public class ContextSynchronizer extends Synchronizer<Context> {
 //<updated-at type="datetime">2009-12-29T21:14:19+00:00</updated-at>
 //</context>
         Context context = null;
+        Builder builder = Context.newBuilder();
         
         try {
             int eventType = parser.getEventType();
@@ -129,7 +130,6 @@ public class ContextSynchronizer extends Synchronizer<Context> {
             final DateFormat format = mDateFormat;
             while (eventType != XmlPullParser.END_DOCUMENT && context == null) {
                 String name = parser.getName();
-                Builder builder = Context.newBuilder();
 
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:

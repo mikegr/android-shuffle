@@ -64,16 +64,26 @@ public class Project implements TracksEntity {
         return mName;
     }
 
-    public static Builder newBuilder() {
-        return Builder.create();
-    }
-
     public final boolean isInitialized() {
         if (TextUtils.isEmpty(mName)) {
             return false;
         }
         return true;
     }
+    
+    @Override
+    public final String toString() {
+        return String.format(
+                "[Project id=%1$s name='%2$s' defaultContextId='%3$s' " +
+                "parallel=%4$s archived=%5$s tracksId='%6$s']",
+                mLocalId, mName, mDefaultContextId,
+                mParallel, mArchived, mTracksId);
+    }
+    
+    public static Builder newBuilder() {
+        return Builder.create();
+    }
+
 
     public static class Builder implements EntityBuilder<Project> {
 
@@ -93,6 +103,7 @@ public class Project implements TracksEntity {
         }
 
         public Builder setLocalId(Id value) {
+            assert value != null;
             result.mLocalId = value;
             return this;
         }
@@ -111,6 +122,7 @@ public class Project implements TracksEntity {
         }
 
         public Builder setDefaultContextId(Id value) {
+            assert value != null;
             result.mDefaultContextId = value;
             return this;
         }
@@ -147,6 +159,7 @@ public class Project implements TracksEntity {
         }
 
         public Builder setTracksId(Id value) {
+            assert value != null;
             result.mTracksId = value;
             return this;
         }

@@ -115,13 +115,13 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
 
     protected Project parseSingleEntity(XmlPullParser parser) throws ParseException {
         final DateFormat format = mDateFormat;
+        Builder builder = Project.newBuilder();
         Project project = null;
+        
         try {
             int eventType = parser.getEventType();
             
             while (eventType != XmlPullParser.END_DOCUMENT && project == null) {
-                Builder builder = Project.newBuilder();
-                builder.setModifiedDate(System.currentTimeMillis());
                 String name = parser.getName();
                 
                 switch (eventType) {

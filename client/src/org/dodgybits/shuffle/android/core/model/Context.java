@@ -60,16 +60,27 @@ public class Context implements TracksEntity {
         return mName;
     }
 
-    public static Builder newBuilder() {
-        return Builder.create();
-    }
-
     public final boolean isInitialized() {
         if (TextUtils.isEmpty(mName)) {
             return false;
         }
         return true;
     }
+    
+    @Override
+    public final String toString() {
+        return String.format(
+                "[Context id=%1$s name='%2$s' colourIndex='%3$s' " +
+                "iconName=%4$s tracksId='%5$s']",
+                mLocalId, mName, mColourIndex,
+                mIconName, mTracksId);
+    }
+    
+    public static Builder newBuilder() {
+        return Builder.create();
+    }
+
+    
 
     public static class Builder implements EntityBuilder<Context> {
 
@@ -89,6 +100,7 @@ public class Context implements TracksEntity {
         }
 
         public Builder setLocalId(Id value) {
+            assert value != null;
             result.mLocalId = value;
             return this;
         }
@@ -134,6 +146,7 @@ public class Context implements TracksEntity {
         }
 
         public Builder setTracksId(Id value) {
+            assert value != null;
             result.mTracksId = value;
             return this;
         }

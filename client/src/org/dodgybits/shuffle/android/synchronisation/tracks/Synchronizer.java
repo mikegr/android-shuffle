@@ -143,7 +143,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
             boolean done = false;
             while (eventType != XmlPullParser.END_DOCUMENT && !done) {
                 Entity entity = parseSingleEntity(parser);
-                if (entity != null) {
+                if (entity != null && entity.isInitialized()) {
                     entities.put(entity.getTracksId(), entity);
                 }
                 
@@ -175,6 +175,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         if (cursor.moveToFirst()) {
             id = Id.create(cursor.getLong(0));
         }
+        cursor.close();
         return id;
     }
 
@@ -187,10 +188,10 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
                 BaseColumns._ID + " = ?", 
                 new String[] {localId.toString()}, 
                 null);
-        
         if (cursor.moveToFirst()) {
             id = Id.create(cursor.getLong(0));
         }
+        cursor.close();
         return id;
     }
 
@@ -263,7 +264,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         try {
             mWebClient.putContentToUrl(createEntityUrl(localEntity), document);
         } catch (WebClient.ApiException ignored) {
-            Log.w(cTag, ignored);
+            Log.w(cTag, "Failed to update entity in tracks " + localEntity, ignored);
         }
     }
 
@@ -280,7 +281,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
                 entity = builder.build();
             }
         } catch (WebClient.ApiException ignored) {
-            Log.w(cTag, ignored);
+            Log.w(cTag, "Failed to create entity in tracks " + entity, ignored);
         }
         return entity;
     }

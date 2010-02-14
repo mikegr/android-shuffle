@@ -110,10 +110,6 @@ public final class Task implements TracksEntity {
         return mDescription;
     }
 
-    public static Builder newBuilder() {
-        return Builder.create();
-    }
-
     public final boolean isInitialized() {
         if (TextUtils.isEmpty(mDescription)) {
             return false;
@@ -121,6 +117,20 @@ public final class Task implements TracksEntity {
         return true;
     }
 
+    @Override
+    public final String toString() {
+        return String.format(
+                "[Task id=%8$s description='%1$s' detail='%2$s' contextId=%3$s projectId=%4$s " +
+                "order=%5$s complete=%6$s tracksId=%7$s]",
+                mDescription, mDetails, mContextId, mProjectId,
+                mOrder, mComplete, mTracksId, mLocalId);
+    }
+    
+    public static Builder newBuilder() {
+        return Builder.create();
+    }
+
+    
     public static class Builder implements EntityBuilder<Task> {
 
         private Builder() {
@@ -139,6 +149,7 @@ public final class Task implements TracksEntity {
         }
 
         public Builder setLocalId(Id value) {
+            assert value != null;
             result.mLocalId = value;
             return this;
         }
@@ -166,6 +177,7 @@ public final class Task implements TracksEntity {
         }
 
         public Builder setContextId(Id value) {
+            assert value != null;
             result.mContextId = value;
             return this;
         }
@@ -175,6 +187,7 @@ public final class Task implements TracksEntity {
         }
 
         public Builder setProjectId(Id value) {
+            assert value != null;
             result.mProjectId = value;
             return this;
         }
@@ -247,6 +260,7 @@ public final class Task implements TracksEntity {
         }
 
         public Builder setCalendarEventId(Id value) {
+            assert value != null;
             result.mCalendarEventId = value;
             return this;
         }
@@ -274,6 +288,7 @@ public final class Task implements TracksEntity {
         }
 
         public Builder setTracksId(Id value) {
+            assert value != null;
             result.mTracksId = value;
             return this;
         }

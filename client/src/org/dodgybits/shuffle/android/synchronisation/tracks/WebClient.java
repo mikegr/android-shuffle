@@ -173,7 +173,7 @@ public class WebClient {
             Log.i(cTag, "post with response " + status.toString());
             if (status.getStatusCode() != HttpStatus.SC_CREATED) {
                 throw new ApiException("Invalid response from server: " +
-                        status.toString());
+                        status.toString() + " for content: " + content);
             }
             Header[] header = response.getHeaders("Location");
             if (header.length != 0) return header[0].getValue();

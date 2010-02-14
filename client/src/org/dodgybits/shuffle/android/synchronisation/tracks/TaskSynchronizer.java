@@ -155,6 +155,8 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
     protected Task parseSingleEntity(XmlPullParser parser) throws ParseException {
         final DateFormat format = mDateFormat;
         Task task = null;
+        final Builder builder = Task.newBuilder();
+        builder.setTimezone("UTC");
         
         try {
             int eventType = parser.getEventType();
@@ -162,8 +164,6 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
             while (eventType != XmlPullParser.END_DOCUMENT && task == null) {
                 final String name = parser.getName();
                 
-                final Builder builder = Task.newBuilder();
-                builder.setTimezone("UTC");
                 long startDate = 0L;
                 long dueDate = 0L;
 

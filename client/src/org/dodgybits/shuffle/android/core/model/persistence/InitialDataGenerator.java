@@ -104,7 +104,7 @@ public class InitialDataGenerator {
 		ProjectPersister projectPersister = new ProjectPersister(androidContext.getContentResolver());
 		TaskPersister taskPersister = new TaskPersister(androidContext.getContentResolver());
 		
-		Project sellBike = createProject("Sell old Powerbook", null);
+		Project sellBike = createProject("Sell old Powerbook", Id.NONE);
 		sellBike = insertProject( projectPersister, sellBike);
 		insertTask( 
 		        taskPersister,
@@ -125,7 +125,7 @@ public class InitialDataGenerator {
                 taskPersister,
 				createTask("Put up ad", AT_COMPUTER_INDEX, sellBike, twoWeeks));
 
-		Project cleanGarage = createProject("Clean out garage", null);
+		Project cleanGarage = createProject("Clean out garage", Id.NONE);
 		cleanGarage = insertProject(projectPersister, cleanGarage);
 		insertTask( 
                 taskPersister,
@@ -148,7 +148,7 @@ public class InitialDataGenerator {
 						ERRANDS_INDEX, cleanGarage, 
 						now, now));
 
-		Project skiTrip = createProject("Organise ski trip", null);
+		Project skiTrip = createProject("Organise ski trip", Id.NONE);
 		skiTrip = insertProject(projectPersister, skiTrip);
 		insertTask( 
                 taskPersister,
