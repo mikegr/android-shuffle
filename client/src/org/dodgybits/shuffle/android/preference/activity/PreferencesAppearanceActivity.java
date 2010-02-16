@@ -24,8 +24,10 @@ import static org.dodgybits.shuffle.android.preference.model.Preferences.DISPLAY
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.InitialDataGenerator;
 import org.dodgybits.shuffle.android.list.view.TaskView;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
@@ -70,11 +72,25 @@ public class PreferencesAppearanceActivity extends Activity  {
         mDisplayProjectCheckbox = (CheckBox) findViewById(R.id.display_project);
         mDisplayDetailsCheckbox = (CheckBox) findViewById(R.id.display_details);
         
-        setupSampleTask();
-        
         // need to add task view programatically due to issues adding via XML
+        setupSampleEntities();
         
-        mTaskView = new TaskView(this, null, null);
+        EntityCache<Context> contentCache = new EntityCache<Context>() {
+        	@Override
+        	public Context findById(Id localId) {
+        		return mSampleContext;
+        	}
+		};
+		
+        EntityCache<Project> projectCache = new EntityCache<Project>() {
+        	@Override
+        	public Project findById(Id localId) {
+        		return mSampleProject;
+        	}
+		};
+        
+        
+        mTaskView = new TaskView(this, contentCache, projectCache);
         mTaskView.updateView(mSampleTask); // todo pass in project and context
         LayoutParams taskLayout = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT );
         LinearLayout layout = (LinearLayout)findViewById(R.id.appearance_layout);
@@ -97,7 +113,7 @@ public class PreferencesAppearanceActivity extends Activity  {
 
 	}
 	
-	private void setupSampleTask() {
+	private void setupSampleEntities() {
         long now = System.currentTimeMillis();
         mSampleProject = Project.newBuilder().setName("Sample project").build();
         mSampleContext = InitialDataGenerator.getSampleContext(getResources());
@@ -106,8 +122,9 @@ public class PreferencesAppearanceActivity extends Activity  {
             .setDetails("Additional action details")
             .setCreatedDate(now)
             .setModifiedDate(now)
-            .setStartDate(now)
-            .setDueDate(now + DateUtils.HOUR_IN_MILLIS * 3)
+            .setStartDate(now + DateUtils.DAY_IN_MILLIS * 2)
+            .setDueDate(now + DateUtils.DAY_IN_MILLIS * 7)
+            .setAllDay(true)
             .build();
 	}
 	

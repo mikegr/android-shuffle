@@ -17,9 +17,11 @@
 package org.dodgybits.shuffle.android.list.activity.task;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.DefaultEntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
@@ -53,7 +55,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 
 	private static final String cTag = "AbstractTaskListActivity";
 	
-    protected EntityCache<org.dodgybits.shuffle.android.core.model.Context> mContextCache;
+    protected EntityCache<Context> mContextCache;
     protected EntityCache<Project> mProjectCache;
 	
 	protected Button mAddTaskButton;
@@ -63,8 +65,8 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-        mContextCache = new EntityCache<org.dodgybits.shuffle.android.core.model.Context>(new ContextPersister(getContentResolver()));
-        mProjectCache = new EntityCache<Project>(new ProjectPersister(getContentResolver()));
+        mContextCache = new DefaultEntityCache<org.dodgybits.shuffle.android.core.model.Context>(new ContextPersister(getContentResolver()));
+        mProjectCache = new DefaultEntityCache<Project>(new ProjectPersister(getContentResolver()));
 		
 		// register self as swipe listener
 		SwipeListItemWrapper wrapper = (SwipeListItemWrapper) findViewById(R.id.swipe_wrapper);

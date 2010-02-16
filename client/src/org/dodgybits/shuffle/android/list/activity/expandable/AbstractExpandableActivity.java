@@ -20,6 +20,7 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.DefaultEntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
@@ -68,8 +69,8 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Expan
         super.onCreate(icicle);
 
         mConfig = createListConfig();
-        mContextCache = new EntityCache<org.dodgybits.shuffle.android.core.model.Context>(new ContextPersister(getContentResolver()));
-        mProjectCache = new EntityCache<Project>(new ProjectPersister(getContentResolver()));
+        mContextCache = new DefaultEntityCache<org.dodgybits.shuffle.android.core.model.Context>(new ContextPersister(getContentResolver()));
+        mProjectCache = new DefaultEntityCache<Project>(new ProjectPersister(getContentResolver()));
         
         setContentView(mConfig.getContentViewResId());
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
