@@ -4,11 +4,15 @@ import java.lang.ref.SoftReference;
 
 import java.util.HashMap;
 
+import android.util.Log;
+
 /**
  * Generic in memory cache based on Romain Guy's suggestion.
  * See http://code.google.com/events/io/2009/sessions/TurboChargeUiAndroidFast.html
  */
 public class ItemCache<K,V> {
+    private static final String cTag = "ItemCache";
+ 
     private final HashMap<K, SoftReference<V>> mCache;
     private final ValueBuilder<K,V> mBuilder;
     
@@ -31,8 +35,11 @@ public class ItemCache<K,V> {
         
         // not in cache or gc'd
         if (value == null) {
+            Log.d(cTag, "Cache miss for "  + key);
             value = mBuilder.build(key);
             put(key, value);
+        } else {
+            Log.d(cTag, "Cache hit for "  + key);
         }
         
         return value;

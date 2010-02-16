@@ -24,17 +24,19 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
     public E findById(Id localId) {
         E entity = null;
         
-        Cursor cursor = mResolver.query(
-                getContentUri(), 
-                getFullProjection(),
-                BaseColumns._ID + " = ?", 
-                new String[] {localId.toString()}, 
-                null);
-        
-        if (cursor.moveToFirst()) {
-            entity = read(cursor);
+        if (localId.isInitialised()) {
+            Cursor cursor = mResolver.query(
+                    getContentUri(), 
+                    getFullProjection(),
+                    BaseColumns._ID + " = ?", 
+                    new String[] {localId.toString()}, 
+                    null);
+            
+            if (cursor.moveToFirst()) {
+                entity = read(cursor);
+            }
+            cursor.close();
         }
-        cursor.close();
         
         return entity;
     }

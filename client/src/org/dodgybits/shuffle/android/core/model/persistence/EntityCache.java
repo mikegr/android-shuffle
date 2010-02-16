@@ -18,7 +18,11 @@ public class EntityCache<E extends Entity> {
     }
     
     public E findById(Id localId) {
-        return mCache.get(localId);
+        E entity = null;
+        if (localId.isInitialised()) {
+            entity = mCache.get(localId); 
+        }
+        return entity;
     }
     
     private class Builder implements ValueBuilder<Id, E> {

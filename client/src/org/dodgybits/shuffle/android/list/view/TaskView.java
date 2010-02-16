@@ -20,7 +20,7 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.persistence.EntityLocator;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
 import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.core.view.DrawableUtils;
@@ -38,8 +38,8 @@ import android.view.View;
 import android.widget.TextView;
 
 public class TaskView extends ItemView<Task> {
-    private EntityLocator<Context> mContextLocator;
-    private EntityLocator<Project> mProjectLocator;
+    private EntityCache<Context> mContextCache;
+    private EntityCache<Project> mProjectCache;
     
     protected LabelView mContext;
     protected TextView mDescription;
@@ -50,12 +50,12 @@ public class TaskView extends ItemView<Task> {
     protected boolean mShowProject;
     
     public TaskView(android.content.Context androidContext, 
-            EntityLocator<Context> contextLocator,
-            EntityLocator<Project> projectLocator) {
+            EntityCache<Context> contextCache,
+            EntityCache<Project> projectCache) {
         super(androidContext);
         
-        mContextLocator = contextLocator;
-        mProjectLocator = projectLocator;
+        mContextCache = contextCache;
+        mProjectCache = projectCache;
         
         LayoutInflater vi = (LayoutInflater)androidContext.
             getSystemService(android.content.Context.LAYOUT_INFLATER_SERVICE);
@@ -88,15 +88,15 @@ public class TaskView extends ItemView<Task> {
     
     
     public void updateView(Task task) {
-//        updateContext(task);
+        updateContext(task);
         updateDescription(task);
         updateWhen(task);
-//        updateProject(task);
+        updateProject(task);
         updateDetails(task);
     }
     
     private void updateContext(Task task) {
-        Context context = mContextLocator.findById(task.getContextId());
+        Context context = mContextCache.findById(task.getContextId());
         boolean displayContext = Preferences.displayContextName(getContext());
         boolean displayIcon = Preferences.displayContextIcon(getContext());
         if (mShowContext && context != null && (displayContext || displayIcon)) {           
@@ -148,7 +148,7 @@ public class TaskView extends ItemView<Task> {
     }
     
     private void updateProject(Task task) {
-        Project project = mProjectLocator.findById(task.getProjectId());
+        Project project = mProjectCache.findById(task.getProjectId());
         if (mShowProject && Preferences.displayProject(getContext()) && (project != null)) {
             mProject.setText(project.getName());
             mProject.setVisibility(View.VISIBLE);
