@@ -14,6 +14,8 @@ public interface EntityPersister<E extends Entity> {
     
     String[] getFullProjection();
     
+    E findById(Id localId);
+    
     E read(Cursor cursor);
         
     Uri insert(E e);

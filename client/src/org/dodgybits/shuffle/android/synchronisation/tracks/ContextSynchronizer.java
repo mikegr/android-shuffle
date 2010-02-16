@@ -74,11 +74,11 @@ public class ContextSynchronizer extends Synchronizer<Context> {
     @Override
     protected Context createMergedLocalEntity(Context localContext, Context newContext) {
         Builder builder = Context.newBuilder();
-        builder.mergeFrom(newContext);
+        builder.mergeFrom(localContext);
         builder
-            .setLocalId(localContext.getLocalId())
-            .setColourIndex(localContext.getColourIndex())
-            .setIconName(localContext.getIconName());
+            .setName(newContext.getName())
+            .setModifiedDate(newContext.getModifiedDate())
+            .setTracksId(newContext.getTracksId());
         return builder.build();
     }
     

@@ -10,6 +10,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 public abstract class AbstractEntityPersister<E extends Entity> implements EntityPersister<E> {
 
@@ -19,6 +20,24 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
         mResolver = resolver;
     }
     
+    @Override
+    public E findById(Id localId) {
+        E entity = null;
+        
+        Cursor cursor = mResolver.query(
+                getContentUri(), 
+                getFullProjection(),
+                BaseColumns._ID + " = ?", 
+                new String[] {localId.toString()}, 
+                null);
+        
+        if (cursor.moveToFirst()) {
+            entity = read(cursor);
+        }
+        cursor.close();
+        
+        return entity;
+    }
     
     @Override
     public Uri insert(E e) {

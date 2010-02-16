@@ -93,16 +93,17 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 
     protected Task createMergedLocalEntity(Task localTask, Task newTask) {
         Builder builder = Task.newBuilder();
-        builder.mergeFrom(newTask);
+        builder.mergeFrom(localTask);
         builder
-            .setLocalId(localTask.getLocalId())
-            .setCreatedDate(localTask.getCreatedDate())
-            .setTimezone(localTask.getTimezone())
-            .setAllDay(localTask.isAllDay())
-            .setHasAlarm(localTask.hasAlarms())
-            .setCalendarEventId(localTask.getCalendarEventId())
-            .setOrder(localTask.getOrder())
-            .setComplete(localTask.isComplete());
+            .setDescription(newTask.getDescription())
+            .setDetails(newTask.getDetails())
+            .setContextId(newTask.getContextId())
+            .setProjectId(newTask.getProjectId())
+            .setModifiedDate(newTask.getModifiedDate())
+            .setStartDate(newTask.getStartDate())
+            .setDueDate(newTask.getDueDate())
+            .setAllDay(newTask.isAllDay())
+            .setTracksId(newTask.getTracksId());
         return builder.build();
     }
 

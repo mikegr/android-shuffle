@@ -78,10 +78,13 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
 
     protected Project createMergedLocalEntity(Project localProject, Project newContext) {
         Builder builder = Project.newBuilder();
-        builder.mergeFrom(newContext);
+        builder.mergeFrom(localProject);
         builder
-            .setLocalId(localProject.getLocalId())
-            .setParallel(localProject.isParallel());
+            .setName(newContext.getName())
+            .setModifiedDate(newContext.getModifiedDate())
+            .setArchived(newContext.isArchived())
+            .setDefaultContextId(newContext.getDefaultContextId())
+            .setTracksId(newContext.getTracksId());
         return builder.build();
     }
 
