@@ -7,7 +7,7 @@ import java.util.HashMap;
 import android.util.Log;
 
 /**
- * Generic in memory cache based on Romain Guy's suggestion.
+ * Generic in-memory cache based on Romain Guy's suggestion.
  * See http://code.google.com/events/io/2009/sessions/TurboChargeUiAndroidFast.html
  */
 public class ItemCache<K,V> {
@@ -38,8 +38,6 @@ public class ItemCache<K,V> {
             Log.d(cTag, "Cache miss for "  + key);
             value = mBuilder.build(key);
             put(key, value);
-        } else {
-            Log.d(cTag, "Cache hit for "  + key);
         }
         
         return value;
