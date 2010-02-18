@@ -10,5 +10,7 @@ public interface TaskQuery {
 	 * start date range
 	 * due date range
 	 * created date range (for Inbox)
+	 * is complete - true/false or ignore
+	 * is archived - true/false or ignore
 	 */
 }
