@@ -22,9 +22,12 @@ import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
+import android.database.Cursor;
 
 public class ProjectListConfig implements DrilldownListConfig<Project> {
     private ProjectPersister mGroupPersister;
@@ -78,6 +81,15 @@ public class ProjectListConfig implements DrilldownListConfig<Project> {
 	@Override
 	public TaskPersister getChildPersister() {
 	    return mChildPersister;
+	}
+	
+	@Override
+	public Cursor createQuery(Activity activity) {
+	    return activity.managedQuery(
+	            getPersister().getContentUri(), 
+	            Shuffle.Projects.cFullProjection,
+                null, null, 
+                Shuffle.Projects.NAME + " ASC");
 	}
 
 }

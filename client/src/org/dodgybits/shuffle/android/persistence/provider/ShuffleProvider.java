@@ -16,8 +16,21 @@
 
 package org.dodgybits.shuffle.android.persistence.provider;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle.Reminders;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks;
+
 import android.app.SearchManager;
-import android.content.*;
+import android.content.ContentProvider;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,19 +38,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.util.Log;
-
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle.Reminders;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks;
-import org.dodgybits.shuffle.android.preference.model.Preferences;
-
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Provides access to database for all task related data.
@@ -64,9 +65,6 @@ public class ShuffleProvider extends ContentProvider {
 	
 	private static final int TASKS = 1;
 	private static final int TASK_ID = 2;
-	private static final int TOP_TASKS = 3;
-	private static final int INBOX_TASKS = 4;
-	private static final int DUE_TASKS = 5;
 
 	private static final int CONTEXTS = 101;
 	private static final int CONTEXT_ID = 102;
@@ -284,39 +282,6 @@ public class ShuffleProvider extends ContentProvider {
 			qb.appendWhere(cTaskTableName + "._id="
 					+ uri.getPathSegments().get(1));
 			break;
-		case INBOX_TASKS:
-			qb.setTables(cTaskJoinTableNames);
-			qb.setProjectionMap(sTaskListProjectMap);
-			long lastCleanMS = Preferences.getLastInboxClean(getContext());
-			qb.appendWhere("(projectId is null AND contextId is null) OR (created > " + lastCleanMS
-					+ ")");
-			break;
-		case DUE_TASKS:
-			qb.setTables(cTaskJoinTableNames);
-			qb.setProjectionMap(sTaskListProjectMap);
-
-			int mode = Integer.parseInt(uri.getPathSegments().get(1));
-			long startMS = 0L;
-			long endOfToday = getEndDate(mode);
-			long endOfTomorrow = endOfToday + DateUtils.DAY_IN_MILLIS;
-			qb.appendWhere("complete = 0");
-			qb.appendWhere(" AND (due > " + startMS + ")");
-			qb.appendWhere(" AND ( (due < " + endOfToday + ") OR");
-			qb.appendWhere("( allDay = 1 AND due < " + endOfTomorrow + " ) )");
-			break;
-		case TOP_TASKS:
-			qb.setTables(cTaskJoinTableNames);
-			qb.setProjectionMap(sTaskListProjectMap);
-
-			qb.appendWhere(
-			        "(complete = 0) AND (" +
-			        "   (projectId is null) OR " +
-			        "   (projectId IN (select p._id from project p where p.parallel = 1)) OR " +
-			        "   (task._id = (select t2._id FROM task t2 WHERE " +
-				 	"      t2.projectId = task.projectId AND t2.complete = 0 " +
-				    "      ORDER BY due ASC, displayOrder ASC limit 1))" +
-				    ")");
-			break;
 		case CONTEXTS:
 			qb.setTables(cContextTableName);
 			qb.setProjectionMap(sContextListProjectMap);
@@ -376,15 +341,8 @@ public class ShuffleProvider extends ContentProvider {
 			switch (cUriMatcher.match(uri)) {
 			case TASKS:
 			case TASK_ID:
-			case INBOX_TASKS:
 			case SEARCH:
 				orderBy = Shuffle.Tasks.DEFAULT_SORT_ORDER;
-				break;
-			case TOP_TASKS:
-                orderBy = Shuffle.Tasks.DUE_DATE + " ASC";
-				break;
-			case DUE_TASKS:
-				orderBy = Shuffle.Tasks.DUE_DATE + " ASC";
 				break;
 			case CONTEXTS:
 			case CONTEXT_ID:
@@ -417,39 +375,10 @@ public class ShuffleProvider extends ContentProvider {
 		return c;
 	}
 
-	private long getEndDate(int mode) {
-		long endMS = 0L;
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		switch (mode) {
-		case Shuffle.Tasks.DAY_MODE:
-			cal.add(Calendar.DAY_OF_YEAR, 1);
-			endMS = cal.getTimeInMillis();
-			break;
-		case Shuffle.Tasks.WEEK_MODE:
-			cal.add(Calendar.DAY_OF_YEAR, 7);
-			endMS = cal.getTimeInMillis();
-			break;
-		case Shuffle.Tasks.MONTH_MODE:
-			cal.add(Calendar.MONTH, 1);
-			endMS = cal.getTimeInMillis();
-			break;
-		}
-		if (Log.isLoggable(cTag, Log.INFO)) {
-			Log.i(cTag, "Due date ends " + endMS);
-		}
-		return endMS;
-	}
-
 	@Override
 	public String getType(Uri uri) {
 		switch (cUriMatcher.match(uri)) {
 		case TASKS:
-		case INBOX_TASKS:
-		case DUE_TASKS:
 			return Shuffle.Tasks.CONTENT_TYPE;
 		case TASK_ID:
 			return Shuffle.Tasks.CONTENT_ITEM_TYPE;
@@ -484,9 +413,6 @@ public class ShuffleProvider extends ContentProvider {
 
 		switch (cUriMatcher.match(url)) {
 		case TASKS:
-		case DUE_TASKS:
-		case TOP_TASKS:
-		case INBOX_TASKS:
 			Long now = System.currentTimeMillis();
 
 			// Make sure that the fields are all set
@@ -574,9 +500,6 @@ public class ShuffleProvider extends ContentProvider {
 		int count;
 		switch (cUriMatcher.match(uri)) {
 		case TASKS:
-		case DUE_TASKS:
-		case TOP_TASKS:
-		case INBOX_TASKS:
 			count = db.delete(cTaskTableName, where, whereArgs);
 			break;
 		case TASK_ID:
@@ -643,9 +566,6 @@ public class ShuffleProvider extends ContentProvider {
 		String segment;
 		switch (cUriMatcher.match(uri)) {
 		case TASKS:
-		case DUE_TASKS:
-		case TOP_TASKS:
-		case INBOX_TASKS:
 			count = db.update(cTaskTableName, values, where, whereArgs);
 			break;
 		case TASK_ID:
@@ -701,9 +621,6 @@ public class ShuffleProvider extends ContentProvider {
 		cUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		cUriMatcher.addURI(Shuffle.PACKAGE, "tasks", TASKS);
 		cUriMatcher.addURI(Shuffle.PACKAGE, "tasks/#", TASK_ID);
-		cUriMatcher.addURI(Shuffle.PACKAGE, "inboxTasks", INBOX_TASKS);
-		cUriMatcher.addURI(Shuffle.PACKAGE, "dueTasks/#", DUE_TASKS);
-		cUriMatcher.addURI(Shuffle.PACKAGE, "topTasks", TOP_TASKS);
 		cUriMatcher.addURI(Shuffle.PACKAGE, "contexts", CONTEXTS);
 		cUriMatcher.addURI(Shuffle.PACKAGE, "contexts/#", CONTEXT_ID);
 		cUriMatcher.addURI(Shuffle.PACKAGE, "contextTasks", CONTEXT_TASKS);

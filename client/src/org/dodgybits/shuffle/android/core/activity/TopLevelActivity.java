@@ -17,8 +17,10 @@
 package org.dodgybits.shuffle.android.core.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
@@ -92,12 +94,12 @@ public class TopLevelActivity extends ListActivity {
         Log.d(cTag, "onResume+");
         super.onResume();
 
-        Uri[] countUris = new Uri[5];
-        countUris[INBOX] = Shuffle.Tasks.cInboxTasksContentURI;
-        countUris[DUE_TASKS] = Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(String.valueOf(Shuffle.Tasks.DAY_MODE)).build();
-        countUris[TOP_TASKS] = Shuffle.Tasks.cTopTasksContentURI;
-        countUris[PROJECTS] = Shuffle.Projects.CONTENT_URI;
-        countUris[CONTEXTS] = Shuffle.Contexts.CONTENT_URI;
+        CursorGenerator[] generators = new CursorGenerator[5];
+        generators[INBOX] = new TaskCursorGenerator(StandardTaskQueries.cInbox);
+        generators[DUE_TASKS] = new TaskCursorGenerator(StandardTaskQueries.cDueToday);
+        generators[TOP_TASKS] = new TaskCursorGenerator(StandardTaskQueries.cTopTasks);
+        generators[PROJECTS] = new UriCursorGenerator(Shuffle.Projects.CONTENT_URI);
+        generators[CONTEXTS] = new UriCursorGenerator(Shuffle.Contexts.CONTENT_URI);
 
         mIconIds[INBOX] = R.drawable.inbox;
         mIconIds[DUE_TASKS] = R.drawable.due_actions;
@@ -105,7 +107,7 @@ public class TopLevelActivity extends ListActivity {
         mIconIds[PROJECTS] = R.drawable.projects;
         mIconIds[CONTEXTS] = R.drawable.contexts;
 
-        mTask = new CalculateCountTask().execute(countUris);
+        mTask = new CalculateCountTask().execute(generators);
 
         String[] perspectives = getResources().getStringArray(R.array.perspectives).clone();
         ArrayAdapter<CharSequence> adapter = new IconArrayAdapter(
@@ -133,10 +135,45 @@ public class TopLevelActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         MenuUtils.checkCommonItemsSelected(position + MenuUtils.INBOX_ID, this, -1, false);
     }
+    
+    private interface CursorGenerator {
+        Cursor generate();
+    }
+    
+    private class TaskCursorGenerator implements CursorGenerator {
+        private TaskQuery mTaskQuery;
+        
+        public TaskCursorGenerator(TaskQuery query) {
+            mTaskQuery = query;
+        }
+        
+        public Cursor generate() {
+            return getContentResolver().query(
+                    Shuffle.Tasks.CONTENT_URI, 
+                    cProjection, 
+                    mTaskQuery.getSelection(), 
+                    mTaskQuery.getSelectionArgs(), 
+                    mTaskQuery.getSortOrder());
+        }
+    }
+     
+    private class UriCursorGenerator implements CursorGenerator {
+        private Uri mUri;
+        
+        public UriCursorGenerator(Uri uri) {
+            mUri = uri;
+        }
+        
+        public Cursor generate() {
+            return getContentResolver().query(
+                    mUri, cProjection, null, null, null);
+        }
+    }
+    
 
-    private class CalculateCountTask extends AsyncTask<Uri, CharSequence[], Void> {
+    private class CalculateCountTask extends AsyncTask<CursorGenerator, CharSequence[], Void> {
 
-        public Void doInBackground(Uri... params) {
+        public Void doInBackground(CursorGenerator... params) {
             String[] perspectives = getResources().getStringArray(R.array.perspectives);
             int colour = getResources().getColor(R.drawable.pale_blue);
             ForegroundColorSpan span = new ForegroundColorSpan(colour);
@@ -161,8 +198,8 @@ public class TopLevelActivity extends ListActivity {
 
             String cachedCountStr = "";
             for (int i = 0; i < length; i++) {
-                Uri uri = params[i];
-                Cursor cursor = getContentResolver().query(uri, cProjection, null, null, null);
+                CursorGenerator generator = params[i];
+                Cursor cursor = generator.generate();
                 int count = cursor.getCount();
                 cursor.close();
                 CharSequence label = "  " + perspectives[i] + "  (" + count + ")";

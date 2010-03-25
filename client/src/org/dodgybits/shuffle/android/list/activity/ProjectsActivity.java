@@ -27,7 +27,6 @@ import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -62,14 +61,6 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 		getContentResolver().delete(
 				getDrilldownListConfig().getChildPersister().getContentUri(), 
 				Shuffle.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(groupId)});
-	}
-	
-	@Override
-	protected Cursor createItemQuery() {
-		Log.d(cTag, "Creating a cursor over all projects");
-		return managedQuery(getIntent().getData(), Shuffle.Projects.cFullProjection,
-				null, null, 
-				Shuffle.Projects.NAME + " ASC");
 	}
 	
 	@Override

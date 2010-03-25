@@ -74,7 +74,7 @@ public abstract class AbstractListActivity<T extends Entity> extends ListActivit
 		// Inform the view we provide context menus for items
         getListView().setOnCreateContextMenuListener(this);
 		
-		Cursor cursor = createItemQuery();
+		Cursor cursor = getListConfig().createQuery(this);
 		setListAdapter(createListAdapter(cursor));
 	}
 
@@ -256,11 +256,6 @@ public abstract class AbstractListActivity<T extends Entity> extends ListActivit
 
 	abstract protected ListConfig<T> createListConfig();
 	
-	/**
-	 * @return a cursor selecting the items to display in the list.
-	 */
-	abstract protected Cursor createItemQuery();
-
 	abstract protected ListAdapter createListAdapter(Cursor cursor);
 		
 	// custom helper methods

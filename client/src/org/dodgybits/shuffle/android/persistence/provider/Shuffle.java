@@ -30,17 +30,9 @@ public class Shuffle {
          * The content:// style URL for this table
          */
         public static final Uri CONTENT_URI = Uri.parse("content://" + PACKAGE + "/tasks");
-        public static final Uri cTopTasksContentURI = Uri.parse("content://" + PACKAGE + "/topTasks");
-        public static final Uri cInboxTasksContentURI = Uri.parse("content://" + PACKAGE + "/inboxTasks");
-        public static final Uri cDueTasksContentURI = Uri.parse("content://" + PACKAGE + "/dueTasks");
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.dodgybits.task";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.dodgybits.task";
-        
-        // used by due tasks to determine query type
-        public static final int DAY_MODE = 0;
-    	public static final int WEEK_MODE = 1;
-    	public static final int MONTH_MODE = 2;
-        
+
         /**
          * The default sort order for this table
          */

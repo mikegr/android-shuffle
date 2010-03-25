@@ -18,18 +18,24 @@ package org.dodgybits.shuffle.android.list.config;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
+import android.database.Cursor;
 
 public abstract class AbstractTaskListConfig implements TaskListConfig {
 
     private TaskPersister mPersister;
+    private TaskQuery mTaskQuery;
     
-    public AbstractTaskListConfig(ContentResolver resolver) {
+    public AbstractTaskListConfig(ContentResolver resolver, TaskQuery query) {
         mPersister = new TaskPersister(resolver);
+        setTaskQuery(query);
     }
     
     @Override
@@ -59,6 +65,26 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     @Override
     public boolean isTaskList() {
     	return true;
+    }
+    
+    @Override
+    public TaskQuery getTaskQuery() {
+        return mTaskQuery;
+    }
+    
+    @Override
+    public void setTaskQuery(TaskQuery query) {
+        mTaskQuery = query;
+    }
+    
+    @Override
+    public Cursor createQuery(Activity activity) {
+        return activity.managedQuery(
+                getTaskPersister().getContentUri(), 
+                Shuffle.Tasks.cFullProjection, 
+                mTaskQuery.getSelection(), 
+                mTaskQuery.getSelectionArgs(), 
+                mTaskQuery.getSortOrder());
     }
 	
 }

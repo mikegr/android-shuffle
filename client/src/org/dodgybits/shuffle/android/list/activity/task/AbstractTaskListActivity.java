@@ -143,13 +143,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     protected Intent getClickIntent(Uri uri) {
     	return new Intent(Intent.ACTION_EDIT, uri);
     }
-    
-	@Override
-	protected Cursor createItemQuery() {
-		return managedQuery(getListConfig().getPersister().getContentUri(), 
-				Shuffle.Tasks.cFullProjection, null, null, null);
-	}
-	
+    	
 	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
 		ListAdapter adapter = new SimpleCursorAdapter(this,

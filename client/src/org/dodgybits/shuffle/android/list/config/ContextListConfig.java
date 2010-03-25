@@ -22,9 +22,12 @@ import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
+import android.database.Cursor;
 
 public class ContextListConfig implements DrilldownListConfig<Context> {
 
@@ -81,4 +84,12 @@ public class ContextListConfig implements DrilldownListConfig<Context> {
 		return context.getString(R.string.task_name);
 	}		
 
+    @Override
+    public Cursor createQuery(Activity activity) {
+        return activity.managedQuery(
+                getPersister().getContentUri(), 
+                Shuffle.Contexts.cFullProjection,
+                null, null, 
+                Shuffle.Contexts.NAME + " ASC");
+    }    
 }

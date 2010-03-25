@@ -18,6 +18,8 @@ package org.dodgybits.shuffle.android.list.activity.task;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.TaskQuery;
+import org.dodgybits.shuffle.android.core.model.TaskQuery.PredefinedQuery;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
@@ -29,13 +31,12 @@ public class TopTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig(getContentResolver()) {
-
-//			public Uri getListContentUri() {
-//				// Tasks with no projects or created since last clean
-//				return Shuffle.Tasks.cTopTasksContentURI;
-//			}
-
+        TaskQuery query = TaskQuery.newBuilder()
+            .setPredefined(PredefinedQuery.topTasks)
+            .build();
+    
+        return new AbstractTaskListConfig(getContentResolver(), query) {
+	    
 		    public int getCurrentViewMenuId() {
 		    	return MenuUtils.TOP_TASKS_ID;
 		    }

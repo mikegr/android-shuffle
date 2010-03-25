@@ -19,7 +19,9 @@ package org.dodgybits.shuffle.android.list.config;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 
+import android.app.Activity;
 import android.content.ContextWrapper;
+import android.database.Cursor;
 
 public interface ListConfig<T extends Entity> {
 
@@ -39,5 +41,7 @@ public interface ListConfig<T extends Entity> {
 	boolean supportsViewAction();
 	
 	boolean isTaskList();
+	
+	Cursor createQuery(Activity activity);
 		
 }

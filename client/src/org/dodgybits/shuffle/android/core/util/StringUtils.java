@@ -1,5 +1,7 @@
 package org.dodgybits.shuffle.android.core.util;
 
+import java.util.List;
+
 public class StringUtils {
 
 	public static String repeat(int count, String token) {
@@ -15,5 +17,18 @@ public class StringUtils {
 			}
 		}
 		return builder.toString();
+	}
+	
+	public static String join(List<String> items, String delim) {
+        StringBuilder result = new StringBuilder();
+        final int len = items.size();
+        for(int i = 0; i < len; i++) {
+            result.append(items.get(i));
+            if (i < len - 1) {
+                result.append(delim);
+            }
+        }
+        return result.toString();
+	    
 	}
 }

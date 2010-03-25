@@ -28,7 +28,6 @@ import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -65,14 +64,6 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 				Shuffle.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)});
 	}
 
-	@Override
-	protected Cursor createItemQuery() {
-		Log.d(cTag, "Creating a cursor over all contexts");
-		return managedQuery(getIntent().getData(), Shuffle.Contexts.cFullProjection,
-				null, null, 
-				Shuffle.Contexts.NAME + " ASC");
-	}
-	
 	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
 		ListAdapter adapter =

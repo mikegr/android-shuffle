@@ -16,10 +16,15 @@
 
 package org.dodgybits.shuffle.android.list.activity.task;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
@@ -42,31 +47,25 @@ import android.widget.AdapterView;
 public class ProjectTasksActivity extends AbstractTaskListActivity {
 
 	private static final String cTag = "ProjectTasksActivity";
-	private long mProjectId;
+	private Id mProjectId;
 	private Project mProject;
 
 	@Override
     public void onCreate(Bundle icicle) {
 		Uri contextURI = getIntent().getData();
-		mProjectId = ContentUris.parseId(contextURI);
+		mProjectId = Id.create(ContentUris.parseId(contextURI));
         super.onCreate(icicle);
 	}
 	
 	@Override
-	protected Cursor createItemQuery() {
-		Log.d(cTag, "Creating a cursor to find tasks for the given context");
-		return managedQuery(
-		        getListConfig().getPersister().getContentUri(), 
-				Shuffle.Tasks.cFullProjection,
-				Shuffle.Tasks.PROJECT_ID + " = ?", 
-				new String[] {String.valueOf(mProjectId)}, 
-				Shuffle.Tasks.DUE_DATE + " ASC," + Shuffle.Tasks.DISPLAY_ORDER + " ASC");
-	}
-
-	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig(getContentResolver()) {
+        List<Id> ids = Arrays.asList(new Id[] {mProjectId});
+        TaskQuery query = TaskQuery.newBuilder()
+            .setProjects(new ArrayList<Id>(ids))
+            .setSortOrder(Shuffle.Tasks.DUE_DATE + " ASC," + Shuffle.Tasks.DISPLAY_ORDER + " ASC")
+            .build();
+        return new AbstractTaskListConfig(getContentResolver(), query) {
 
 		    public int getCurrentViewMenuId() {
 		    	return 0;

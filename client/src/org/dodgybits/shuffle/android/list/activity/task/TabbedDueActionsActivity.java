@@ -18,10 +18,12 @@ package org.dodgybits.shuffle.android.list.activity.task;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.TaskQuery;
+import org.dodgybits.shuffle.android.core.model.TaskQuery.PredefinedQuery;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.list.config.TaskListConfig;
 
 import android.content.ContextWrapper;
 import android.database.Cursor;
@@ -35,7 +37,7 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	private static final String cTag = "TabbedDueActionsActivity";
 
 	private TabHost mTabHost;
-	private int mMode = Shuffle.Tasks.DAY_MODE;
+	private PredefinedQuery mMode = PredefinedQuery.dueToday;
 	
     @Override
     public void onCreate(Bundle icicle) {
@@ -45,22 +47,22 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         mTabHost.setup();
         mTabHost.addTab(createTabSpec(
         			R.string.day_button_title, 
-        			String.valueOf(Shuffle.Tasks.DAY_MODE),
+        			PredefinedQuery.dueToday.name(),
         			android.R.drawable.ic_menu_day));
         mTabHost.addTab(createTabSpec(
         			R.string.week_button_title, 
-        			String.valueOf(Shuffle.Tasks.WEEK_MODE),
+                    PredefinedQuery.dueThisWeek.name(),
         			android.R.drawable.ic_menu_week));
         mTabHost.addTab(createTabSpec(
         			R.string.month_button_title, 
-        			String.valueOf(Shuffle.Tasks.MONTH_MODE),
+                    PredefinedQuery.dueThisMonth.name(),
         			android.R.drawable.ic_menu_month));
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 
 			public void onTabChanged(String tabId) {
 				Log.d(cTag, "Switched to tab: " + tabId);
-				if (tabId == null) tabId = String.valueOf(Shuffle.Tasks.DAY_MODE);
-				mMode = Integer.parseInt(tabId); 
+				if (tabId == null) tabId = PredefinedQuery.dueToday.name();
+				mMode = PredefinedQuery.valueOf(tabId);
 				updateCursor();
 			}
         	
@@ -80,18 +82,13 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig(getContentResolver()) {
+		return new AbstractTaskListConfig(getContentResolver(), createTaskQuery()) {
 
 			@Override
 			public int getContentViewResId() {
 				return R.layout.tabbed_due_tasks;
 			}
 			
-//			public Uri getListContentUri() {
-//				return Shuffle.Tasks.cDueTasksContentURI.buildUpon().appendPath(
-//						String.valueOf(mMode)).build();
-//			}
-
 		    public int getCurrentViewMenuId() {
 				return MenuUtils.CALENDAR_ID;
 		    }
@@ -101,9 +98,18 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 				return context.getString(R.string.title_calendar, getSelectedPeriod());
 		    }
 			
+		    
 		};
 	}
+	
+	private TaskListConfig getTaskListConfig() {
+	    return (TaskListConfig)getListConfig();
+	}
     	
+	private TaskQuery createTaskQuery() {
+        return TaskQuery.newBuilder().setPredefined(mMode).build();
+	}
+	
     private TabSpec createTabSpec(int tabTitleRes, String tagId, int iconId) {
         TabSpec tabSpec = mTabHost.newTabSpec(tagId);
         tabSpec.setContent(R.id.task_list);
@@ -121,7 +127,8 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
     		stopManagingCursor(oldCursor);
     	}
     	
-    	Cursor cursor = createItemQuery();
+    	getTaskListConfig().setTaskQuery(createTaskQuery());
+    	Cursor cursor = getListConfig().createQuery(this);
     	adapter.changeCursor(cursor);
     	setTitle(getListConfig().createTitle(this));
 	}    
@@ -129,13 +136,13 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	private String getSelectedPeriod() {
 		String result = null;
 		switch (mMode) {
-		case Shuffle.Tasks.DAY_MODE:
+		case dueToday:
 			result = getString(R.string.day_button_title).toLowerCase();
 			break;
-		case Shuffle.Tasks.WEEK_MODE:
+		case dueThisWeek:
 			result = getString(R.string.week_button_title).toLowerCase();
 			break;
-		case Shuffle.Tasks.MONTH_MODE:
+		case dueThisMonth:
 			result = getString(R.string.month_button_title).toLowerCase();
 			break;
 		}
