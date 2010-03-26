@@ -16,10 +16,10 @@
 
 <resources>
     <array name="clean">
-        <item>從不</item>
-        <item>每小時</item>
+        <item>从不</item>
+        <item>每小时</item>
         <item>每天</item>
-        <item>每週</item>
+        <item>每周</item>
     </array>
     <array name="clean_keys">
         <item>never</item>
@@ -28,30 +28,30 @@
         <item>weekly</item>
     </array>
     <array name="perspectives">
-        <item>活動清單</item>
-        <item>預約活動</item>
-        <item>臨近活動</item>
-        <item>內容</item>
+        <item>活动列表</item>
+        <item>预约活动</item>
+        <item>临近活动</item>
+        <item>内容</item>
         <item>情景</item>
     </array>
     <array name="view_types">
-        <item>可收縮清單</item>
-        <item>層疊清單</item>
+        <item>可收缩列表</item>
+        <item>层叠列表</item>
     </array>
     <array name="help_screens">
-        <item>介紹</item>
-        <item>活動清單</item>
-        <item>內容</item>
+        <item>介绍</item>
+        <item>活动列表</item>
+        <item>内容</item>
         <item>情景</item>
-        <item>預約活動</item>
-        <item>臨近活動</item>
-        <item>設定</item>
+        <item>预约活动</item>
+        <item>临近活动</item>
+        <item>设置</item>
         <item>便捷提示</item>
-        <item>致謝</item>
+        <item>致谢</item>
     </array>
     <array name="preference_screens">
-        <item>活動樣式</item>
-        <item>清單樣式</item>
+        <item>活动样式</item>
+        <item>列表样式</item>
         <item>清空</item>
     </array>
 	    
@@ -118,18 +118,18 @@
          These must be kept in sync with the reminder_minutes_values array.
     -->
     <string-array name="reminder_minutes_labels">
-        <item>5 分鐘</item>
-        <item>10 分鐘</item>
-        <item>15 分鐘</item>
-        <item>20 分鐘</item>
-        <item>25 分鐘</item>
-        <item>30 分鐘</item>
-        <item>45 分鐘</item>
-        <item>1 小時</item>
-        <item>2 小時</item>
-        <item>3 小時</item>
-        <item>12 小時</item>
-        <item>24 小時</item>
+        <item>5 分钟</item>
+        <item>10 分钟</item>
+        <item>15 分钟</item>
+        <item>20 分钟</item>
+        <item>25 分钟</item>
+        <item>30 分钟</item>
+        <item>45 分钟</item>
+        <item>1 小时</item>
+        <item>2 小时</item>
+        <item>3 小时</item>
+        <item>12 小时</item>
+        <item>24 小时</item>
         <item>2 天</item>
         <item>1 周</item>
     </string-array>
@@ -152,19 +152,19 @@
     </string-array>
     
     <string-array name="preferences_default_reminder_labels">
-        <item>無</item>
-        <item>5 分鐘</item>
-        <item>10 分鐘</item>
-        <item>15 分鐘</item>
-        <item>20 分鐘</item>
-        <item>25 分鐘</item>
-        <item>30 分鐘</item>
-        <item>45 分鐘</item>
-        <item>1 小時</item>
-        <item>2 小時</item>
-        <item>3 小時</item>
-        <item>12 小時</item>
-        <item>24 小時</item>
+        <item>无</item>
+        <item>5 分钟</item>
+        <item>10 分钟</item>
+        <item>15 分钟</item>
+        <item>20 分钟</item>
+        <item>25 分钟</item>
+        <item>30 分钟</item>
+        <item>45 分钟</item>
+        <item>1 小时</item>
+        <item>2 小时</item>
+        <item>3 小时</item>
+        <item>12 小时</item>
+        <item>24 小时</item>
         <item>2 天</item>
         <item>1 周</item>
     </string-array>

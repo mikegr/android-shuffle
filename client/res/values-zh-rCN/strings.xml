@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Android Shuffle Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+	<!--  Activity titles -->
+    <string name="app_name">Shuffle</string>
+    <string name="title_inbox">活动列表</string>
+    <string name="title_project">内容</string>
+    <string name="title_context">情景</string>
+    <string name="title_next_tasks">临近活动</string>
+    <string name="title_due_tasks">预约活动</string>
+    <string name="title_new_task">新建活动</string>
+    <string name="title_edit_task">编辑活动</string>
+    <string name="title_view_task">查看活动</string>
+    <string name="title_new_project">新建内容</string>
+    <string name="title_edit_project">编辑内容</string>
+    <string name="title_new_context">新建情景</string>
+    <string name="title_edit_context">编辑情景</string>
+    <string name="title_task_extras">活动额外信息</string>
+    <string name="title_preferences">常规设置</string>
+    <string name="title_preferences_appearance">常规设置 > 活动样式</string>
+    <string name="title_preferences_clean">常规设置 > 清空</string>
+    <string name="title_preferences_create_backup">创建备份</string>
+    <string name="title_preferences_restore_backup">从备份恢复</string>
+    <string name="title_help">帮助</string>
+    <string name="title_icon_picker">选择图标</string>
+    <string name="title_colour_picker">选择颜色</string>
+    <string name="title_calendar">活动预定 %s</string>
+    <string name="title_project_tasks">内容 > %s</string>
+    <string name="title_context_tasks">情景 > %s</string>
+    <string name="title_shortcut_picker">选择快捷方式屏幕</string>
+
+	<!--  Option menu -->
+    <string name="menu_save">保存</string>
+    <string name="menu_save_and_add">保存并新建</string>
+    <string name="menu_delete">删除</string>
+    <string name="menu_complete">切换完成</string>
+    <string name="menu_move_up">上移</string>
+    <string name="menu_move_down">下移</string>
+    <string name="menu_insert">添加 %s</string>
+    <string name="menu_revert">反转</string>
+    <string name="menu_discard">放弃</string>
+    <string name="menu_view">视图</string>
+    <string name="menu_preferences">设置</string>
+    <string name="menu_sync">同步</string>
+    <string name="menu_search">搜索</string>
+    <string name="menu_help">帮助</string>
+
+    <!--  general purpose -->
+    <string name="project_title">内容</string>
+    <string name="context_title">情景</string>
+    <string name="details_title">详情</string>
+    <string name="set_button_title">设置</string>
+    <string name="clear_button_title">清除</string>
+    <string name="edit_button_title">编辑</string>
+    <string name="extras_button_title">额外详情...</string>
+    <string name="save_button_title">保存</string>
+    <string name="ok_button_title">确认</string>
+    <string name="cancel_button_title">取消</string>
+    <string name="replace_button_title">替换</string>
+	<string name="warning_title">警告</string>
+	<string name="info_title">信息</string>
+    <string name="task_name">活动</string>
+    <string name="project_name">内容</string>
+    <string name="context_name">情景</string>
+    <string name="nothing"></string>
+    <string name="none_empty">无</string>
+    <string name="undefined">无</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+    <string name="previous_button_title">上个</string>
+    <string name="next_button_title">下个</string>
+    
+    <!--  search -->
+    <string name="search_label">Shuffle</string>
+    <string name="search_hint">按描述或详情搜索</string>
+    <string name="search_settings_description">活动的描述和详情</string>
+    
+    <!--  Welcome screen -->
+    <string name="sample_data_title">演示</string>
+    <string name="clean_slate_title">清空</string>
+
+	<!--  edit screens -->
+    <string name="menu_done">保存</string>
+    <string name="menu_doNotSave">放弃更改</string>
+
+	<!--  task edit screen -->
+    <string name="description_title">描述</string>
+    <string name="scheduling_title">时间安排</string>
+    <string name="scheduling_collapsed">点击显示时间安排选项</string>
+    <string name="scheduling_expanded">点击隐藏时间安排选项</string>
+    <string name="start_title">开始</string>
+    <string name="due_title">预订</string>
+    <string name="all_day_title">全天</string>
+    <string name="reminders_title">提醒</string>
+    <string name="add_to_gcal_title">添加到谷歌日历</string>
+    <string name="add_to_gcal_detail_disabled">添加日期来启用此选项</string>
+    <string name="add_to_gcal_detail">新条目将在保存后加载</string>
+    <string name="update_gcal_title">更新谷歌日历</string>
+    <string name="update_gcal_detail">更新的条目将在保存后加载</string>
+    <string name="completed_title">已完成</string>
+    <string name="clear_title">清除日期</string>
+
+	<!--  project & context edit screens -->
+    <string name="colour_title">颜色</string>
+    <string name="archived_title">存档</string>
+    <string name="icon_title">图标</string>
+    <string name="name_title">名称</string>
+    <string name="sequence_title">活动顺序完成</string>
+    <string name="parallel_title">活动并行完成</string>
+    <string name="default_context_title">默认情景</string>
+    <string name="preview_title">预览</string>
+    <string name="context_errands">出差</string>
+	<string name="context_online">上网</string>
+    <string name="context_athome">在家</string>
+    <string name="context_atwork">工作</string>
+	<string name="context_contact">联系</string>
+	<string name="context_read">阅读</string>
+
+	<!--  Calendar screen -->
+    <string name="day_button_title">今天</string>
+    <string name="week_button_title">下周</string>
+    <string name="month_button_title">下月</string>
+	
+	<!--  preferences screen -->    
+    <string name="display_task_list_title">在活动列表中显示</string>
+    <string name="context_icon_title">情景图标</string>
+    <string name="context_name_title">情景名称</string>
+    <string name="due_date_title">预订日期</string>
+
+
+    <string name="general_preferences">谷歌设置</string>
+    
+    <string name="title_calendar_preference">日历选择</string>
+    <string name="summary_calendar_preference">对于新的谷歌日历条目</string>
+
+
+	<string name="layout_preferences">布局设置</string>
+
+	<string name="title_project_view_preference">内容视图</string>
+	<string name="summary_project_view_preference">在独立的屏幕中显示活动内容</string>
+
+	<string name="title_context_view_preference">情景视图</string>
+	<string name="summary_context_view_preference">在独立的屏幕中显示活动情景</string>
+
+	<string name="title_action_appearance_preference">活动外观</string>
+	<string name="summary_action_appearance_preference">自定义列表中活动的显示</string>
+
+
+    <string name="sync_preferences">同步设置</string>
+
+    <string name="changeSynchronizationSettings">Tracks 设置</string>
+
+
+	<string name="backup_preferences">备份设置</string>
+	
+	<string name="title_create_backup_preference">备份到 SD 卡</string>
+	<string name="summary_create_backup_preference">保存所有活动, 内容和情景</string>
+
+    <string name="filename_title">备份文件</string>
+	<string name="backup_progress">等待 <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>。</string>
+	<string name="toast_backup_saved">数据已成功的备份到 <xliff:g id="filename">%s</xliff:g>。</string>
+
+	<string name="title_restore_backup_preference">从 SD 卡恢复</string>
+	<string name="summary_restore_backup_preference">从备份恢复数据</string>
+	<string name="toast_backup_restored">数据成功的从 <xliff:g id="filename">%s</xliff:g> 恢复。</string>
+	<string name="restore_progress">正在读取 <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>。</string>
+	<string name="restore_button_title">恢复</string>
+
+    <string name="warning_filename_empty">您必须指定一个文件名。</string>
+	<string name="warning_filename_exists"><xliff:g id="filename">%s</xliff:g> 已存在。</string>
+	<string name="warning_media_not_mounted">媒体没有安装 <xliff:g id="error">%s</xliff:g></string>
+	<string name="warning_backup_failed">备份失败 <xliff:g id="error">%s</xliff:g></string>
+    <string name="warning_no_files">没有要显示的文件。</string>
+	<string name="warning_restore_failed">恢复失败 <xliff:g id="error">%s</xliff:g></string>
+    <string name="status_checking_media">正在检查媒体状态。</string>
+    <string name="status_creating_backup">正在创建备份文件。</string>
+    <string name="status_backup_complete">备份完成。</string>
+    <string name="status_reading_backup">正在读取备份文件。</string>
+    <string name="status_restore_complete">恢复完成。</string>
+
+	<string name="cleanup_preferences">清空设置</string>
+
+	<string name="dialog_title_cleanup_preference">删除完成的活动</string>
+
+	<string name="title_delete_completed_preference">删除完成的活动</string>
+
+	<string name="title_delete_all_preference">删除全部!</string>
+	<string name="summary_delete_all_preference">删除全部活动, 内容和自定义情景。</string>
+
+    <string name="delete_completed_button_title">删除</string>
+    <string name="clean_inbox_button_title">清空活动列表</string>
+    <string name="clean_slate_button_title">删除</string>
+
+    <!-- Toast displayed when an item is created -->
+    <string name="itemCreatedToast"><xliff:g id="itemName">%s</xliff:g> 已创建。</string>
+
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemSavedToast"><xliff:g id="itemName">%s</xliff:g> 已保存。</string>
+
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemDeletedToast"><xliff:g id="itemName">%s</xliff:g> 已删除。</string>
+    
+   <!-- synchronization-->
+    <string name="synchronizing">使用 Tracks 同步</string>
+    <string name="tracksUser">用户</string>
+    <string name="tracksInstallation">目标设备</string>
+    <string name="tracks_url">Tracks 设备</string>
+    <string name="tracks_url_settings">http://my.gtdify.com</string>
+    <string name="tracks_user">用户</string>
+    <string name="tracks_pass">密码</string>
+    <string name="readingRemoteTasks">正在读取远程任务</string>
+    <string name="processingTasks">正在处理任务</string>
+    <string name="readingLocalTasks">正在读取本地任务</string>
+    <string name="doneWithTasks">完成任务</string>
+    <string name="cannotSyncTasksWithoutContext">无法同步带有情景的任务到 Tracks</string>
+    <string name="readingRemoteContexts">正在读取远程情景</string>
+    <string name="processingContexts">正在处理情景</string>
+    <string name="readingLocalContexts">正在读取本地情景</string>
+    <string name="doneWithContexts">完成情景</string>
+    <string name="readingRemoteProjects">正在读取远程内容</string>
+    <string name="processingProjects">正在处理内容</string>
+    <string name="readingLocalProjects">正在读取本地内容</string>
+    <string name="doneWithProjects">完成内容</string>
+    <string name="tracks_failed_to_check_url">无法使用这些设置载入情景, 发生了一些错误</string>
+    <string name="tracks_background_sync">后台同步间隔</string>
+    <string name="sync_interval_none">从不</string>
+    <string name="sync_interval_30min">30 分钟</string>
+    <string name="sync_interval_1h">1 小时</string>
+    <string name="sync_interval_2h">2 小时</string>
+    <string name="sync_interval_3h">3 小时</string>
+
+	<!--  messages -->
+    <string name="no_due_date">无预定日期</string>
+    <string name="no_icon">无图标</string>
+    <string name="no_tasks">没有活动可以显示。从菜单项 \"添加活动\" 开始创建活动。</string>
+    <string name="no_due_tasks">无预约活动。</string>
+    <string name="no_projects">没有内容可以显示。从活动列表创建活动并指派它们到相应的内容。</string>
+    <string name="no_contexts">没有情景可以显示。从活动列表创建活动并指派它们到相应的内容。</string>
+    <string name="delete_warning">确定要删除所选的 %s 和它的 %d %ss?</string>
+    <string name="delete_completed_warning">删除所有已完成任务?</string>
+    <string name="clean_slate_warning">删除 <i>全部</i> 活动, 内容和定义的情景?</string>
+    <string name="clean_task_message">删除 %d 条已完成活动。</string>
+    <string name="clean_inbox_message">清除列表中的活动及它的内容或情景</string>
+    <string name="clean_slate_message">删除全部活动, 内容和定义的情景。</string>
+   	<string name="error_title">错误</string>
+	<string name="error_message">载入活动错误</string>
+	<string name="web_error_message">无法连接到 Tracks</string>    
+    <string name="welcome1">
+欢迎使用 Shuffle, 一款激励人们 \"把事情做好\" 的有创意的个人事务管理工具。
+如果您想了解如何最好地利用 Shuffle, 点击 \"演示\" 来载入一些样例项目和活动。
+稍后您可以通过点击设置菜单中的 \"全部删除\" 并重新开始。
+    </string>
+    <string name="welcome2">
+或者清空所有活动, 仅保留默认的环境情景...
+    </string>
+    <string name="welcome3">
+查看帮组菜单获取更多介绍和提示。
+    </string>
+    <string name="help0">
+Shuffle 是一款激励人们 \"把事情做好\" 的有创意的个人事务管理工具。
+它可以让您快速的输入和分类 \'活动\'。使用 5 种支持的视图,
+您可以按您的喜好任意的处理活动。
+\n
+一个简单明了的流程设置, 让你能根据内容和情景分类你的各项活动。
+这使得, 你可以将看似难以应付的事情分割成各项你可以完成的简单活动。\n
+随着活动内容的变化, 你可以清除那些旧的, 已完成的活动; 然后添加更新的活动, 依据优先级安排你当前的活动。
+    </string>
+    <string name="help1">
+这是添加活动的最佳位置。
+<b>活动列表</b> 是所有活动开始存放的地方。
+你可以查看活动列表, 分析当前活动, 非配各项活动相应的内容和/或情景。\n
+一旦你处理完毕这个列表, 你可以从菜单选择的 <i>清空列表</i> 来从活动列表中清除全部分类的活动。
+    </string>
+    <string name="help2">
+<b>内容</b> 视图列出了你目前所有的活动内容, 并可以让你层叠显示每一个活动内容。
+除了可以在此处添加, 编辑, 删除活动外, 你还可以重新调整和排列你的各项活动。
+\n
+一些内容中, 活动会按照严格的数序在其他活动完成后开始。
+另一些内容, 活动可以按任何顺序完成。这可以在创建或编辑内容时配置。
+\n
+内容, 如情景, 提供了两种视图模式: 层叠和收放视图模式。
+在层叠模式, 点击一个内容任务您可以转到另一个显示此内容的活动的屏幕。在收放模式, 点击一个内容会在相同的屏幕显示活动。
+    </string>
+    <string name="help3">
+<b>情景</b> 表明了你活动进行时所处于的情景状态。提供了一些默认的情景: 
+<i>在家</i>, <i>工作</i>, <i>上网</i>, <i>出差</i>, <i>联系</i> 和 <i>阅读</i>。\n
+你可以随意的更改或者删除这些情景, 并添加自己适用的情景。\n
+\n
+就像内容视图, 情景也可以通过设置来配置层叠或收放视图模式。
+    </string>
+    <string name="help4">
+<b>临近活动</b> 是查看即将需要完成的活动最好的地方。\n
+它显示以下活动\n
+- 没有内容的活动\n
+- 顺序内容的第一个活动\n
+- 所有的并行内容的活动\n
+列表会快速的显示您可以现在开始的最重要的活动。
+    </string>
+    <string name="help5">
+<b>预约活动</b> 列出了你设定了预期完成时间的相关活动。
+包含 3 种视图 - <i>今天</i>, <i>本周</i> 和 
+<i>本月</i>, 每个都会显示给定时间内的活动。
+过期的活动则显示在所有活动列表中。
+    </string>
+    <string name="help6">
+Shuffle 有许多地方可供用户设置。所有视图中都可以通过菜单访问 <b>设置</b> 屏幕。\n
+<b>日历</b>  - 选择一个与 Google Calendar 合并日历时使用的日历。\n
+<b>内容/情景视图</b>  - 使用两种屏幕 (层叠-收放) 或者在树状结构 (可伸展) 中显示内容和情景。\n
+<b>活动样式</b> - 允许你可以定制要显示在活动列表中的活动信息。\n
+<b>Tracks 设置</b> - 使用一个 Tracks 服务器配置同步。\n
+<b>备份到 SD 卡</b> - 保存您全部的活动, 情景和内容到 SD 卡。您可以备份这些到您的电脑。\n
+<b>从 SD 卡恢复</b> - 从备份中恢复您所有的数据。没有尝试避免重复活动, 
+所以最好是从一个整洁的 Shuffle 实例中恢复。\n
+<b>删除完成的活动</b> - 永久删除所有已完成的活动。\n
+<b>删除全部!</b> - 永久删除所有的活动, 内容和自定义情景。\n
+    </string>
+    <string name="help7">
+你可能不知道的一些 Shuffle 的便捷功能:\n
+1) 在每个列表视图里, 长按项目就能弹出菜单。\n
+2) 返回按钮会先保存然后返回。\n
+3) 使用 <i>保存并新建</i> 按钮可以用来连续创建活动。\n
+4) 您可以通过在列表中滑动手指即可标记一个活动为已完成。\n
+5) 在您主屏幕上创建各种各样的 Shuffle 视图和活动的快捷方式。\n
+6) 在全局设置 &gt; 搜索, 启用 Shuffle 活动出现在快速搜索框查询 (仅支持 Android 1.6 及以上)。
+    </string>
+    <string name="help8">
+感谢 Tango 桌面项目的支持团队, Shuffle 使用了其中的开源图标资源。
+也感谢 David Gibb 提供的设计方面很棒的反馈, Morten Nielson 的 Tracks 同步工作,
+以及 Gudrun 忍受我在晚上和周末的 Android 修补工作。\n
+\n
+要反馈跟多信息或者 Bug, 请访问 http://code.google.com/p/android-shuffle/issues/list 或发送邮件到 andy@dodgybits.org
+    </string>
+    
+    <!-- Reminder format strings -->
+    <plurals name="Nminutes">
+        <!-- This is the label for a 1-minute reminder. -->
+        <item quantity="one">1 分钟</item>
+        <!-- This is the label for 2 or more minutes. The actual number of
+             minutes is a parameter. -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> 分钟</item>
+    </plurals>
+    <!-- We use the abbreviation "mins" instead of "minutes" to keep the string short.
+         This is the number of minutes displayed for a calendar reminder.  For example,
+         a reminder of 10 minutes would be displayed as '10 mins'.  The translation
+         should use the shortest acceptable abbreviation to save space. -->
+    <plurals name="Nmins">
+        <!-- This is the label for a 1-minute reminder. -->
+        <item quantity="one">1 分钟</item>
+        <!-- This is the label for 2 or more minutes. The actual number of
+             minutes is a parameter. -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> 分钟</item>
+    </plurals>
+    <!-- This is the number of hours displayed for a calendar reminder.  For example,
+         a reminder of 1 hour would be displayed as '1 hour'.  The translation
+         should use the shortest acceptable abbreviation of 'hour' to save space. -->
+    <plurals name="Nhours">
+        <!-- This is the label for a 1-hour reminder. -->
+        <item quantity="one">1 小时</item>
+        <!-- This is the label for a reminder of 2 or more hours. The actual number of
+             hours is a parameter. -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> 小时</item>
+    </plurals>
+    <!-- This is the number of days displayed for a calendar reminder.  For example,
+         a reminder of 2 days would be displayed as '2 days'.  The translation
+         should use the shortest acceptable abbreviation of 'day' to save space. -->
+    <plurals name="Ndays">
+        <!-- This is the label for a reminder of 1 day. -->
+        <item quantity="one">1 天</item>
+        <!-- This is the label for a reminder of 2 or more days. The actual number of
+             days is a parameter. -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> 天</item>
+    </plurals>
+    
+</resources>
