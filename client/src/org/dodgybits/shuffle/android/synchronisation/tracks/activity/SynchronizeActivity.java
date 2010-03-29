@@ -1,23 +1,24 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks.activity;
 
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.android.synchronisation.tracks.SyncProgressListener;
 import org.dodgybits.shuffle.android.synchronisation.tracks.TracksSynchronizer;
 import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
 
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 /**
  * Activity to handle synchronization
  * 
  * @author Morten Nielsen
  */
-public class SynchronizeActivity extends Activity implements SyncProgressListener {
+public class SynchronizeActivity extends FlurryEnabledActivity implements SyncProgressListener {
     private TracksSynchronizer synchronizer = null;
     private TextView info;
     private ProgressBar progress;

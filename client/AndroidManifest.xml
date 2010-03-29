@@ -16,8 +16,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.dodgybits.android.shuffle"
-	android:versionCode="21"
-    android:versionName="1.5.1"    
+	android:versionCode="22"
+    android:versionName="1.6.0"    
     >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -332,6 +332,21 @@
 
         <service android:name="org.dodgybits.shuffle.android.synchronisation.tracks.service.SynchronizationService"/>
         
+        <!--  app widget -->
+
+        <receiver android:name="org.dodgybits.shuffle.android.widget.WidgetProvider">
+            <meta-data android:name="android.appwidget.provider"
+                    android:resource="@xml/appwidget_provider" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="org.dodgybits.shuffle.android.widget.WidgetConfigure">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>        
     </application>
     
 </manifest> 

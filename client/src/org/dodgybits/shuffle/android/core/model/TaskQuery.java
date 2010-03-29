@@ -82,7 +82,7 @@ public class TaskQuery {
     private String predefinedSelection() {
         String result;
         switch (mPredefined) {
-            case topTasks:
+            case nextTasks:
                 result = "(complete = 0) AND (" +
                     "   (projectId is null) OR " +
                     "   (projectId IN (select p._id from project p where p.parallel = 1)) OR " +
@@ -118,11 +118,11 @@ public class TaskQuery {
             cal.add(Calendar.DAY_OF_YEAR, 1);
             endMS = cal.getTimeInMillis();
             break;
-        case dueThisWeek:
+        case dueNextWeek:
             cal.add(Calendar.DAY_OF_YEAR, 7);
             endMS = cal.getTimeInMillis();
             break;
-        case dueThisMonth:
+        case dueNextMonth:
             cal.add(Calendar.MONTH, 1);
             endMS = cal.getTimeInMillis();
             break;
@@ -294,7 +294,7 @@ public class TaskQuery {
     }
 
     public enum PredefinedQuery {
-        topTasks, dueToday, dueThisWeek, dueThisMonth
+        nextTasks, dueToday, dueNextWeek, dueNextMonth
     }
 
     public final class DateRange {

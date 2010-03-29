@@ -16,6 +16,7 @@
 
 package org.dodgybits.shuffle.android.core.activity;
 
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.synchronisation.tracks.service.SynchronizationService;
 
@@ -24,7 +25,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-public class BootstrapActivity extends Activity {
+public class BootstrapActivity extends FlurryEnabledActivity {
 	private static final String cTag = "BootstrapActivity";
 
 	

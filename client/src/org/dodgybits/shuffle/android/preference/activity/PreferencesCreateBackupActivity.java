@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
@@ -23,7 +24,6 @@ import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue.Builder;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
@@ -39,7 +39,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class PreferencesCreateBackupActivity extends Activity 
+public class PreferencesCreateBackupActivity extends FlurryEnabledActivity 
 	implements View.OnClickListener {
     private static final String CREATE_BACKUP_STATE = "createBackupState";
 	private static final String cTag = "PreferencesCreateBackupActivity";

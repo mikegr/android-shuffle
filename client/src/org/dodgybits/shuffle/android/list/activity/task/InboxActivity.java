@@ -16,15 +16,13 @@
 
 package org.dodgybits.shuffle.android.list.activity.task;
 
-import java.util.ArrayList;
-
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
+import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.content.ContextWrapper;
@@ -69,11 +67,7 @@ public class InboxActivity extends AbstractTaskListActivity {
 	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-        TaskQuery query = TaskQuery.newBuilder()
-            .setContexts(new ArrayList<Id>())
-            .setProjects(new ArrayList<Id>())
-            .build();
-	    
+        TaskQuery query = StandardTaskQueries.getQuery(StandardTaskQueries.cInbox);
 		return new AbstractTaskListConfig(getContentResolver(), query) {
 
 		    public int getCurrentViewMenuId() {

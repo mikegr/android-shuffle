@@ -16,7 +16,11 @@
 
 package org.dodgybits.shuffle.android.core.activity;
 
+import static org.dodgybits.shuffle.android.core.util.Constants.cPackage;
+import static org.dodgybits.shuffle.android.core.util.Constants.cStringType;
+
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,7 +32,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class HelpActivity extends Activity {
+public class HelpActivity extends FlurryEnabledActivity {
     public static final String cHelpPage = "helpPage";
     
 	private Spinner mHelpSpinner;
@@ -57,7 +61,7 @@ public class HelpActivity extends Activity {
         	public void onItemSelected(AdapterView<?> parent, View v,
         			int position, long id) {
         		int resId = HelpActivity.this.getResources().getIdentifier(
-        				"help" + position, "string", "org.dodgybits.android.shuffle");
+        				"help" + position, cStringType, cPackage);
         		mHelpContent.setText(HelpActivity.this.getText(resId));
         		updateNavigationButtons();
         	}

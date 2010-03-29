@@ -245,7 +245,6 @@ public class MenuUtils {
         case MenuUtils.CALENDAR_ID:
         	if (currentViewMenuId != CALENDAR_ID) {
             	Log.d(cTag, "Switching to calendar");
-            	//activity.startActivity(new Intent(activity, CalendarActivity.class));
             	activity.startActivity(new Intent(activity, TabbedDueActionsActivity.class));
         		if (finishCurrentActivity) activity.finish();
         	}

@@ -17,15 +17,15 @@
 package org.dodgybits.shuffle.android.preference.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public abstract class PreferencesDeleteActivity extends Activity {
+public abstract class PreferencesDeleteActivity extends FlurryEnabledActivity {
     private static final String cTag = "PreferencesDeleteActivity";
 
     protected TextView mText;

@@ -17,11 +17,11 @@
 package org.dodgybits.shuffle.android.core.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.core.model.persistence.InitialDataGenerator;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -34,7 +34,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends FlurryEnabledActivity {
     private static final String cTag = "WelcomeActivity";
 	
     private Button mSampleDataButton;

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledListActivity;
 import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
@@ -15,7 +16,7 @@ import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LauncherShortcutActivity extends ListActivity {
+public class LauncherShortcutActivity extends FlurryEnabledListActivity {
 	private static final String cScreenId = "screenId";
 	
     private static final int NEW_TASK = 0;

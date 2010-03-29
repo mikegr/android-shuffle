@@ -1,27 +1,33 @@
 package org.dodgybits.shuffle.android.preference.activity;
 
-import android.app.Activity;
+import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_INTERVAL;
+import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_PASSWORD;
+import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_URL;
+import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_USER;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
+import org.dodgybits.shuffle.android.preference.model.Preferences;
+import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
+
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.*;
-
-import org.dodgybits.android.shuffle.R;
-
-import static org.dodgybits.shuffle.android.preference.model.Preferences.*;
-
-import org.dodgybits.shuffle.android.preference.model.Preferences;
-import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
-
-import java.net.URI;
-import java.net.URISyntaxException;
+import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * Activity that changes the options set for synchronization
  */
-public class SynchronizationSettingsActivity extends Activity {
+public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
     private EditText mUrlTextbox;
     private EditText mUserTextbox;
     private EditText mPassTextbox;

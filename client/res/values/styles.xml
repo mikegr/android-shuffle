@@ -106,6 +106,38 @@
         <item name="android:textStyle">bold</item>
 	</style>
 
+    <style name="widget_title" parent="text">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="widget_context">
+        <item name="android:clickable">true</item>
+        <item name="android:layout_width">16dip</item>
+        <item name="android:layout_height">16dip</item>
+        <item name="android:layout_marginTop">2dip</item>
+    </style>
+
+    <style name="widget_project" parent="list_text">
+        <item name="android:textColor">@drawable/project</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lines">1</item>
+        <item name="android:clickable">true</item>
+    </style>
+	
+	<style name="widget_description" parent="list_text">
+        <item name="android:textColor">@drawable/description</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textScaleX">0.9</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:paddingLeft">2dip</item>
+        <item name="android:lines">1</item>
+        <item name="android:clickable">true</item>
+	</style>
+
 	<style name="list_sub_text_2" parent="list_text">
         <item name="android:textColor">@drawable/details</item>
         <item name="android:typeface">sans</item>

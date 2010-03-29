@@ -17,6 +17,7 @@
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledExpandableListActivity;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
@@ -32,7 +33,6 @@ import org.dodgybits.shuffle.android.list.view.SwipeListItemListener;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
-import android.app.ExpandableListActivity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -53,7 +53,7 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.Toast;
 
-public abstract class AbstractExpandableActivity<G extends Entity> extends ExpandableListActivity 
+public abstract class AbstractExpandableActivity<G extends Entity> extends FlurryEnabledExpandableListActivity 
 	implements SwipeListItemListener {
 	
 	private static final String cTag = "AbstractExpandableActivity";

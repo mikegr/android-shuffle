@@ -17,6 +17,7 @@
 package org.dodgybits.shuffle.android.preference.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledPreferenceActivity;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.content.AsyncQueryHandler;
@@ -25,10 +26,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.PreferenceActivity;
 import android.util.Log;
 
-public class PreferencesActivity extends PreferenceActivity {
+public class PreferencesActivity extends FlurryEnabledPreferenceActivity {
     private static final String cTag = "PreferencesActivity";
 
     // We can't use the constants from the provider since it's not a public portion of the SDK.

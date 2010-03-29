@@ -17,6 +17,7 @@
 package org.dodgybits.shuffle.android.core.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledListActivity;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
@@ -45,7 +46,7 @@ import android.widget.ListView;
 /**
  * Displays a list of the main activities.
  */
-public class TopLevelActivity extends ListActivity {
+public class TopLevelActivity extends FlurryEnabledListActivity {
     private static final String cTag = "TopLevelActivity";
 
     private static final int INBOX = 0;
@@ -95,9 +96,9 @@ public class TopLevelActivity extends ListActivity {
         super.onResume();
 
         CursorGenerator[] generators = new CursorGenerator[5];
-        generators[INBOX] = new TaskCursorGenerator(StandardTaskQueries.cInbox);
-        generators[DUE_TASKS] = new TaskCursorGenerator(StandardTaskQueries.cDueToday);
-        generators[TOP_TASKS] = new TaskCursorGenerator(StandardTaskQueries.cTopTasks);
+        generators[INBOX] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cInbox));
+        generators[DUE_TASKS] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cDueToday));
+        generators[TOP_TASKS] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks));
         generators[PROJECTS] = new UriCursorGenerator(Shuffle.Projects.CONTENT_URI);
         generators[CONTEXTS] = new UriCursorGenerator(Shuffle.Contexts.CONTENT_URI);
 

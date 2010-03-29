@@ -19,10 +19,10 @@ package org.dodgybits.shuffle.android.list.activity.task;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
-import org.dodgybits.shuffle.android.core.model.TaskQuery.PredefinedQuery;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
+import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 
 import android.content.ContextWrapper;
 
@@ -31,9 +31,7 @@ public class TopTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected ListConfig<Task> createListConfig()
 	{
-        TaskQuery query = TaskQuery.newBuilder()
-            .setPredefined(PredefinedQuery.topTasks)
-            .build();
+        TaskQuery query = StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks);
     
         return new AbstractTaskListConfig(getContentResolver(), query) {
 	    

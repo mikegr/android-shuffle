@@ -23,6 +23,7 @@ import static org.dodgybits.shuffle.android.preference.model.Preferences.DISPLAY
 import static org.dodgybits.shuffle.android.preference.model.Preferences.DISPLAY_PROJECT_KEY;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
@@ -32,7 +33,6 @@ import org.dodgybits.shuffle.android.core.model.persistence.InitialDataGenerator
 import org.dodgybits.shuffle.android.list.view.TaskView;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -43,7 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TableRow.LayoutParams;
 
-public class PreferencesAppearanceActivity extends Activity  {
+public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
     private static final String cTag = "PreferencesAppearanceActivity";
 	
     private TaskView mTaskView;

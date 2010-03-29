@@ -51,7 +51,8 @@ public class Preferences {
     public static final String TRACKS_PASSWORD = "tracks_password";
     public static final String TRACKS_INTERVAL = "tracks_interval";
 
-
+    public static final String WIDGET_QUERY_PREFIX = "widget_query_";
+    
     public static boolean validateTracksSettings(Context context) {
         String url = getTracksUrl(context);
         String password = getTracksPassword(context);
@@ -183,6 +184,15 @@ public class Preferences {
             }
         }
         return id;
+	}
+	
+	public static String getWidgetQueryKey(int widgetId) {
+	    return WIDGET_QUERY_PREFIX + widgetId;
+	}
+	
+	public static String getWidgetQuery(Context context, String key) {
+        getSharedPreferences(context);
+        return sPrefs.getString(key, null);
 	}
 	
 	public static SharedPreferences.Editor getEditor(Context context) {

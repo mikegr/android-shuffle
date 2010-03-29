@@ -17,6 +17,7 @@
 package org.dodgybits.shuffle.android.list.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledListActivity;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
@@ -43,7 +44,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public abstract class AbstractListActivity<T extends Entity> extends ListActivity {
+public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabledListActivity {
 
 	public static final String cSelectedItem = "SELECTED_ITEM";
 

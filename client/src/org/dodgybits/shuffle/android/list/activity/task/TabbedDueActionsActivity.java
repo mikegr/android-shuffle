@@ -51,11 +51,11 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         			android.R.drawable.ic_menu_day));
         mTabHost.addTab(createTabSpec(
         			R.string.week_button_title, 
-                    PredefinedQuery.dueThisWeek.name(),
+                    PredefinedQuery.dueNextWeek.name(),
         			android.R.drawable.ic_menu_week));
         mTabHost.addTab(createTabSpec(
         			R.string.month_button_title, 
-                    PredefinedQuery.dueThisMonth.name(),
+                    PredefinedQuery.dueNextMonth.name(),
         			android.R.drawable.ic_menu_month));
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 
@@ -139,10 +139,10 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 		case dueToday:
 			result = getString(R.string.day_button_title).toLowerCase();
 			break;
-		case dueThisWeek:
+		case dueNextWeek:
 			result = getString(R.string.week_button_title).toLowerCase();
 			break;
-		case dueThisMonth:
+		case dueNextMonth:
 			result = getString(R.string.month_button_title).toLowerCase();
 			break;
 		}

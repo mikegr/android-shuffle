@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
@@ -30,7 +31,6 @@ import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,7 +44,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class PreferencesRestoreBackupActivity extends Activity
+public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 	implements View.OnClickListener {
     private static final String RESTORE_BACKUP_STATE = "restoreBackupState";
     private static final String cTag = "PreferencesRestoreBackupActivity";
