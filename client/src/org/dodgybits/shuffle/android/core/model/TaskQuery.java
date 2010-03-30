@@ -161,7 +161,7 @@ public class TaskQuery {
         addIdListArgs(args, mProjects);
         addIdListArgs(args, mContexts);
 
-        return null;
+        return args.size() > 0 ? args.toArray(new String[0]): null;
     }
         
     @Override

@@ -38,7 +38,8 @@ import android.widget.SimpleCursorAdapter;
  */
 public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 
-	private static final String cTag = "ContextsActivity";
+	@SuppressWarnings("unused")
+    private static final String cTag = "ContextsActivity";
 
 	@Override
 	protected void onResume() {
