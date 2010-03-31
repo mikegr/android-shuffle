@@ -117,6 +117,8 @@
         <item name="android:layout_width">16dip</item>
         <item name="android:layout_height">16dip</item>
         <item name="android:layout_marginTop">2dip</item>
+        <item name="android:layout_marginBottom">2dip</item>
+        <item name="android:layout_marginLeft">5dip</item>
     </style>
 
     <style name="widget_project" parent="list_text">
@@ -124,6 +126,7 @@
         <item name="android:typeface">sans</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">5dip</item>
         <item name="android:lines">1</item>
         <item name="android:clickable">true</item>
     </style>
