@@ -22,7 +22,6 @@ import static org.dodgybits.shuffle.android.core.util.Constants.cStringType;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;

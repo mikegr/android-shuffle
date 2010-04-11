@@ -2,9 +2,7 @@ package org.dodgybits.shuffle.android.synchronisation.tracks;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.Map;
 
 import org.dodgybits.android.shuffle.R;
@@ -14,6 +12,7 @@ import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
+import org.dodgybits.shuffle.android.core.util.DateUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -95,16 +94,16 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
         try {
             serializer.setOutput(writer);
 
+            String now = DateUtils.formatIso8601Date(System.currentTimeMillis());
             serializer.startTag("", "project");
-            Date date = new Date();
-            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(mDateFormat.format(date)).endTag("", "created-at");
+            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(now).endTag("", "created-at");
             Id contextId = findTracksIdByContextId(project.getDefaultContextId());
             if(contextId.isInitialised()) {
                 serializer.startTag("", "default-context-id").attribute("", "type", "integer").text(contextId.toString()).endTag("", "default-context-id");
             }
             serializer.startTag("", "name").text(project.getName()).endTag("", "name");
             serializer.startTag("", "state").text(project.isArchived() ? "hidden": "active").endTag("", "state");
-            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(mDateFormat.format(date)).endTag("", "updated-at");
+            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(now).endTag("", "updated-at");
             serializer.endTag("", "project");
 
             serializer.flush();
@@ -117,7 +116,6 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
     }
 
     protected Project parseSingleEntity(XmlPullParser parser) throws ParseException {
-        final DateFormat format = mDateFormat;
         Builder builder = Project.newBuilder();
         Project project = null;
         
@@ -135,7 +133,8 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
                             Id tracksId = Id.create(Long.parseLong(parser.nextText()));
                             builder.setTracksId(tracksId);
                         } else if (name.equalsIgnoreCase("updated-at")) {
-                            long modifiedDate = format.parse(parser.nextText()).getTime();
+                            String dateStr = parser.nextText();
+                            long modifiedDate = DateUtils.parseIso8601Date(dateStr);
                             builder.setModifiedDate(modifiedDate);
                         } else if (name.equalsIgnoreCase("default-context-trackId")) {
                             Id tracksId = Id.create(Long.parseLong(parser.nextText()));

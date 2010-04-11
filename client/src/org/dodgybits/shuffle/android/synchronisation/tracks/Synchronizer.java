@@ -1,9 +1,7 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks;
 
 import java.io.StringReader;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +34,6 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
     protected WebClient mWebClient;
     protected android.content.Context mContext;
     protected final TracksSynchronizer mTracksSynchronizer;
-    protected DateFormat mDateFormat;
     
     private int mBasePercent;
 
@@ -49,7 +46,6 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         mWebClient = client;
         mContext = context;
         mBasePercent = basePercent;
-        mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         mPersister = createPersister();
     }
 

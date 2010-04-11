@@ -20,11 +20,71 @@ import static android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
 import static android.text.format.DateUtils.FORMAT_ABBREV_TIME;
 import static android.text.format.DateUtils.FORMAT_SHOW_DATE;
 import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
+
+import java.lang.ref.SoftReference;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.Context;
 import android.text.format.Time;
 
 public class DateUtils {
 		
+    /**
+     * Lazily create date format objects, one per thread. Use soft references so format
+     * may be collected when low on memory.
+     */
+    private static final ThreadLocal<SoftReference<DateFormat>> cDateFormat = 
+        new ThreadLocal<SoftReference<DateFormat>>() {
+        
+            private SoftReference<DateFormat> createValue() {  
+                return new SoftReference<DateFormat>(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"));  
+            }  
+            
+            @Override
+            public SoftReference<DateFormat> get() {
+                SoftReference<DateFormat> value = super.get();
+                if (value == null || value.get() == null) {
+                    value = createValue();
+                    set(value);
+                }
+                return value;
+            }
+    };  
+
+    /**
+     * Accepts strings in ISO 8601 format. This includes the following cases:
+     * <ul>
+     * <li>2009-08-15T12:50:03+01:00</li>
+     * <li>2009-08-15T12:50:03+0200</li>
+     * <li>2010-04-07T04:00:00Z</li>
+     * </ul>
+     */
+    public static long parseIso8601Date(String dateStr) throws ParseException {
+        // normalize timezone first
+        String timezone = dateStr.substring(19);
+        timezone = timezone.replaceAll(":", "");
+        if ("Z".equals(timezone)) {
+            // Z indicates UTC, so convert to standard representation
+            timezone = "+0000";
+        }
+        String cleanedDateStr = dateStr.substring(0, 19) + timezone;
+        DateFormat f = cDateFormat.get().get();
+        Date d = f.parse(cleanedDateStr);
+        return d.getTime();
+    }
+    
+    public static String formatIso8601Date(long ms) {
+        DateFormat f = cDateFormat.get().get();
+        String dateStr = f.format(new Date(ms));
+        if (dateStr.length() == 24) {
+            dateStr = dateStr.substring(0, 22) + ":" + dateStr.substring(22);
+        }
+        return dateStr;
+    }
+    
 	public static boolean isSameDay(long millisX, long millisY) {
 		return Time.getJulianDay(millisX, 0) == Time.getJulianDay(millisY, 0);
 	}

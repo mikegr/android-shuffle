@@ -37,7 +37,8 @@ import android.widget.SimpleCursorAdapter;
  */
 public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 
-	private static final String cTag = "ProjectsActivity";
+	@SuppressWarnings("unused")
+    private static final String cTag = "ProjectsActivity";
 
 	@Override
 	protected void onResume() {

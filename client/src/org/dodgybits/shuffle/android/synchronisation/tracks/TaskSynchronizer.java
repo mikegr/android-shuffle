@@ -2,9 +2,7 @@ package org.dodgybits.shuffle.android.synchronisation.tracks;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -15,6 +13,7 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.util.DateUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -117,21 +116,22 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 
 
             serializer.startTag("", "todo");
-            Date creationDate = new Date(task.getCreatedDate());
             if (task.isComplete()) {
-                Date completedDate = new Date(task.getModifiedDate());
-                serializer.startTag("", "completed-at").attribute("", "type", "datetime").text(mDateFormat.format(completedDate)).endTag("", "completed-at");
+                String completedDateStr = DateUtils.formatIso8601Date(task.getModifiedDate());
+                serializer.startTag("", "completed-at").attribute("", "type", "datetime").text(completedDateStr).endTag("", "completed-at");
             }
             
             Id contextId = findTracksIdByContextId(task.getContextId());
             if (contextId.isInitialised()) {
                 serializer.startTag("", "context-id").attribute("", "type", "integer").text(contextId.toString()).endTag("", "context-id");
             }
-            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(mDateFormat.format(creationDate)).endTag("", "created-at");
+            String createdDateStr = DateUtils.formatIso8601Date(task.getCreatedDate());
+            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(createdDateStr).endTag("", "created-at");
             serializer.startTag("", "description").text(task.getDescription()).endTag("", "description");
-            if (task.getDueDate() != 0)
-                serializer.startTag("", "due").attribute("", "type", "datetime").text(mDateFormat.format(new Date(task.getDueDate()))).endTag("", "due");
-
+            if (task.getDueDate() != 0) {
+                String dueDateStr = DateUtils.formatIso8601Date(task.getDueDate());
+                serializer.startTag("", "due").attribute("", "type", "datetime").text(dueDateStr).endTag("", "due");
+            }
 
             serializer.startTag("", "notes").text(task.getDetails() != null ? task.getDetails() : "").endTag("", "notes");
 
@@ -139,8 +139,15 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
             if (projectId.isInitialised()) {
                 serializer.startTag("", "project-id").attribute("", "type", "integer").text(projectId.toString()).endTag("", "project-id");
             }
+            
+            if (task.getStartDate() != 0L) {
+                serializer.startTag("", "show-from").attribute("", "type", "datetime").text(DateUtils.formatIso8601Date(task.getStartDate())).endTag("", "show-from");
+            }
+            
             serializer.startTag("", "state").text(task.isComplete() ? "completed" : "active").endTag("", "state");
-            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(mDateFormat.format(new Date(task.getModifiedDate()))).endTag("", "updated-at");
+            
+            String updatedDateStr = DateUtils.formatIso8601Date(task.getModifiedDate());
+            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(updatedDateStr).endTag("", "updated-at");
 
 
             serializer.endTag("", "todo");
@@ -149,12 +156,12 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
         } catch (IOException ignored) {
             Log.d(cTag, "Failed to serialize task", ignored);
         }
+        Log.d(cTag, writer.toString());
 
         return writer.toString();
     }
 
     protected Task parseSingleEntity(XmlPullParser parser) throws ParseException {
-        final DateFormat format = mDateFormat;
         Task task = null;
         final Builder builder = Task.newBuilder();
         builder.setTimezone("UTC");
@@ -176,7 +183,8 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
                             Id tracksId = Id.create(Long.parseLong(parser.nextText()));
                             builder.setTracksId(tracksId);
                         } else if (name.equalsIgnoreCase("updated-at")) {
-                            long modifiedDate = format.parse(parser.nextText()).getTime();
+                            String dateStr = parser.nextText();
+                            long modifiedDate = DateUtils.parseIso8601Date(dateStr);
                             builder.setModifiedDate(modifiedDate);
                         } else if (name.equalsIgnoreCase("context-id")) {
                             String tokenValue = parser.nextText();
@@ -195,18 +203,19 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
                         } else if (name.equalsIgnoreCase("notes")) {
                             builder.setDetails(parser.nextText());
                         } else if (name.equalsIgnoreCase("created-at")) {
-                            long created = format.parse(parser.nextText()).getTime();
+                            String dateStr = parser.nextText();
+                            long created = DateUtils.parseIso8601Date(dateStr);
                             builder.setCreatedDate(created);
                         } else if (name.equalsIgnoreCase("due")) {
-                            String textToken = parser.nextText();
-                            if (textToken != null && !textToken.equals("")) {
-                                dueDate = format.parse(textToken).getTime();
+                            String dateStr = parser.nextText();
+                            if (dateStr != null && !dateStr.equals("")) {
+                                dueDate = DateUtils.parseIso8601Date(dateStr);
                                 builder.setDueDate(dueDate);
                             }
                         } else if (name.equalsIgnoreCase("show-from")) {
-                            String textToken = parser.nextText();
-                            if (textToken != null && !textToken.equals("")) {
-                                startDate = format.parse(textToken).getTime();
+                            String dateStr = parser.nextText();
+                            if (dateStr != null && !dateStr.equals("")) {
+                                startDate = DateUtils.parseIso8601Date(dateStr);
                                 builder.setStartDate(startDate);
                             }
                         }

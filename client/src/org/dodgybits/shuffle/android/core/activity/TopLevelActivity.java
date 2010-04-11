@@ -25,7 +25,6 @@ import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
-import android.app.ListActivity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;

@@ -1,20 +1,20 @@
 package org.dodgybits.shuffle.android.core.activity;
 
-import android.app.ListActivity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledListActivity;
 import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class LauncherShortcutActivity extends FlurryEnabledListActivity {
 	private static final String cScreenId = "screenId";

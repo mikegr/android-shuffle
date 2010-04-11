@@ -2,9 +2,7 @@ package org.dodgybits.shuffle.android.synchronisation.tracks;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.Map;
 
 import org.dodgybits.android.shuffle.R;
@@ -14,6 +12,7 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.util.DateUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -92,13 +91,13 @@ public class ContextSynchronizer extends Synchronizer<Context> {
             //serializer.startDocument("UTF-8", true);
 
 
+            String now = DateUtils.formatIso8601Date(System.currentTimeMillis());
             serializer.startTag("", "context");
-            Date date = new Date();
-            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(mDateFormat.format(date)).endTag("", "created-at");
+            serializer.startTag("", "created-at").attribute("", "type", "datetime").text(now).endTag("", "created-at");
             serializer.startTag("", "hide").attribute("", "type", "boolean").text("false").endTag("", "hide");
             serializer.startTag("", "name").text(localContext.getName()).endTag("", "name");
             serializer.startTag("", "position").attribute("", "type", "integer").text("12").endTag("", "position");
-            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(mDateFormat.format(date)).endTag("", "updated-at");
+            serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(now).endTag("", "updated-at");
             serializer.endTag("", "context");
             // serializer.endDocument();
             serializer.flush();
@@ -127,7 +126,6 @@ public class ContextSynchronizer extends Synchronizer<Context> {
         try {
             int eventType = parser.getEventType();
 
-            final DateFormat format = mDateFormat;
             while (eventType != XmlPullParser.END_DOCUMENT && context == null) {
                 String name = parser.getName();
 
@@ -142,7 +140,8 @@ public class ContextSynchronizer extends Synchronizer<Context> {
                             Id tracksId = Id.create(Long.parseLong(parser.nextText()));
                             builder.setTracksId(tracksId);
                         } else if (name.equalsIgnoreCase("updated-at")) {
-                            long date = format.parse(parser.nextText()).getTime();
+                            String dateStr = parser.nextText();
+                            long date = DateUtils.parseIso8601Date(dateStr);
                             builder.setModifiedDate(date);
                         }
                         break;

@@ -25,7 +25,6 @@ import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
