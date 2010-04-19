@@ -57,6 +57,11 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
     }
     
     @Override
+    protected String getEntityName() {
+        return "project";
+    }
+    
+    @Override
     public Uri getContentUri() {
         return Shuffle.Projects.CONTENT_URI;
     }

@@ -1,5 +1,9 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks;
 
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryTracksSyncCompletedEvent;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryTracksSyncError;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryTracksSyncStartedEvent;
+
 import java.util.LinkedList;
 
 import org.dodgybits.android.shuffle.R;
@@ -11,6 +15,8 @@ import android.content.ContextWrapper;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.flurry.android.FlurryAgent;
 
 
 /**
@@ -81,16 +87,20 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
     @Override
     protected Void doInBackground(String... strings) {
         try {
+            FlurryAgent.onEvent(cFlurryTracksSyncStartedEvent);
             mContextSynchronizer.synchronize();
             mProjectSynchronizer.synchronize();
             mTaskSynchronizer.synchronize();
             publishProgress(Progress.createProgress(100, "Synchronization Complete"));
+            FlurryAgent.onEvent(cFlurryTracksSyncCompletedEvent);
         } catch (WebClient.ApiException e) {
             Log.w(cTag, "Tracks call failed", e);
             publishProgress(Progress.createErrorProgress(mContext.getString(R.string.web_error_message)));
+            FlurryAgent.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
         } catch (Exception e) {
             Log.w(cTag, "Synch failed", e);
             publishProgress(Progress.createErrorProgress(mContext.getString(R.string.error_message)));
+            FlurryAgent.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
         }
         return null;
 

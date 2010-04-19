@@ -1,5 +1,7 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks;
 
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryTracksSyncError;
+
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Collection;
@@ -21,6 +23,8 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
+
+import com.flurry.android.FlurryAgent;
 
 /**
  * Base class for handling synchronization, template method object.
@@ -57,7 +61,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         verifyLocalEntities(localEntities);
         mTracksSynchronizer.reportProgress(Progress.createProgress(mBasePercent,
                 readingRemoteText()));
-        Map<Id, Entity> remoteEntities = getTrackEntities();
+        TracksEntities tracksEntities = getTrackEntities();
         int startCounter = localEntities.size() + 1;
         int count = 0;
         for (Entity localEntity : localEntities.values()) {
@@ -66,10 +70,10 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
                     + Math.round(((count * 100) / startCounter) * 0.33f);
             mTracksSynchronizer.reportProgress(Progress.createProgress(percent,
                     processingText()));
-            synchronizeSingle(remoteEntities, localEntity);
+            synchronizeSingle(tracksEntities, localEntity);
         }
 
-        for (Entity remoteEntity : remoteEntities.values()) {
+        for (Entity remoteEntity : tracksEntities.getEntities().values()) {
             insertEntity(remoteEntity);
         }
 
@@ -121,9 +125,11 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
     
     protected abstract EntityBuilder<Entity> createBuilder();
     
-    private Map<Id, Entity> getTrackEntities() throws WebClient.ApiException {
+    private TracksEntities getTrackEntities() throws WebClient.ApiException {
         Map<Id, Entity> entities = new HashMap<Id, Entity>();
+        boolean errorFree = true;
         String tracksEntityXml;
+        
         try {
             tracksEntityXml = mWebClient.getUrlContent(entityIndexUrl());
         } catch (WebClient.ApiException e) {
@@ -137,8 +143,16 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
 
             int eventType = parser.getEventType();
             boolean done = false;
+            
             while (eventType != XmlPullParser.END_DOCUMENT && !done) {
-                Entity entity = parseSingleEntity(parser);
+                Entity entity = null;
+                try {
+                    entity = parseSingleEntity(parser);
+                } catch (Exception e) {
+                    logTracksError(e);
+                    errorFree = false;
+                }
+                
                 if (entity != null && entity.isInitialized()) {
                     entities.put(entity.getTracksId(), entity);
                 }
@@ -146,16 +160,21 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
                 eventType = parser.getEventType();
                 String name = parser.getName();
                 if (eventType == XmlPullParser.END_TAG &&
-                        name.equalsIgnoreCase(endIndexTag())) {
+                   name.equalsIgnoreCase(endIndexTag())) {
                    done = true;
                 }
             }
-        } catch (ParseException e) {
-            Log.w(cTag, e);
         } catch (XmlPullParserException e) {
-            Log.w(cTag, e);
+            logTracksError(e);
+            errorFree = false;
         }
-        return entities;
+        
+        return new TracksEntities(entities, errorFree);
+    }
+    
+    private void logTracksError(Exception e) {
+        Log.e(cTag, "Failed to parse " + endIndexTag() + " " + e.getMessage());
+        FlurryAgent.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
     }
 
     private Id findEntityLocalIdByTracksId(Id tracksId, Uri contentUri) {
@@ -214,10 +233,10 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         return foundEntity;
     }
     
-    private void synchronizeSingle(Map<Id, Entity> remoteEntities,
+    private void synchronizeSingle(TracksEntities tracksEntities,
             Entity localEntity) {
+        final Map<Id, Entity> remoteEntities = tracksEntities.getEntities();
         if (!localEntity.getTracksId().isInitialised()) {
-
             Entity newEntity = findEntityByLocalName(remoteEntities.values(),
                     localEntity);
             if (newEntity != null)
@@ -235,7 +254,8 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         if (remoteEntity != null) {
             handleRemoteEntity(localEntity, remoteEntity);
             remoteEntities.remove(remoteEntity.getTracksId());
-        } else {
+        } else if (tracksEntities.isErrorFree()){
+            // only delete entities if we didn't encounter errors parsing
             deleteEntity(localEntity);
         }
     }
@@ -304,4 +324,22 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         return list;
     }
 
+    private class TracksEntities {
+        private Map<Id, Entity> mEntities;
+        private boolean mErrorFree;
+        
+        public TracksEntities(Map<Id, Entity> entities, boolean errorFree) {
+            mEntities = entities;
+            mErrorFree = errorFree;
+        }
+        
+        public Map<Id, Entity> getEntities() {
+            return mEntities;
+        }
+        
+        public boolean isErrorFree() {
+            return mErrorFree;
+        }
+        
+    }
 }

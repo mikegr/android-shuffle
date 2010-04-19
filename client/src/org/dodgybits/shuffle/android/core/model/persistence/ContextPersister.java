@@ -52,6 +52,11 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
     }
     
     @Override
+    protected String getEntityName() {
+        return "context";
+    }
+    
+    @Override
     public Uri getContentUri() {
         return Shuffle.Contexts.CONTENT_URI;
     }

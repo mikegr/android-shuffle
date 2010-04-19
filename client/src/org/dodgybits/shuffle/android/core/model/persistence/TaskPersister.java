@@ -1,13 +1,33 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryCompleteTaskEvent;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryCountParam;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryDeleteEntityEvent;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryReorderTasksEvent;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.ALL_DAY;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.CAL_EVENT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.COMPLETE;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.CONTEXT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.CREATED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DESCRIPTION;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DETAILS;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DISPLAY_ORDER;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DUE_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.HAS_ALARM;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.MODIFIED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.PROJECT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.START_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.TIMEZONE;
+import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.TRACKS_ID;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
-
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.*;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -18,6 +38,8 @@ import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.util.SparseIntArray;
+
+import com.flurry.android.FlurryAgent;
 
 public class TaskPersister extends AbstractEntityPersister<Task> {
     private static final String cTag = "TaskPersister";
@@ -99,6 +121,11 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     }
 
     @Override
+    protected String getEntityName() {
+        return "task";
+    }
+    
+    @Override
     public Uri getContentUri() {
         return Shuffle.Tasks.CONTENT_URI;
     }
@@ -114,6 +141,11 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
                 Shuffle.Tasks.COMPLETE + " = 1",
                 null);
         Log.d(cTag, "Deleted " + deletedRows + " completed tasks.");
+        
+        Map<String, String> params = new HashMap<String,String>(mFlurryParams);
+        params.put(cFlurryCountParam, String.valueOf(deletedRows));
+        FlurryAgent.onEvent(cFlurryDeleteEntityEvent, params);
+        
         return deletedRows;
     }
 
@@ -126,13 +158,16 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
      */
     public boolean toggleTaskComplete(Cursor cursor) {
         Id taskId = readId(cursor, ID_INDEX);
-        boolean newValue = !readBoolean(cursor, COMPLETE_INDEX);
+        boolean isComplete = !readBoolean(cursor, COMPLETE_INDEX);
         ContentValues values = new ContentValues();
-        writeBoolean(values, COMPLETE, newValue);
+        writeBoolean(values, COMPLETE, isComplete);
         values.put(MODIFIED_DATE, System.currentTimeMillis());
         mResolver.update(getContentUri(), values,
                 Shuffle.Tasks._ID + "=?", new String[] { String.valueOf(taskId) });
-        return newValue;
+        if (isComplete) {
+            FlurryAgent.onEvent(cFlurryCompleteTaskEvent);
+        }
+        return isComplete;
     }
 
 
@@ -157,6 +192,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         values = new ContentValues();
         values.put(DISPLAY_ORDER, positionValue1);
         mResolver.update(uri, values, null, null);
+        FlurryAgent.onEvent(cFlurryReorderTasksEvent);
     }
 
     

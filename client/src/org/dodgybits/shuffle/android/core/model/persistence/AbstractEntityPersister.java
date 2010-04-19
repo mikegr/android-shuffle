@@ -1,9 +1,17 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
+import static org.dodgybits.shuffle.android.core.util.Constants.*;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryDeleteEntityEvent;
+
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Id;
+
+import com.flurry.android.FlurryAgent;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -15,9 +23,14 @@ import android.provider.BaseColumns;
 public abstract class AbstractEntityPersister<E extends Entity> implements EntityPersister<E> {
 
     protected ContentResolver mResolver;
+    protected Map<String, String> mFlurryParams;
     
     public AbstractEntityPersister(ContentResolver resolver) {
         mResolver = resolver;
+        
+        Map<String, String> params = new HashMap<String,String>();
+        params.put(cFlurryEntityTypeParam, getEntityName());
+        mFlurryParams = Collections.unmodifiableMap(params);
     }
     
     @Override
@@ -46,6 +59,7 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
         validate(e);
         Uri uri = mResolver.insert(getContentUri(), null);
         update(uri, e);
+        FlurryAgent.onEvent(cFlurryCreateEntityEvent, mFlurryParams);
         return uri;
     }
 
@@ -61,7 +75,11 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
                 writeContentValues(values, entity);
                 valuesArray[i++] = values;
             }
-            mResolver.bulkInsert(getContentUri(), valuesArray);
+            int rowsCreated = mResolver.bulkInsert(getContentUri(), valuesArray);
+
+            Map<String, String> params = new HashMap<String, String>(mFlurryParams);
+            params.put(cFlurryCountParam, String.valueOf(rowsCreated));
+            FlurryAgent.onEvent(cFlurryCreateEntityEvent, params);
         }
     }
 
@@ -70,17 +88,26 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
         validate(e);
         Uri uri = getUri(e);
         update(uri, e);
+        
+        FlurryAgent.onEvent(cFlurryUpdateEntityEvent, mFlurryParams);
     }
 
     @Override
     public boolean delete(Id id) {
         Uri uri = getUri(id);
-        return mResolver.delete(uri, null, null) == 1;
+        boolean success = (mResolver.delete(uri, null, null) == 1);
+        if (success) {
+            FlurryAgent.onEvent(cFlurryDeleteEntityEvent, mFlurryParams);
+        }
+
+        return success;
     }
     
     abstract public Uri getContentUri();
     
     abstract protected void writeContentValues(ContentValues values, E e);
+    
+    abstract protected String getEntityName();
     
     private void validate(E e) {
         if (e == null || !e.isInitialized()) {
