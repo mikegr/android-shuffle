@@ -17,6 +17,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
 
@@ -75,15 +76,15 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
         return mContext.getString(R.string.doneWithProjects);
     }
 
-    protected Project createMergedLocalEntity(Project localProject, Project newContext) {
+    protected Project createMergedLocalEntity(Project localProject, Project remoteProject) {
         Builder builder = Project.newBuilder();
         builder.mergeFrom(localProject);
         builder
-            .setName(newContext.getName())
-            .setModifiedDate(newContext.getModifiedDate())
-            .setArchived(newContext.isArchived())
-            .setDefaultContextId(newContext.getDefaultContextId())
-            .setTracksId(newContext.getTracksId());
+            .setName(remoteProject.getName())
+            .setModifiedDate(remoteProject.getModifiedDate())
+            .setArchived(remoteProject.isArchived())
+            .setDefaultContextId(remoteProject.getDefaultContextId())
+            .setTracksId(remoteProject.getTracksId());
         return builder.build();
     }
 
@@ -136,11 +137,14 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
                             String dateStr = parser.nextText();
                             long modifiedDate = DateUtils.parseIso8601Date(dateStr);
                             builder.setModifiedDate(modifiedDate);
-                        } else if (name.equalsIgnoreCase("default-context-trackId")) {
-                            Id tracksId = Id.create(Long.parseLong(parser.nextText()));
-                            Id defaultContextId = findContextIdByTracksId(tracksId);
-                            if (defaultContextId.isInitialised()) {
-                                builder.setDefaultContextId(defaultContextId);
+                        } else if (name.equalsIgnoreCase("default-context-id")) {
+                            String tokenValue = parser.nextText();
+                            if (!TextUtils.isEmpty(tokenValue)) {
+                                Id tracksId = Id.create(Long.parseLong(tokenValue));
+                                Id defaultContextId = findContextIdByTracksId(tracksId);
+                                if (defaultContextId.isInitialised()) {
+                                    builder.setDefaultContextId(defaultContextId);
+                                }
                             }
                         } else if (name.equalsIgnoreCase("state")) {
                             boolean archived = !parser.nextText().equalsIgnoreCase("active");
@@ -157,9 +161,9 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
                 eventType = parser.next();
             }
         } catch (IOException e) {
-            throw new ParseException("Unable to parse context", 0);
+            throw new ParseException("Unable to parse project:" + e.getMessage(), 0);
         } catch (XmlPullParserException e) {
-            throw new ParseException("Unable to parse context", 0);
+            throw new ParseException("Unable to parse project:" + e.getMessage(), 0);
         }
         return project;
     }

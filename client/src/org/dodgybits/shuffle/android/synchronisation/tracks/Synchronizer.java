@@ -136,7 +136,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
             Log.w(cTag, e);
             throw e;
         }
-
+        
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(new StringReader(tracksEntityXml));
@@ -239,11 +239,13 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         if (!localEntity.getTracksId().isInitialised()) {
             Entity newEntity = findEntityByLocalName(remoteEntities.values(),
                     localEntity);
-            if (newEntity != null)
+            
+            if (newEntity != null) {
                 remoteEntities.remove(newEntity.getTracksId());
-            else
+            } else {
                 newEntity = createEntityInTracks(localEntity);
-
+            }
+            
             if (newEntity != null) {
                 updateEntity(createMergedLocalEntity(localEntity, newEntity));
 
@@ -279,8 +281,8 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         String document = createDocumentForEntity(localEntity);
         try {
             mWebClient.putContentToUrl(createEntityUrl(localEntity), document);
-        } catch (WebClient.ApiException ignored) {
-            Log.w(cTag, "Failed to update entity in tracks " + localEntity, ignored);
+        } catch (WebClient.ApiException e) {
+            Log.w(cTag, "Failed to update entity in tracks " + localEntity + ":" + e.getMessage(), e);
         }
     }
 
@@ -296,8 +298,8 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
                 builder.setTracksId(id);
                 entity = builder.build();
             }
-        } catch (WebClient.ApiException ignored) {
-            Log.w(cTag, "Failed to create entity in tracks " + entity, ignored);
+        } catch (WebClient.ApiException e) {
+            Log.w(cTag, "Failed to create entity in tracks " + entity + ":" + e.getMessage(), e);
         }
         return entity;
     }

@@ -155,9 +155,9 @@ public class ContextSynchronizer extends Synchronizer<Context> {
                 eventType = parser.next();
             }
         } catch (IOException e) {
-            throw new ParseException("Unable to parse context", 0);
+            throw new ParseException("Unable to parse context:" + e.getMessage(), 0);
         } catch (XmlPullParserException e) {
-            throw new ParseException("Unable to parse context", 0);
+            throw new ParseException("Unable to parse context:" + e.getMessage(), 0);
         }
         return context;
     }

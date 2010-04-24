@@ -19,6 +19,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
 
@@ -188,14 +189,14 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
                             builder.setModifiedDate(modifiedDate);
                         } else if (name.equalsIgnoreCase("context-id")) {
                             String tokenValue = parser.nextText();
-                            if (tokenValue != null && !tokenValue.equals("")) {
+                            if (!TextUtils.isEmpty(tokenValue)) {
                                 Id tracksId = Id.create(Long.parseLong(tokenValue));
                                 Id contextId = findContextIdByTracksId(tracksId);
                                 builder.setContextId(contextId);
                             }
                         } else if (name.equalsIgnoreCase("project-id")) {
                             String tokenValue = parser.nextText();
-                            if (tokenValue != null && !tokenValue.equals("")) {
+                            if (!TextUtils.isEmpty(tokenValue)) {
                                 Id tracksId = Id.create(Long.parseLong(tokenValue));
                                 Id projectId = findProjectIdByTracksId(tracksId);
                                 builder.setProjectId(projectId);
@@ -204,17 +205,19 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
                             builder.setDetails(parser.nextText());
                         } else if (name.equalsIgnoreCase("created-at")) {
                             String dateStr = parser.nextText();
-                            long created = DateUtils.parseIso8601Date(dateStr);
-                            builder.setCreatedDate(created);
+                            if (!TextUtils.isEmpty(dateStr)) {
+                                long created = DateUtils.parseIso8601Date(dateStr);
+                                builder.setCreatedDate(created);
+                            }
                         } else if (name.equalsIgnoreCase("due")) {
                             String dateStr = parser.nextText();
-                            if (dateStr != null && !dateStr.equals("")) {
+                            if (!TextUtils.isEmpty(dateStr)) {
                                 dueDate = DateUtils.parseIso8601Date(dateStr);
                                 builder.setDueDate(dueDate);
                             }
                         } else if (name.equalsIgnoreCase("show-from")) {
                             String dateStr = parser.nextText();
-                            if (dateStr != null && !dateStr.equals("")) {
+                            if (!TextUtils.isEmpty(dateStr)) {
                                 startDate = DateUtils.parseIso8601Date(dateStr);
                                 builder.setStartDate(startDate);
                             }
@@ -232,9 +235,9 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
                 eventType = parser.next();
             }
         } catch (IOException e) {
-            throw new ParseException("Unable to parse task", 0);
+            throw new ParseException("Unable to parse task:" + e.getMessage(), 0);
         } catch (XmlPullParserException e) {
-            throw new ParseException("Unable to parse task", 0);
+            throw new ParseException("Unable to parse task:" + e.getMessage(), 0);
         }
         return task;
     }

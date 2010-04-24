@@ -76,7 +76,7 @@ public class WebClient {
             return status.getStatusCode() == HttpStatus.SC_OK;
 
         } catch (IOException e) {
-            throw new ApiException("Problem communicating with API");
+            throw new ApiException("Problem communicating with API", e);
         }
     }
 
@@ -126,7 +126,7 @@ public class WebClient {
             return new String(content.toByteArray());
 
         } catch (IOException e) {
-            throw new ApiException("Problem communicating with API");
+            throw new ApiException("Problem communicating with API", e);
         }
     }
 
@@ -161,7 +161,7 @@ public class WebClient {
         try {
             ent = new StringEntity(content, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new ApiException("unsupported encoding set");
+            throw new ApiException("unsupported encoding set", e);
         }
         request.setEntity(ent);
 
@@ -181,7 +181,7 @@ public class WebClient {
 
 
         } catch (IOException e) {
-            throw new ApiException("Problem communicating with API");
+            throw new ApiException("Problem communicating with API", e);
         }
     }
 
@@ -202,7 +202,7 @@ public class WebClient {
         try {
             ent = new StringEntity(content, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new ApiException("unsupported encoding");
+            throw new ApiException("unsupported encoding", e);
         }
         request.setEntity(ent);
 
@@ -232,22 +232,20 @@ public class WebClient {
             return new String(returnContent.toByteArray());
 
         } catch (IOException e) {
-            throw new ApiException("Problem communicating with API");
+            throw new ApiException("Problem communicating with API", e);
         }
     }
 
     @SuppressWarnings("serial")
     public class ApiException extends Exception {
-        private final String reason;
 
         public ApiException(String reason) {
-            //To change body of created methods use File | Settings | File Templates.
-
-            this.reason = reason;
+            super(reason);
+        }
+        
+        public ApiException(String reason, Exception e) {
+            super(reason, e);
         }
 
-        public String getReason() {
-            return reason;
-        }
     }
 }
