@@ -1,45 +1,38 @@
 <RelativeLayout
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent"
-	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/widget_background"
     android:paddingLeft="15dip"
     android:paddingRight="15dip"
     android:paddingTop="12dip"
     android:paddingBottom="15dip"
-	>
-	
-	<TextView 
-	   android:id="@+id/title"
-	   android:layout_width="wrap_content" 
-	   android:layout_height="wrap_content"
-	   android:layout_alignParentTop="true"
-       android:paddingLeft="5dip"
+    >
+    
+    <TextView 
+       android:id="@+id/title"
+       android:layout_width="wrap_content" 
+       android:layout_height="wrap_content"
+       android:layout_alignParentTop="true"
+       android:paddingLeft="4dip"
+       android:paddingTop="1dip"
        style="@style/widget_title"       
-	   />
-	   
+       />
+      
     <ImageView android:id="@+id/add_task"
        android:layout_width="20dip"
        android:layout_height="20dip"
        android:layout_alignParentTop="true"
        android:layout_alignParentRight="true"
-       android:src="@drawable/ic_btn_round_plus"
     />
-	   
-    <ImageView
-       android:id="@+id/separator_0"
-       android:layout_width="fill_parent"
-       android:layout_height="1dip"
-       android:layout_below="@+id/add_task"
-       android:background="@drawable/light_gray"
-        />
-
+       
     <TextView 
        android:id="@+id/project_1"
        android:layout_width="wrap_content" 
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
-       android:layout_below="@+id/separator_0"
+       android:layout_below="@+id/add_task"
+       android:paddingTop="5dip"
        style="@style/widget_project"       
        />
        
@@ -59,22 +52,14 @@
        android:layout_below="@+id/project_1"
        style="@style/widget_description"
        />
-	
-    <ImageView
-       android:id="@+id/separator_1"
-       android:layout_width="fill_parent"
-       android:layout_height="1dip"
-       android:layout_below="@+id/description_1"
-       android:background="@drawable/light_gray"
-        />
-	   
-	
+    
     <TextView 
        android:id="@+id/project_2"
        android:layout_width="wrap_content" 
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
-       android:layout_below="@+id/separator_1"
+       android:layout_below="@+id/description_1"
+       android:paddingTop="2dip"
        style="@style/widget_project"       
        />
 
@@ -95,20 +80,14 @@
        style="@style/widget_description"
        />
        
-    <ImageView
-       android:id="@+id/separator_2"
-       android:layout_width="fill_parent"
-       android:layout_height="1dip"
-       android:layout_below="@+id/description_2"
-       android:background="@drawable/light_gray"
-        />
-       
     <TextView 
        android:id="@+id/project_3"
        android:layout_width="wrap_content" 
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
        android:layout_below="@+id/description_2"
+       android:layout_marginLeft="12dip"
+       android:paddingTop="2dip"
        style="@style/widget_project"       
        />
        
@@ -130,20 +109,13 @@
        style="@style/widget_description"
        />
 
-    <ImageView
-       android:id="@+id/separator_3"
-       android:layout_width="fill_parent"
-       android:layout_height="1dip"
-       android:layout_below="@+id/description_3"
-       android:background="@drawable/light_gray"
-        />
-
     <TextView 
        android:id="@+id/project_4"
        android:layout_width="wrap_content" 
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
        android:layout_below="@+id/description_3"
+       android:paddingTop="2dip"
        style="@style/widget_project"       
        />
 
@@ -163,5 +135,5 @@
        android:layout_below="@+id/project_4"
        style="@style/widget_description"
        />
-	   
+       
 </RelativeLayout>

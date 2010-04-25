@@ -107,9 +107,10 @@
 	</style>
 
     <style name="widget_title" parent="text">
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:typeface">normal</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/white</item>
     </style>
 
     <style name="widget_context">
