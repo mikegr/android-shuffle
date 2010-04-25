@@ -131,10 +131,10 @@
     <string name="due_date_title">Frist</string>
 
 
-    <string name="general_preferences">General settings</string> <!--  TODO -->
+    <string name="general_preferences">Allgemeine Einstellungen</string>
     
-    <string name="title_calendar_preference">Select calendar</string> <!--  TODO -->
-    <string name="summary_calendar_preference">For new Google Calendar entries</string> <!--  TODO -->
+    <string name="title_calendar_preference">Kalender auswählen</string>
+    <string name="summary_calendar_preference">für neue Kalendereinträge</string>
 
 
 	<string name="layout_preferences">Layout</string>
@@ -198,37 +198,36 @@
     <string name="itemDeletedToast"><xliff:g id="itemName">%s</xliff:g> wurde gelöscht.</string>
 
        <!-- synchronization-->
-    <!--TODO start-->
-    <string name="synchronizing">Synchronizing with Tracks</string>
-    <string name="tracksUser">User</string>
-    <string name="tracksInstallation">Target installation</string>
-    <string name="sync_preferences">Synchronization options</string>
-    <string name="changeSynchronizationSettings">Change synchronization settings</string>
-    <string name="tracks_url">Tracks installation</string>
+    <string name="synchronizing">Synchronisierung mit Hilfe von Tracks</string>
+    <string name="tracksUser">Benutzer</string>
+    <string name="tracksInstallation">Zielinstallation</string>
+    <string name="sync_preferences">Synchronisationseinstellungen</string>
+    <string name="changeSynchronizationSettings">Synchronisationseinstellungen ändern</string>
+    <string name="tracks_url">Installation von Tracks</string>
     <string name="tracks_url_settings">http://my.gtdify.com</string>
-    <string name="tracks_user">User</string>
-    <string name="tracks_pass">Password</string>
-    <string name="readingRemoteTasks">Reading remote tasks</string>
-    <string name="processingTasks">Processing tasks</string>
-    <string name="readingLocalTasks">Reading local tasks</string>
-    <string name="doneWithTasks">Done with tasks</string>
-    <string name="cannotSyncTasksWithoutContext">Cannot synchronize tasks without a context to Tracks</string>
-    <string name="readingRemoteContexts">Reading remote Contexts</string>
-    <string name="processingContexts">Processing Contexts</string>
-    <string name="readingLocalContexts">Reading local Contexts</string>
-    <string name="doneWithContexts">Done with Contexts</string>
-    <string name="readingRemoteProjects">Reading remote Projects</string>
-    <string name="processingProjects">Processing Projects</string>
-    <string name="readingLocalProjects">Reading local Projects</string>
-    <string name="doneWithProjects">Done with Projects</string>
-    <string name="tracks_failed_to_check_url">Could not load contexts using these settings, something is wrong with them</string>
-    <string name="tracks_background_sync">Background synchronization interval</string>
-    <string name="sync_interval_none">No background synchronizer</string>
-    <string name="sync_interval_30min">30 minutes</string>
-    <string name="sync_interval_1h">1 hour</string>
-    <string name="sync_interval_2h">2 hours</string>
-    <string name="sync_interval_3h">3 hours</string>
-    <!--TODO end-->
+    <string name="tracks_user">Bentuzername</string>
+    <string name="tracks_pass">Passwort</string>
+    <string name="readingRemoteTasks">Lese Handlungen per Fernzugriff</string>
+    <string name="processingTasks">Verarbeite Handlungen</string>
+    <string name="readingLocalTasks">Lese lokale Handlungen</string>
+    <string name="doneWithTasks">Alle Handlungen wurden verabeitet</string>
+    <string name="cannotSyncTasksWithoutContext">Es kann keine Synchronisation ohne eine Tracks-Kategorie stattfinden.</string>
+    <string name="readingRemoteContexts">Lese Katogerien per Fernzugriff </string>
+    <string name="processingContexts">Verarbeite Kategorien</string>
+    <string name="readingLocalContexts">Lese lokale Kategorien</string>
+    <string name="doneWithContexts">Alle Kategorien wurden verarbeitet</string>
+    <string name="readingRemoteProjects">Lese Projekte per Fernzugriff</string>
+    <string name="processingProjects">Verarbeite die Projekte</string>
+    <string name="readingLocalProjects">Lese lokale Projekte</string>
+    <string name="doneWithProjects">Alle Projekte wurden verarbeitet</string>
+    <string name="tracks_failed_to_check_url">Fehler in den Eisntellungen: Konnte die Kategorien nicht laden.</string>
+    <string name="tracks_background_sync">Synchronisationsintervall</string>
+    <string name="sync_interval_none">Keine Synchronisation</string>
+    <string name="sync_interval_30min">30 Minuten</string>
+    <string name="sync_interval_1h">1 Stunde</string>
+    <string name="sync_interval_2h">2 Stunden</string>
+    <string name="sync_interval_3h">3 Stunden</string>
+
 	<!--  messages -->
     <string name="no_due_date">Keine Frist</string>
     <string name="no_icon">Kein Icon</string>
@@ -244,8 +243,8 @@
     <string name="clean_slate_message">Alle Handlungen, Projekte und selbsterstellte Kategorien wurden entfernt.</string>
    	<string name="error_title">Fehler</string>
 	<string name="error_message">Fehler beim Laden der Handlung</string>
-    <!--TODO-->
-	<string name="web_error_message">Unable to connect to Tracks</string>
+
+	<string name="web_error_message">Konnte keine Verbindung zu Tracks aufbauen.</string>
     
     <string name="welcome1">
 Willkommen in Shuffle, einem Organisationsprogramm, das von \"Getting Things Done\" inspiriert wurde.
