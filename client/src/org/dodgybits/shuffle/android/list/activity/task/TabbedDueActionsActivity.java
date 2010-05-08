@@ -20,10 +20,13 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.model.TaskQuery.PredefinedQuery;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.TaskListConfig;
+
+import com.google.inject.Inject;
 
 import roboguice.inject.InjectView;
 import android.content.ContextWrapper;
@@ -39,6 +42,8 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 
 	@InjectView(android.R.id.tabhost) TabHost mTabHost;
 	private PredefinedQuery mMode = PredefinedQuery.dueToday;
+	
+    @Inject private TaskPersister mTaskPersister;
 	
     @Override
     public void onCreate(Bundle icicle) {
@@ -79,10 +84,10 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
     	mTabHost.setCurrentTab(0);
     }
     
-	@Override
-	protected ListConfig<Task> createListConfig()
+    @Override
+    protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig(getContentResolver(), createTaskQuery()) {
+		return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister) {
 
 			@Override
 			public int getContentViewResId() {

@@ -20,10 +20,7 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.DefaultEntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.activity.AbstractListActivity;
@@ -51,6 +48,7 @@ import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
 import com.google.inject.internal.Nullable;
 
 public abstract class AbstractTaskListActivity extends AbstractListActivity<Task> 
@@ -58,8 +56,8 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 
 	private static final String cTag = "AbstractTaskListActivity";
 	
-    protected EntityCache<Context> mContextCache;
-    protected EntityCache<Project> mProjectCache;
+	@Inject protected EntityCache<Context> mContextCache;
+	@Inject protected EntityCache<Project> mProjectCache;
 	
 	@InjectView(R.id.add_task_button) @Nullable Button mAddTaskButton;
 	protected Button mOtherButton;
@@ -67,9 +65,6 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		
-        mContextCache = new DefaultEntityCache<org.dodgybits.shuffle.android.core.model.Context>(new ContextPersister(getContentResolver()));
-        mProjectCache = new DefaultEntityCache<Project>(new ProjectPersister(getContentResolver()));
 		
 		// register self as swipe listener
 		SwipeListItemWrapper wrapper = (SwipeListItemWrapper) findViewById(R.id.swipe_wrapper);

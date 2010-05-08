@@ -19,6 +19,8 @@ package org.dodgybits.shuffle.android.preference.activity;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.persistence.InitialDataGenerator;
 
+import com.google.inject.Inject;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -26,6 +28,8 @@ import android.widget.Toast;
 public class PreferencesDeleteAllActivity extends PreferencesDeleteActivity {
     private static final String cTag = "PreferencesDeleteAllActivity";
 
+    @Inject InitialDataGenerator mGenerator;
+    
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
@@ -40,7 +44,7 @@ public class PreferencesDeleteAllActivity extends PreferencesDeleteActivity {
 	@Override
 	protected void onDelete() {
     	Log.i(cTag, "Cleaning the slate");
-    	InitialDataGenerator.cleanSlate(this, null);
+    	mGenerator.cleanSlate(null);
         Toast.makeText(this, R.string.clean_slate_message, Toast.LENGTH_SHORT).show();
     	finish();
 	}

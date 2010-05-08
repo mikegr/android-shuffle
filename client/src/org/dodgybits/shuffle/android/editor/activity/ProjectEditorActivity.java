@@ -21,9 +21,7 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
 import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
-import org.dodgybits.shuffle.android.core.model.encoding.ProjectEncoder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
@@ -42,6 +40,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
 
     private static final String cTag = "ProjectEditorActivity";
@@ -51,6 +51,9 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     @InjectView(R.id.parallel_entry) RelativeLayout mParallelEntry;
     @InjectView(R.id.parallel_label) TextView mParallelLabel;
     @InjectView(R.id.parallel_icon) ImageView mParallelButton;
+    
+    @Inject private EntityPersister<Project> mPersister;
+    @Inject private EntityEncoder<Project> mEncoder;
     
     private String[] mContextNames;
     private long[] mContextIds;
@@ -97,16 +100,6 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
         }
-    }
-    
-    @Override
-    protected EntityEncoder<Project> createEncoder() {
-        return new ProjectEncoder();
-    }
-    
-    @Override
-    protected EntityPersister<Project> createPersister() {
-        return new ProjectPersister(getContentResolver());
     }
     
     @Override
@@ -198,6 +191,16 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     @Override
     protected CharSequence getItemName() {
     	return getString(R.string.project_name);
+    }
+    
+    @Override
+    protected EntityEncoder<Project> getEncoder() {
+        return mEncoder;
+    }
+    
+    @Override
+    protected EntityPersister<Project> getPersister() {
+        return mPersister;
     }
     
     private void loadCursor() {

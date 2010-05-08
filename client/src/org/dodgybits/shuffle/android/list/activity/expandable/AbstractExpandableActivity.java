@@ -20,11 +20,8 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledExpandableListActivity;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Project;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.DefaultEntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
@@ -53,26 +50,22 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+
 public abstract class AbstractExpandableActivity<G extends Entity> extends FlurryEnabledExpandableListActivity 
 	implements SwipeListItemListener {
 	
 	private static final String cTag = "AbstractExpandableActivity";
 
 	protected ExpandableListAdapter mAdapter;
-	protected EntityCache<org.dodgybits.shuffle.android.core.model.Context> mContextCache;
-	protected EntityCache<Project> mProjectCache;
+	@Inject protected EntityCache<org.dodgybits.shuffle.android.core.model.Context> mContextCache;
+	@Inject protected EntityCache<Project> mProjectCache;
 	
-	private ExpandableListConfig<G> mConfig;
-
 	@Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        mConfig = createListConfig();
-        mContextCache = new DefaultEntityCache<org.dodgybits.shuffle.android.core.model.Context>(new ContextPersister(getContentResolver()));
-        mProjectCache = new DefaultEntityCache<Project>(new ProjectPersister(getContentResolver()));
-        
-        setContentView(mConfig.getContentViewResId());
+        setContentView(getListConfig().getContentViewResId());
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         
 		// Inform the list we provide context menus for items
@@ -100,19 +93,19 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     	switch (event.getKeyCode()) {
     	case KeyEvent.KEYCODE_N:
     		// go to previous view
-    		int prevView = mConfig.getCurrentViewMenuId() - 1;
+    		int prevView = getListConfig().getCurrentViewMenuId() - 1;
     		if (prevView < MenuUtils.INBOX_ID) {
     			prevView = MenuUtils.CONTEXT_ID;
     		}
-    		MenuUtils.checkCommonItemsSelected(prevView, this, mConfig.getCurrentViewMenuId());
+    		MenuUtils.checkCommonItemsSelected(prevView, this, getListConfig().getCurrentViewMenuId());
     		return true;
 		case KeyEvent.KEYCODE_M:
 			// go to previous view
-			int nextView = mConfig.getCurrentViewMenuId() + 1;
+			int nextView = getListConfig().getCurrentViewMenuId() + 1;
 			if (nextView > MenuUtils.CONTEXT_ID) {
 				nextView = MenuUtils.INBOX_ID;
 			}
-			MenuUtils.checkCommonItemsSelected(nextView, this, mConfig.getCurrentViewMenuId());
+			MenuUtils.checkCommonItemsSelected(nextView, this, getListConfig().getCurrentViewMenuId());
 			return true;
     	}
 		return super.onKeyDown(keyCode, event);
@@ -133,9 +126,9 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        MenuUtils.addExpandableInsertMenuItems(menu, mConfig.getGroupName(this), 
-        		mConfig.getChildName(this), this);
-        MenuUtils.addViewMenuItems(menu, mConfig.getCurrentViewMenuId());
+        MenuUtils.addExpandableInsertMenuItems(menu, getListConfig().getGroupName(this), 
+        		getListConfig().getChildName(this), this);
+        MenuUtils.addViewMenuItems(menu, getListConfig().getCurrentViewMenuId());
         MenuUtils.addPrefsHelpMenuItems(this, menu);
         MenuUtils.addSearchMenuItem(this, menu);
         
@@ -144,8 +137,8 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
         
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        final EntityPersister<G> groupPersister = mConfig.getGroupPersister();
-        final TaskPersister childPersister = mConfig.getChildPersister();
+        final EntityPersister<G> groupPersister = getListConfig().getGroupPersister();
+        final TaskPersister childPersister = getListConfig().getChildPersister();
         
         switch (item.getItemId()) {
 	        case MenuUtils.INSERT_CHILD_ID:
@@ -166,7 +159,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 	            insertItem(groupPersister.getContentUri());
 	            return true;
         }
-        if (MenuUtils.checkCommonItemsSelected(item, this, mConfig.getCurrentViewMenuId())) return true;
+        if (MenuUtils.checkCommonItemsSelected(item, this, getListConfig().getCurrentViewMenuId())) return true;
         return super.onOptionsItemSelected(item);
     }
     
@@ -200,16 +193,16 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
         if (isChild)
         {
         	long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
-            Uri selectedUri = ContentUris.withAppendedId(mConfig.getChildPersister().getContentUri(), childId);
+            Uri selectedUri = ContentUris.withAppendedId(getListConfig().getChildPersister().getContentUri(), childId);
             MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
         	MenuUtils.addCompleteMenuItem(menu);
         }
         else
         {
         	long groupId = getExpandableListAdapter().getGroupId(groupPosition);
-            Uri selectedUri = ContentUris.withAppendedId(mConfig.getGroupPersister().getContentUri(), groupId);
+            Uri selectedUri = ContentUris.withAppendedId(getListConfig().getGroupPersister().getContentUri(), groupId);
             MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
-            MenuUtils.addInsertMenuItems(menu, mConfig.getChildName(this), true, this);
+            MenuUtils.addInsertMenuItems(menu, getListConfig().getChildName(this), true, this);
         }
 		// ... and ends with the delete command.
 		MenuUtils.addDeleteMenuItem(menu);
@@ -237,7 +230,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 	            
 	        case MenuUtils.INSERT_ID:
                 int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
-                final Uri childContentUri = mConfig.getChildPersister().getContentUri();
+                final Uri childContentUri = getListConfig().getChildPersister().getContentUri();
 	        	if (groupPosition > -1)
 	        	{
 		        	Cursor cursor = (Cursor) getExpandableListAdapter().getGroup(groupPosition);
@@ -255,7 +248,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-   		Uri url = ContentUris.withAppendedId(mConfig.getChildPersister().getContentUri(), id);
+   		Uri url = ContentUris.withAppendedId(getListConfig().getChildPersister().getContentUri(), id);
 		// Launch activity to view/edit the currently selected item
 		startActivity(getClickIntent(url));
 		return true;
@@ -320,7 +313,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     	Uri selectedUri = null;
     	Boolean childSelected = isChildSelected(); 
     	if (childSelected != null) {
-    		selectedUri = childSelected ? mConfig.getChildPersister().getContentUri() : mConfig.getGroupPersister().getContentUri();
+    		selectedUri = childSelected ? getListConfig().getChildPersister().getContentUri() : getListConfig().getGroupPersister().getContentUri();
     	}
     	return selectedUri;
     }
@@ -347,8 +340,8 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     	final int type = ExpandableListView.getPackedPositionType(packedPosition);
     	final int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
     	final int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
-        final EntityPersister<G> groupPersister = mConfig.getGroupPersister();
-        final TaskPersister childPersister = mConfig.getChildPersister();
+        final EntityPersister<G> groupPersister = getListConfig().getGroupPersister();
+        final TaskPersister childPersister = getListConfig().getChildPersister();
     	
     	switch (type) {
 	    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
@@ -376,7 +369,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 		    			        getContentResolver().delete(uri, null, null);
 		    			    	Log.i(cTag, "Deleting all child for group id " + groupId);
 		    					getContentResolver().delete(childPersister.getContentUri(), 
-		    							mConfig.getGroupIdColumnName() + " = ?", 
+		    							getListConfig().getGroupIdColumnName() + " = ?", 
 		    							new String[] {String.valueOf(groupId)});
 		    			        showCancelToast(true);
 		    				} else {
@@ -384,8 +377,8 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 		    				}
 		    			}
 		    		};
-	    			AlertUtils.showDeleteGroupWarning(this, mConfig.getGroupName(this), 
-	    					mConfig.getChildName(this), childCount, buttonListener);    		
+	    			AlertUtils.showDeleteGroupWarning(this, getListConfig().getGroupName(this), 
+	    					getListConfig().getChildName(this), childCount, buttonListener);    		
 	    		} else {
 			    	Log.i(cTag, "Deleting childless group at position " + groupPosition);
 					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
@@ -424,8 +417,6 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 
 	abstract protected void updateInsertExtras(Bundle extras, G group);
 
-	abstract protected ExpandableListConfig<G> createListConfig();
-	
 	abstract void refreshChildCount();
 
     abstract ExpandableListAdapter createExpandableListAdapter(Cursor cursor);
@@ -452,9 +443,6 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     
 	// custom helper methods
 	
-	protected final ExpandableListConfig<G> getListConfig()
-	{
-		return mConfig;
-	}
+	abstract protected ExpandableListConfig<G> getListConfig();
     
 }

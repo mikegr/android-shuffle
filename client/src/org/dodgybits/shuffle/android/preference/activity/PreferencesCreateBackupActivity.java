@@ -12,9 +12,7 @@ import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.protocol.ContextProtocolTranslator;
 import org.dodgybits.shuffle.android.core.model.protocol.ProjectProtocolTranslator;
 import org.dodgybits.shuffle.android.core.model.protocol.TaskProtocolTranslator;
@@ -42,6 +40,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 public class PreferencesCreateBackupActivity extends FlurryEnabledActivity 
 	implements View.OnClickListener {
     private static final String CREATE_BACKUP_STATE = "createBackupState";
@@ -55,6 +55,10 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
     @InjectView(R.id.discardButton) Button mCancelButton;
     @InjectView(R.id.progress_horizontal) ProgressBar mProgressBar;
     @InjectView(R.id.progress_label) TextView mProgressText;
+    
+    @Inject EntityPersister<Context> mContextPersister;
+    @Inject EntityPersister<Project> mProjectPersister;
+    @Inject EntityPersister<Task> mTaskPersister;
     
     private AsyncTask<?, ?, ?> mTask;
     
@@ -283,10 +287,9 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
             int i = 0;
             int total = cursor.getCount();
             String type = getString(R.string.context_name);
-            ContextPersister persister = new ContextPersister(getContentResolver());
             ContextProtocolTranslator translator = new ContextProtocolTranslator();
         	while (cursor.moveToNext()) {
-        	    Context context = persister.read(cursor);
+        	    Context context = mContextPersister.read(cursor);
             	builder.addContext(translator.toMessage(context));
     			String text = getString(R.string.backup_progress, type, context.getName());
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
@@ -304,10 +307,9 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
             int i = 0;
             int total = cursor.getCount();
             String type = getString(R.string.project_name);
-            ProjectPersister persister = new ProjectPersister(getContentResolver());
             ProjectProtocolTranslator translator = new ProjectProtocolTranslator(null);
         	while (cursor.moveToNext()) {
-        		Project project = persister.read(cursor);
+        		Project project = mProjectPersister.read(cursor);
             	builder.addProject(translator.toMessage(project));
     			String text = getString(R.string.backup_progress, type, project.getName());
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);
@@ -325,10 +327,9 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
             int i = 0;
             int total = cursor.getCount();
             String type = getString(R.string.task_name);
-            TaskPersister persister = new TaskPersister(getContentResolver());
             TaskProtocolTranslator translator = new TaskProtocolTranslator(null, null);
         	while (cursor.moveToNext()) {
-        		Task task = persister.read(cursor);
+        		Task task = mTaskPersister.read(cursor);
             	builder.addTask(translator.toMessage(task));
     			String text = getString(R.string.backup_progress, type, task.getDescription());
     			int percent = calculatePercent(progressStart, progressEnd, ++i, total);

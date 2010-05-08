@@ -12,7 +12,6 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -33,12 +32,13 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
     private final String mTracksUrl;
 
     public TaskSynchronizer( 
+            EntityPersister<Task> persister,
             TracksSynchronizer tracksSynchronizer, 
             WebClient client, 
             Context context, 
             int basePercent,
             String tracksUrl) {
-        super(tracksSynchronizer, client, context, basePercent);
+        super(persister, tracksSynchronizer, client, context, basePercent);
 
         this.mTracksUrl = tracksUrl;
     }
@@ -48,11 +48,6 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
         return Task.newBuilder();
     }
 
-    @Override
-    protected EntityPersister<Task> createPersister() {
-        return new TaskPersister(mContext.getContentResolver());
-    }
-    
     @Override
     protected void verifyLocalEntities(Map<Id, Task> localEntities) {
 

@@ -35,11 +35,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
+import com.google.inject.Inject;
+
 public class WelcomeActivity extends FlurryEnabledActivity {
     private static final String cTag = "WelcomeActivity";
 	
     @InjectView(R.id.sample_data_button) Button mSampleDataButton;
     @InjectView(R.id.clean_slate_button) Button mCleanSlateButton;
+    @Inject InitialDataGenerator mGenerator;
+    
     private Handler mHandler;
     
     @Override
@@ -97,7 +101,7 @@ public class WelcomeActivity extends FlurryEnabledActivity {
         setProgressBarVisibility(true);
     	new Thread() {
     		public void run() {
-    	    	InitialDataGenerator.createSampleData(WelcomeActivity.this, mHandler);
+    		    mGenerator.createSampleData(mHandler);
     		}
     	}.start();
     }
@@ -107,7 +111,7 @@ public class WelcomeActivity extends FlurryEnabledActivity {
         setProgressBarVisibility(true);
     	new Thread() {
     		public void run() {
-    	    	InitialDataGenerator.cleanSlate(WelcomeActivity.this, mHandler);
+    		    mGenerator.cleanSlate(mHandler);
     		}
     	}.start();
     }

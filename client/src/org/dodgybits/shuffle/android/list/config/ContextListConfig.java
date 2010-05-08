@@ -25,18 +25,19 @@ import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContextWrapper;
 import android.database.Cursor;
 
-public class ContextListConfig implements DrilldownListConfig<Context> {
+import com.google.inject.Inject;
 
+public class ContextListConfig implements DrilldownListConfig<Context> {
     private ContextPersister mGroupPersister;
     private TaskPersister mChildPersister;
     
-    public ContextListConfig(ContentResolver resolver) {
-        mGroupPersister = new ContextPersister(resolver);
-        mChildPersister = new TaskPersister(resolver);
+    @Inject
+    public ContextListConfig(ContextPersister contextPersister, TaskPersister taskPersister) {
+        mGroupPersister = contextPersister;
+        mChildPersister = taskPersister;
     }
     
     @Override

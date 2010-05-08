@@ -11,7 +11,6 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -30,25 +29,19 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
     private final String mTracksUrl;
 
     public ProjectSynchronizer(
+            EntityPersister<Project> persister,
             TracksSynchronizer tracksSynchronizer, 
             WebClient client, 
             android.content.Context context,
             int basePercent,
             String tracksUrl) {
-        super(tracksSynchronizer, client, context, basePercent);
+        super(persister, tracksSynchronizer, client, context, basePercent);
 
         mTracksUrl = tracksUrl;
     }
     
     @Override
-    protected EntityPersister<Project> createPersister() {
-        return new ProjectPersister(mContext.getContentResolver());
-    }
-
-
-    @Override
     protected void verifyLocalEntities(Map<Id, Project> localEntities) {
-        
     }
     
     @Override

@@ -23,9 +23,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+
 public class PreferencesDeleteCompletedActivity extends PreferencesDeleteActivity {
     private static final String cTag = "PreferencesDeleteCompletedActivity";
 
+    @Inject TaskPersister mTaskPersister;
+    
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
@@ -37,8 +41,7 @@ public class PreferencesDeleteCompletedActivity extends PreferencesDeleteActivit
     
 	@Override
 	protected void onDelete() {
-	    TaskPersister persister = new TaskPersister(getContentResolver());
-    	int deletedTasks = persister.deleteCompletedTasks();
+    	int deletedTasks = mTaskPersister.deleteCompletedTasks();
 		CharSequence message = getString(R.string.clean_task_message, new Object[] {deletedTasks});
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 		finish();

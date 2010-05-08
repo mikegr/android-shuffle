@@ -11,11 +11,15 @@ import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 
-import android.content.ContentResolver;
+import roboguice.inject.ContentResolverProvider;
+import roboguice.inject.ContextScoped;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.google.inject.Inject;
+
+@ContextScoped
 public class ProjectPersister extends AbstractEntityPersister<Project> {
 
     private static final int ID_INDEX = 0;
@@ -26,8 +30,9 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
     private static final int PARALLEL_INDEX = 5;
     private static final int ARCHIVED_INDEX = 6;
     
-    public ProjectPersister(ContentResolver resolver) {
-        super(resolver);
+    @Inject
+    public ProjectPersister(ContentResolverProvider provider) {
+        super(provider.get());
     }
     
     @Override

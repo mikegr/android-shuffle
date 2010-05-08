@@ -10,11 +10,15 @@ import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 
-import android.content.ContentResolver;
+import roboguice.inject.ContentResolverProvider;
+import roboguice.inject.ContextScoped;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.google.inject.Inject;
+
+@ContextScoped
 public class ContextPersister extends AbstractEntityPersister<Context> {
 
     private static final int ID_INDEX = 0;
@@ -24,10 +28,11 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
     private static final int TRACKS_ID_INDEX = 4;
     private static final int MODIFIED_INDEX = 5;
     
-    public ContextPersister(ContentResolver resolver) {
-        super(resolver);
+    @Inject
+    public ContextPersister(ContentResolverProvider provider) {
+        super(provider.get());
     }
-    
+
     @Override
     public Context read(Cursor cursor) {
         Builder builder = Context.newBuilder();

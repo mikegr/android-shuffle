@@ -1,9 +1,5 @@
 package org.dodgybits.shuffle.android.persistence.provider;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 

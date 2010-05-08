@@ -25,7 +25,8 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
@@ -45,28 +46,33 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 
+import com.google.inject.Inject;
+
 public class ProjectTasksActivity extends AbstractTaskListActivity {
 
 	private static final String cTag = "ProjectTasksActivity";
 	private Id mProjectId;
 	private Project mProject;
 
+    @Inject private EntityPersister<Project> mPersister;
+    @Inject private TaskPersister mTaskPersister;
+    
 	@Override
     public void onCreate(Bundle icicle) {
 		Uri contextURI = getIntent().getData();
 		mProjectId = Id.create(ContentUris.parseId(contextURI));
         super.onCreate(icicle);
 	}
-	
+
 	@Override
-	protected ListConfig<Task> createListConfig()
+    protected ListConfig<Task> createListConfig()
 	{
         List<Id> ids = Arrays.asList(new Id[] {mProjectId});
         TaskQuery query = TaskQuery.newBuilder()
             .setProjects(new ArrayList<Id>(ids))
             .setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC")
             .build();
-        return new AbstractTaskListConfig(getContentResolver(), query) {
+        return new AbstractTaskListConfig(query, mTaskPersister) {
 
 		    public int getCurrentViewMenuId() {
 		    	return 0;
@@ -86,8 +92,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 		Cursor cursor = getContentResolver().query(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.cFullProjection,
 				ProjectProvider.Projects._ID + " = ?", new String[] {String.valueOf(mProjectId)}, null);
 		if (cursor.moveToNext()) {
-		    ProjectPersister persister = new ProjectPersister(getContentResolver());
-			mProject = persister.read(cursor);
+			mProject = mPersister.read(cursor);
 		}
 		cursor.close();
 		

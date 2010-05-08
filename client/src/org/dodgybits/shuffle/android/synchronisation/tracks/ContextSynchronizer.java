@@ -10,7 +10,6 @@ import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
 import org.xmlpull.v1.XmlPullParser;
@@ -26,19 +25,15 @@ public class ContextSynchronizer extends Synchronizer<Context> {
     private final String mTracksUrl;
     
     public ContextSynchronizer(
+            EntityPersister<Context> persister,
             TracksSynchronizer tracksSynchronizer, 
             WebClient client, 
             android.content.Context context, 
             int basePercent, 
             String tracksUrl) {
-        super(tracksSynchronizer, client, context, basePercent);
+        super(persister, tracksSynchronizer, client, context, basePercent);
 
         mTracksUrl = tracksUrl;
-    }
-    
-    @Override
-    protected EntityPersister<Context> createPersister() {
-        return new ContextPersister(mContext.getContentResolver());
     }
     
     @Override

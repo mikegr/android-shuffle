@@ -21,10 +21,13 @@ import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 
+import com.google.inject.Inject;
+
 import android.widget.RelativeLayout;
 
 public class ExpandableTaskView extends TaskView {
 
+    @Inject
 	public ExpandableTaskView(
 	        android.content.Context androidContext,
             EntityCache<Context> contextCache,

@@ -19,9 +19,7 @@ package org.dodgybits.shuffle.android.editor.activity;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
-import org.dodgybits.shuffle.android.core.model.encoding.ContextEncoder;
 import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.util.TextColours;
 import org.dodgybits.shuffle.android.core.view.ContextIcon;
@@ -46,6 +44,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 public class ContextEditorActivity extends AbstractEditorActivity<Context> implements TextWatcher {
 
     private static final String cTag = "ContextEditorActivity";
@@ -56,15 +56,18 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     private int mColourIndex;
     private ContextIcon mIcon;
     
-    @InjectView(R.id.name) EditText mNameWidget;
+    @InjectView(R.id.name) private EditText mNameWidget;
 
-    @InjectView(R.id.colour_display) TextView mColourWidget;
+    @InjectView(R.id.colour_display) private TextView mColourWidget;
 
-    @InjectView(R.id.icon_display) ImageView mIconWidget;
-    @InjectView(R.id.icon_none) TextView mIconNoneWidget;
-    @InjectView(R.id.icon_clear_button) ImageButton mClearIconButton;
-	@InjectView(R.id.context_preview) ContextView mContext;
+    @InjectView(R.id.icon_display) private ImageView mIconWidget;
+    @InjectView(R.id.icon_none) private TextView mIconNoneWidget;
+    @InjectView(R.id.icon_clear_button) private ImageButton mClearIconButton;
+	@InjectView(R.id.context_preview) private ContextView mContext;
 
+	@Inject private EntityPersister<Context> mPersister;
+	@Inject private EntityEncoder<Context> mEncoder;
+	
 	@Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
@@ -103,16 +106,6 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         }
     }
     
-	@Override
-	protected EntityEncoder<Context> createEncoder() {
-	    return new ContextEncoder();
-	}
-
-	@Override
-	protected EntityPersister<Context> createPersister() {
-	    return new ContextPersister(getContentResolver());
-	}
-	
     @Override
     protected boolean isValid() {
         String name = mNameWidget.getText().toString();
@@ -217,6 +210,16 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         if (mOriginalItem == null) {
         	mOriginalItem = context;
         }    	
+    }
+    
+    @Override
+    protected EntityEncoder<Context> getEncoder() {
+        return mEncoder;
+    }
+    
+    @Override
+    protected EntityPersister<Context> getPersister() {
+        return mPersister;
     }
     
     private void loadCursor() {

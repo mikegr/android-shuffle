@@ -17,9 +17,7 @@ import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.protocol.ContextProtocolTranslator;
 import org.dodgybits.shuffle.android.core.model.protocol.EntityDirectory;
 import org.dodgybits.shuffle.android.core.model.protocol.HashEntityDirectory;
@@ -46,6 +44,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 	implements View.OnClickListener {
     private static final String RESTORE_BACKUP_STATE = "restoreBackupState";
@@ -59,6 +59,10 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
     @InjectView(R.id.discardButton) Button mCancelButton;
     @InjectView(R.id.progress_horizontal) ProgressBar mProgressBar;
     @InjectView(R.id.progress_label) TextView mProgressText;
+    
+    @Inject EntityPersister<Context> mContextPersister;
+    @Inject EntityPersister<Project> mProjectPersister;
+    @Inject EntityPersister<Task> mTaskPersister;
     
     private AsyncTask<?, ?, ?> mTask;
     
@@ -266,7 +270,6 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
     	private EntityDirectory<Context> addContexts(
 				List<org.dodgybits.shuffle.dto.ShuffleProtos.Context> protoContexts,
 				int progressStart, int progressEnd) {
-            ContextPersister persister = new ContextPersister(getContentResolver());
             ContextProtocolTranslator translator = new ContextProtocolTranslator();
     	    
 			Set<String> allContextNames = new HashSet<String>();
@@ -274,7 +277,7 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 			{
 				allContextNames.add(protoContext.getName());
 			}
-			Map<String,Context> existingContexts = fetchContextsByName(allContextNames, persister);
+			Map<String,Context> existingContexts = fetchContextsByName(allContextNames);
 			
 			// build up the locator and list of new contacts
 			HashEntityDirectory<Context> contextLocator = new HashEntityDirectory<Context>();
@@ -303,11 +306,11 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
 			}
-            persister.bulkInsert(newContexts);
+            mContextPersister.bulkInsert(newContexts);
 			
 			// we need to fetch all the newly created contexts to retrieve their new ids
 			// and update the locator accordingly
-			Map<String,Context> savedContexts = fetchContextsByName(newContextNames, persister);
+			Map<String,Context> savedContexts = fetchContextsByName(newContextNames);
 			for (String contextName : newContextNames) {
 				Context savedContext = savedContexts.get(contextName);
 				Context restoredContext = contextLocator.findByName(contextName);
@@ -323,7 +326,7 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
          * @param names  names to match
          * @return any matching contexts in a Map, keyed on the context name
          */
-        private Map<String,Context> fetchContextsByName(Collection<String> names, ContextPersister persister) {
+        private Map<String,Context> fetchContextsByName(Collection<String> names) {
             Map<String,Context> contexts = new HashMap<String,Context>();
             if (names.size() > 0)
             {
@@ -335,7 +338,7 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
                         ContextProvider.Contexts.NAME + " IN (" + params + ")",
                         paramValues, ContextProvider.Contexts.NAME + " ASC");
                 while (cursor.moveToNext()) {
-                    Context context = persister.read(cursor);
+                    Context context = mContextPersister.read(cursor);
                     contexts.put(context.getName(), context);
                 }
                 cursor.close();
@@ -347,7 +350,6 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 				List<org.dodgybits.shuffle.dto.ShuffleProtos.Project> protoProjects,
 				EntityDirectory<Context> contextLocator,
 				int progressStart, int progressEnd) {
-            ProjectPersister persister = new ProjectPersister(getContentResolver());
             ProjectProtocolTranslator translator = new ProjectProtocolTranslator(contextLocator);
             
 			Set<String> allProjectNames = new HashSet<String>();
@@ -355,7 +357,7 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 			{
 				allProjectNames.add(protoProject.getName());
 			}
-			Map<String,Project> existingProjects = fetchProjectsByName(allProjectNames, persister);
+			Map<String,Project> existingProjects = fetchProjectsByName(allProjectNames);
 			
 			// build up the locator and list of new projects
 			HashEntityDirectory<Project> projectLocator = new HashEntityDirectory<Project>();
@@ -384,11 +386,11 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
 			}
-            persister.bulkInsert(newProjects);
+            mProjectPersister.bulkInsert(newProjects);
 
 			// we need to fetch all the newly created contexts to retrieve their new ids
 			// and update the locator accordingly
-			Map<String,Project> savedProjects = fetchProjectsByName(newProjectNames, persister);
+			Map<String,Project> savedProjects = fetchProjectsByName(newProjectNames);
 			for (String projectName : newProjectNames) {
 				Project savedProject = savedProjects.get(projectName);
 				Project restoredProject = projectLocator.findByName(projectName);
@@ -403,7 +405,7 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 	     *
 	     * @return any matching contexts in a Map, keyed on the context name
 	     */
-	    private Map<String,Project> fetchProjectsByName(Collection<String> names, ProjectPersister persister) {
+	    private Map<String,Project> fetchProjectsByName(Collection<String> names) {
 	        Map<String,Project> projects = new HashMap<String,Project>();
 	        if (names.size() > 0)
 	        {
@@ -415,7 +417,7 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 	                    ProjectProvider.Projects.NAME + " IN (" + params + ")",
 	                    paramValues, ProjectProvider.Projects.NAME + " ASC");
 	            while (cursor.moveToNext()) {
-	                Project project = persister.read(cursor);
+	                Project project = mProjectPersister.read(cursor);
 	                projects.put(project.getName(), project);
 	            }
 	            cursor.close();
@@ -428,7 +430,6 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 				EntityDirectory<Context> contextLocator,
 				EntityDirectory<Project> projectLocator,
 				int progressStart, int progressEnd) {
-            TaskPersister persister = new TaskPersister(getContentResolver());
             TaskProtocolTranslator translator = new TaskProtocolTranslator(contextLocator, projectLocator);
 		    
 			// add all tasks back, even if they're duplicates
@@ -446,7 +447,7 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 				int percent = calculatePercent(progressStart, progressEnd, ++i, total);
             	publishProgress(Progress.createProgress(percent, text));
 			}
-			persister.bulkInsert(newTasks);
+			mTaskPersister.bulkInsert(newTasks);
 		}
                 
         private int calculatePercent(int start, int end, int current, int total) {

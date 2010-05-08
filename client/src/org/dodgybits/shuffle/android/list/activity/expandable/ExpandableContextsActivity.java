@@ -34,15 +34,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 
+import com.google.inject.Inject;
+
 public class ExpandableContextsActivity extends AbstractExpandableActivity<Context> {
     private int mChildIdColumnIndex; 
     private int mGroupIdColumnIndex; 
 	private SparseIntArray mTaskCountArray;
 	
-	@Override
-	protected ExpandableListConfig<Context> createListConfig() {
-		return new ContextExpandableListConfig(getContentResolver());
-	}
+    @Inject ContextExpandableListConfig mListConfig;
+	
+    @Override
+    protected ExpandableListConfig<Context> getListConfig() {
+        return mListConfig;
+    }
 	
 	@Override
 	protected void refreshChildCount() {

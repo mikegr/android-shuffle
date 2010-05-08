@@ -43,17 +43,17 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
     private int mBasePercent;
 
     public Synchronizer(
+            EntityPersister<Entity> persister,
             TracksSynchronizer tracksSynchronizer, 
             WebClient client,
             android.content.Context context,
             int basePercent) {
+        mPersister = persister;
         mTracksSynchronizer = tracksSynchronizer;
         mWebClient = client;
         mContext = context;
         mBasePercent = basePercent;
-        mPersister = createPersister();
     }
-
     
     public void synchronize() throws WebClient.ApiException {
         mTracksSynchronizer.reportProgress(Progress.createProgress(mBasePercent,
@@ -97,8 +97,6 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
     protected Id findTracksIdByContextId(Id contextId) {
         return findEntityTracksIdByLocalId(contextId, ContextProvider.Contexts.CONTENT_URI);
     }
-    
-    protected abstract EntityPersister<Entity> createPersister();
     
     protected abstract void verifyLocalEntities(Map<Id, Entity> localEntities);
 

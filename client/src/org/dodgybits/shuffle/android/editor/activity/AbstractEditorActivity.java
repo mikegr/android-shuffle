@@ -51,18 +51,12 @@ public abstract class AbstractEditorActivity<E extends Entity> extends GuiceActi
     protected Cursor mCursor;
     protected E mOriginalItem;
     protected Intent mNextIntent;
-    
-    protected EntityPersister<E> mPersister;
-    protected EntityEncoder<E> mEncoder;
-    
+        
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
         super.onCreate(icicle);
 
-        mPersister = createPersister();
-        mEncoder = createEncoder();
-        
         processIntent();
         
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
@@ -210,7 +204,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends GuiceActi
                 // Put the original item back into the database
                 mCursor.close();
                 mCursor = null;
-                mPersister.update(mOriginalItem);
+                getPersister().update(mOriginalItem);
             } else if (mState == State.STATE_INSERT) {
             	// if inserting, there's nothing to delete
             }
@@ -249,7 +243,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends GuiceActi
     	Uri uri = null;
     	if (isValid()) {
    	       E item = createItemFromUI();
-   	       uri = mPersister.insert(item);
+   	       uri = getPersister().insert(item);
    	       showSaveToast();
     	}
     	return uri;
@@ -259,7 +253,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends GuiceActi
     	Uri uri = null;
     	if (isValid()) {
             E item = createItemFromUI();
-            mPersister.update(item);
+            getPersister().update(item);
 	    	showSaveToast();
 	    	uri = mUri;
     	}
@@ -267,11 +261,11 @@ public abstract class AbstractEditorActivity<E extends Entity> extends GuiceActi
     }
     
     protected final E restoreItem(Bundle icicle) {
-        return mEncoder.restore(icicle);
+        return getEncoder().restore(icicle);
     }
     
     protected final void saveItem(Bundle outState, E item) {
-        mEncoder.save(outState, item);
+        getEncoder().save(outState, item);
     }
         
     /**
@@ -283,8 +277,8 @@ public abstract class AbstractEditorActivity<E extends Entity> extends GuiceActi
     abstract protected void updateUIFromItem(E item);
     abstract protected void updateUIFromExtras(Bundle extras);
     
-    abstract protected EntityPersister<E> createPersister();
-    abstract protected EntityEncoder<E> createEncoder();
+    abstract protected EntityPersister<E> getPersister();
+    abstract protected EntityEncoder<E> getEncoder();
     
     abstract protected Intent getInsertIntent();
     

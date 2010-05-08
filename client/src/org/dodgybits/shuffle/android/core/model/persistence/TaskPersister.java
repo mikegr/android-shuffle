@@ -29,7 +29,8 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
-import android.content.ContentResolver;
+import roboguice.inject.ContentResolverProvider;
+import roboguice.inject.ContextScoped;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -40,7 +41,9 @@ import android.util.Log;
 import android.util.SparseIntArray;
 
 import com.flurry.android.FlurryAgent;
+import com.google.inject.Inject;
 
+@ContextScoped
 public class TaskPersister extends AbstractEntityPersister<Task> {
     private static final String cTag = "TaskPersister";
 
@@ -61,8 +64,9 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     private static final int HAS_ALARM_INDEX = ALL_DAY_INDEX + 1;
     private static final int TASK_TRACK_INDEX = HAS_ALARM_INDEX  + 1;
     
-    public TaskPersister(ContentResolver resolver) {
-        super(resolver);
+    @Inject
+    public TaskPersister(ContentResolverProvider provider) {
+        super(provider.get());
     }
     
     @Override
@@ -202,7 +206,9 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         
         SparseIntArray countMap = new SparseIntArray();
         while (cursor.moveToNext()) {
-            countMap.put(cursor.getInt(ID_INDEX), cursor.getInt(TASK_COUNT_INDEX));
+            Integer id = cursor.getInt(ID_INDEX);
+            Integer count = cursor.getInt(TASK_COUNT_INDEX);
+            countMap.put(id, count);
         }
         return countMap;
     }    

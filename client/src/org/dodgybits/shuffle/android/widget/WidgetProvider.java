@@ -37,9 +37,12 @@ import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
+import roboguice.inject.ContentResolverProvider;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
@@ -94,14 +97,22 @@ public class WidgetProvider extends AppWidgetProvider {
     public void onDisabled(android.content.Context context) {
     }
 
-    static void updateAppWidget(android.content.Context androidContext, AppWidgetManager appWidgetManager,
+    static void updateAppWidget(final android.content.Context androidContext, AppWidgetManager appWidgetManager,
             int appWidgetId, String queryName) {
         Log.d(cTag, "updateAppWidget appWidgetId=" + appWidgetId + " queryName=" + queryName);
 
-        TaskPersister taskPersister = new TaskPersister(androidContext.getContentResolver());
-        ProjectPersister projectPersister = new ProjectPersister(androidContext.getContentResolver());
+        // TODO inject
+        ContentResolverProvider provider = new ContentResolverProvider() {
+            @Override
+            public ContentResolver get() {
+                return androidContext.getContentResolver();
+            }
+        };
+        
+        TaskPersister taskPersister = new TaskPersister(provider);
+        ProjectPersister projectPersister = new ProjectPersister(provider);
         EntityCache<Project> projectCache = new DefaultEntityCache<Project>(projectPersister);
-        ContextPersister contextPersister = new ContextPersister(androidContext.getContentResolver());
+        ContextPersister contextPersister = new ContextPersister(provider);
         EntityCache<Context> contextCache = new DefaultEntityCache<Context>(contextPersister);
         
         RemoteViews views = new RemoteViews(androidContext.getPackageName(), R.layout.widget);

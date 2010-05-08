@@ -33,6 +33,8 @@ import org.dodgybits.shuffle.android.core.model.persistence.InitialDataGenerator
 import org.dodgybits.shuffle.android.list.view.TaskView;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
+import com.google.inject.Inject;
+
 import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -51,14 +53,16 @@ public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
     private Task mSampleTask;
     private Project mSampleProject;
     private Context mSampleContext;
+    private boolean mSaveChanges;   
+    private boolean mDisplayIcon, mDisplayContext, mDisplayDueDate, mDisplayProject, mDisplayDetails;
+    
 	@InjectView(R.id.display_icon) CheckBox mDisplayIconCheckbox;
 	@InjectView(R.id.display_context) CheckBox mDisplayContextCheckbox;
 	@InjectView(R.id.display_due_date) CheckBox mDisplayDueDateCheckbox;
 	@InjectView(R.id.display_project) CheckBox mDisplayProjectCheckbox;
 	@InjectView(R.id.display_details) CheckBox mDisplayDetailsCheckbox;
-	private boolean mSaveChanges;	
-	private boolean mDisplayIcon, mDisplayContext, mDisplayDueDate, mDisplayProject, mDisplayDetails;
-	
+
+	@Inject InitialDataGenerator mGenerator;
 	
 	@Override
 	protected void onCreate(Bundle icicle) {
@@ -111,7 +115,7 @@ public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
 	private void setupSampleEntities() {
         long now = System.currentTimeMillis();
         mSampleProject = Project.newBuilder().setName("Sample project").build();
-        mSampleContext = InitialDataGenerator.getSampleContext(getResources());
+        mSampleContext = mGenerator.getSampleContext();
         mSampleTask = Task.newBuilder()
             .setDescription("Sample action")
             .setDetails("Additional action details")

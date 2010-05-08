@@ -60,7 +60,7 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-        mConfig = createListConfig();
+		mConfig = createListConfig();
 		
 		setContentView(getListConfig().getContentViewResId());
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);

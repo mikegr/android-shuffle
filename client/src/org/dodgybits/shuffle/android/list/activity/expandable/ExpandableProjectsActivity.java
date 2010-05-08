@@ -41,6 +41,8 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
+import com.google.inject.Inject;
+
 public class ExpandableProjectsActivity extends AbstractExpandableActivity<Project> {
 	private static final String cTag = "ExpandableProjectsActivity";
 
@@ -48,11 +50,13 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	private int mGroupIdColumnIndex; 
 	private SparseIntArray mTaskCountArray;
 
-	@Override
-	protected ExpandableListConfig<Project> createListConfig() {
-		return new ProjectExpandableListConfig(getContentResolver());
-	}
-	
+    @Inject ProjectExpandableListConfig mListConfig;
+
+    @Override
+    protected ExpandableListConfig<Project> getListConfig() {
+        return mListConfig;
+    }
+    
 	@Override
 	protected void refreshChildCount() {
 		Cursor cursor = getContentResolver().query(

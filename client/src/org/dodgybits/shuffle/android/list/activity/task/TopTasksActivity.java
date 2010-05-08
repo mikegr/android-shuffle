@@ -19,21 +19,31 @@ package org.dodgybits.shuffle.android.list.activity.task;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 
+import com.google.inject.Inject;
+
 import android.content.ContextWrapper;
+import android.os.Bundle;
 
 public class TopTasksActivity extends AbstractTaskListActivity {
 
-	@Override
+    @Inject private TaskPersister mTaskPersister;
+    
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+    }
+
 	protected ListConfig<Task> createListConfig()
 	{
         TaskQuery query = StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks);
     
-        return new AbstractTaskListConfig(getContentResolver(), query) {
+        return new AbstractTaskListConfig(query, mTaskPersister) {
 	    
 		    public int getCurrentViewMenuId() {
 		    	return MenuUtils.TOP_TASKS_ID;

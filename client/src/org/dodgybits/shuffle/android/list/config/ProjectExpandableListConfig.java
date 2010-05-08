@@ -24,18 +24,20 @@ import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
-import android.content.ContentResolver;
 import android.content.ContextWrapper;
+
+import com.google.inject.Inject;
 
 public class ProjectExpandableListConfig implements ExpandableListConfig<Project> {
     private ProjectPersister mGroupPersister;
     private TaskPersister mChildPersister;
     
-    public ProjectExpandableListConfig(ContentResolver resolver) {
-        mGroupPersister = new ProjectPersister(resolver);
-        mChildPersister = new TaskPersister(resolver);
+    @Inject
+    public ProjectExpandableListConfig(ProjectPersister projectPersister, TaskPersister taskPersister) {
+        mGroupPersister = projectPersister;
+        mChildPersister = taskPersister;
     }
-
+    
     @Override
 	public String getChildName(ContextWrapper context) {
 		return context.getString(R.string.task_name);

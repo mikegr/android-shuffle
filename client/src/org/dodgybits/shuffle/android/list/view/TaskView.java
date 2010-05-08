@@ -26,6 +26,8 @@ import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.core.view.DrawableUtils;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
+import com.google.inject.Inject;
+
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -49,6 +51,7 @@ public class TaskView extends ItemView<Task> {
     protected boolean mShowContext;
     protected boolean mShowProject;
     
+    @Inject
     public TaskView(android.content.Context androidContext, 
             EntityCache<Context> contextCache,
             EntityCache<Project> projectCache) {

@@ -7,9 +7,18 @@ import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryTracksSyn
 import java.util.LinkedList;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 
+import roboguice.inject.ContentResolverProvider;
+
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.AsyncTask;
@@ -37,7 +46,8 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
     private final TaskSynchronizer mTaskSynchronizer;
 
 
-    public static TracksSynchronizer getActiveSynchronizer(ContextWrapper context) throws WebClient.ApiException {
+    public static TracksSynchronizer getActiveSynchronizer(
+            ContextWrapper context) throws WebClient.ApiException {
         TracksSynchronizer synchronizer = getSingletonSynchronizer(context);
         while (synchronizer.getStatus() == Status.FINISHED) {
             synchronizer = getSingletonSynchronizer(context);
@@ -50,17 +60,32 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
 
             synchronizer = new TracksSynchronizer(
                     context, 
-                    new WebClient(context, Preferences.getTracksUser(context), Preferences.getTracksPassword(context)), 
-                    Preferences.getTracksUrl(context));
+                    new WebClient(context, Preferences.getTracksUser(context), 
+                            Preferences.getTracksPassword(context)), 
+                    Preferences.getTracksUrl(context)
+                    );
         }
         return synchronizer;
     }
 
-
-    private TracksSynchronizer(Context context, WebClient client, String tracksUrl) {
-        mContextSynchronizer = new ContextSynchronizer(this, client, context, 0, tracksUrl);
-        mProjectSynchronizer = new ProjectSynchronizer(this, client, context, 33, tracksUrl);
-        mTaskSynchronizer = new TaskSynchronizer(this, client, context, 66, tracksUrl);
+    private TracksSynchronizer(Context context, 
+            WebClient client, 
+            String tracksUrl) {
+        //TODO inject this
+        ContentResolverProvider provider = new ContentResolverProvider() {
+            @Override
+            public ContentResolver get() {
+                return context.getContentResolver();
+            }
+        };
+        
+        EntityPersister<Task> taskPersister = new TaskPersister(provider);
+        EntityPersister<org.dodgybits.shuffle.android.core.model.Context> contextPersister = new ContextPersister(provider);
+        EntityPersister<Project> projectPersister = new ProjectPersister(provider);
+        
+        mContextSynchronizer = new ContextSynchronizer(contextPersister, this, client, context, 0, tracksUrl);
+        mProjectSynchronizer = new ProjectSynchronizer(projectPersister, this, client, context, 33, tracksUrl);
+        mTaskSynchronizer = new TaskSynchronizer(taskPersister, this, client, context, 66, tracksUrl);
 
         mContext = context;
         mMessages = new LinkedList<Integer>();

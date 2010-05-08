@@ -28,6 +28,12 @@ import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
+import roboguice.inject.ContentResolverProvider;
+import roboguice.inject.ResourcesProvider;
+
+import com.google.inject.Inject;
+
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -45,12 +51,32 @@ public class InitialDataGenerator {
 	private static final int COMMUNICATION_INDEX = 4;
 	private static final int READ_INDEX = 5;
 
-	private static Context[] cPresetContexts = null;
+	private Context[] mPresetContexts = null;
 
+	private EntityPersister<Context> mContextPersister;
+	private EntityPersister<Project> mProjectPersister;
+	private EntityPersister<Task> mTaskPersister;
+	private ContentResolver mContentResolver;
+	private Resources mResources;
 	
-    public static Context getSampleContext(Resources res) {
-        initPresetContexts(res);
-        return cPresetContexts[ERRANDS_INDEX];
+	@Inject 
+    public InitialDataGenerator(EntityPersister<Context> contextPersister,
+            EntityPersister<Project> projectPersister,
+            EntityPersister<Task> taskPersister,
+            ContentResolverProvider provider,
+            ResourcesProvider resourcesProvider
+    ) {
+	    mContentResolver = provider.get();
+	    mResources = resourcesProvider.get();
+	    mContextPersister = contextPersister;
+	    mProjectPersister = projectPersister;
+	    mTaskPersister = taskPersister;
+	    
+        initPresetContexts();
+    }
+
+    public Context getSampleContext() {
+        return mPresetContexts[ERRANDS_INDEX];
     }
     
     /**
@@ -60,21 +86,19 @@ public class InitialDataGenerator {
      * @param androidContext the android context, in this case the activity.
      * @param handler the android message handler
      */
-    public static void cleanSlate(android.content.Context androidContext,
-            Handler handler) {
-        initPresetContexts(androidContext.getResources());
-        int deletedRows = androidContext.getContentResolver().delete(
+    public void cleanSlate(Handler handler) {
+        initPresetContexts();
+        int deletedRows = mContentResolver.delete(
                 TaskProvider.Tasks.CONTENT_URI, null, null);
         Log.d(cTag, "Deleted " + deletedRows + " tasks.");
-        deletedRows = androidContext.getContentResolver().delete(
+        deletedRows = mContentResolver.delete(
                 ProjectProvider.Projects.CONTENT_URI, null, null);
         Log.d(cTag, "Deleted " + deletedRows + " projects.");
-        deletedRows = androidContext.getContentResolver().delete(
+        deletedRows = mContentResolver.delete(
                 ContextProvider.Contexts.CONTENT_URI, null, null);
         Log.d(cTag, "Deleted " + deletedRows + " contexts.");
-        ContextPersister persister = new ContextPersister(androidContext.getContentResolver());
-        for (int i = 0; i < cPresetContexts.length; i++) {
-            cPresetContexts[i] = insertContext(persister, cPresetContexts[i]);
+        for (int i = 0; i < mPresetContexts.length; i++) {
+            mPresetContexts[i] = insertContext(mPresetContexts[i]);
         }
         if (handler != null)
             handler.sendEmptyMessage(0);
@@ -86,9 +110,8 @@ public class InitialDataGenerator {
      * @param androidContext the context, that being the view
      * @param handler the message handler
      */
-	public static void createSampleData(android.content.Context androidContext,
-			Handler handler) {
-		cleanSlate(androidContext, null);
+	public void createSampleData(Handler handler) {
+		cleanSlate(null);
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
@@ -103,114 +126,90 @@ public class InitialDataGenerator {
 		cal.add(Calendar.WEEK_OF_YEAR, 1);
 		long twoWeeks = cal.getTimeInMillis();
 		
-		ProjectPersister projectPersister = new ProjectPersister(androidContext.getContentResolver());
-		TaskPersister taskPersister = new TaskPersister(androidContext.getContentResolver());
-		
 		Project sellBike = createProject("Sell old Powerbook", Id.NONE);
-		sellBike = insertProject( projectPersister, sellBike);
+		sellBike = insertProject(sellBike);
 		insertTask( 
-		        taskPersister,
 				createTask("Backup data", null, 
 						AT_COMPUTER_INDEX, sellBike, 
 						now, now + DateUtils.HOUR_IN_MILLIS));
 		insertTask( 
-                taskPersister,
 				createTask("Reformat HD", "Install Leopard and updates", 
 						AT_COMPUTER_INDEX, sellBike, 
 						twoDays, twoDays + 2 * DateUtils.HOUR_IN_MILLIS));
 		insertTask( 
-                taskPersister,
 				createTask("Determine good price", "Take a look on ebay for similar systems", 
 						AT_COMPUTER_INDEX, sellBike, 
 						oneWeek, oneWeek + 2 * DateUtils.HOUR_IN_MILLIS));
 		insertTask( 
-                taskPersister,
 				createTask("Put up ad", AT_COMPUTER_INDEX, sellBike, twoWeeks));
 
 		Project cleanGarage = createProject("Clean out garage", Id.NONE);
-		cleanGarage = insertProject(projectPersister, cleanGarage);
+		cleanGarage = insertProject(cleanGarage);
 		insertTask( 
-                taskPersister,
 				createTask("Sort out contents", "Split into keepers and junk", 
 						AT_HOME_INDEX, cleanGarage, 
 						yesterday, yesterday));
 		insertTask( 
-                taskPersister,
 				createTask("Advertise garage sale", "Local paper(s) and on craigslist", 
 						AT_COMPUTER_INDEX, cleanGarage, 
 						oneWeek, oneWeek + 2 * DateUtils.HOUR_IN_MILLIS));
 		insertTask( 
-                taskPersister,
 				createTask("Contact local charities", "See what they want or maybe just put in charity bins", 
 						COMMUNICATION_INDEX, cleanGarage, 
 						now, now));
 		insertTask( 
-                taskPersister,
 				createTask("Take rest to tip", "Hire trailer?", 
 						ERRANDS_INDEX, cleanGarage, 
 						now, now));
 
 		Project skiTrip = createProject("Organise ski trip", Id.NONE);
-		skiTrip = insertProject(projectPersister, skiTrip);
+		skiTrip = insertProject(skiTrip);
 		insertTask( 
-                taskPersister,
 				createTask("Send email to determine best week", null, 
 						COMMUNICATION_INDEX, skiTrip, 
 						now, now + 2 * DateUtils.HOUR_IN_MILLIS));
 		insertTask( 
-                taskPersister,
 				createTask("Look up package deals", 
 						AT_COMPUTER_INDEX, skiTrip, 0L));
 		insertTask( 
-                taskPersister,
 				createTask("Book chalet", 
 						AT_COMPUTER_INDEX, skiTrip, 0L)); 
 		insertTask( 
-                taskPersister,
 				createTask("Book flights", 
 						AT_COMPUTER_INDEX, skiTrip, 0L));
 		insertTask( 
-                taskPersister,
 				createTask("Book hire car", 
 						AT_COMPUTER_INDEX, skiTrip, 0L));
 		insertTask( 
-                taskPersister,
 				createTask("Get board waxed", 
 						ERRANDS_INDEX, skiTrip, 0L));
 
-		Project discussI8n = createProject("Discuss internationalization", cPresetContexts[AT_WORK_INDEX].getLocalId());
-		discussI8n = insertProject(projectPersister, discussI8n);
+		Project discussI8n = createProject("Discuss internationalization", mPresetContexts[AT_WORK_INDEX].getLocalId());
+		discussI8n = insertProject(discussI8n);
 		insertTask( 
-                taskPersister,
 				createTask("Read up on options", null, 
 						AT_COMPUTER_INDEX, discussI8n, 
 						twoDays, twoDays + 2 * DateUtils.HOUR_IN_MILLIS));
 		insertTask( 
-                taskPersister,
 				createTask("Kickoff meeting", null, 
 						COMMUNICATION_INDEX, discussI8n, 
 						oneWeek, oneWeek + 2 * DateUtils.HOUR_IN_MILLIS));
 		insertTask( 
-                taskPersister,
 				createTask("Produce report", null, 
 						AT_WORK_INDEX, discussI8n, 
 						twoWeeks, twoWeeks + 2 * DateUtils.HOUR_IN_MILLIS));
 
 		// a few stand alone tasks
 		insertTask( 
-                taskPersister,
 				createTask("Organise music collection", 
 						AT_COMPUTER_INDEX, null, 0L));
 		insertTask( 
-                taskPersister,
 				createTask("Make copy of door keys", 
 						ERRANDS_INDEX, null, yesterday));
 		insertTask( 
-                taskPersister,
 				createTask("Read Falling Man", 
 						READ_INDEX, null, 0L));
 		insertTask( 
-                taskPersister,
 				createTask("Buy Tufte books", 
 						ERRANDS_INDEX, null, oneWeek));
 		if (handler != null)
@@ -218,20 +217,20 @@ public class InitialDataGenerator {
 	}
 	
     
-    private static void initPresetContexts(Resources res) {
-        if (cPresetContexts == null) {
-            cPresetContexts = new Context[] {
-                    createContext(res.getText(R.string.context_athome).toString(), 5, "go_home"), // 0
-                    createContext(res.getText(R.string.context_atwork).toString(), 19, "system_file_manager"), // 1
-                    createContext(res.getText(R.string.context_online).toString(), 1, "applications_internet"), // 2
-                    createContext(res.getText(R.string.context_errands).toString(), 14, "applications_development"), // 3
-                    createContext(res.getText(R.string.context_contact).toString(), 22, "system_users"), // 4
-                    createContext(res.getText(R.string.context_read).toString(), 16, "format_justify_fill") // 5
+    private void initPresetContexts() {
+        if (mPresetContexts == null) {
+            mPresetContexts = new Context[] {
+                    createContext(mResources.getText(R.string.context_athome).toString(), 5, "go_home"), // 0
+                    createContext(mResources.getText(R.string.context_atwork).toString(), 19, "system_file_manager"), // 1
+                    createContext(mResources.getText(R.string.context_online).toString(), 1, "applications_internet"), // 2
+                    createContext(mResources.getText(R.string.context_errands).toString(), 14, "applications_development"), // 3
+                    createContext(mResources.getText(R.string.context_contact).toString(), 22, "system_users"), // 4
+                    createContext(mResources.getText(R.string.context_read).toString(), 16, "format_justify_fill") // 5
             };
         }
     }
 
-    private static Context createContext(String name, int colourIndex, String iconName) {
+    private Context createContext(String name, int colourIndex, String iconName) {
         Context.Builder builder = Context.newBuilder();
         builder
             .setName(name)
@@ -240,21 +239,21 @@ public class InitialDataGenerator {
         return builder.build();
     }	
 
-	private static Task createTask(String description, int contextIndex, Project project, long start) {
+	private Task createTask(String description, int contextIndex, Project project, long start) {
 		return createTask(description, null, contextIndex, project, start);
 	}
 	
-	private static Task createTask(String description, String details, 
+	private Task createTask(String description, String details, 
 			int contextIndex, Project project, long start) {
 		return createTask(description, details, contextIndex, project, start, start);
 
 	}		
 
-	private static int ORDER = 1;
+	private int ORDER = 1;
 	
-	private static Task createTask(String description, String details, 
+	private Task createTask(String description, String details, 
 			int contextIndex, Project project, long start, long due) {
-		Id contextId = contextIndex > -1 ? cPresetContexts[contextIndex].getLocalId() : Id.NONE;
+		Id contextId = contextIndex > -1 ? mPresetContexts[contextIndex].getLocalId() : Id.NONE;
 		long created = System.currentTimeMillis();
         String timezone = TimeZone.getDefault().getID();
 
@@ -273,7 +272,7 @@ public class InitialDataGenerator {
 		return builder.build();
 	}
 	
-    private static Project createProject(String name, Id defaultContextId) {
+    private Project createProject(String name, Id defaultContextId) {
         Project.Builder builder = Project.newBuilder();
         builder
             .setName(name)
@@ -282,10 +281,9 @@ public class InitialDataGenerator {
         return builder.build();
     }
 
-	private static Context insertContext(
-			ContextPersister persister,
+	private Context insertContext(
 			org.dodgybits.shuffle.android.core.model.Context context) {
-		Uri uri = persister.insert(context);
+		Uri uri = mContextPersister.insert(context);
 		long id = ContentUris.parseId(uri);
 		Log.d(cTag, "Created context id=" + id + " uri=" + uri);
 		Context.Builder builder = Context.newBuilder();
@@ -295,10 +293,9 @@ public class InitialDataGenerator {
 		return context;
 	}
 
-	private static Project insertProject(
-			ProjectPersister persister,
+	private Project insertProject(
 			Project project) {
-		Uri uri = persister.insert(project);
+		Uri uri = mProjectPersister.insert(project);
 		long id = ContentUris.parseId(uri);
 		Log.d(cTag, "Created project id=" + id + " uri=" + uri);
 		Project.Builder builder = Project.newBuilder();
@@ -308,10 +305,9 @@ public class InitialDataGenerator {
 		return project;
 	}
 
-	private static Task insertTask(
-	        TaskPersister persister,
+	private Task insertTask(
 			Task task) {
-		Uri uri = persister.insert(task);
+		Uri uri = mTaskPersister.insert(task);
 		long id = ContentUris.parseId(uri);
 		Log.d(cTag, "Created task id=" + id);
 		Task.Builder builder = Task.newBuilder();

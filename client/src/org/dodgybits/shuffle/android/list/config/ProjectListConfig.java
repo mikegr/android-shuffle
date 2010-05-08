@@ -24,6 +24,8 @@ import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 
+import com.google.inject.Inject;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
@@ -33,11 +35,12 @@ public class ProjectListConfig implements DrilldownListConfig<Project> {
     private ProjectPersister mGroupPersister;
     private TaskPersister mChildPersister;
     
-    public ProjectListConfig(ContentResolver resolver) {
-        mGroupPersister = new ProjectPersister(resolver);
-        mChildPersister = new TaskPersister(resolver);
+    @Inject
+    public ProjectListConfig(ProjectPersister projectPersister, TaskPersister taskPersister) {
+        mGroupPersister = projectPersister;
+        mChildPersister = taskPersister;
     }
-    
+
     @Override
 	public String getChildName(ContextWrapper context) {
 		return context.getString(R.string.task_name);

@@ -24,7 +24,6 @@ import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContextWrapper;
 import android.database.Cursor;
 
@@ -33,8 +32,8 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     private TaskPersister mPersister;
     private TaskQuery mTaskQuery;
     
-    public AbstractTaskListConfig(ContentResolver resolver, TaskQuery query) {
-        mPersister = new TaskPersister(resolver);
+    public AbstractTaskListConfig(TaskQuery query, TaskPersister persister) {
+        mPersister = persister;
         setTaskQuery(query);
     }
     

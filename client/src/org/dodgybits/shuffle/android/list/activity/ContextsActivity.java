@@ -26,6 +26,8 @@ import org.dodgybits.shuffle.android.list.view.ContextView;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
+import com.google.inject.Inject;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -42,6 +44,8 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	@SuppressWarnings("unused")
     private static final String cTag = "ContextsActivity";
 
+	@Inject ContextListConfig mListConfig;
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -54,9 +58,8 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	}
 	
 	@Override
-	protected ListConfig<Context> createListConfig()
-	{
-		return new ContextListConfig(getContentResolver());
+	protected ListConfig<Context> createListConfig() {
+	    return mListConfig;
 	}
 	
 	@Override

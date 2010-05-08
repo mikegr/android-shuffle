@@ -19,6 +19,7 @@ package org.dodgybits.shuffle.android.list.activity.task;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
@@ -34,7 +35,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+
 public class InboxActivity extends AbstractTaskListActivity {
+
+    @Inject private TaskPersister mTaskPersister;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -64,11 +69,11 @@ public class InboxActivity extends AbstractTaskListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-	@Override
-	protected ListConfig<Task> createListConfig()
+    @Override
+    protected ListConfig<Task> createListConfig()
 	{
         TaskQuery query = StandardTaskQueries.getQuery(StandardTaskQueries.cInbox);
-		return new AbstractTaskListConfig(getContentResolver(), query) {
+		return new AbstractTaskListConfig(query, mTaskPersister) {
 
 		    public int getCurrentViewMenuId() {
 		    	return MenuUtils.INBOX_ID;

@@ -33,6 +33,8 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 
+import com.google.inject.Inject;
+
 /**
  * Display list of projects with task children.
  */
@@ -41,6 +43,8 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	@SuppressWarnings("unused")
     private static final String cTag = "ProjectsActivity";
 
+    @Inject ProjectListConfig mListConfig;
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -53,9 +57,8 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	}
 
 	@Override
-	protected ListConfig<Project> createListConfig()
-	{
-		return new ProjectListConfig(getContentResolver());
+	protected ListConfig<Project> createListConfig() {
+	    return mListConfig;
 	}
 
 	@Override

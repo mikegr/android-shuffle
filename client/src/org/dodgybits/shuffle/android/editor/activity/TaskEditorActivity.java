@@ -25,9 +25,7 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
-import org.dodgybits.shuffle.android.core.model.encoding.TaskEncoder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
@@ -68,6 +66,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.google.inject.Inject;
 
 /**
  * A generic activity for editing a task in the database.  This can be used
@@ -143,6 +143,9 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private ArrayList<Integer> mOriginalMinutes = new ArrayList<Integer>();
     private ArrayList<LinearLayout> mReminderItems = new ArrayList<LinearLayout>(0);
     
+    @Inject private EntityPersister<Task> mPersister;
+    @Inject private EntityEncoder<Task> mEncoder;
+    
     @Override
     protected void onCreate(Bundle icicle) {
         Log.d(cTag, "onCreate+");
@@ -169,15 +172,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
         }
-    }
-    @Override
-    protected EntityEncoder<Task> createEncoder() {
-        return new TaskEncoder();
-    }
-    
-    @Override
-    protected EntityPersister<Task> createPersister() {
-        return new TaskPersister(getContentResolver());
     }
     
     @Override
@@ -432,6 +426,17 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
 		
 		return builder.build();
 	}
+    
+    @Override
+    protected EntityEncoder<Task> getEncoder() {
+        return mEncoder;
+    }
+    
+    @Override
+    protected EntityPersister<Task> getPersister() {
+        return mPersister;
+    }
+    
         
     private Uri addOrUpdateCalendarEvent(
             Id calEventId, String title, String description,

@@ -25,7 +25,8 @@ import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
@@ -39,18 +40,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.inject.Inject;
+
 public class ContextTasksActivity extends AbstractTaskListActivity {
 
 	private static final String cTag = "ContextTasksActivity";
 	private Id mContextId;
 	private Context mContext;
-
+	
+    @Inject private EntityPersister<Context> mContextPersister;
+    @Inject private TaskPersister mTaskPersister;
+	
 	@Override
     public void onCreate(Bundle icicle) {
 		Uri contextUri = getIntent().getData();
 		mContextId = Id.create(ContentUris.parseId(contextUri));
         super.onCreate(icicle);
-
 	}
 
 	@Override
@@ -59,14 +64,14 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	}
 
 	@Override
-	protected ListConfig<Task> createListConfig()
+    protected ListConfig<Task> createListConfig()
 	{
 	    List<Id> ids = Arrays.asList(new Id[] {mContextId});
 	    TaskQuery query = TaskQuery.newBuilder()
 	        .setContexts(new ArrayList<Id>(ids))
 	        .setSortOrder(TaskProvider.Tasks.CREATED_DATE + " ASC")
 	        .build();
-		return new AbstractTaskListConfig(getContentResolver(), query) {
+		return new AbstractTaskListConfig(query, mTaskPersister) {
 
 		    public int getCurrentViewMenuId() {
 		    	return 0;
@@ -80,15 +85,13 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 		};
 	}
 	
-	
 	@Override
 	protected void onResume() {
 		Log.d(cTag, "Fetching context " + mContextId);
 		Cursor cursor = getContentResolver().query(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.cFullProjection,
 				ContextProvider.Contexts._ID + " = ?", new String[] {String.valueOf(mContextId)}, null);
 		if (cursor.moveToNext()) {
-		    ContextPersister persister = new ContextPersister(getContentResolver());
-			mContext = persister.read(cursor);
+			mContext = mContextPersister.read(cursor);
 		}
 		cursor.close();
 		
