@@ -17,10 +17,7 @@
 package org.dodgybits.shuffle.android.list.activity.task;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.activity.AbstractListActivity;
@@ -49,6 +46,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.internal.Nullable;
 
 public abstract class AbstractTaskListActivity extends AbstractListActivity<Task> 
@@ -56,8 +54,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 
 	private static final String cTag = "AbstractTaskListActivity";
 	
-	@Inject protected EntityCache<Context> mContextCache;
-	@Inject protected EntityCache<Project> mProjectCache;
+    @Inject Provider<TaskView> mTaskViewProvider;
 	
 	@InjectView(R.id.add_task_button) @Nullable Button mAddTaskButton;
 	protected Button mOtherButton;
@@ -157,7 +154,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 				if (convertView instanceof TaskView) {
 					taskView = (TaskView) convertView;
 				} else {
-					taskView = new TaskView(parent.getContext(), mContextCache, mProjectCache);
+                    taskView = mTaskViewProvider.get();
 				}
 				taskView.setShowContext(showTaskContext());
 				taskView.setShowProject(showTaskProject());

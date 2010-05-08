@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class ExpandableContextsActivity extends AbstractExpandableActivity<Context> {
     private int mChildIdColumnIndex; 
@@ -42,6 +43,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 	private SparseIntArray mTaskCountArray;
 	
     @Inject ContextExpandableListConfig mListConfig;
+	@Inject Provider<ExpandableTaskView> mTaskViewProvider;
 	
     @Override
     protected ExpandableListConfig<Context> getListConfig() {
@@ -107,7 +109,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
 				} else {
-					taskView = new ExpandableTaskView(parent.getContext(), mContextCache, mProjectCache);
+					taskView = mTaskViewProvider.get(); 
 				}
 				taskView.setShowContext(false);
 				taskView.setShowProject(true);

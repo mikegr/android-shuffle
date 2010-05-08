@@ -42,6 +42,7 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class ExpandableProjectsActivity extends AbstractExpandableActivity<Project> {
 	private static final String cTag = "ExpandableProjectsActivity";
@@ -51,6 +52,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	private SparseIntArray mTaskCountArray;
 
     @Inject ProjectExpandableListConfig mListConfig;
+    @Inject Provider<ExpandableTaskView> mTaskViewProvider;
 
     @Override
     protected ExpandableListConfig<Project> getListConfig() {
@@ -121,7 +123,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 				if (convertView instanceof ExpandableTaskView) {
 					taskView = (ExpandableTaskView) convertView;
 				} else {
-					taskView = new ExpandableTaskView(parent.getContext(), mContextCache, mProjectCache);
+                    taskView = mTaskViewProvider.get(); 
 				}
 				taskView.setShowContext(true);
 				taskView.setShowProject(false);
