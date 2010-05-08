@@ -1,0 +1,402 @@
+?
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Android Shuffle Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+	<!--  Activity titles -->
+    <string name="app_name">Shuffle PL</string>
+    <string name="title_inbox">Skrzynka</string>
+    <string name="title_project">Projekty</string>
+    <string name="title_context">Konteksty</string>
+    <string name="title_next_tasks">Następne zadania</string>
+    <string name="title_due_tasks">Wymagane zadania</string>
+    <string name="title_due_today">Na dzisiaj</string>
+    <string name="title_due_next_week">Na przyszły tydzień</string>
+    <string name="title_due_next_month">Na przyszły miesiąc</string>
+    <string name="title_new_task">Nowe zadanie</string>
+    <string name="title_edit_task">Edytuj zadanie</string>
+    <string name="title_view_task">Zobacz zadanie</string>
+    <string name="title_new_project">Nowy projekt</string>
+    <string name="title_edit_project">Edytuj projekt</string>
+    <string name="title_new_context">Nowy kontekst</string>
+    <string name="title_edit_context">Edytuj kontekst</string>
+    <string name="title_task_extras">Dodatki</string>
+    <string name="title_preferences">Ustawienia ogólne</string>
+    <string name="title_preferences_appearance">Ustawienia ogólne > Wygląd zadań</string>
+    <string name="title_preferences_clean">Ustawienia ogólne > Czyszczenie</string>
+    <string name="title_preferences_create_backup">Utwórz kopię zapasową</string>
+    <string name="title_preferences_restore_backup">Przywróć z kopii zapasowej</string>
+    <string name="title_help">Pomoc</string>
+    <string name="title_icon_picker">Wybierz ikonę</string>
+    <string name="title_colour_picker">Wybierz kolor</string>
+    <string name="title_calendar">Wymagane zadania %s</string>
+    <string name="title_project_tasks">Projekty > %s</string>
+    <string name="title_context_tasks">Konteksty > %s</string>
+    <string name="title_shortcut_picker">Wybierz ekran skrótu</string>
+    <string name="title_widget_picker">Wybierz ekran widżetu</string>
+
+	<!--  Option menu -->
+    <string name="menu_save">Zapisz</string>
+    <string name="menu_save_and_add">Zapisz i utwórz nowy</string>
+    <string name="menu_delete">Usuń</string>
+    <string name="menu_complete">Oznacz jako gotowy</string>
+    <string name="menu_move_up">Do góry</string>
+    <string name="menu_move_down">W dół</string>
+    <string name="menu_insert">Dodaj %s</string>
+    <string name="menu_revert">Przywróć</string>
+    <string name="menu_discard">Odrzuć</string>
+    <string name="menu_view">Perspektywy</string>
+    <string name="menu_preferences">Ustawienia</string>
+    <string name="menu_sync">Synchronizuj</string>
+    <string name="menu_search">Szukaj</string>
+    <string name="menu_help">Pomoc</string>
+
+    <!--  general purpose -->
+    <string name="project_title">Projekt</string>
+    <string name="context_title">Kontekst</string>
+    <string name="details_title">Szczegóły</string>
+    <string name="set_button_title">Ustaw</string>
+    <string name="clear_button_title">Wyczyść</string>
+    <string name="edit_button_title">Edytuj</string>
+    <string name="extras_button_title">Dodatkowe szczegóły...</string>
+    <string name="save_button_title">Zapisz</string>
+    <string name="ok_button_title">OK</string>
+    <string name="cancel_button_title">Anuluj</string>
+    <string name="replace_button_title">Replace</string>
+	<string name="warning_title">Ostrzeżenie</string>
+	<string name="info_title">Informacje</string>
+    <string name="task_name">Zadanie</string>
+    <string name="project_name">Projekt</string>
+    <string name="context_name">Kontekst</string>
+    <string name="nothing"></string>
+    <string name="none_empty">Brak</string>
+    <string name="undefined">Brak</string>
+    <string name="today">Dzisiaj</string>
+    <string name="yesterday">Wczoraj</string>
+    <string name="previous_button_title">Wcześniejsze</string>
+    <string name="next_button_title">Następne</string>
+    
+    <!--  search -->
+    <string name="search_label">Shuffle</string>
+    <string name="search_hint">Wyszukaj w opisie lub szczegółach</string>
+    <string name="search_settings_description">Opisy i szczegóły zadań</string>
+    
+    <!--  Welcome screen -->
+    <string name="sample_data_title">Pokaz</string>
+    <string name="clean_slate_title">Wyczyść terminy</string>
+
+	<!--  edit screens -->
+    <string name="menu_done">Zapisz</string>
+    <string name="menu_doNotSave">Porzuć zmiany</string>
+
+	<!--  task edit screen -->
+    <string name="description_title">Opis</string>
+    <string name="scheduling_title">Planowanie</string>
+    <string name="scheduling_collapsed">Kliknij by rozwinąć opcje planowania</string>
+    <string name="scheduling_expanded">Kliknij by schować opcje planowania</string>
+    <string name="start_title">Początek</string>
+    <string name="due_title">Koniec</string>
+    <string name="all_day_title">Cały dzień</string>
+    <string name="reminders_title">Przypomnienia</string>
+    <string name="add_to_gcal_title">Dodaj do kalendarza Google</string>
+    <string name="add_to_gcal_detail_disabled">Dodaj daty by włączyć tę opcję</string>
+    <string name="add_to_gcal_detail">Nowy wpis zostanie dodany po zapisaniu</string>
+    <string name="update_gcal_title">Aktualizuj kalendarz Google</string>
+    <string name="update_gcal_detail">Zaktualizowany wpis zostanie wczytany po zapisaniu</string>
+    <string name="completed_title">Ukończone</string>
+    <string name="clear_title">Wyczyść daty</string>
+
+	<!--  project & context edit screens -->
+    <string name="colour_title">Kolor</string>
+    <string name="archived_title">Zarchiwizowane</string>
+    <string name="icon_title">Ikona</string>
+    <string name="name_title">Nazwa</string>
+    <string name="sequence_title">Zadania wykonywane po kolei</string>
+    <string name="parallel_title">Zadania wykonywane równolegle</string>
+    <string name="default_context_title">Domyślny kontekst</string>
+    <string name="preview_title">Podgląd</string>
+    <string name="context_errands">Zlecenia</string>
+	<string name="context_online">Online</string>
+    <string name="context_athome">W domu</string>
+    <string name="context_atwork">W pracy</string>
+	<string name="context_contact">Kontakt</string>
+	<string name="context_read">Przeczytaj</string>
+
+	<!--  Calendar screen -->
+    <string name="day_button_title">Dzisiaj</string>
+    <string name="week_button_title">Następny tydzień</string>
+    <string name="month_button_title">Następny miesiąc</string>
+	
+	<!--  preferences screen -->    
+    <string name="display_task_list_title">Wyświetl na liście zadań</string>
+    <string name="context_icon_title">Ikona kontekstu</string>
+    <string name="context_name_title">Nazwa kontekstu</string>
+    <string name="due_date_title">Data ukończenia</string>
+
+
+    <string name="general_preferences">Ustawienia Google</string>
+    
+    <string name="title_calendar_preference">Wybór kalendarza</string>
+    <string name="summary_calendar_preference">Dla nowych wpisów do kalendarza Google</string>
+
+
+	<string name="layout_preferences">Ustawienia układu</string>
+
+	<string name="title_project_view_preference">Widok projektu</string>
+	<string name="summary_project_view_preference">Wyświetlaj zadania projektu na osobnym ekranie</string>
+
+	<string name="title_context_view_preference">Widok kontekstu</string>
+	<string name="summary_context_view_preference">Wyświetlaj zadania kontekstu na osobnym ekranie</string>
+
+	<string name="title_action_appearance_preference">Widok zadania</string>
+	<string name="summary_action_appearance_preference">Dostosuj wyświetlanie zadań w listach</string>
+
+
+    <string name="sync_preferences">Ustawienia synchronizacji</string>
+
+    <string name="changeSynchronizationSettings">Ustawienia Tracks</string>
+
+
+	<string name="backup_preferences">Ustawienia kopii zapasowej</string>
+	
+	<string name="title_create_backup_preference">Kopia na kartę SD</string>
+	<string name="summary_create_backup_preference">Zapisz wszystkie zadania, projekty i konteksty</string>
+
+    <string name="filename_title">Plik kopii zapasowej</string>
+	<string name="backup_progress">Zapisywanie <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string>
+	<string name="toast_backup_saved">Dane zapisane do <xliff:g id="filename">%s</xliff:g>.</string>
+
+	<string name="title_restore_backup_preference">Przywróć kopię zapasową z karty SD</string>
+	<string name="summary_restore_backup_preference">Przywróć dane z kopii zapasowej</string>
+	<string name="toast_backup_restored">Dane przywrócone z  <xliff:g id="filename">%s</xliff:g>.</string>
+	<string name="restore_progress">Czytanie <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string>
+	<string name="restore_button_title">Przywróć</string>
+
+    <string name="warning_filename_empty">Musisz podać nazwę pliku.</string>
+	<string name="warning_filename_exists"><xliff:g id="filename">%s</xliff:g> już istnieje.</string>
+	<string name="warning_media_not_mounted">Karta nie jest zamontowana <xliff:g id="error">%s</xliff:g></string>
+	<string name="warning_backup_failed">Kopia nie powiodła się <xliff:g id="error">%s</xliff:g></string>
+    <string name="warning_no_files">Brak plików do wyświetlenia.</string>
+	<string name="warning_restore_failed">Przywrócenie nie powiodło się <xliff:g id="error">%s</xliff:g></string>
+    <string name="status_checking_media">Sprawdzanie stanu nośnika.</string>
+    <string name="status_creating_backup">Tworzenie pliku kopii.</string>
+    <string name="status_backup_complete">Kopia gotowa.</string>
+    <string name="status_reading_backup">Czytanie pliku kopii.</string>
+    <string name="status_restore_complete">Przywracania ukończone.</string>
+
+	<string name="cleanup_preferences">Ustawienia czyszczenia</string>
+
+	<string name="dialog_title_cleanup_preference">Usuń ukończone zadania</string>
+
+	<string name="title_delete_completed_preference">Usuń ukończone zadania</string>
+
+	<string name="title_delete_all_preference">Usuń wszystko!</string>
+	<string name="summary_delete_all_preference">Usuń wszystkie zadania, projekty i konteksty.</string>
+
+    <string name="delete_completed_button_title">Usuń</string>
+    <string name="clean_inbox_button_title">Wyczyść Skrzynkę</string>
+    <string name="clean_slate_button_title">Usuń</string>
+
+    <!-- Toast displayed when an item is created -->
+    <string name="itemCreatedToast"><xliff:g id="itemName">%s</xliff:g> utworzony.</string>
+
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemSavedToast"><xliff:g id="itemName">%s</xliff:g> zachowany.</string>
+
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemDeletedToast"><xliff:g id="itemName">%s</xliff:g> usunięty.</string>
+    
+   <!-- synchronization-->
+    <string name="synchronizing">Synchronizowanie z Tracks</string>
+    <string name="tracksUser">Użytkownik</string>
+    <string name="tracksInstallation">Docelowa instalacja</string>
+    <string name="tracks_url">Instalacja Tracks</string>
+    <string name="tracks_url_settings">http://my.gtdify.com</string>
+    <string name="tracks_user">Użytkownik</string>
+    <string name="tracks_pass">Hasło</string>
+    <string name="readingRemoteTasks">Czytanie zdalnych zadań</string>
+    <string name="processingTasks">Przetwarzanie zadań</string>
+    <string name="readingLocalTasks">Czytanie lokalnych zadań</string>
+    <string name="doneWithTasks">Zadania gotowe</string>
+    <string name="cannotSyncTasksWithoutContext">Nie można synchronizować zadań bez kontekstu</string>
+    <string name="readingRemoteContexts">Czytanie zdalnych kontekstów</string>
+    <string name="processingContexts">Przetwarzanie kontekstów</string>
+    <string name="readingLocalContexts">Czytanie lokalnych kontekstów</string>
+    <string name="doneWithContexts">Konteksty gotowe</string>
+    <string name="readingRemoteProjects">Czytanie zdalnych projektów</string>
+    <string name="processingProjects">Przetwarzanie projektów</string>
+    <string name="readingLocalProjects">Czytanie lokalnych projektów</string>
+    <string name="doneWithProjects">Projekty gotowe</string>
+    <string name="tracks_failed_to_check_url">Nie można załadować kontekstów z tymi ustawieniami. Być może wystąpił błąd</string>
+    <string name="tracks_background_sync">Interwał synchronizacji w tle</string>
+    <string name="sync_interval_none">Nigdy</string>
+    <string name="sync_interval_30min">30 minut</string>
+    <string name="sync_interval_1h">1 godzina</string>
+    <string name="sync_interval_2h">2 godziny</string>
+    <string name="sync_interval_3h">3 godziny</string>
+
+	<!--  messages -->
+    <string name="no_due_date">Brak daty wykonania</string>
+    <string name="no_icon">Brak ikony</string>
+    <string name="no_tasks">Brak zadań do wyświetlenia. Zacznij wybierając \"Dodaj zadania\" z menu.</string>
+    <string name="no_due_tasks">Brak akcji do wykonania.</string>
+    <string name="no_projects">Brak projektów do wyświetlenia. Zacznij od utworzenia zadań w Skrzynce i przypisania ich do projektów.</string>
+    <string name="no_contexts">Brak kontekstów do wyświetlenia. Zacznij od utworzenia zadań w Skrzynce i przypisania ich do kontekstów.</string>
+    <string name="delete_warning">Na pewno usunąć zaznaczone %s i jego %d %ss?</string>
+    <string name="delete_completed_warning">Usunąć wszystkie ukończone zadania?</string>
+    <string name="clean_slate_warning">Usunąć <i>wszystkie</i> zadania, projekty i własne konteksty?</string>
+    <string name="clean_task_message">Usunięto %d ukończonych zadań.</string>
+    <string name="clean_inbox_message">Zadania z projektami i kontekstami zostały wyczyszczone ze skrzynki.</string>
+    <string name="clean_slate_message">Wszystkie zadania, projekty i własne konteksty zostały usunięte.</string>
+   	<string name="error_title">Błąd</string>
+	<string name="error_message">Błąd ładowania zadania</string>
+	<string name="web_error_message">Nie można się połączyć z Tracks</string>    
+    <string name="welcome1">
+Witam w Shuffle, osobistym narzędziu do organizacji pracy inspirowanym
+metodologią \"Getting Things Done\".
+Jeśli chcesz dowiedzieć się jak najlepiej używać Shuffle kliknij Demonstracja
+aby wczytać klika przykładowych projektów i zadań.
+Później możesz zacząć od nowa wybierając \"Usuń wszystko\" z menu Ustawienia.     
+    </string>
+    <string name="welcome2">
+Możesz również zacząć od razu bez zadań i projektów, z kilkoma domyślnymi kontekstami...
+    </string>
+    <string name="welcome3">
+Więcej porad i instrukcji znajduje się w Pomocy  w menu Ustawień.
+    </string>
+    <string name="help0">
+Shuffle jest narzędziem osobistej organizacji inspirowanym \"Getting Things Done\".
+Umożliwia szybko wprowadzać i kategoryzować \'zadania\'. Z 5 wpieranymi perspektywami
+pozwala ci zaatakować twoje zadania w ulubiony sposób.
+\n
+A simple elegant workflow encourages you to categorize your actions into projects and optionally provide context.
+This structure lets you to break down formidable projects into individual achievable tasks.\n
+As a project evolves, clean out old actions as they\'re performed, 
+add new actions and reorder any remaining actions depending on your current priorities.
+    </string>
+    <string name="help1">
+This is the best place to add your actions. 
+The <b>Inbox</b> is where all actions start off before they are processed.
+Try to regularly scan the Inbox, analyzing each action and either discard it, do it or assign it
+to a project and/or context.\n
+Once you\'ve processed the list, select <i>Clean up Inbox</i> from the menu to
+clear out all the categorized actions from your Inbox. 
+    </string>
+    <string name="help2">
+The <b>Project</b> perspective lists all your projects, and allows you to drill-down 
+into each project to view its actions. In addition to the standard adding, editing and deleting
+of actions, the project view also supports rearranging actions in the order you intend to complete them.
+\n
+For some projects it makes sense for actions to completed one after the other in strict order. For other
+projects,  actions can be completed in any order. This is configurable when creating or editing a project.
+\n
+Projects, like contexts, can be viewed in two different modes: drill-down or expandable view. 
+In drill down mode, clicking on a project takes you to another 
+screen showing the actions for that project. In expandable mode, clicking a project shows
+its actions on the same screen.
+    </string>
+    <string name="help3">
+<b>Contexts</b> are situations in which you intend to perform actions. Shuffle comes with a few standard contexts to get you started: 
+<i>At home</i>, <i>At  work</i>, <i>Online</i>, <i>Errands</i>, <i>Contact</i> and <i>Read</i>. \n
+Feel free to modify or delete the existing, or add your own contexts that suit your situation.\n
+\n
+Like the Projects perspective, contexts can be viewed in either drill-down or expandable mode, configurable via Settings. 
+    </string>
+    <string name="help4">
+<b>Next actions</b> is the best place to look to determine what needs to be done. \n
+It shows the following actions\n
+- those without a project\n
+- the first action for sequential projects\n
+- all actions for parallel projects\n
+This list quickly shows you the most important actions for you to get started on now.
+    </string>
+    <string name="help5">
+<b>Due actions</b> lets you keep track of actions you have given an explicit due date. 
+There are 3 views - <i>Today</i>, <i>This Week</i> and 
+<i>This Month</i> each showing actions due for the given time scale. 
+Overdue actions are shown in all views.
+    </string>
+    <string name="help6">
+A number of aspects of Shuffle are user-configurable. The <b>Settings</b> screen is available from all Perspectives via the menu. \n
+<b>Calendar</b>  - Select a calendar to use when integrating actions with Google Calendar. \n
+<b>Project/Context view</b>  - Show projects and contexts in two screens (drill-down) or in a tree structure (expandable). \n
+<b>Action appearance</b> - Lets you customize what information to display for actions in each perspective.  \n
+<b>Tracks settings</b> - Configure synchronization with a Tracks server . \n
+<b>Backup to SD Card</b> - Save all your actions, contexts and projects to your SD Card. You can them back this up to your computer. \n
+<b>Restore from SD Card</b> - Restores all your data from a backup. No attempt is made to avoid duplicate actions, 
+so it's best to restore onto a clean Shuffle instance. \n
+<b>Delete completed actions</b> - Permanently delete all completed actions. \n
+<b>Delete everything!</b> - Permanently delete all actions, projects and custom contexts. \n
+    </string>
+    <string name="help7">
+Some handy Shuffle features you may not know about:\n
+1) In any list view, long press on an item to see a menu of options.\n
+2) Hitting the Back button saves before closing.\n
+3) Use the <i>Save and New</i> menu to create a bunch of actions in one go.\n
+4) You can mark an action as complete by swiping your finger over it in a list.\n
+5) Create shortcuts on your Home Screens for various Shuffle views and actions\n
+6) In Global Settings &gt; Search, enable Shuffle for actions to appear in Quick Search Box queries (Android 1.6+ only)
+    </string>
+    <string name="help8">
+Thanks to the team behind the Tango Desktop Project, an open source collection of icons used in Shuffle.
+Thanks also to David Gibb for providing some great feedback on the design, Morten Nielson for the Tracks synch work,
+and to Gudrun for tolerating my nights and weekends spent tinkering with Android.\n
+\n
+For feedback or bug reports, please check http://code.google.com/p/android-shuffle/issues/list or email me at andy@dodgybits.org
+    </string>
+
+
+    <!-- Reminder format strings -->
+    <plurals name="Nminutes">
+        <!-- This is the label for a 1-minute reminder. -->
+        <item quantity="one">1 minuta</item>
+        <!-- This is the label for 2 or more minutes. The actual number of
+             minutes is a parameter. -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> minut</item>
+    </plurals>
+    <!-- We use the abbreviation "mins" instead of "minutes" to keep the string short.
+         This is the number of minutes displayed for a calendar reminder.  For example,
+         a reminder of 10 minutes would be displayed as '10 mins'.  The translation
+         should use the shortest acceptable abbreviation to save space. -->
+    <plurals name="Nmins">
+        <!-- This is the label for a 1-minute reminder. -->
+        <item quantity="one">1 min</item>
+        <!-- This is the label for 2 or more minutes. The actual number of
+             minutes is a parameter. -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> min</item>
+    </plurals>
+    <!-- This is the number of hours displayed for a calendar reminder.  For example,
+         a reminder of 1 hour would be displayed as '1 hour'.  The translation
+         should use the shortest acceptable abbreviation of 'hour' to save space. -->
+    <plurals name="Nhours">
+        <!-- This is the label for a 1-hour reminder. -->
+        <item quantity="one">1 godzina</item>
+        <!-- This is the label for a reminder of 2 or more hours. The actual number of
+             hours is a parameter. -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> godzin</item>
+    </plurals>
+    <!-- This is the number of days displayed for a calendar reminder.  For example,
+         a reminder of 2 days would be displayed as '2 days'.  The translation
+         should use the shortest acceptable abbreviation of 'day' to save space. -->
+    <plurals name="Ndays">
+        <!-- This is the label for a reminder of 1 day. -->
+        <item quantity="one">1 dzień</item>
+        <!-- This is the label for a reminder of 2 or more days. The actual number of
+             days is a parameter. -->
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> dni</item>
+    </plurals>
+    
+</resources>

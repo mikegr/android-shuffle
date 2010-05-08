@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Android Shuffle Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <array name="clean">
+        <item>Nigdy</item>
+        <item>Co godzinę</item>
+        <item>Codziennie</item>
+        <item>Tygodniowo</item>
+    </array>
+    <array name="clean_keys">
+        <item>nigdy</item>
+        <item>co godzinę</item>
+        <item>codziennie</item>
+        <item>tygodniowo</item>
+    </array>
+    <array name="perspectives">
+        <item>Skrzynka</item>
+        <item>Wymagane działania</item>
+        <item>Natępne działania</item>
+        <item>Projekty</item>
+        <item>Konteksty</item>
+    </array>
+    <array name="view_types">
+        <item>Lista rozszerzalna</item>
+        <item>Drill-down list</item>
+    </array>
+    <array name="help_screens">
+        <item>Wprowadzenie</item>
+        <item>Skrzynka</item>
+        <item>Projekty</item>
+        <item>Konteksty</item>
+        <item>Następne działania</item>
+        <item>Wymagane działania</item>
+        <item>Ustawienia</item>
+        <item>Przydatne porady</item>
+        <item>Podziękowania</item>
+    </array>
+    <array name="preference_screens">
+        <item>Wygląd działań</item>
+        <item>Układ list</item>
+        <item>Czyszczenie</item>
+    </array>
+	    
+    <array name="text_colours">
+    	<item>c5b6985</item>
+    	<item>c2c6cfc</item>
+    	<item>c1800c9</item>
+    	<item>c5528a1</item>
+    	<item>c854f61</item>
+    	<item>cca000f</item>
+
+    	<item>cdee5f2</item>
+    	<item>ce1ecfe</item>
+    	<item>ce0e2fe</item>
+    	<item>ce1d5f8</item>
+    	<item>cfde9f4</item>
+    	<item>cffe3e3</item>
+
+    	<item>cea7015</item>
+    	<item>cb16d12</item>
+    	<item>ca98b13</item>
+    	<item>c626332</item>
+    	<item>c639930</item>
+    	<item>c006634</item>
+    	
+    	<item>cfef0e2</item>
+    	<item>cf9dcb4</item>
+    	<item>cf2e7b4</item>
+    	<item>cfeffd5</item>
+    	<item>cf9ffef</item>
+    	<item>cf1f5ec</item>
+    </array>
+    <array name="background_colours">
+    	<item>cdee5f2</item>
+    	<item>ce1ecfe</item>
+    	<item>ce0e2fe</item>
+    	<item>ce1d5f8</item>
+    	<item>cfde9f4</item>
+    	<item>cffe3e3</item>
+
+    	<item>c5b6985</item>
+    	<item>c2c6cfc</item>
+    	<item>c1800c9</item>
+    	<item>c5528a1</item>
+    	<item>c854f61</item>
+    	<item>cca000f</item>
+
+    	<item>cfef0e2</item>
+    	<item>cf9dcb4</item>
+    	<item>cf2e7b4</item>
+		<item>cfeffd5</item>
+    	<item>cf9ffef</item>
+    	<item>cf1f5ec</item>
+
+    	<item>cea7015</item>
+    	<item>cb16d12</item>
+    	<item>ca98b13</item>
+    	<item>c626332</item>
+    	<item>c639930</item>
+    	<item>c006634</item>
+    </array>
+    
+    <!-- Choices for the "Reminder minutes" spinner.
+         These must be kept in sync with the reminder_minutes_values array.
+    -->
+    <string-array name="reminder_minutes_labels">
+        <item>5 minut</item>
+        <item>10 minut</item>
+        <item>15 minut</item>
+        <item>20 minut</item>
+        <item>25 minut</item>
+        <item>30 minut</item>
+        <item>45 minut</item>
+        <item>1 godzina</item>
+        <item>2 godziny</item>
+        <item>3 godziny</item>
+        <item>12 godzin</item>
+        <item>24 godziny</item>
+        <item>2 dni</item>
+        <item>1 tydzień</item>
+    </string-array>
+    
+    <string-array name="reminder_minutes_values" translatable="false">
+        <item>"5"</item>
+        <item>"10"</item>
+        <item>"15"</item>
+        <item>"20"</item>
+        <item>"25"</item>
+        <item>"30"</item>
+        <item>"45"</item>
+        <item>"60"</item>
+        <item>"120"</item>
+        <item>"180"</item>
+        <item>"720"</item>
+        <item>"1440"</item>
+        <item>"2880"</item>
+        <item>"10080"</item>
+    </string-array>
+    
+    <string-array name="preferences_default_reminder_labels">
+        <item>Brak</item>
+        <item>5 minut</item>
+        <item>10 minut</item>
+        <item>15 minut</item>
+        <item>20 minut</item>
+        <item>25 minut</item>
+        <item>30 minut</item>
+        <item>45 minut</item>
+        <item>1 godzina</item>
+        <item>2 godziny</item>
+        <item>3 godziny</item>
+        <item>12 godzin</item>
+        <item>24 godzin</item>
+        <item>2 dni</item>
+        <item>1 tydzień</item>
+    </string-array>
+    
+    <string-array name="preferences_default_reminder_values" translatable="false">
+        <item>"0"</item>
+        <item>"5"</item>
+        <item>"10"</item>
+        <item>"15"</item>
+        <item>"20"</item>
+        <item>"25"</item>
+        <item>"30"</item>
+        <item>"45"</item>
+        <item>"60"</item>
+        <item>"120"</item>
+        <item>"180"</item>
+        <item>"720"</item>
+        <item>"1440"</item>
+        <item>"2880"</item>
+        <item>"10080"</item>
+    </string-array>
+    
+</resources>
