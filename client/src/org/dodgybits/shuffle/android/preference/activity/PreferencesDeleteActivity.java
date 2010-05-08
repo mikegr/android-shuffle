@@ -19,6 +19,7 @@ package org.dodgybits.shuffle.android.preference.activity;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 
+import roboguice.inject.InjectView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,9 +29,9 @@ import android.widget.TextView;
 public abstract class PreferencesDeleteActivity extends FlurryEnabledActivity {
     private static final String cTag = "PreferencesDeleteActivity";
 
-    protected TextView mText;
-    protected Button mDeleteButton;
-    protected Button mCancelButton;
+    @InjectView(R.id.text) TextView mText;
+    @InjectView(R.id.delete_button) Button mDeleteButton;
+    @InjectView(R.id.cancel_button) Button mCancelButton;
     
     @Override
     protected void onCreate(Bundle icicle) {
@@ -40,9 +41,6 @@ public abstract class PreferencesDeleteActivity extends FlurryEnabledActivity {
 
         setContentView(R.layout.delete_dialog);
         
-        mText = (TextView) findViewById(R.id.text);
-        
-        mDeleteButton = (Button) findViewById(R.id.delete_button);
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -50,7 +48,6 @@ public abstract class PreferencesDeleteActivity extends FlurryEnabledActivity {
             }
         });        
         
-        mCancelButton = (Button) findViewById(R.id.cancel_button);
         mCancelButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {

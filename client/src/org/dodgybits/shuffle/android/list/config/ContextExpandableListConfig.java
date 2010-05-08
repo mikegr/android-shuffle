@@ -22,7 +22,7 @@ import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
@@ -53,7 +53,7 @@ public class ContextExpandableListConfig implements ExpandableListConfig<Context
 
     @Override
 	public String getGroupIdColumnName() {
-		return Shuffle.Tasks.CONTEXT_ID;
+		return TaskProvider.Tasks.CONTEXT_ID;
 	}
 
     @Override

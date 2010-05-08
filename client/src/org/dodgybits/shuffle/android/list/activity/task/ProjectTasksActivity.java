@@ -29,7 +29,8 @@ import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.content.ContentUris;
 import android.content.ContextWrapper;
@@ -63,7 +64,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
         List<Id> ids = Arrays.asList(new Id[] {mProjectId});
         TaskQuery query = TaskQuery.newBuilder()
             .setProjects(new ArrayList<Id>(ids))
-            .setSortOrder(Shuffle.Tasks.DUE_DATE + " ASC," + Shuffle.Tasks.DISPLAY_ORDER + " ASC")
+            .setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC")
             .build();
         return new AbstractTaskListConfig(getContentResolver(), query) {
 
@@ -82,8 +83,8 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected void onResume() {
 		Log.d(cTag, "Fetching project " + mProjectId);
-		Cursor cursor = getContentResolver().query(Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection,
-				Shuffle.Projects._ID + " = ?", new String[] {String.valueOf(mProjectId)}, null);
+		Cursor cursor = getContentResolver().query(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.cFullProjection,
+				ProjectProvider.Projects._ID + " = ?", new String[] {String.valueOf(mProjectId)}, null);
 		if (cursor.moveToNext()) {
 		    ProjectPersister persister = new ProjectPersister(getContentResolver());
 			mProject = persister.read(cursor);
@@ -100,7 +101,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
      */ 
     protected Intent getClickIntent(Uri uri) {
     	long taskId = ContentUris.parseId(uri);
-    	Uri taskUri = ContentUris.appendId(Shuffle.Tasks.CONTENT_URI.buildUpon(), taskId).build();
+    	Uri taskUri = ContentUris.appendId(TaskProvider.Tasks.CONTENT_URI.buildUpon(), taskId).build();
     	return new Intent(Intent.ACTION_EDIT, taskUri);
     }
     
@@ -113,11 +114,11 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     	if (extras == null) {
     	    extras = new Bundle();
     	}
-    	extras.putLong(Shuffle.Tasks.PROJECT_ID, mProject.getLocalId().getId());
+    	extras.putLong(TaskProvider.Tasks.PROJECT_ID, mProject.getLocalId().getId());
     	
     	final Id defaultContextId = mProject.getDefaultContextId();
     	if (defaultContextId.isInitialised()) {
-       		extras.putLong(Shuffle.Tasks.CONTEXT_ID, defaultContextId.getId());
+       		extras.putLong(TaskProvider.Tasks.CONTEXT_ID, defaultContextId.getId());
     	}
     	
     	intent.putExtras(extras);

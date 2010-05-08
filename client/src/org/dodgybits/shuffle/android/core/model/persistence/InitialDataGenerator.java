@@ -24,7 +24,9 @@ import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.content.ContentUris;
 import android.content.res.Resources;
@@ -62,13 +64,13 @@ public class InitialDataGenerator {
             Handler handler) {
         initPresetContexts(androidContext.getResources());
         int deletedRows = androidContext.getContentResolver().delete(
-                Shuffle.Tasks.CONTENT_URI, null, null);
+                TaskProvider.Tasks.CONTENT_URI, null, null);
         Log.d(cTag, "Deleted " + deletedRows + " tasks.");
         deletedRows = androidContext.getContentResolver().delete(
-                Shuffle.Projects.CONTENT_URI, null, null);
+                ProjectProvider.Projects.CONTENT_URI, null, null);
         Log.d(cTag, "Deleted " + deletedRows + " projects.");
         deletedRows = androidContext.getContentResolver().delete(
-                Shuffle.Contexts.CONTENT_URI, null, null);
+                ContextProvider.Contexts.CONTENT_URI, null, null);
         Log.d(cTag, "Deleted " + deletedRows + " contexts.");
         ContextPersister persister = new ContextPersister(androidContext.getContentResolver());
         for (int i = 0; i < cPresetContexts.length; i++) {

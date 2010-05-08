@@ -1,14 +1,14 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.COLOUR;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.ICON;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.MODIFIED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.NAME;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.TRACKS_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.COLOUR;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.ICON;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.MODIFIED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.NAME;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.TRACKS_ID;
 
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -58,12 +58,12 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
     
     @Override
     public Uri getContentUri() {
-        return Shuffle.Contexts.CONTENT_URI;
+        return ContextProvider.Contexts.CONTENT_URI;
     }
 
     @Override
     public String[] getFullProjection() {
-        return Shuffle.Contexts.cFullProjection;
+        return ContextProvider.Contexts.cFullProjection;
     }
     
     

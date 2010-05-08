@@ -33,6 +33,7 @@ import org.dodgybits.shuffle.android.core.model.persistence.InitialDataGenerator
 import org.dodgybits.shuffle.android.list.view.TaskView;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
+import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -50,11 +51,11 @@ public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
     private Task mSampleTask;
     private Project mSampleProject;
     private Context mSampleContext;
-	private CheckBox mDisplayIconCheckbox;
-	private CheckBox mDisplayContextCheckbox;
-	private CheckBox mDisplayDueDateCheckbox;
-	private CheckBox mDisplayProjectCheckbox;
-	private CheckBox mDisplayDetailsCheckbox;
+	@InjectView(R.id.display_icon) CheckBox mDisplayIconCheckbox;
+	@InjectView(R.id.display_context) CheckBox mDisplayContextCheckbox;
+	@InjectView(R.id.display_due_date) CheckBox mDisplayDueDateCheckbox;
+	@InjectView(R.id.display_project) CheckBox mDisplayProjectCheckbox;
+	@InjectView(R.id.display_details) CheckBox mDisplayDetailsCheckbox;
 	private boolean mSaveChanges;	
 	private boolean mDisplayIcon, mDisplayContext, mDisplayDueDate, mDisplayProject, mDisplayDetails;
 	
@@ -65,12 +66,6 @@ public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
 
         setContentView(R.layout.preferences_appearance);
         
-        
-        mDisplayIconCheckbox = (CheckBox) findViewById(R.id.display_icon);
-        mDisplayContextCheckbox = (CheckBox) findViewById(R.id.display_context);
-        mDisplayDueDateCheckbox = (CheckBox) findViewById(R.id.display_due_date);
-        mDisplayProjectCheckbox = (CheckBox) findViewById(R.id.display_project);
-        mDisplayDetailsCheckbox = (CheckBox) findViewById(R.id.display_details);
         
         // need to add task view programatically due to issues adding via XML
         setupSampleEntities();

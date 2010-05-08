@@ -7,7 +7,7 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledListActivity;
 import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,8 +32,7 @@ public class LauncherShortcutActivity extends FlurryEnabledListActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        final Intent intent = getIntent();
-        final String action = intent.getAction();
+        final String action = getIntent().getAction();
 
         setContentView(R.layout.launcher_shortcut);
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
@@ -49,7 +48,7 @@ public class LauncherShortcutActivity extends FlurryEnabledListActivity {
         }
 
         if (!Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
-        	int screenId = intent.getExtras().getInt(cScreenId, -1);
+        	int screenId = getIntent().getExtras().getInt(cScreenId, -1);
         	if (screenId < INBOX && screenId > CONTEXTS) {
         		// unknown id - just go to BootstrapActivity
             	startActivity(new Intent(this, BootstrapActivity.class));
@@ -82,7 +81,7 @@ public class LauncherShortcutActivity extends FlurryEnabledListActivity {
     	Intent shortcutIntent;
     	Parcelable iconResource;
     	if (position == NEW_TASK) {
-    		shortcutIntent = new Intent(Intent.ACTION_INSERT, Shuffle.Tasks.CONTENT_URI);
+    		shortcutIntent = new Intent(Intent.ACTION_INSERT, TaskProvider.Tasks.CONTENT_URI);
     		iconResource = Intent.ShortcutIconResource.fromContext(
                     this,  R.drawable.add_task_3d);
     	} else {

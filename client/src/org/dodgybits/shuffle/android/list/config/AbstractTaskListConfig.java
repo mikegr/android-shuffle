@@ -21,7 +21,7 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -81,7 +81,7 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     public Cursor createQuery(Activity activity) {
         return activity.managedQuery(
                 getTaskPersister().getContentUri(), 
-                Shuffle.Tasks.cFullProjection, 
+                TaskProvider.Tasks.cFullProjection, 
                 mTaskQuery.getSelection(), 
                 mTaskQuery.getSelectionArgs(), 
                 mTaskQuery.getSortOrder());

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.dodgybits.shuffle.android.core.util.StringUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -65,15 +65,15 @@ public class TaskQuery {
             expressions.add(predefinedSelection());
         }
         if (mProjects != null) {
-            expressions.add(idListSelection(mProjects, Shuffle.Tasks.PROJECT_ID));
+            expressions.add(idListSelection(mProjects, TaskProvider.Tasks.PROJECT_ID));
         }
         if (mContexts != null) {
-            expressions.add(idListSelection(mContexts, Shuffle.Tasks.CONTEXT_ID));
+            expressions.add(idListSelection(mContexts, TaskProvider.Tasks.CONTEXT_ID));
         }
         // TODO add range values
         
         if (mComplete != null) {
-            expressions.add(Shuffle.Tasks.COMPLETE + "=" + (mComplete ? "1" : "0"));
+            expressions.add(TaskProvider.Tasks.COMPLETE + "=" + (mComplete ? "1" : "0"));
         }
         
         return StringUtils.join(expressions, " AND ");

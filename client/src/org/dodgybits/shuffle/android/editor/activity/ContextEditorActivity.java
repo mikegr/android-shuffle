@@ -28,8 +28,9 @@ import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.core.view.DrawableUtils;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.list.view.ContextView;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 
+import roboguice.inject.InjectView;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
@@ -55,14 +56,14 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     private int mColourIndex;
     private ContextIcon mIcon;
     
-    private EditText mNameWidget;
+    @InjectView(R.id.name) EditText mNameWidget;
 
-    private TextView mColourWidget;
+    @InjectView(R.id.colour_display) TextView mColourWidget;
 
-    private ImageView mIconWidget;
-    private TextView mIconNoneWidget;
-    private ImageButton mClearIconButton;
-	protected ContextView mContext;
+    @InjectView(R.id.icon_display) ImageView mIconWidget;
+    @InjectView(R.id.icon_none) TextView mIconNoneWidget;
+    @InjectView(R.id.icon_clear_button) ImageButton mClearIconButton;
+	@InjectView(R.id.context_preview) ContextView mContext;
 
 	@Override
     protected void onCreate(Bundle icicle) {
@@ -70,7 +71,24 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         super.onCreate(icicle);
         
         loadCursor();
-        findViewsAndAddListeners();
+        // The text view for our context description, identified by its ID in the XML file.
+		mNameWidget.addTextChangedListener(this);
+		
+		mColourIndex = -1;
+		
+		mIcon = ContextIcon.NONE;
+		
+		View colourEntry = findViewById(R.id.colour_entry);
+		colourEntry.setOnClickListener(this);
+		colourEntry.setOnFocusChangeListener(this);
+		
+		View iconEntry = findViewById(R.id.icon_entry);
+		iconEntry.setOnClickListener(this);
+		iconEntry.setOnFocusChangeListener(this);
+		
+		mClearIconButton.setOnClickListener(this);
+		mClearIconButton.setOnFocusChangeListener(this);
+		
     
         if (mState == State.STATE_EDIT) {
             // Make sure we are at the one and only row in the cursor.
@@ -149,7 +167,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     
     @Override
     protected Intent getInsertIntent() {
-    	return new Intent(Intent.ACTION_INSERT, Shuffle.Contexts.CONTENT_URI);
+    	return new Intent(Intent.ACTION_INSERT, ContextProvider.Contexts.CONTENT_URI);
     }
     
     @Override
@@ -204,39 +222,12 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     private void loadCursor() {
     	if (mUri != null && mState == State.STATE_EDIT)
     	{
-            mCursor = managedQuery(mUri, Shuffle.Contexts.cFullProjection, null, null, null);
+            mCursor = managedQuery(mUri, ContextProvider.Contexts.cFullProjection, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {
 	            // The cursor is empty. This can happen if the event was deleted.
 	            finish();
             }
     	}
-    }
-    
-    private void findViewsAndAddListeners() {
-        // The text view for our context description, identified by its ID in the XML file.
-        mNameWidget = (EditText) findViewById(R.id.name);
-        mNameWidget.addTextChangedListener(this);
-        
-        mColourWidget = (TextView) findViewById(R.id.colour_display);
-        mColourIndex = -1;
-        
-        mIconWidget = (ImageView) findViewById(R.id.icon_display);
-        mIconNoneWidget = (TextView) findViewById(R.id.icon_none);
-        mIcon = ContextIcon.NONE;
-
-        View colourEntry = findViewById(R.id.colour_entry);
-        colourEntry.setOnClickListener(this);
-        colourEntry.setOnFocusChangeListener(this);
-
-        View iconEntry = findViewById(R.id.icon_entry);
-        iconEntry.setOnClickListener(this);
-        iconEntry.setOnFocusChangeListener(this);
-        
-        mClearIconButton = (ImageButton) findViewById(R.id.icon_clear_button);
-        mClearIconButton.setOnClickListener(this);
-        mClearIconButton.setOnFocusChangeListener(this);
-        
-		mContext = (ContextView) findViewById(R.id.context_preview);
     }
     
     @Override

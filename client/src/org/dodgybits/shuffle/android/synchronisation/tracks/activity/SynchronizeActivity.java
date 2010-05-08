@@ -8,6 +8,7 @@ import org.dodgybits.shuffle.android.synchronisation.tracks.SyncProgressListener
 import org.dodgybits.shuffle.android.synchronisation.tracks.TracksSynchronizer;
 import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
 
+import roboguice.inject.InjectView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ProgressBar;
@@ -20,17 +21,14 @@ import android.widget.TextView;
  */
 public class SynchronizeActivity extends FlurryEnabledActivity implements SyncProgressListener {
     private TracksSynchronizer synchronizer = null;
-    private TextView info;
-    private ProgressBar progress;
+    @InjectView(R.id.info_text) TextView info;
+    @InjectView(R.id.progress_horizontal) ProgressBar progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.synchronize);
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         super.onCreate(savedInstanceState);
-
-        info = (TextView) findViewById(R.id.info_text);
-        progress = (ProgressBar) findViewById(R.id.progress_horizontal);
 
         TextView url = (TextView) findViewById(R.id.syncUrl);
         TextView user = (TextView) findViewById(R.id.syncUser);

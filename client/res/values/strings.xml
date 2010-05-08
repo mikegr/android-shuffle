@@ -254,7 +254,7 @@
     <string name="no_due_tasks">There are no actions due.</string>
     <string name="no_projects">There are no projects to display. Get started by creating actions in the Inbox and assigning them to projects.</string>
     <string name="no_contexts">There are no contexts to display. Get started by creating actions in the Inbox and assigning them to contexts.</string>
-    <string name="delete_warning">Are you sure you want to delete the selected %s and it's %d %ss?</string>
+    <string name="delete_warning">Are you sure you want to delete the selected %s and it\'s %d %ss?</string>
     <string name="delete_completed_warning">Delete all completed tasks?</string>
     <string name="clean_slate_warning">Delete <i>all</i> actions, projects and custom contexts?</string>
     <string name="clean_task_message">Deleted %d completed actions.</string>
@@ -335,7 +335,7 @@ A number of aspects of Shuffle are user-configurable. The <b>Settings</b> screen
 <b>Tracks settings</b> - Configure synchronization with a Tracks server . \n
 <b>Backup to SD Card</b> - Save all your actions, contexts and projects to your SD Card. You can them back this up to your computer. \n
 <b>Restore from SD Card</b> - Restores all your data from a backup. No attempt is made to avoid duplicate actions, 
-so it's best to restore onto a clean Shuffle instance. \n
+so it\'s best to restore onto a clean Shuffle instance. \n
 <b>Delete completed actions</b> - Permanently delete all completed actions. \n
 <b>Delete everything!</b> - Permanently delete all actions, projects and custom contexts. \n
     </string>

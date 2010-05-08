@@ -28,7 +28,8 @@ import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.content.ContentUris;
 import android.content.ContextWrapper;
@@ -63,7 +64,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	    List<Id> ids = Arrays.asList(new Id[] {mContextId});
 	    TaskQuery query = TaskQuery.newBuilder()
 	        .setContexts(new ArrayList<Id>(ids))
-	        .setSortOrder(Shuffle.Tasks.CREATED_DATE + " ASC")
+	        .setSortOrder(TaskProvider.Tasks.CREATED_DATE + " ASC")
 	        .build();
 		return new AbstractTaskListConfig(getContentResolver(), query) {
 
@@ -83,8 +84,8 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected void onResume() {
 		Log.d(cTag, "Fetching context " + mContextId);
-		Cursor cursor = getContentResolver().query(Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection,
-				Shuffle.Contexts._ID + " = ?", new String[] {String.valueOf(mContextId)}, null);
+		Cursor cursor = getContentResolver().query(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.cFullProjection,
+				ContextProvider.Contexts._ID + " = ?", new String[] {String.valueOf(mContextId)}, null);
 		if (cursor.moveToNext()) {
 		    ContextPersister persister = new ContextPersister(getContentResolver());
 			mContext = persister.read(cursor);
@@ -102,7 +103,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     @Override
     protected Intent getClickIntent(Uri uri) {
     	long taskId = ContentUris.parseId(uri);
-    	Uri taskURI = ContentUris.withAppendedId(Shuffle.Tasks.CONTENT_URI, taskId);
+    	Uri taskURI = ContentUris.withAppendedId(TaskProvider.Tasks.CONTENT_URI, taskId);
     	return new Intent(Intent.ACTION_EDIT, taskURI);
     }
 
@@ -114,7 +115,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     	Intent intent = super.getInsertIntent();
     	Bundle extras = intent.getExtras();
     	if (extras == null) extras = new Bundle();
-    	extras.putLong(Shuffle.Tasks.CONTEXT_ID, mContext.getLocalId().getId());
+    	extras.putLong(TaskProvider.Tasks.CONTEXT_ID, mContext.getLocalId().getId());
     	intent.putExtras(extras);
     	return intent;
     }    

@@ -27,10 +27,12 @@ import org.dodgybits.shuffle.android.core.model.protocol.ProjectProtocolTranslat
 import org.dodgybits.shuffle.android.core.model.protocol.TaskProtocolTranslator;
 import org.dodgybits.shuffle.android.core.util.StringUtils;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
 
+import roboguice.inject.InjectView;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,11 +54,11 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
     private enum State {SELECTING, IN_PROGRESS, COMPLETE, ERROR};
     
     private State mState = State.SELECTING;
-    private Spinner mFileSpinner;
-    private Button mRestoreButton;
-    private Button mCancelButton;
-    private ProgressBar mProgressBar;
-    private TextView mProgressText;
+    @InjectView(R.id.filename) Spinner mFileSpinner;
+    @InjectView(R.id.saveButton) Button mRestoreButton;
+    @InjectView(R.id.discardButton) Button mCancelButton;
+    @InjectView(R.id.progress_horizontal) ProgressBar mProgressBar;
+    @InjectView(R.id.progress_label) TextView mProgressText;
     
     private AsyncTask<?, ?, ?> mTask;
     
@@ -77,12 +79,6 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
     }    	
     
     private void findViewsAndAddListeners() {
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_horizontal);
-        mProgressText = (TextView) findViewById(R.id.progress_label);
-        mRestoreButton = (Button) findViewById(R.id.saveButton);
-        mCancelButton = (Button) findViewById(R.id.discardButton);
-        mFileSpinner = (Spinner) findViewById(R.id.filename);
-        
         mRestoreButton.setText(R.string.restore_button_title);
         
         mRestoreButton.setOnClickListener(this);
@@ -334,10 +330,10 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
                 String params = StringUtils.repeat(names.size(), "?", ",");
                 String[] paramValues = names.toArray(new String[0]);
                 Cursor cursor = getContentResolver().query(
-                        Shuffle.Contexts.CONTENT_URI,
-                        Shuffle.Contexts.cFullProjection,
-                        Shuffle.Contexts.NAME + " IN (" + params + ")",
-                        paramValues, Shuffle.Contexts.NAME + " ASC");
+                        ContextProvider.Contexts.CONTENT_URI,
+                        ContextProvider.Contexts.cFullProjection,
+                        ContextProvider.Contexts.NAME + " IN (" + params + ")",
+                        paramValues, ContextProvider.Contexts.NAME + " ASC");
                 while (cursor.moveToNext()) {
                     Context context = persister.read(cursor);
                     contexts.put(context.getName(), context);
@@ -414,10 +410,10 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 	            String params = StringUtils.repeat(names.size(), "?", ",");
 	            String[] paramValues = names.toArray(new String[0]);
 	            Cursor cursor = getContentResolver().query(
-	                    Shuffle.Projects.CONTENT_URI,
-	                    Shuffle.Projects.cFullProjection,
-	                    Shuffle.Projects.NAME + " IN (" + params + ")",
-	                    paramValues, Shuffle.Projects.NAME + " ASC");
+	                    ProjectProvider.Projects.CONTENT_URI,
+	                    ProjectProvider.Projects.cFullProjection,
+	                    ProjectProvider.Projects.NAME + " IN (" + params + ")",
+	                    paramValues, ProjectProvider.Projects.NAME + " ASC");
 	            while (cursor.moveToNext()) {
 	                Project project = persister.read(cursor);
 	                projects.put(project.getName(), project);

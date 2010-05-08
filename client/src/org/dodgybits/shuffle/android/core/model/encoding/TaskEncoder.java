@@ -1,21 +1,21 @@
 package org.dodgybits.shuffle.android.core.model.encoding;
 
 import static android.provider.BaseColumns._ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.ALL_DAY;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.CAL_EVENT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.COMPLETE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.CONTEXT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.CREATED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DESCRIPTION;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DETAILS;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DISPLAY_ORDER;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DUE_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.HAS_ALARM;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.MODIFIED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.PROJECT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.START_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.TIMEZONE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.TRACKS_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.ALL_DAY;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.CAL_EVENT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.COMPLETE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.CONTEXT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.CREATED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DESCRIPTION;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DETAILS;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DISPLAY_ORDER;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DUE_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.HAS_ALARM;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.MODIFIED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.PROJECT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.START_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.TIMEZONE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.TRACKS_ID;
 
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;

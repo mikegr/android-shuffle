@@ -171,7 +171,7 @@
 	<string name="warning_backup_failed">La sauvegarde a échoué <xliff:g id="error">%s</xliff:g></string>
     <string name="warning_no_files">Aucun fichier à afficher.</string>
 	<string name="warning_restore_failed">La restauration a échoué <xliff:g id="error">%s</xliff:g></string>
-    <string name="status_checking_media">Vérification de l'état du périphérique.</string>
+    <string name="status_checking_media">Vérification de l\'état du périphérique.</string>
     <string name="status_creating_backup">Création du fichier de sauvegarde.</string>
     <string name="status_backup_complete">Sauvegarde terminée.</string>
     <string name="status_reading_backup">Lecture du fichier de la sauvegarde.</string>
@@ -311,7 +311,7 @@ Il est à noter que les tâches à échéance dépassée sont affichées dans to
     <string name="help6">
 Un certain nombre d\'aspects de Shuffle sont configurables par l\'utilisateur. L\'écran <b>Préférences</b> est accessible dans toutes les vues via le menu. \n
 L\option <b>Layout des listes</b> affiche les projets et contextes dans deux fenêtres différentes (\'zoom\') ou bien dans une structure hiérarchique dans la même fenêtre(\'expansible\'). \n
-L\'option <b>Apparence d'une tâche</b> vous permet de personnaliser les informations d\'une tâche à afficher dans chaque vue.  \n
+L\'option <b>Apparence d\'une tâche</b> vous permet de personnaliser les informations d\'une tâche à afficher dans chaque vue.  \n
 L\'option <b>Tout purger</b> permet de supprimer toutes les tâches terminées ou tout supprimer. \n
     </string>
     <string name="help7">
@@ -325,7 +325,7 @@ Et voici quelques aspects de Shuffle que vous ne savez pas peut-être:\n
     <string name="help8">
 Merci à l\'équipe du Tango Desktop Project, projet open source, pour la collection d\'icônes utilisées dans Shuffle.
 Merci à David Gibb pour ses grands retour d\'expérience sur le design, et à Gudrun pour avoir toléré les nuits et weekends
-que j'ai passés à bricoler avec Android.\n
+que j\'ai passés à bricoler avec Android.\n
 Traduction en français par K. Saikouk (toute remarque sur cette traduction est la bienvenue).\n
 \n
 Pour vos remarques ou rappports de bug, veuillez utiliser http://code.google.com/p/android-shuffle/issues/list ou m\'envoyer un email à andy@dodgybits.org

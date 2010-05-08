@@ -29,9 +29,13 @@ import org.dodgybits.shuffle.android.core.model.encoding.TaskEncoder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.list.activity.State;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ReminderProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
+import roboguice.inject.InjectView;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -76,28 +80,28 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private static final String cTag = "TaskEditorActivity";
 
     private static final String[] cContextProjection = new String[] {
-    	Shuffle.Contexts._ID,
-    	Shuffle.Contexts.NAME
+    	ContextProvider.Contexts._ID,
+    	ContextProvider.Contexts.NAME
     };
     
     private static final String[] cProjectProjection = new String[] {
-    	Shuffle.Projects._ID,
-    	Shuffle.Projects.NAME
+    	ProjectProvider.Projects._ID,
+    	ProjectProvider.Projects.NAME
     };
     
-    private static final String REMINDERS_WHERE = Shuffle.Reminders.TASK_ID + "=? AND (" +
-	    Shuffle.Reminders.METHOD + "=" + Shuffle.Reminders.METHOD_ALERT + 
-	    " OR " + Shuffle.Reminders.METHOD + "=" + Shuffle.Reminders.METHOD_DEFAULT + ")";
+    private static final String REMINDERS_WHERE = ReminderProvider.Reminders.TASK_ID + "=? AND (" +
+	    ReminderProvider.Reminders.METHOD + "=" + ReminderProvider.Reminders.METHOD_ALERT + 
+	    " OR " + ReminderProvider.Reminders.METHOD + "=" + ReminderProvider.Reminders.METHOD_DEFAULT + ")";
     
     private static final int MAX_REMINDERS = 3;
 
 	private static final int cNewContextCode = 100;
 	private static final int cNewProjectCode = 101;
 
-    private EditText mDescriptionWidget;
-    private Spinner mContextSpinner;
-    private Spinner mProjectSpinner;
-    private EditText mDetailsWidget;
+    private @InjectView(R.id.description) EditText mDescriptionWidget;
+    private @InjectView(R.id.context) Spinner mContextSpinner;
+    private @InjectView(R.id.project) Spinner mProjectSpinner;
+    private @InjectView(R.id.details) EditText mDetailsWidget;
 
     private String[] mContextNames;
     private long[] mContextIds;
@@ -106,12 +110,12 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private long[] mProjectIds;
     
     private boolean mSchedulingExpanded;
-    private Button mStartDateButton;
-    private Button mDueDateButton;
-    private Button mStartTimeButton;
-    private Button mDueTimeButton;
-    private Button mClearButton;
-    private CheckBox mAllDayCheckBox;
+    private @InjectView(R.id.start_date) Button mStartDateButton;
+    private @InjectView(R.id.due_date) Button mDueDateButton;
+    private @InjectView(R.id.start_time) Button mStartTimeButton;
+    private @InjectView(R.id.due_time) Button mDueTimeButton;
+    private @InjectView(R.id.clear_dates) Button mClearButton;
+    private @InjectView(R.id.is_all_day) CheckBox mAllDayCheckBox;
     
     private boolean mShowStart;
     private Time mStartTime;
@@ -123,10 +127,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
 	private View mExpandButton;
 	private View mCollapseButton;
 
-	private View mCompleteEntry;
+	private @InjectView(R.id.completed_entry) View mCompleteEntry;
     private CheckBox mCompletedCheckBox;
     
-	private View mUpdateCalendarEntry;
+	private @InjectView(R.id.gcal_entry) View mUpdateCalendarEntry;
     private CheckBox mUpdateCalendarCheckBox;
 	private TextView mCalendarLabel;
 	private TextView mCalendarDetail;
@@ -135,7 +139,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private ArrayList<String> mReminderLabels;
     private int mDefaultReminderMinutes;
 	
-    private LinearLayout mRemindersContainer;
+    private @InjectView(R.id.reminder_items_container) LinearLayout mRemindersContainer;
     private ArrayList<Integer> mOriginalMinutes = new ArrayList<Integer>();
     private ArrayList<LinearLayout> mReminderItems = new ArrayList<LinearLayout>(0);
     
@@ -213,10 +217,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     @Override
     protected void updateUIFromExtras(Bundle extras) {
     	if (extras != null) {
-        	Long contextId = extras.getLong(Shuffle.Tasks.CONTEXT_ID);
+        	Long contextId = extras.getLong(TaskProvider.Tasks.CONTEXT_ID);
         	setSpinnerSelection(mContextSpinner, mContextIds, contextId);
             
-        	Long projectId = extras.getLong(Shuffle.Tasks.PROJECT_ID);
+        	Long projectId = extras.getLong(TaskProvider.Tasks.PROJECT_ID);
         	setSpinnerSelection(mProjectSpinner, mProjectIds, projectId);
         }
     	
@@ -296,22 +300,22 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         
         // Load reminders (if there are any)
         if (task.hasAlarms()) {
-            Uri uri = Shuffle.Reminders.CONTENT_URI;
+            Uri uri = ReminderProvider.Reminders.CONTENT_URI;
             ContentResolver cr = getContentResolver();
-            Cursor reminderCursor = cr.query(uri, Shuffle.Reminders.cFullProjection, 
+            Cursor reminderCursor = cr.query(uri, ReminderProvider.Reminders.cFullProjection, 
             		REMINDERS_WHERE, new String[] {String.valueOf(task.getLocalId().getId())}, null);
             try {
                 // First pass: collect all the custom reminder minutes (e.g.,
                 // a reminder of 8 minutes) into a global list.
                 while (reminderCursor.moveToNext()) {
-                    int minutes = reminderCursor.getInt(Shuffle.Reminders.MINUTES_INDEX);
+                    int minutes = reminderCursor.getInt(ReminderProvider.Reminders.MINUTES_INDEX);
                     addMinutesToList(this, mReminderValues, mReminderLabels, minutes);
                 }
                 
                 // Second pass: create the reminder spinners
                 reminderCursor.moveToPosition(-1);
                 while (reminderCursor.moveToNext()) {
-                    int minutes = reminderCursor.getInt(Shuffle.Reminders.MINUTES_INDEX);
+                    int minutes = reminderCursor.getInt(ReminderProvider.Reminders.MINUTES_INDEX);
                     mOriginalMinutes.add(minutes);
                     addReminder(this, this, mReminderItems, mReminderValues,
                             mReminderLabels, minutes);
@@ -480,19 +484,19 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     
     @Override
     protected Intent getInsertIntent() {
-    	Intent intent = new Intent(Intent.ACTION_INSERT, Shuffle.Tasks.CONTENT_URI);
+    	Intent intent = new Intent(Intent.ACTION_INSERT, TaskProvider.Tasks.CONTENT_URI);
     	// give new task the same project and context as this one
     	Bundle extras = intent.getExtras();
     	if (extras == null) extras = new Bundle();
     	
     	Id contextId = getSpinnerSelectedId(mContextSpinner, mContextIds);
 		if (contextId.isInitialised()) {
-    		extras.putLong(Shuffle.Tasks.CONTEXT_ID, contextId.getId());    		
+    		extras.putLong(TaskProvider.Tasks.CONTEXT_ID, contextId.getId());    		
 		}
 		
     	Id projectId = getSpinnerSelectedId(mProjectSpinner, mProjectIds);
     	if (projectId.isInitialised()) {
-    		extras.putLong(Shuffle.Tasks.PROJECT_ID, projectId.getId());    		
+    		extras.putLong(TaskProvider.Tasks.PROJECT_ID, projectId.getId());    		
     	}
 
     	intent.putExtras(extras);
@@ -551,13 +555,13 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     public void onClick(View v) {
         switch (v.getId()) {
 	        case R.id.context_add: {
-	        	Intent addContextIntent = new Intent(Intent.ACTION_INSERT, Shuffle.Contexts.CONTENT_URI);
+	        	Intent addContextIntent = new Intent(Intent.ACTION_INSERT, ContextProvider.Contexts.CONTENT_URI);
 	        	startActivityForResult(addContextIntent, cNewContextCode);
 	        	break;
 	        }
 
 	        case R.id.project_add: {
-	        	Intent addProjectIntent = new Intent(Intent.ACTION_INSERT, Shuffle.Projects.CONTENT_URI);
+	        	Intent addProjectIntent = new Intent(Intent.ACTION_INSERT, ProjectProvider.Projects.CONTENT_URI);
 	        	startActivityForResult(addProjectIntent, cNewProjectCode);
 	        	break;
 	        }
@@ -647,7 +651,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         // Get the task if we're editing
     	if (mUri != null && mState == State.STATE_EDIT)
     	{
-	        mCursor = managedQuery(mUri, Shuffle.Tasks.cFullProjection, null, null, null);
+	        mCursor = managedQuery(mUri, TaskProvider.Tasks.cFullProjection, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {
 	            // The cursor is empty. This can happen if the event was deleted.
 	            finish();
@@ -657,50 +661,37 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     
     private void findViewsAndAddListeners() {
         // The text view for our task description, identified by its ID in the XML file.
-        mDescriptionWidget = (EditText) findViewById(R.id.description);
         
-        mContextSpinner = (Spinner) findViewById(R.id.context);
         setupContextSpinner();
         ImageButton addContextButton = (ImageButton) findViewById(R.id.context_add);
         addContextButton.setOnClickListener(this);
         addContextButton.setOnFocusChangeListener(this);
         
-        mProjectSpinner = (Spinner) findViewById(R.id.project);
         setupProjectSpinner();
         ImageButton addProjectButton = (ImageButton) findViewById(R.id.project_add);
         addProjectButton.setOnClickListener(this);
         addProjectButton.setOnFocusChangeListener(this);
 
-        mDetailsWidget = (EditText) findViewById(R.id.details);
-                
-        mCompleteEntry = findViewById(R.id.completed_entry);
         mCompleteEntry.setOnClickListener(this);
         mCompleteEntry.setOnFocusChangeListener(this);
         mCompletedCheckBox = (CheckBox) mCompleteEntry.findViewById(R.id.completed_entry_checkbox);
     	
-        mUpdateCalendarEntry = findViewById(R.id.gcal_entry);
         mUpdateCalendarEntry.setOnClickListener(this);
         mUpdateCalendarEntry.setOnFocusChangeListener(this);
         mUpdateCalendarCheckBox = (CheckBox) mUpdateCalendarEntry.findViewById(R.id.update_calendar_checkbox);
         mCalendarLabel = (TextView) mUpdateCalendarEntry.findViewById(R.id.gcal_label);
         mCalendarDetail = (TextView) mUpdateCalendarEntry.findViewById(R.id.gcal_detail);
         
-        mStartDateButton = (Button) findViewById(R.id.start_date);
         mStartDateButton.setOnClickListener(new DateClickListener(mStartTime));
         
-        mStartTimeButton = (Button) findViewById(R.id.start_time);
         mStartTimeButton.setOnClickListener(new TimeClickListener(mStartTime));
         
-        mDueDateButton = (Button) findViewById(R.id.due_date);
         mDueDateButton.setOnClickListener(new DateClickListener(mDueTime));
         
-        mDueTimeButton = (Button) findViewById(R.id.due_time);
         mDueTimeButton.setOnClickListener(new TimeClickListener(mDueTime));
 
-        mAllDayCheckBox = (CheckBox) findViewById(R.id.is_all_day);
         mAllDayCheckBox.setOnCheckedChangeListener(this);            
 
-        mClearButton = (Button) findViewById(R.id.clear_dates);
         mClearButton.setOnClickListener(this);
 
         ViewGroup schedulingSection = (ViewGroup) findViewById(R.id.scheduling_section);
@@ -714,15 +705,13 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mSchedulingDetail = (TextView) schedulingEntry.findViewById(R.id.scheduling_detail);
         mSchedulingExpanded = mSchedulingExtra.getVisibility() == View.VISIBLE;
 
-        mRemindersContainer = (LinearLayout) findViewById(R.id.reminder_items_container);
         
         // Initialize the reminder values array.
         Resources r = getResources();
         String[] strings = r.getStringArray(R.array.reminder_minutes_values);
-        int size = strings.length;
-        ArrayList<Integer> list = new ArrayList<Integer>(size);
-        for (int i = 0 ; i < size ; i++) {
-            list.add(Integer.parseInt(strings[i]));
+        ArrayList<Integer> list = new ArrayList<Integer>(strings.length);
+        for (String numberString: strings) {
+            list.add(Integer.parseInt(numberString));
         }
         mReminderValues = list;
         String[] labels = r.getStringArray(R.array.reminder_minutes_labels);
@@ -742,8 +731,8 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     
     private void setupContextSpinner() {
         Cursor contextCursor = getContentResolver().query(
-        		Shuffle.Contexts.CONTENT_URI, cContextProjection, 
-        		null, null, Shuffle.Contexts.NAME + " ASC");
+        		ContextProvider.Contexts.CONTENT_URI, cContextProjection, 
+        		null, null, ContextProvider.Contexts.NAME + " ASC");
         int arraySize = contextCursor.getCount() + 1;
         mContextIds = new long[arraySize];
         mContextIds[0] = 0;
@@ -763,8 +752,8 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     
     private void setupProjectSpinner() {
         Cursor projectCursor = getContentResolver().query(
-        		Shuffle.Projects.CONTENT_URI, cProjectProjection, 
-        		null, null, Shuffle.Projects.NAME + " ASC");
+        		ProjectProvider.Projects.CONTENT_URI, cProjectProjection, 
+        		null, null, ProjectProvider.Projects.NAME + " ASC");
         int arraySize = projectCursor.getCount() + 1;
         mProjectIds = new long[arraySize];
         mProjectIds[0] = 0;
@@ -979,11 +968,11 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     	if (mState == State.STATE_INSERT || !projectId.equals(mOriginalItem.getProjectId())) {
     		// get current highest order value    		
     		Cursor cursor =  getContentResolver().query(
-    				Shuffle.Tasks.CONTENT_URI, 
-    				new String[] {Shuffle.Tasks.PROJECT_ID, Shuffle.Tasks.DISPLAY_ORDER}, 
-    				Shuffle.Tasks.PROJECT_ID + " = ?", 
+    				TaskProvider.Tasks.CONTENT_URI, 
+    				new String[] {TaskProvider.Tasks.PROJECT_ID, TaskProvider.Tasks.DISPLAY_ORDER}, 
+    				TaskProvider.Tasks.PROJECT_ID + " = ?", 
     				new String[] {String.valueOf(projectId.getId())}, 
-    				Shuffle.Tasks.DISPLAY_ORDER + " desc");
+    				TaskProvider.Tasks.DISPLAY_ORDER + " desc");
     		if (cursor.moveToFirst()) {
     			// first entry is current highest value
     			int highest = cursor.getInt(1);
@@ -1125,9 +1114,9 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         }
 
         // Delete all the existing reminders for this event
-        String where = Shuffle.Reminders.TASK_ID + "=?";
+        String where = ReminderProvider.Reminders.TASK_ID + "=?";
         String[] args = new String[] { Long.toString(taskId) };
-        cr.delete(Shuffle.Reminders.CONTENT_URI, where, args);
+        cr.delete(ReminderProvider.Reminders.CONTENT_URI, where, args);
 
         ContentValues values = new ContentValues();
         int len = reminderMinutes.size();
@@ -1137,10 +1126,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             int minutes = reminderMinutes.get(i);
 
             values.clear();
-            values.put(Shuffle.Reminders.MINUTES, minutes);
-            values.put(Shuffle.Reminders.METHOD, Shuffle.Reminders.METHOD_ALERT);
-            values.put(Shuffle.Reminders.TASK_ID, taskId);
-            cr.insert(Shuffle.Reminders.CONTENT_URI, values);
+            values.put(ReminderProvider.Reminders.MINUTES, minutes);
+            values.put(ReminderProvider.Reminders.METHOD, ReminderProvider.Reminders.METHOD_ALERT);
+            values.put(ReminderProvider.Reminders.TASK_ID, taskId);
+            cr.insert(ReminderProvider.Reminders.CONTENT_URI, values);
         }
         return true;
     }    

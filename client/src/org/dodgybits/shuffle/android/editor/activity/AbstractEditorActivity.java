@@ -24,7 +24,7 @@ import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
-import android.app.Activity;
+import roboguice.activity.GuiceActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -41,7 +41,7 @@ import android.widget.Toast;
  * either to simply view an item (Intent.VIEW_ACTION), view and edit an item
  * (Intent.EDIT_ACTION), or create a new item (Intent.INSERT_ACTION).  
  */
-public abstract class AbstractEditorActivity<E extends Entity> extends Activity 
+public abstract class AbstractEditorActivity<E extends Entity> extends GuiceActivity 
 	implements View.OnClickListener, View.OnFocusChangeListener {
 
     private static final String cTag = "AbstractEditorActivity";

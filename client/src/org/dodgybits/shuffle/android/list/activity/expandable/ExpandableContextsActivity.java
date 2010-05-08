@@ -24,7 +24,8 @@ import org.dodgybits.shuffle.android.list.view.ContextView;
 import org.dodgybits.shuffle.android.list.view.ExpandableContextView;
 import org.dodgybits.shuffle.android.list.view.ExpandableTaskView;
 import org.dodgybits.shuffle.android.list.view.TaskView;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -46,17 +47,17 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 	@Override
 	protected void refreshChildCount() {
 		Cursor cursor = getContentResolver().query(
-				Shuffle.Contexts.cContextTasksContentURI, 
-				Shuffle.Contexts.cFullTaskProjection, null, null, null);
+				ContextProvider.Contexts.cContextTasksContentURI, 
+				ContextProvider.Contexts.cFullTaskProjection, null, null, null);
         mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
 	
 	@Override
 	protected Cursor createGroupQuery() {
-		Cursor cursor = managedQuery(Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection,
-				null, null, Shuffle.Contexts.NAME + " ASC");
-		mGroupIdColumnIndex = cursor.getColumnIndex(Shuffle.Contexts._ID);
+		Cursor cursor = managedQuery(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.cFullProjection,
+				null, null, ContextProvider.Contexts.NAME + " ASC");
+		mGroupIdColumnIndex = cursor.getColumnIndex(ContextProvider.Contexts._ID);
 		return cursor;
 	}
 
@@ -72,16 +73,16 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	@Override
 	protected Cursor createChildQuery(long groupId) {
-		Cursor cursor = managedQuery(Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cFullProjection,
-				Shuffle.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)}, 
-				Shuffle.Tasks.CREATED_DATE + " ASC");
-		mChildIdColumnIndex = cursor.getColumnIndex(Shuffle.Tasks._ID);
+		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.cFullProjection,
+				TaskProvider.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)}, 
+				TaskProvider.Tasks.CREATED_DATE + " ASC");
+		mChildIdColumnIndex = cursor.getColumnIndex(TaskProvider.Tasks._ID);
 		return cursor;
 	}
 
 	@Override
 	protected void updateInsertExtras(Bundle extras, Context context) {
-   		extras.putLong(Shuffle.Tasks.CONTEXT_ID, context.getLocalId().getId());
+   		extras.putLong(TaskProvider.Tasks.CONTEXT_ID, context.getLocalId().getId());
 	}
 	
 	@Override
@@ -90,9 +91,9 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
         		cursor,
                 android.R.layout.simple_expandable_list_item_1,
                 android.R.layout.simple_expandable_list_item_1,
-                new String[] {Shuffle.Contexts.NAME}, 
+                new String[] {ContextProvider.Contexts.NAME}, 
                 new int[] {android.R.id.text1},
-                new String[] {Shuffle.Tasks.DESCRIPTION},
+                new String[] {TaskProvider.Tasks.DESCRIPTION},
                 new int[] {android.R.id.text1}) {
 
 	        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {

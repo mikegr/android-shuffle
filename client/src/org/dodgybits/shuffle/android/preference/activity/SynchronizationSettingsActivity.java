@@ -13,6 +13,7 @@ import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
 
+import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,10 +29,10 @@ import android.widget.Toast;
  * Activity that changes the options set for synchronization
  */
 public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
-    private EditText mUrlTextbox;
-    private EditText mUserTextbox;
-    private EditText mPassTextbox;
-    private Spinner mInterval;
+    @InjectView(R.id.url) EditText mUrlTextbox;
+    @InjectView(R.id.user) EditText mUserTextbox;
+    @InjectView(R.id.pass) EditText mPassTextbox;
+    @InjectView(R.id.sync_interval) Spinner mInterval;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,11 +46,6 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
                 getText(R.string.sync_interval_1h).toString(),
                 getText(R.string.sync_interval_2h).toString(),
                 getText(R.string.sync_interval_3h).toString() };
-
-        mUrlTextbox = (EditText) findViewById(R.id.url);
-        mUserTextbox = (EditText) findViewById(R.id.user);
-        mPassTextbox = (EditText) findViewById(R.id.pass);
-        mInterval = (Spinner) findViewById(R.id.sync_interval);
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
                 this, android.R.layout.simple_list_item_1, options);

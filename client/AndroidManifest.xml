@@ -1,352 +1,391 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2009 Android Shuffle Open Source Project
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-  
-          http://www.apache.org/licenses/LICENSE-2.0
-  
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
+	<!--
+		Copyright (C) 2009 Android Shuffle Open Source Project Licensed under
+		the Apache License, Version 2.0 (the "License"); you may not use this
+		file except in compliance with the License. You may obtain a copy of
+		the License at http://www.apache.org/licenses/LICENSE-2.0 Unless
+		required by applicable law or agreed to in writing, software
+		distributed under the License is distributed on an "AS IS" BASIS,
+		WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+		implied. See the License for the specific language governing
+		permissions and limitations under the License.
+	-->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.dodgybits.android.shuffle"
-	android:versionCode="22"
-    android:versionName="1.6.0"    
-    >
+	package="org.dodgybits.android.shuffle" android:versionCode="22"
+	android:versionName="1.6.0">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    
-    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
-    
-    <supports-screens
-          android:largeScreens="true"
-          android:normalScreens="true"
-          android:smallScreens="false"
-          android:anyDensity="true" />
-    
-    <application 
-    	android:theme="@style/ShuffleTheme"
-    	android:icon="@drawable/app_icon_3d" 
-        android:label="@string/app_name">
-    
-        <!--  core -->
-        
-        <activity android:name="org.dodgybits.shuffle.android.core.activity.BootstrapActivity" android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    
-        <activity android:name="org.dodgybits.shuffle.android.core.activity.WelcomeActivity" android:label="@string/app_name"
-            android:theme="@android:style/Theme.Light"
-	        />
-            
-        <activity android:name="org.dodgybits.shuffle.android.core.activity.TopLevelActivity" android:label="@string/app_name"/>
-        
-        <activity android:name="org.dodgybits.shuffle.android.core.activity.HelpActivity" 
-            android:label="@string/title_help"
-            android:theme="@android:style/Theme.Light">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.help" />
-            </intent-filter>            
-        </activity>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_CALENDAR" />
+	<uses-permission android:name="android.permission.WRITE_CALENDAR" />
+	<uses-permission android:name="android.permission.INTERNET" />
 
-                
-        <activity android:name="org.dodgybits.shuffle.android.core.activity.LauncherShortcutActivity"
-                  android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
+	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
 
-        </activity>
-        
-        <activity-alias android:name="org.dodgybits.shuffle.android.core.activity.LauncherShortcutActivity"
-            android:targetActivity="org.dodgybits.shuffle.android.core.activity.LauncherShortcutActivity"
-            android:label="@string/app_name">
-            <!--  This intent-filter allows your shortcuts to be created in the launcher. -->
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+	<supports-screens android:largeScreens="true"
+		android:normalScreens="true" android:smallScreens="false"
+		android:anyDensity="true" />
 
-        </activity-alias>        
+	<application android:theme="@style/ShuffleTheme"
+		android:icon="@drawable/app_icon_3d" android:label="@string/app_name"
+		android:name="org.dodgybits.shuffle.android.core.ShuffleApplication">
 
-        <!--  editor -->
-        
-        <meta-data
-            android:name="android.app.default_searchable"
-            android:value="org.dodgybits.shuffle.android.editor.activity.TaskEditorActivity" />
-        
-        <activity android:name="org.dodgybits.shuffle.android.editor.activity.TaskEditorActivity" 
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Light"
-            >
-            <intent-filter android:label="@string/title_edit_task">
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="org.dodgybits.android.shuffle.action.EDIT_TASK" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.task" />
-            </intent-filter>
+		<!--  core -->
 
-            <intent-filter>
-                <action android:name="android.intent.action.INSERT" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
-            </intent-filter>
-            
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+		<activity
+			android:name="org.dodgybits.shuffle.android.core.activity.BootstrapActivity"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
 
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-            
-        </activity>
-        
-        <activity android:name="org.dodgybits.shuffle.android.editor.activity.ProjectEditorActivity" 
-            android:label="@string/title_new_project"
-            android:theme="@android:style/Theme.Light"
-            >
-            <intent-filter android:label="@string/title_edit_project">
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="org.dodgybits.android.shuffle.action.EDIT_PROJECT" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.project" />
-            </intent-filter>
-            
-            <intent-filter>
-                <action android:name="android.intent.action.INSERT" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.project" />
-            </intent-filter>
-        </activity>        
+		<activity
+			android:name="org.dodgybits.shuffle.android.core.activity.WelcomeActivity"
+			android:label="@string/app_name" android:theme="@android:style/Theme.Light" />
 
-        <activity android:name="org.dodgybits.shuffle.android.editor.activity.ContextEditorActivity" 
-            android:label="@string/title_new_context"
-            android:theme="@android:style/Theme.Light"
-            >
-            <intent-filter android:label="@string/title_edit_context">
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="org.dodgybits.android.shuffle.action.EDIT_CONTEXT" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.context" />
-            </intent-filter>
+		<activity
+			android:name="org.dodgybits.shuffle.android.core.activity.TopLevelActivity"
+			android:label="@string/app_name" />
 
-            <intent-filter>
-                <action android:name="android.intent.action.INSERT" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.context" />
-            </intent-filter>
-        </activity>        
+		<activity android:name="org.dodgybits.shuffle.android.core.activity.HelpActivity"
+			android:label="@string/title_help" android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.help" />
+			</intent-filter>
+		</activity>
 
 
-        <activity android:name="org.dodgybits.shuffle.android.editor.activity.IconPickerActivity" 
-            android:label="@string/title_icon_picker"
-            android:theme="@android:style/Theme.Dialog">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.icons" />
-            </intent-filter>            
-        </activity>
-        
-        <activity android:name="org.dodgybits.shuffle.android.editor.activity.ColourPickerActivity" 
-            android:label="@string/title_colour_picker"
-            android:theme="@android:style/Theme.Dialog">
-            <!--  android:theme="@android:style/Theme.Dialog" -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.colours" />
-            </intent-filter>            
-        </activity>
-                
-        <!--  list -->
-        
-        <activity android:name="org.dodgybits.shuffle.android.list.activity.ContextsActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
-                <type android:name="vnd.android.cursor.dir/vnd.dodgybits.context" />
-            </intent-filter>            
-        </activity>
-        
-        <activity android:name="org.dodgybits.shuffle.android.list.activity.ProjectsActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.project" />
-            </intent-filter>            
-        </activity>
-                
-        <activity android:name="org.dodgybits.shuffle.android.list.activity.expandable.ExpandableContextsActivity" 
-            android:label="@string/title_context">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <type android:name="vnd.android.cursor.dir/vnd.dodgybits.context" />
-            </intent-filter>            
-        </activity>
-        
+		<activity
+			android:name="org.dodgybits.shuffle.android.core.activity.LauncherShortcutActivity"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
 
-        <activity android:name="org.dodgybits.shuffle.android.list.activity.expandable.ExpandableProjectsActivity" 
-            android:label="@string/title_project">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.project" />
-            </intent-filter>            
-        </activity>
-        
-        <activity android:name="org.dodgybits.shuffle.android.list.activity.task.InboxActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
-            </intent-filter>            
-        </activity>
+		</activity>
 
-        <activity android:name="org.dodgybits.shuffle.android.list.activity.task.TabbedDueActionsActivity"/>
+		<activity-alias
+			android:name="org.dodgybits.shuffle.android.core.activity.LauncherShortcutActivity"
+			android:targetActivity="org.dodgybits.shuffle.android.core.activity.LauncherShortcutActivity"
+			android:label="@string/app_name">
+			<!--
+				This intent-filter allows your shortcuts to be created in the
+				launcher.
+			-->
+			<intent-filter>
+				<action android:name="android.intent.action.CREATE_SHORTCUT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
 
-        <activity android:name="org.dodgybits.shuffle.android.list.activity.task.TopTasksActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
-            </intent-filter>            
-        </activity>
+		</activity-alias>
 
-        <activity android:name="org.dodgybits.shuffle.android.list.activity.task.ProjectTasksActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
-            </intent-filter>
-        </activity>
+		<!--  editor -->
 
-        <activity android:name="org.dodgybits.shuffle.android.list.activity.task.ContextTasksActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
-            </intent-filter>            
-        </activity>
+		<meta-data android:name="android.app.default_searchable"
+			android:value="org.dodgybits.shuffle.android.editor.activity.TaskEditorActivity" />
 
-        <!--  persistence -->
-        
-        <provider android:name="org.dodgybits.shuffle.android.persistence.provider.ShuffleProvider"
-            android:authorities="org.dodgybits.android.shuffle.provider.Shuffle" />
+		<activity
+			android:name="org.dodgybits.shuffle.android.editor.activity.TaskEditorActivity"
+			android:label="@string/app_name" android:theme="@android:style/Theme.Light">
+			<intent-filter android:label="@string/title_edit_task">
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="org.dodgybits.android.shuffle.action.EDIT_TASK" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.task" />
+			</intent-filter>
 
-        <!--  preference -->
+			<intent-filter>
+				<action android:name="android.intent.action.INSERT" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+			</intent-filter>
 
-        <activity android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesActivity" 
-            android:label="@string/title_preferences">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.preferences" />
-            </intent-filter>            
-        </activity>
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
 
-        <activity android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesAppearanceActivity" 
-            android:label="@string/title_preferences_appearance">
-        </activity>
+			<meta-data android:name="android.app.searchable"
+				android:resource="@xml/search_tasks" />
 
-        <activity android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesCreateBackupActivity" 
-            android:label="@string/title_preferences_create_backup"
-            android:theme="@android:style/Theme.Dialog">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>            
-        </activity>
+		</activity>
 
-        <activity android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesRestoreBackupActivity" 
-            android:label="@string/title_preferences_restore_backup"
-            android:theme="@android:style/Theme.Dialog">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>            
-        </activity>
+		<activity
+			android:name="org.dodgybits.shuffle.android.editor.activity.ProjectEditorActivity"
+			android:label="@string/title_new_project" android:theme="@android:style/Theme.Light">
+			<intent-filter android:label="@string/title_edit_project">
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="org.dodgybits.android.shuffle.action.EDIT_PROJECT" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.project" />
+			</intent-filter>
 
-        <activity android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesDeleteCompletedActivity" 
-            android:theme="@android:style/Theme.Dialog">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>            
-        </activity>
+			<intent-filter>
+				<action android:name="android.intent.action.INSERT" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.project" />
+			</intent-filter>
 
-        <activity android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesDeleteAllActivity" 
-            android:theme="@android:style/Theme.Dialog">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>            
-        </activity>
-        
-        <activity android:name="org.dodgybits.shuffle.android.preference.activity.SynchronizationSettingsActivity"/>
-        
-        <!--  synchronisation -->
+		</activity>
 
-        <activity android:name="org.dodgybits.shuffle.android.synchronisation.tracks.activity.SynchronizeActivity"/>
+		<activity
+			android:name="org.dodgybits.shuffle.android.editor.activity.ContextEditorActivity"
+			android:label="@string/title_new_context" android:theme="@android:style/Theme.Light">
+			<intent-filter android:label="@string/title_edit_context">
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="org.dodgybits.android.shuffle.action.EDIT_CONTEXT" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.item/vnd.dodgybits.context" />
+			</intent-filter>
 
-        <service android:name="org.dodgybits.shuffle.android.synchronisation.tracks.service.SynchronizationService"/>
-        
-        <!--  app widget -->
+			<intent-filter>
+				<action android:name="android.intent.action.INSERT" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.context" />
+			</intent-filter>
+		</activity>
 
-        <receiver android:name="org.dodgybits.shuffle.android.widget.WidgetProvider">
-            <meta-data android:name="android.appwidget.provider"
-                    android:resource="@xml/appwidget_provider" />
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-        </receiver>
 
-        <activity android:name="org.dodgybits.shuffle.android.widget.WidgetConfigure">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>        
-    </application>
-    
+		<activity
+			android:name="org.dodgybits.shuffle.android.editor.activity.IconPickerActivity"
+			android:label="@string/title_icon_picker" android:theme="@android:style/Theme.Dialog">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.icons" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.editor.activity.ColourPickerActivity"
+			android:label="@string/title_colour_picker" android:theme="@android:style/Theme.Dialog">
+			<!--  android:theme="@android:style/Theme.Dialog" -->
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.colours" />
+			</intent-filter>
+		</activity>
+
+		<!--  list -->
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.list.activity.ContextsActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.ALTERNATIVE" />
+				<type android:name="vnd.android.cursor.dir/vnd.dodgybits.context" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.list.activity.ProjectsActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.ALTERNATIVE" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.project" />
+			</intent-filter>
+
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.list.activity.expandable.ExpandableContextsActivity"
+			android:label="@string/title_context">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<type android:name="vnd.android.cursor.dir/vnd.dodgybits.context" />
+			</intent-filter>
+		</activity>
+
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.list.activity.expandable.ExpandableProjectsActivity"
+			android:label="@string/title_project">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.project" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.list.activity.task.InboxActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.list.activity.task.TabbedDueActionsActivity" />
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.list.activity.task.TopTasksActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.ALTERNATIVE" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.list.activity.task.ProjectTasksActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.ALTERNATIVE" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
+			<meta-data android:name="android.app.searchable"
+				android:resource="@xml/search_projects" />
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.list.activity.task.ContextTasksActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.ALTERNATIVE" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.task" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
+			<meta-data android:name="android.app.searchable"
+				android:resource="@xml/search_contexts" />
+		</activity>
+
+		<!--  persistence -->
+
+		<provider
+			android:name="org.dodgybits.shuffle.android.persistence.provider.ContextProvider"
+			android:authorities="org.dodgybits.android.shuffle.provider.contextprovider" />
+		<provider
+			android:name="org.dodgybits.shuffle.android.persistence.provider.ProjectProvider"
+			android:authorities="org.dodgybits.android.shuffle.provider.projectprovider" />
+		<provider
+			android:name="org.dodgybits.shuffle.android.persistence.provider.ReminderProvider"
+			android:authorities="org.dodgybits.android.shuffle.provider.reminderprovider" />
+		<provider
+			android:name="org.dodgybits.shuffle.android.persistence.provider.TaskProvider"
+			android:authorities="org.dodgybits.android.shuffle.provider.taskprovider" />
+
+		<!--  preference -->
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesActivity"
+			android:label="@string/title_preferences">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.dodgybits.preferences" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesAppearanceActivity"
+			android:label="@string/title_preferences_appearance">
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesCreateBackupActivity"
+			android:label="@string/title_preferences_create_backup"
+			android:theme="@android:style/Theme.Dialog">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesRestoreBackupActivity"
+			android:label="@string/title_preferences_restore_backup"
+			android:theme="@android:style/Theme.Dialog">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesDeleteCompletedActivity"
+			android:theme="@android:style/Theme.Dialog">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesDeleteAllActivity"
+			android:theme="@android:style/Theme.Dialog">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.MAIN" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.preference.activity.SynchronizationSettingsActivity" />
+
+		<!--  synchronisation -->
+
+		<activity
+			android:name="org.dodgybits.shuffle.android.synchronisation.tracks.activity.SynchronizeActivity" />
+
+		<service
+			android:name="org.dodgybits.shuffle.android.synchronisation.tracks.service.SynchronizationService" />
+
+		<!--  app widget -->
+
+		<receiver android:name="org.dodgybits.shuffle.android.widget.WidgetProvider">
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/appwidget_provider" />
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+		</receiver>
+
+		<activity android:name="org.dodgybits.shuffle.android.widget.WidgetConfigure">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+			</intent-filter>
+		</activity>
+	</application>
+
 </manifest> 

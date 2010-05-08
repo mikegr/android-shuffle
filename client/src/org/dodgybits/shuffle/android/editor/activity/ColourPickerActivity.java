@@ -20,7 +20,8 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.util.TextColours;
 import org.dodgybits.shuffle.android.list.view.LabelView;
 
-import android.app.Activity;
+import roboguice.activity.GuiceActivity;
+import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ColourPickerActivity extends Activity implements
+public class ColourPickerActivity extends GuiceActivity implements
 		OnItemClickListener {
 
 	@SuppressWarnings("unused")
@@ -40,14 +41,13 @@ public class ColourPickerActivity extends Activity implements
 
 	public static final String TYPE = "vnd.android.cursor.dir/vnd.dodgybits.colours";
 
-	private GridView mGrid;
+	@InjectView(R.id.colourGrid) GridView mGrid;
 
 	@Override
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
 		setContentView(R.layout.colour_picker);
-		mGrid = (GridView) findViewById(R.id.colourGrid);
 		mGrid.setAdapter(new IconAdapter(this));
 		mGrid.setOnItemClickListener(this);
 	}

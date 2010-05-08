@@ -25,8 +25,10 @@ import org.dodgybits.shuffle.android.core.model.encoding.ProjectEncoder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.list.activity.State;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 
+import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -44,11 +46,11 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
 
     private static final String cTag = "ProjectEditorActivity";
    
-    private EditText mNameWidget;
-    private Spinner mDefaultContextSpinner;
-    private RelativeLayout mParallelEntry;
-    private TextView mParallelLabel;
-    private ImageView mParallelButton;
+    @InjectView(R.id.name) EditText mNameWidget;
+    @InjectView(R.id.default_context) Spinner mDefaultContextSpinner;
+    @InjectView(R.id.parallel_entry) RelativeLayout mParallelEntry;
+    @InjectView(R.id.parallel_label) TextView mParallelLabel;
+    @InjectView(R.id.parallel_icon) ImageView mParallelButton;
     
     private String[] mContextNames;
     private long[] mContextIds;
@@ -60,7 +62,28 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
         super.onCreate(icicle);
         
         loadCursor();
-        findViewsAndAddListeners();
+        // The text view for our project description, identified by its ID in the XML file.
+		
+		Cursor contactCursor = getContentResolver().query(
+				ContextProvider.Contexts.CONTENT_URI, 
+				new String[] {ContextProvider.Contexts._ID, ContextProvider.Contexts.NAME}, null, null, null);
+		int size = contactCursor.getCount() + 1;
+		mContextIds = new long[size];
+		mContextIds[0] = 0;
+		mContextNames = new String[size];
+		mContextNames[0] = getText(R.string.none_empty).toString();
+		for (int i = 1; i < size; i++) {
+			contactCursor.moveToNext();
+			mContextIds[i] = contactCursor.getLong(0);
+			mContextNames[i] = contactCursor.getString(1);
+		}
+		contactCursor.close();
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				this, android.R.layout.simple_list_item_1, mContextNames);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mDefaultContextSpinner.setAdapter(adapter);
+		
+		mParallelEntry.setOnClickListener(this);
         
         if (mState == State.STATE_EDIT) {
             // Make sure we are at the one and only row in the cursor.
@@ -169,7 +192,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
 
     @Override
     protected Intent getInsertIntent() {
-    	return new Intent(Intent.ACTION_INSERT, Shuffle.Projects.CONTENT_URI);
+    	return new Intent(Intent.ACTION_INSERT, ProjectProvider.Projects.CONTENT_URI);
     }
     
     @Override
@@ -180,7 +203,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     private void loadCursor() {
     	if (mUri != null && mState == State.STATE_EDIT)
     	{
-            mCursor = managedQuery(mUri, Shuffle.Projects.cFullProjection, null, null, null);
+            mCursor = managedQuery(mUri, ProjectProvider.Projects.cFullProjection, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {
 	            // The cursor is empty. This can happen if the event was deleted.
 	            finish();
@@ -189,36 +212,6 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     	}
     }
     
-    private void findViewsAndAddListeners() {
-        // The text view for our project description, identified by its ID in the XML file.
-        mNameWidget = (EditText) findViewById(R.id.name);
-        mDefaultContextSpinner = (Spinner) findViewById(R.id.default_context);
-
-        Cursor contactCursor = getContentResolver().query(
-        		Shuffle.Contexts.CONTENT_URI, 
-        		new String[] {Shuffle.Contexts._ID, Shuffle.Contexts.NAME}, null, null, null);
-        int size = contactCursor.getCount() + 1;
-        mContextIds = new long[size];
-        mContextIds[0] = 0;
-        mContextNames = new String[size];
-        mContextNames[0] = getText(R.string.none_empty).toString();
-        for (int i = 1; i < size; i++) {
-        	contactCursor.moveToNext();
-        	mContextIds[i] = contactCursor.getLong(0);
-        	mContextNames[i] = contactCursor.getString(1);
-        }
-        contactCursor.close();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-        		this, android.R.layout.simple_list_item_1, mContextNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mDefaultContextSpinner.setAdapter(adapter);
-        
-        mParallelLabel = (TextView) findViewById(R.id.parallel_label);
-        mParallelButton = (ImageView) findViewById(R.id.parallel_icon);
-        mParallelEntry = (RelativeLayout) findViewById(R.id.parallel_entry);
-        mParallelEntry.setOnClickListener(this);
-    }        
-
     private void updateParallelSection() {
         if (isParallel) {
             mParallelLabel.setText(R.string.parallel_title);

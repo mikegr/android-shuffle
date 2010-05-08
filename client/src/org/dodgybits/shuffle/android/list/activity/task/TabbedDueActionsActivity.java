@@ -25,6 +25,7 @@ import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.TaskListConfig;
 
+import roboguice.inject.InjectView;
 import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -36,14 +37,13 @@ import android.widget.TabHost.TabSpec;
 public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	private static final String cTag = "TabbedDueActionsActivity";
 
-	private TabHost mTabHost;
+	@InjectView(android.R.id.tabhost) TabHost mTabHost;
 	private PredefinedQuery mMode = PredefinedQuery.dueToday;
 	
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
         mTabHost.addTab(createTabSpec(
         			R.string.day_button_title, 

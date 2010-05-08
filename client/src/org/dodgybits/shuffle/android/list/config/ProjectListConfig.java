@@ -22,7 +22,7 @@ import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -87,9 +87,9 @@ public class ProjectListConfig implements DrilldownListConfig<Project> {
 	public Cursor createQuery(Activity activity) {
 	    return activity.managedQuery(
 	            getPersister().getContentUri(), 
-	            Shuffle.Projects.cFullProjection,
+	            ProjectProvider.Projects.cFullProjection,
                 null, null, 
-                Shuffle.Projects.NAME + " ASC");
+                ProjectProvider.Projects.NAME + " ASC");
 	}
 
 }

@@ -1,7 +1,6 @@
 package org.dodgybits.shuffle.android.core.util;
 
 import java.lang.ref.SoftReference;
-
 import java.util.HashMap;
 
 import android.util.Log;

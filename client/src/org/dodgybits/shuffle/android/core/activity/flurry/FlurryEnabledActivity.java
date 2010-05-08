@@ -1,11 +1,11 @@
 package org.dodgybits.shuffle.android.core.activity.flurry;
 
 import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryApiKey;
-import android.app.Activity;
+import roboguice.activity.GuiceActivity;
 
 import com.flurry.android.FlurryAgent;
 
-public abstract class FlurryEnabledActivity extends Activity {
+public abstract class FlurryEnabledActivity extends GuiceActivity {
 
     @Override
     public void onStart()

@@ -34,7 +34,7 @@ import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.app.PendingIntent;
@@ -112,13 +112,13 @@ public class WidgetProvider extends AppWidgetProvider {
         int titleId = getIdentifier(androidContext, "title_" + queryName, cStringType);
         views.setTextViewText(R.id.title, androidContext.getString(titleId));
         
-        Intent intent = new Intent(Intent.ACTION_INSERT, Shuffle.Tasks.CONTENT_URI);
+        Intent intent = new Intent(Intent.ACTION_INSERT, TaskProvider.Tasks.CONTENT_URI);
         PendingIntent pendingIntent = PendingIntent.getActivity(androidContext, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.add_task, pendingIntent);
         
         Cursor taskCursor = androidContext.getContentResolver().query(
-                Shuffle.Tasks.CONTENT_URI, 
-                Shuffle.Tasks.cFullProjection, 
+                TaskProvider.Tasks.CONTENT_URI, 
+                TaskProvider.Tasks.cFullProjection, 
                 query.getSelection(), 
                 query.getSelectionArgs(), 
                 query.getSortOrder());
@@ -152,7 +152,7 @@ public class WidgetProvider extends AppWidgetProvider {
             }
             
             if (task != null) {
-                Uri.Builder builder = Shuffle.Tasks.CONTENT_URI.buildUpon();
+                Uri.Builder builder = TaskProvider.Tasks.CONTENT_URI.buildUpon();
                 ContentUris.appendId(builder, task.getLocalId().getId());
                 Uri taskUri = builder.build();
                 intent = new Intent(Intent.ACTION_EDIT, taskUri);

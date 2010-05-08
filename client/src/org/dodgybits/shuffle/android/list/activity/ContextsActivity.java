@@ -23,7 +23,8 @@ import org.dodgybits.shuffle.android.list.activity.task.ContextTasksActivity;
 import org.dodgybits.shuffle.android.list.config.ContextListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.view.ContextView;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -46,8 +47,8 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 		super.onResume();
 		
 		Cursor cursor = getContentResolver().query(
-				Shuffle.Contexts.cContextTasksContentURI,
-				Shuffle.Contexts.cFullTaskProjection, null, null, null);
+				ContextProvider.Contexts.cContextTasksContentURI,
+				ContextProvider.Contexts.cFullTaskProjection, null, null, null);
 		mTaskCountArray = getDrilldownListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
@@ -62,7 +63,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	protected void deleteChildren(Id groupId) {
 		getContentResolver().delete(
 		        getDrilldownListConfig().getChildPersister().getContentUri(), 
-				Shuffle.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)});
+				TaskProvider.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)});
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 		ListAdapter adapter =
 				new SimpleCursorAdapter(this,
 						android.R.layout.simple_list_item_1, cursor,
-						new String[] { Shuffle.Contexts.NAME },
+						new String[] { ContextProvider.Contexts.NAME },
 						new int[] { android.R.id.text1 }) {
 			
 			public View getView(int position, View convertView, ViewGroup parent) {

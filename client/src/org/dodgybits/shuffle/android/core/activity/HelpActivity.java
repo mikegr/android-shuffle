@@ -22,6 +22,7 @@ import static org.dodgybits.shuffle.android.core.util.Constants.cStringType;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 
+import roboguice.inject.InjectView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -34,10 +35,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class HelpActivity extends FlurryEnabledActivity {
     public static final String cHelpPage = "helpPage";
     
-	private Spinner mHelpSpinner;
-	private TextView mHelpContent;
-	private Button mPrevious;
-	private Button mNext;
+	@InjectView(R.id.help_screen) Spinner mHelpSpinner;
+	@InjectView(R.id.help_text) TextView mHelpContent;
+	@InjectView(R.id.previous_button) Button mPrevious;
+	@InjectView(R.id.next_button) Button mNext;
     	
 	@Override
 	protected void onCreate(Bundle icicle) {
@@ -45,8 +46,6 @@ public class HelpActivity extends FlurryEnabledActivity {
 
         setContentView(R.layout.help);
         
-        mHelpContent = (TextView) findViewById(R.id.help_text);
-        mHelpSpinner = (Spinner) findViewById(R.id.help_screen);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
         		this, R.array.help_screens,
                 android.R.layout.simple_spinner_item);
@@ -66,7 +65,6 @@ public class HelpActivity extends FlurryEnabledActivity {
         	}
         });
 
-        mPrevious = (Button) findViewById(R.id.previous_button);
         mPrevious.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
         		int position = mHelpSpinner.getSelectedItemPosition();
@@ -75,7 +73,6 @@ public class HelpActivity extends FlurryEnabledActivity {
         });        
 
         
-        mNext = (Button) findViewById(R.id.next_button);
         mNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
         		int position = mHelpSpinner.getSelectedItemPosition();

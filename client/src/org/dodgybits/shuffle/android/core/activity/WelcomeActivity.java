@@ -22,6 +22,7 @@ import org.dodgybits.shuffle.android.core.model.persistence.InitialDataGenerator
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
+import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -37,8 +38,8 @@ import android.widget.Button;
 public class WelcomeActivity extends FlurryEnabledActivity {
     private static final String cTag = "WelcomeActivity";
 	
-    private Button mSampleDataButton;
-    private Button mCleanSlateButton;
+    @InjectView(R.id.sample_data_button) Button mSampleDataButton;
+    @InjectView(R.id.clean_slate_button) Button mCleanSlateButton;
     private Handler mHandler;
     
     @Override
@@ -51,7 +52,6 @@ public class WelcomeActivity extends FlurryEnabledActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.welcome);
         
-        mSampleDataButton = (Button) findViewById(R.id.sample_data_button);
         mSampleDataButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	disableButtons();
@@ -59,7 +59,6 @@ public class WelcomeActivity extends FlurryEnabledActivity {
             	performCreateSampleData();
             }
         });
-        mCleanSlateButton = (Button) findViewById(R.id.clean_slate_button);
         mCleanSlateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	disableButtons();

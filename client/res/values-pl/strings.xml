@@ -1,4 +1,3 @@
-?
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2009 Android Shuffle Open Source Project
 
@@ -337,7 +336,7 @@ A number of aspects of Shuffle are user-configurable. The <b>Settings</b> screen
 <b>Tracks settings</b> - Configure synchronization with a Tracks server . \n
 <b>Backup to SD Card</b> - Save all your actions, contexts and projects to your SD Card. You can them back this up to your computer. \n
 <b>Restore from SD Card</b> - Restores all your data from a backup. No attempt is made to avoid duplicate actions, 
-so it's best to restore onto a clean Shuffle instance. \n
+so it\'s best to restore onto a clean Shuffle instance. \n
 <b>Delete completed actions</b> - Permanently delete all completed actions. \n
 <b>Delete everything!</b> - Permanently delete all actions, projects and custom contexts. \n
     </string>

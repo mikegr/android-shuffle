@@ -4,21 +4,21 @@ import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryCompleteT
 import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryCountParam;
 import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryDeleteEntityEvent;
 import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryReorderTasksEvent;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.ALL_DAY;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.CAL_EVENT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.COMPLETE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.CONTEXT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.CREATED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DESCRIPTION;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DETAILS;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DISPLAY_ORDER;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.DUE_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.HAS_ALARM;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.MODIFIED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.PROJECT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.START_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.TIMEZONE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Tasks.TRACKS_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.ALL_DAY;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.CAL_EVENT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.COMPLETE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.CONTEXT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.CREATED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DESCRIPTION;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DETAILS;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DISPLAY_ORDER;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DUE_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.HAS_ALARM;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.MODIFIED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.PROJECT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.START_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.TIMEZONE;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.TRACKS_ID;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ import java.util.TimeZone;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -127,18 +127,18 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     
     @Override
     public Uri getContentUri() {
-        return Shuffle.Tasks.CONTENT_URI;
+        return TaskProvider.Tasks.CONTENT_URI;
     }
     
     @Override
     public String[] getFullProjection() {
-        return Shuffle.Tasks.cFullProjection;
+        return TaskProvider.Tasks.cFullProjection;
     }
     
     public int deleteCompletedTasks() {
         int deletedRows = mResolver.delete(
                 getContentUri(), 
-                Shuffle.Tasks.COMPLETE + " = 1",
+                TaskProvider.Tasks.COMPLETE + " = 1",
                 null);
         Log.d(cTag, "Deleted " + deletedRows + " completed tasks.");
         
@@ -163,7 +163,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         writeBoolean(values, COMPLETE, isComplete);
         values.put(MODIFIED_DATE, System.currentTimeMillis());
         mResolver.update(getContentUri(), values,
-                Shuffle.Tasks._ID + "=?", new String[] { String.valueOf(taskId) });
+                TaskProvider.Tasks._ID + "=?", new String[] { String.valueOf(taskId) });
         if (isComplete) {
             FlurryAgent.onEvent(cFlurryCompleteTaskEvent);
         }

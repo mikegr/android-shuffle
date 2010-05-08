@@ -1,12 +1,12 @@
 package org.dodgybits.shuffle.android.core.model.encoding;
 
 import static android.provider.BaseColumns._ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.ARCHIVED;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.DEFAULT_CONTEXT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.MODIFIED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.NAME;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.PARALLEL;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Projects.TRACKS_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.ARCHIVED;
+import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.DEFAULT_CONTEXT_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.MODIFIED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.NAME;
+import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.PARALLEL;
+import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.TRACKS_ID;
 
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;

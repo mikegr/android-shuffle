@@ -22,7 +22,9 @@ import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.content.SharedPreferences;
@@ -98,8 +100,8 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
         generators[INBOX] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cInbox));
         generators[DUE_TASKS] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cDueToday));
         generators[TOP_TASKS] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks));
-        generators[PROJECTS] = new UriCursorGenerator(Shuffle.Projects.CONTENT_URI);
-        generators[CONTEXTS] = new UriCursorGenerator(Shuffle.Contexts.CONTENT_URI);
+        generators[PROJECTS] = new UriCursorGenerator(ProjectProvider.Projects.CONTENT_URI);
+        generators[CONTEXTS] = new UriCursorGenerator(ContextProvider.Contexts.CONTENT_URI);
 
         mIconIds[INBOX] = R.drawable.inbox;
         mIconIds[DUE_TASKS] = R.drawable.due_actions;
@@ -149,7 +151,7 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
         
         public Cursor generate() {
             return getContentResolver().query(
-                    Shuffle.Tasks.CONTENT_URI, 
+                    TaskProvider.Tasks.CONTENT_URI, 
                     cProjection, 
                     mTaskQuery.getSelection(), 
                     mTaskQuery.getSelectionArgs(), 

@@ -18,7 +18,8 @@ package org.dodgybits.shuffle.android.editor.activity;
 
 import org.dodgybits.android.shuffle.R;
 
-import android.app.Activity;
+import roboguice.activity.GuiceActivity;
+import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,21 +31,20 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class IconPickerActivity extends Activity implements OnItemClickListener {
+public class IconPickerActivity extends GuiceActivity implements OnItemClickListener {
 
     @SuppressWarnings("unused")
 	private static final String cTag = "IconPickerActivity";
 
     public static final String TYPE = "vnd.android.cursor.dir/vnd.dodgybits.icons";
 
-    private GridView mGrid;
+    @InjectView(R.id.iconGrid) GridView mGrid;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         setContentView(R.layout.icon_picker);
-        mGrid = (GridView) findViewById(R.id.iconGrid);
         mGrid.setAdapter(new IconAdapter(this));
         mGrid.setOnItemClickListener(this);
     }

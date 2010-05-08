@@ -26,7 +26,8 @@ import org.dodgybits.shuffle.android.list.view.ExpandableProjectView;
 import org.dodgybits.shuffle.android.list.view.ExpandableTaskView;
 import org.dodgybits.shuffle.android.list.view.ProjectView;
 import org.dodgybits.shuffle.android.list.view.TaskView;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -55,17 +56,17 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	@Override
 	protected void refreshChildCount() {
 		Cursor cursor = getContentResolver().query(
-				Shuffle.Projects.cProjectTasksContentURI, 
-				Shuffle.Projects.cFullTaskProjection, null, null, null);
+				ProjectProvider.Projects.cProjectTasksContentURI, 
+				ProjectProvider.Projects.cFullTaskProjection, null, null, null);
 		mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
 		
 	@Override
 	protected Cursor createGroupQuery() {
-		Cursor cursor = managedQuery(Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection,
-				null, null, Shuffle.Projects.NAME + " ASC");
-		mGroupIdColumnIndex = cursor.getColumnIndex(Shuffle.Projects._ID);
+		Cursor cursor = managedQuery(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.cFullProjection,
+				null, null, ProjectProvider.Projects.NAME + " ASC");
+		mGroupIdColumnIndex = cursor.getColumnIndex(ProjectProvider.Projects._ID);
 		return cursor;
 	}
 
@@ -81,20 +82,20 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	@Override
 	protected Cursor createChildQuery(long groupId) {
-		Cursor cursor = managedQuery(Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cFullProjection,
-				Shuffle.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(groupId)}, 
-				Shuffle.Tasks.DUE_DATE + " ASC," + Shuffle.Tasks.DISPLAY_ORDER + " ASC");
-		mChildIdColumnIndex = cursor.getColumnIndex(Shuffle.Tasks._ID);
+		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.cFullProjection,
+				TaskProvider.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(groupId)}, 
+				TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC");
+		mChildIdColumnIndex = cursor.getColumnIndex(TaskProvider.Tasks._ID);
 		return cursor;		
 	}
 
 	@Override
 	protected void updateInsertExtras(Bundle extras, Project project) {
-    	extras.putLong(Shuffle.Tasks.PROJECT_ID, project.getLocalId().getId());
+    	extras.putLong(TaskProvider.Tasks.PROJECT_ID, project.getLocalId().getId());
     	
     	final Id defaultContextId = project.getDefaultContextId();
     	if (defaultContextId.isInitialised()) {
-    		extras.putLong(Shuffle.Tasks.CONTEXT_ID, defaultContextId.getId());
+    		extras.putLong(TaskProvider.Tasks.CONTEXT_ID, defaultContextId.getId());
     	}
 	}
 	
@@ -104,9 +105,9 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
         		cursor,
                 android.R.layout.simple_expandable_list_item_1,
                 android.R.layout.simple_expandable_list_item_1,
-                new String[] {Shuffle.Projects.NAME}, 
+                new String[] {ProjectProvider.Projects.NAME}, 
                 new int[] {android.R.id.text1},
-                new String[] {Shuffle.Tasks.DESCRIPTION},
+                new String[] {TaskProvider.Tasks.DESCRIPTION},
                 new int[] {android.R.id.text1}) {
 
 	        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {

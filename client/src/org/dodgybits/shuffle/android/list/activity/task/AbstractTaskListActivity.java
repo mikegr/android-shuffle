@@ -31,8 +31,9 @@ import org.dodgybits.shuffle.android.list.config.TaskListConfig;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemListener;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
 import org.dodgybits.shuffle.android.list.view.TaskView;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
+import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -50,6 +51,8 @@ import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.google.inject.internal.Nullable;
+
 public abstract class AbstractTaskListActivity extends AbstractListActivity<Task> 
 	implements SwipeListItemListener, View.OnClickListener {
 
@@ -58,7 +61,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     protected EntityCache<Context> mContextCache;
     protected EntityCache<Project> mProjectCache;
 	
-	protected Button mAddTaskButton;
+	@InjectView(R.id.add_task_button) @Nullable Button mAddTaskButton;
 	protected Button mOtherButton;
 	
 	@Override
@@ -73,7 +76,6 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 		wrapper.setSwipeListItemListener(this);
 		
 		// lookup and setup icons in icon_bar (if present)
-		mAddTaskButton = (Button) findViewById(R.id.add_task_button);
 		if (mAddTaskButton != null) {
 			Drawable addIcon = getResources().getDrawable(android.R.drawable.ic_menu_add);
 			addIcon.setBounds(0, 0, 24, 24);
@@ -148,7 +150,7 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 	protected ListAdapter createListAdapter(Cursor cursor) {
 		ListAdapter adapter = new SimpleCursorAdapter(this,
 						R.layout.list_task_view, cursor,
-						new String[] { Shuffle.Tasks.DESCRIPTION },
+						new String[] { TaskProvider.Tasks.DESCRIPTION },
 						new int[] { R.id.description }) {
 
 			@Override

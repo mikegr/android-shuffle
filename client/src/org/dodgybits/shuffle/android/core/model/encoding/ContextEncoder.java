@@ -1,11 +1,11 @@
 package org.dodgybits.shuffle.android.core.model.encoding;
 
 import static android.provider.BaseColumns._ID;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.COLOUR;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.ICON;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.MODIFIED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.NAME;
-import static org.dodgybits.shuffle.android.persistence.provider.Shuffle.Contexts.TRACKS_ID;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.COLOUR;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.ICON;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.MODIFIED_DATE;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.NAME;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.TRACKS_ID;
 
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;

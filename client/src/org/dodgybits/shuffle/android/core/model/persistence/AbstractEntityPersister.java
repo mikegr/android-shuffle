@@ -1,7 +1,10 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
-import static org.dodgybits.shuffle.android.core.util.Constants.*;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryCountParam;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryCreateEntityEvent;
 import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryDeleteEntityEvent;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryEntityTypeParam;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryUpdateEntityEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -11,14 +14,14 @@ import java.util.Map;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Id;
 
-import com.flurry.android.FlurryAgent;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import com.flurry.android.FlurryAgent;
 
 public abstract class AbstractEntityPersister<E extends Entity> implements EntityPersister<E> {
 

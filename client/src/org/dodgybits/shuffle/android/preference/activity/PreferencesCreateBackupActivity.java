@@ -19,11 +19,14 @@ import org.dodgybits.shuffle.android.core.model.protocol.ContextProtocolTranslat
 import org.dodgybits.shuffle.android.core.model.protocol.ProjectProtocolTranslator;
 import org.dodgybits.shuffle.android.core.model.protocol.TaskProtocolTranslator;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue;
 import org.dodgybits.shuffle.dto.ShuffleProtos.Catalogue.Builder;
 
+import roboguice.inject.InjectView;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
@@ -47,11 +50,11 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
     private enum State {EDITING, IN_PROGRESS, COMPLETE, ERROR};
     
     private State mState = State.EDITING;
-    private EditText mFilenameWidget;
-    private Button mSaveButton;
-    private Button mCancelButton;
-    private ProgressBar mProgressBar;
-    private TextView mProgressText;
+    @InjectView(R.id.filename) EditText mFilenameWidget;
+    @InjectView(R.id.saveButton) Button mSaveButton;
+    @InjectView(R.id.discardButton) Button mCancelButton;
+    @InjectView(R.id.progress_horizontal) ProgressBar mProgressBar;
+    @InjectView(R.id.progress_label) TextView mProgressText;
     
     private AsyncTask<?, ?, ?> mTask;
     
@@ -66,11 +69,6 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
     }
 
     private void findViewsAndAddListeners() {
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_horizontal);
-        mProgressText = (TextView) findViewById(R.id.progress_label);
-        mSaveButton = (Button) findViewById(R.id.saveButton);
-        mCancelButton = (Button) findViewById(R.id.discardButton);
-        mFilenameWidget = (EditText) findViewById(R.id.filename);
         
         mSaveButton.setOnClickListener(this);
         mCancelButton.setOnClickListener(this);
@@ -280,7 +278,7 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
         {
 	    	Log.d(cTag, "Writing contexts");
             Cursor cursor = getContentResolver().query(
-            		Shuffle.Contexts.CONTENT_URI, Shuffle.Contexts.cFullProjection, 
+            		ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.cFullProjection, 
             		null, null, null);
             int i = 0;
             int total = cursor.getCount();
@@ -301,7 +299,7 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
         {
 	    	Log.d(cTag, "Writing projects");
             Cursor cursor = getContentResolver().query(
-            		Shuffle.Projects.CONTENT_URI, Shuffle.Projects.cFullProjection, 
+            		ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.cFullProjection, 
             		null, null, null);
             int i = 0;
             int total = cursor.getCount();
@@ -322,7 +320,7 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
         {
 	    	Log.d(cTag, "Writing tasks");
             Cursor cursor = getContentResolver().query(
-            		Shuffle.Tasks.CONTENT_URI, Shuffle.Tasks.cFullProjection, 
+            		TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.cFullProjection, 
             		null, null, null);
             int i = 0;
             int total = cursor.getCount();

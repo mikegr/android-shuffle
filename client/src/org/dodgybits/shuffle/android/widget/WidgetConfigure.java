@@ -8,7 +8,7 @@ import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
-import android.app.ListActivity;
+import roboguice.activity.GuiceListActivity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import android.widget.ListView;
 /**
  * The configuration screen for the WidgetProvider widget.
  */
-public class WidgetConfigure extends ListActivity {
+public class WidgetConfigure extends GuiceListActivity {
     static final String TAG = "WidgetConfigure";
 
     private static final int NEXT_TASKS = 0;

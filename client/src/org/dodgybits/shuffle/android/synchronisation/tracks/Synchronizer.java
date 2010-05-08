@@ -11,7 +11,8 @@ import java.util.Map;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
-import org.dodgybits.shuffle.android.persistence.provider.Shuffle;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
 import org.xmlpull.v1.XmlPullParser;
@@ -82,19 +83,19 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
     }
 
     protected Id findProjectIdByTracksId(Id tracksId) {
-        return findEntityLocalIdByTracksId(tracksId, Shuffle.Projects.CONTENT_URI);
+        return findEntityLocalIdByTracksId(tracksId, ProjectProvider.Projects.CONTENT_URI);
     }
 
     protected Id findContextIdByTracksId(Id tracksId) {
-        return findEntityLocalIdByTracksId(tracksId, Shuffle.Contexts.CONTENT_URI);
+        return findEntityLocalIdByTracksId(tracksId, ContextProvider.Contexts.CONTENT_URI);
     }
     
     protected Id findTracksIdByProjectId(Id projectId) {
-        return findEntityTracksIdByLocalId(projectId, Shuffle.Projects.CONTENT_URI);
+        return findEntityTracksIdByLocalId(projectId, ProjectProvider.Projects.CONTENT_URI);
     }
 
     protected Id findTracksIdByContextId(Id contextId) {
-        return findEntityTracksIdByLocalId(contextId, Shuffle.Contexts.CONTENT_URI);
+        return findEntityTracksIdByLocalId(contextId, ContextProvider.Contexts.CONTENT_URI);
     }
     
     protected abstract EntityPersister<Entity> createPersister();
