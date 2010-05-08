@@ -17,7 +17,7 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="142dp"
     android:minHeight="142dp"
-    android:updatePeriodMillis="900000"
+    android:updatePeriodMillis="43200000"
     android:initialLayout="@layout/widget"
     android:configure="org.dodgybits.shuffle.android.widget.WidgetConfigure"
     >

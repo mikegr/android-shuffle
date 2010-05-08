@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 public class ContextProvider extends AbstractCollectionProvider {
 	public static final String cContextTableName = "context";
 
+    public static final String cUpdateIntent = "org.dodgybits.shuffle.android.CONTEXT_UPDATE";
 
 	private static final String AUTHORITY = Shuffle.PACKAGE+".contextprovider";
 
@@ -13,8 +14,17 @@ public class ContextProvider extends AbstractCollectionProvider {
 	static final int CONTEXT_TASKS = 103;
 
 	public ContextProvider() {
-		super(AUTHORITY,"contexts",cContextTableName,Contexts.NAME, Contexts._ID, Contexts.CONTENT_URI,0,Contexts._ID,Contexts.NAME, Contexts.COLOUR,
+		super(
+		        AUTHORITY,
+		        "contexts",
+		        cContextTableName,
+                cUpdateIntent,
+		        Contexts.NAME, 
+		        Contexts._ID, 
+		        Contexts.CONTENT_URI,
+		        Contexts._ID,Contexts.NAME, Contexts.COLOUR,
 				Contexts.ICON,Contexts.TRACKS_ID, Contexts.MODIFIED_DATE);
+		
 		uriMatcher.addURI(AUTHORITY, "contextTasks", CONTEXT_TASKS);
 		restrictionBuilders.put(CONTEXT_TASKS, new CustomElementFilterRestrictionBuilder("context c, task t", "t.contextId = c._id", "c._id"));
 		setDefaultSortOrder(Contexts.DEFAULT_SORT_ORDER);

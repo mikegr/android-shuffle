@@ -7,11 +7,19 @@ public class TaskProvider extends AbstractCollectionProvider {
 	
 	public static final String cTaskTableName = "task";
 
-
+	public static final String cUpdateIntent = "org.dodgybits.shuffle.android.TASK_UPDATE";
 
 	public TaskProvider() {
-		super(AUTHORITY,"tasks",cTaskTableName,Tasks.DESCRIPTION,Tasks._ID,Tasks.CONTENT_URI,0,Tasks.DESCRIPTION,Tasks.DETAILS,Tasks.CONTEXT_ID,Tasks.PROJECT_ID,Tasks.CREATED_DATE,
-				Tasks.MODIFIED_DATE,Tasks.START_DATE,Tasks.DUE_DATE,Tasks.TIMEZONE,Tasks.CAL_EVENT_ID,Tasks.DISPLAY_ORDER,Tasks.COMPLETE,
+		super(AUTHORITY,
+		        "tasks",
+		        cTaskTableName,
+		        cUpdateIntent,
+		        Tasks.DESCRIPTION,Tasks._ID,
+		        Tasks.CONTENT_URI,
+		        Tasks.DESCRIPTION,
+		        Tasks.DETAILS,Tasks.CONTEXT_ID,Tasks.PROJECT_ID,Tasks.CREATED_DATE,
+				Tasks.MODIFIED_DATE,Tasks.START_DATE,Tasks.DUE_DATE,Tasks.TIMEZONE,
+				Tasks.CAL_EVENT_ID,Tasks.DISPLAY_ORDER,Tasks.COMPLETE,
 				Tasks.ALL_DAY,Tasks.HAS_ALARM,Tasks.TRACKS_ID, Tasks._ID);
 		
 		makeSearchable(Tasks._ID, Tasks.DESCRIPTION, Tasks.DETAILS,Tasks.DESCRIPTION,Tasks.DETAILS);

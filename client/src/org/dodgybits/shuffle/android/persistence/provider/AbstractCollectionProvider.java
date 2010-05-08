@@ -8,6 +8,7 @@ import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -66,6 +67,7 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 	protected final Map<Integer, ElementInserter> elementInserters;
 	protected final Map<Integer, ElementDeleter> elementDeleters;
 	private final String tableName;
+	private final String updateIntentAction;
 	private final Map<String, String> elementsMap;
 	protected final Map<Integer,String> mimeTypes;
 	protected final Uri contentUri;
@@ -82,6 +84,11 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 	protected Map<String,String> getElementsMap() {
 		return elementsMap;
 	}
+	
+    private void notifyOnChange(Uri uri) {
+        getContext().getContentResolver().notifyChange(uri, null);
+        getContext().sendBroadcast(new Intent(updateIntentAction));
+    }
 
 	public static interface RestrictionBuilder {
 		void addRestrictions(Uri uri, SQLiteQueryBuilder qb);
@@ -155,7 +162,12 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 	}
 
 	protected final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-	public AbstractCollectionProvider(String authority, String collectionNamePlural, String tableName, String primaryKey, String idField,Uri contentUri,int i, String... fields) {
+	
+	public AbstractCollectionProvider(String authority, String collectionNamePlural, 
+	        String tableName,
+	        String updateIntentAction,
+	        String primaryKey, String idField,Uri contentUri, 
+	        String... fields) {
 		this.authority = authority;
 		this.contentUri = contentUri;
 		registerCollectionUrls(collectionNamePlural);
@@ -163,6 +175,7 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 		this.restrictionBuilders.put(COLLECTION_MATCH_ID, new EntireCollectionRestrictionBuilder());
 		this.restrictionBuilders.put(ELEMENT_MATCH_ID, new ElementByIdRestrictionBuilder());
 		this.tableName = tableName;
+		this.updateIntentAction = updateIntentAction;
 		this.elementsMap = createTableMap(tableName, fields);
 		this.mimeTypes = new HashMap<Integer, String>();
 		this.mimeTypes.put(COLLECTION_MATCH_ID, getContentType());
@@ -192,9 +205,10 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 		SQLiteDatabase db = getWriteableDatabase();
 	
 		int count = doDelete(uri, where, whereArgs, db);
-		getContext().getContentResolver().notifyChange(uri, null);
+		notifyOnChange(uri);
 		return count;
 	}
+	
 
 
 	SQLiteDatabase getReadableDatabase() {
@@ -289,7 +303,7 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 		int count = 0;
 		SQLiteDatabase db = getWriteableDatabase();
 		count = doUpdate(uri, values, where, whereArgs, db);
-		getContext().getContentResolver().notifyChange(uri, null);
+		notifyOnChange(uri);
 		return count;
 	}
 	protected void addRestrictions(Uri uri, SQLiteQueryBuilder qb) {
@@ -346,7 +360,7 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 			if (rowID > 0) {
 				Uri uri = ContentUris.withAppendedId(contentUri,
 						rowID);
-				getContext().getContentResolver().notifyChange(uri, null);
+				notifyOnChange(uri);
 				return uri;
 			}
 			throw new SQLException("Failed to insert row into " + url);
@@ -383,12 +397,12 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 		public int delete(Uri uri, String where, String[] whereArgs,
 				SQLiteDatabase db) {
 			String id = uri.getPathSegments().get(1);
-			return db.delete(getTableName(),
-					idField
-							+ "="
-							+ id
-							+ (!TextUtils.isEmpty(where) ? " AND (" + where
-									+ ')' : ""), whereArgs);
+			int rowsUpdated = db.delete(getTableName(),
+                    idField + "=" + id +
+                    (!TextUtils.isEmpty(where) ? " AND (" + where +
+                            ')' : ""), whereArgs);
+			notifyOnChange(uri);
+			return rowsUpdated;
 		}
 	}
 	protected int doDelete(Uri uri, String where, String[] whereArgs,

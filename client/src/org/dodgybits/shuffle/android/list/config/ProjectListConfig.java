@@ -24,12 +24,11 @@ import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 
-import com.google.inject.Inject;
-
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContextWrapper;
 import android.database.Cursor;
+
+import com.google.inject.Inject;
 
 public class ProjectListConfig implements DrilldownListConfig<Project> {
     private ProjectPersister mGroupPersister;

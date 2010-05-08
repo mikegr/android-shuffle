@@ -7,8 +7,7 @@ public class ProjectProvider extends AbstractCollectionProvider {
 	   
 	public static final String PROJECT_TABLE_NAME = "project";
 
-
-
+    public static final String cUpdateIntent = "org.dodgybits.shuffle.android.PROJECT_UPDATE";
 
 	/**
      * Projects table
@@ -61,8 +60,18 @@ public class ProjectProvider extends AbstractCollectionProvider {
 	
 
 	public ProjectProvider() {
-		super(AUTHORITY,URL_COLLECTION_NAME, PROJECT_TABLE_NAME,Projects.NAME,Projects._ID,Projects.CONTENT_URI,0, Projects._ID,Projects.NAME,
-				Projects.DEFAULT_CONTEXT_ID, Projects.TRACKS_ID, Projects.MODIFIED_DATE,Projects.PARALLEL, Projects.ARCHIVED);
+		super(
+		        AUTHORITY,
+		        URL_COLLECTION_NAME, 
+		        PROJECT_TABLE_NAME,
+                cUpdateIntent,
+		        Projects.NAME,
+		        Projects._ID,
+		        Projects.CONTENT_URI,
+		        Projects._ID,Projects.NAME,
+				Projects.DEFAULT_CONTEXT_ID, Projects.TRACKS_ID, Projects.MODIFIED_DATE,
+				Projects.PARALLEL, Projects.ARCHIVED);
+		
 		makeSearchable(Projects._ID, Projects.NAME, Projects.NAME, Projects.NAME);
 		uriMatcher.addURI(AUTHORITY, "projectTasks", PROJECT_TASKS);
 		String idField = "p._id";

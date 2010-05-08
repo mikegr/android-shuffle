@@ -5,6 +5,8 @@ import android.net.Uri;
 public class ReminderProvider extends AbstractCollectionProvider {
 	private static final String AUTHORITY = Shuffle.PACKAGE+".reminderprovider";
 
+    public static final String cUpdateIntent = "org.dodgybits.shuffle.android.REMINDER_UPDATE";
+	
 	/**
 	 * Reminders table
 	 */
@@ -61,7 +63,15 @@ public class ReminderProvider extends AbstractCollectionProvider {
 	public static final String cReminderTableName = "Reminder";
 	
 	public ReminderProvider() {
-		super(AUTHORITY,"reminders",cReminderTableName,Reminders.METHOD,Reminders._ID,Reminders.CONTENT_URI,0,Reminders._ID,Reminders.TASK_ID,Reminders.MINUTES, Reminders.METHOD );
+		super(
+		        AUTHORITY,
+		        "reminders",
+		        cReminderTableName,
+		        cUpdateIntent,
+		        Reminders.METHOD,
+		        Reminders._ID,
+		        Reminders.CONTENT_URI,
+		        Reminders._ID,Reminders.TASK_ID,Reminders.MINUTES, Reminders.METHOD );
 		setDefaultSortOrder(Reminders.DEFAULT_SORT_ORDER);
 	}
 

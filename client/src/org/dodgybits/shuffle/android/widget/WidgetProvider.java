@@ -34,14 +34,16 @@ import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import roboguice.inject.ContentResolverProvider;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
@@ -63,6 +65,24 @@ public class WidgetProvider extends AppWidgetProvider {
     private static final String cTag = "WidgetProvider";
 
     private static final HashMap<String,Integer> sIdCache = new HashMap<String,Integer>();
+    
+    @Override
+    public void onReceive(android.content.Context context, Intent intent) {
+        super.onReceive(context, intent);
+        
+        String action = intent.getAction();
+        if (TaskProvider.cUpdateIntent.equals(action) ||
+                ProjectProvider.cUpdateIntent.equals(action) ||
+                ContextProvider.cUpdateIntent.equals(action)) {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            // Retrieve the identifiers for each instance of your chosen widget.
+            ComponentName thisWidget = new ComponentName(context, WidgetProvider.class);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+            if (appWidgetIds != null && appWidgetIds.length > 0) {
+                this.onUpdate(context, appWidgetManager, appWidgetIds);
+            }
+        }
+    }
     
     @Override
     public void onUpdate(android.content.Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
