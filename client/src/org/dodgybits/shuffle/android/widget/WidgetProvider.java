@@ -166,10 +166,10 @@ public class WidgetProvider extends AppWidgetProvider {
             
             int descriptionViewId = getIdIdentifier(androidContext, "description_" + taskCount);
             views.setTextViewText(descriptionViewId, task != null ? task.getDescription() : "");
-//            views.setInt(descriptionViewId, "setLines", project == null ? 2 : 1);
+            views.setInt(descriptionViewId, "setLines", project == null ? 2 : 1);
             
             int projectViewId = getIdIdentifier(androidContext, "project_" + taskCount);
-            views.setViewVisibility(projectViewId, project == null ? View.INVISIBLE : View.VISIBLE);
+            views.setViewVisibility(projectViewId, project == null ? View.GONE : View.VISIBLE);
             views.setTextViewText(projectViewId, project != null ? project.getName() : "");
             
             int contextIconId = getIdIdentifier(androidContext, "context_icon_" + taskCount);

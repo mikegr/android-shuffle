@@ -107,7 +107,7 @@
 	</style>
 
     <style name="widget_title" parent="text">
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:typeface">normal</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@drawable/white</item>
@@ -125,7 +125,7 @@
     <style name="widget_project" parent="list_text">
         <item name="android:textColor">@drawable/project</item>
         <item name="android:typeface">sans</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingLeft">5dip</item>
         <item name="android:lines">1</item>
@@ -135,8 +135,7 @@
 	<style name="widget_description" parent="list_text">
         <item name="android:textColor">@drawable/description</item>
         <item name="android:typeface">sans</item>
-        <item name="android:textScaleX">0.9</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:paddingLeft">2dip</item>
         <item name="android:lines">1</item>
         <item name="android:clickable">true</item>
