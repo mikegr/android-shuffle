@@ -5,15 +5,17 @@ import android.net.Uri;
 
 public class TaskProvider extends AbstractCollectionProvider {
 	
-	public static final String cTaskTableName = "task";
+	public static final String TASK_TABLE_NAME = "task";
 
-	public static final String cUpdateIntent = "org.dodgybits.shuffle.android.TASK_UPDATE";
+	public static final String UPDATE_INTENT = "org.dodgybits.shuffle.android.TASK_UPDATE";
 
+    private static final String URL_COLLECTION_NAME = "tasks";
+	
 	public TaskProvider() {
 		super(AUTHORITY,
-		        "tasks",
-		        cTaskTableName,
-		        cUpdateIntent,
+		        URL_COLLECTION_NAME,
+		        TASK_TABLE_NAME,
+		        UPDATE_INTENT,
 		        Tasks.DESCRIPTION,Tasks._ID,
 		        Tasks.CONTENT_URI,
 		        Tasks.DESCRIPTION,
@@ -22,19 +24,12 @@ public class TaskProvider extends AbstractCollectionProvider {
 				Tasks.CAL_EVENT_ID,Tasks.DISPLAY_ORDER,Tasks.COMPLETE,
 				Tasks.ALL_DAY,Tasks.HAS_ALARM,Tasks.TRACKS_ID, Tasks._ID);
 		
-		makeSearchable(Tasks._ID, Tasks.DESCRIPTION, Tasks.DETAILS,Tasks.DESCRIPTION,Tasks.DETAILS);
+		makeSearchable(Tasks._ID, 
+		        Tasks.DESCRIPTION, Tasks.DETAILS,
+		        Tasks.DESCRIPTION, Tasks.DETAILS);
 		elementInserters.put(COLLECTION_MATCH_ID, new TaskInserter());
 		setDefaultSortOrder(Tasks.DEFAULT_SORT_ORDER);
 	}
-
-
-
-
-	/* load task along with its optional project and context all in one query */
-	static final String cTaskJoinTableNames = "task left outer join project on task.projectId = project._id "
-			+ "left outer join context on task.contextId = context._id";
-
-
 
 
 

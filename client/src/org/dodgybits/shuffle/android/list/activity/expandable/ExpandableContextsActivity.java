@@ -53,15 +53,15 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 	@Override
 	protected void refreshChildCount() {
 		Cursor cursor = getContentResolver().query(
-				ContextProvider.Contexts.cContextTasksContentURI, 
-				ContextProvider.Contexts.cFullTaskProjection, null, null, null);
+				ContextProvider.Contexts.CONTEXT_TASKS_CONTENT_URI, 
+				ContextProvider.Contexts.FULL_TASK_PROJECTION, null, null, null);
         mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
 	
 	@Override
 	protected Cursor createGroupQuery() {
-		Cursor cursor = managedQuery(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.cFullProjection,
+		Cursor cursor = managedQuery(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.FULL_PROJECTION,
 				null, null, ContextProvider.Contexts.NAME + " ASC");
 		mGroupIdColumnIndex = cursor.getColumnIndex(ContextProvider.Contexts._ID);
 		return cursor;

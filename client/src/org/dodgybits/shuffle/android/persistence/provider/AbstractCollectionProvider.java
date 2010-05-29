@@ -63,6 +63,7 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 	protected DatabaseHelper mOpenHelper;
 	protected Map<String, String> suggestionProjectionMap;
 	protected final Map<Integer, RestrictionBuilder> restrictionBuilders;
+	protected final Map<Integer, GroupByBuilder> groupByBuilders;
 	protected final Map<Integer, CollectionUpdater> collectionUpdaters;
 	protected final Map<Integer, ElementInserter> elementInserters;
 	protected final Map<Integer, ElementDeleter> elementDeleters;
@@ -156,9 +157,27 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 			projectionMap.put("count", "count(*)");
 			qb.setProjectionMap(projectionMap);
 			qb.setTables(tables);
-			qb.appendWhere(restrictions);			
+			qb.appendWhere(restrictions);
 		}
 		
+	}
+	
+    public static interface GroupByBuilder {
+        String getGroupBy(Uri uri);
+    }
+	
+	protected class StandardGroupByBuilder implements GroupByBuilder
+	{
+	    private String mGroupBy;
+	    
+	    public StandardGroupByBuilder(String groupBy) {
+	        mGroupBy = groupBy;
+	    }
+	    
+	    @Override
+	    public String getGroupBy(Uri uri) {
+	        return mGroupBy;
+	    }
 	}
 
 	protected final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -186,7 +205,9 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 		this.elementInserters = new HashMap<Integer, ElementInserter>();
 		this.elementInserters.put(COLLECTION_MATCH_ID, new ElementInserterImpl(primaryKey));
 		this.elementDeleters = new HashMap<Integer, ElementDeleter>();
+		this.elementDeleters.put(COLLECTION_MATCH_ID, new EntireCollectionDeleter());
 		this.elementDeleters.put(ELEMENT_MATCH_ID, new ElementDeleterImpl(idField));
+        this.groupByBuilders = new HashMap<Integer, GroupByBuilder>();
 	}
 	
 	@Override
@@ -214,7 +235,7 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 	SQLiteDatabase getReadableDatabase() {
 		return mOpenHelper.getReadableDatabase();
 	}
-	protected String getSortOder(Uri uri, String sort) {
+	protected String getSortOrder(Uri uri, String sort) {
 		if (defaultSortOrder != null && TextUtils.isEmpty(sort)) {
 			return defaultSortOrder;
 		}
@@ -273,20 +294,30 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 
 		addRestrictions(uri, qb);
 
-		String orderBy = getSortOder(uri, sort);
-
+		String orderBy = getSortOrder(uri, sort);
+		String groupBy = getGroupBy(uri);
+		
 		if (Log.isLoggable(cTag, Log.DEBUG)) {
 			Log.d(cTag, "Executing " + selection + " with args "
 					+ Arrays.toString(selectionArgs) + " ORDER BY " + orderBy);
 		}
 
-		Cursor c = qb.query(db, projection, selection, selectionArgs, null,
+		Cursor c = qb.query(db, projection, selection, selectionArgs, groupBy,
 				null, orderBy);
 		c.setNotificationUri(getContext().getContentResolver(), uri);
 		return c;
 	}
 	
-	protected void registerCollectionUrls(String collectionName) {
+	protected String getGroupBy(Uri uri) {
+	    String groupBy = null;
+	    GroupByBuilder builder = groupByBuilders.get(match(uri));
+	    if (builder != null) {
+	        groupBy = builder.getGroupBy(uri);
+	    }
+        return groupBy;
+    }
+
+    protected void registerCollectionUrls(String collectionName) {
 		uriMatcher.addURI(authority, collectionName, COLLECTION_MATCH_ID);
 		uriMatcher.addURI(authority, collectionName+"/#", ELEMENT_MATCH_ID);
 	}
@@ -405,6 +436,19 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 			return rowsUpdated;
 		}
 	}
+	
+    private class EntireCollectionDeleter implements ElementDeleter {
+        @Override
+        public int delete(Uri uri, String where, String[] whereArgs,
+                SQLiteDatabase db) {
+            int rowsUpdated = db.delete(getTableName(), where, whereArgs);
+            notifyOnChange(uri);
+            return rowsUpdated;
+        }
+    }
+	
+	
+	
 	protected int doDelete(Uri uri, String where, String[] whereArgs,
 			SQLiteDatabase db) {
 		ElementDeleter elementDeleter = elementDeleters.get(match(uri));

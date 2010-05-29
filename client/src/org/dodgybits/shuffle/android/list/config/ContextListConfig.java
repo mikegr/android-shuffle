@@ -89,7 +89,7 @@ public class ContextListConfig implements DrilldownListConfig<Context> {
     public Cursor createQuery(Activity activity) {
         return activity.managedQuery(
                 getPersister().getContentUri(), 
-                ContextProvider.Contexts.cFullProjection,
+                ContextProvider.Contexts.FULL_PROJECTION,
                 null, null, 
                 ContextProvider.Contexts.NAME + " ASC");
     }    

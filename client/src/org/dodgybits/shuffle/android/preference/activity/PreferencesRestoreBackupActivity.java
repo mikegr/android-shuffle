@@ -334,7 +334,7 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
                 String[] paramValues = names.toArray(new String[0]);
                 Cursor cursor = getContentResolver().query(
                         ContextProvider.Contexts.CONTENT_URI,
-                        ContextProvider.Contexts.cFullProjection,
+                        ContextProvider.Contexts.FULL_PROJECTION,
                         ContextProvider.Contexts.NAME + " IN (" + params + ")",
                         paramValues, ContextProvider.Contexts.NAME + " ASC");
                 while (cursor.moveToNext()) {
@@ -413,7 +413,7 @@ public class PreferencesRestoreBackupActivity extends FlurryEnabledActivity
 	            String[] paramValues = names.toArray(new String[0]);
 	            Cursor cursor = getContentResolver().query(
 	                    ProjectProvider.Projects.CONTENT_URI,
-	                    ProjectProvider.Projects.cFullProjection,
+	                    ProjectProvider.Projects.FULL_PROJECTION,
 	                    ProjectProvider.Projects.NAME + " IN (" + params + ")",
 	                    paramValues, ProjectProvider.Projects.NAME + " ASC");
 	            while (cursor.moveToNext()) {

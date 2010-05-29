@@ -50,8 +50,8 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 		super.onResume();
 		
 		Cursor cursor = getContentResolver().query(
-				ProjectProvider.Projects.cProjectTasksContentURI, 
-				ProjectProvider.Projects.cFullTaskProjection, null, null, null);
+				ProjectProvider.Projects.PROJECT_TASKS_CONTENT_URI, 
+				ProjectProvider.Projects.FULL_TASK_PROJECTION, null, null, null);
         mTaskCountArray = getDrilldownListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}

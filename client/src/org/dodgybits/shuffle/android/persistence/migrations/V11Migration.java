@@ -10,18 +10,18 @@ public class V11Migration extends AbstractMigration {
 	@Override
 	public void migrate(SQLiteDatabase db) {
 		// Shuffle v1.1.1 (2nd release)
-		db.execSQL("ALTER TABLE " + TaskProvider.cTaskTableName
+		db.execSQL("ALTER TABLE " + TaskProvider.TASK_TABLE_NAME
 				+ " ADD COLUMN start INTEGER;");
-		db.execSQL("ALTER TABLE " + TaskProvider.cTaskTableName
+		db.execSQL("ALTER TABLE " + TaskProvider.TASK_TABLE_NAME
 				+ " ADD COLUMN timezone TEXT;");
-		db.execSQL("ALTER TABLE " + TaskProvider.cTaskTableName
+		db.execSQL("ALTER TABLE " + TaskProvider.TASK_TABLE_NAME
 				+ " ADD COLUMN allDay INTEGER NOT NULL DEFAULT 0;");
-		db.execSQL("ALTER TABLE " + TaskProvider.cTaskTableName
+		db.execSQL("ALTER TABLE " + TaskProvider.TASK_TABLE_NAME
 				+ " ADD COLUMN hasAlarm INTEGER NOT NULL DEFAULT 0;");
-		db.execSQL("ALTER TABLE " + TaskProvider.cTaskTableName
+		db.execSQL("ALTER TABLE " + TaskProvider.TASK_TABLE_NAME
 				+ " ADD COLUMN calEventId INTEGER;");
-		db.execSQL("UPDATE " + TaskProvider.cTaskTableName + " SET start = due;");
-		db.execSQL("UPDATE " + TaskProvider.cTaskTableName + " SET allDay = 1 " +
+		db.execSQL("UPDATE " + TaskProvider.TASK_TABLE_NAME + " SET start = due;");
+		db.execSQL("UPDATE " + TaskProvider.TASK_TABLE_NAME + " SET allDay = 1 " +
 				"WHERE due > 0;");
 		
 		createRemindersTable(db);
@@ -45,7 +45,7 @@ public class V11Migration extends AbstractMigration {
 	private void createTaskCleanupTrigger(SQLiteDatabase db) {
 		// Trigger to remove data tied to a task when we delete that task
         db.execSQL("DROP TRIGGER IF EXISTS tasks_cleanup_delete");
-		db.execSQL("CREATE TRIGGER tasks_cleanup_delete DELETE ON " + TaskProvider.cTaskTableName
+		db.execSQL("CREATE TRIGGER tasks_cleanup_delete DELETE ON " + TaskProvider.TASK_TABLE_NAME
 				+ " BEGIN "
 				+ "DELETE FROM " + ReminderProvider.cReminderTableName + " WHERE taskId = old._id;"
 				+ "END");

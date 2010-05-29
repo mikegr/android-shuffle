@@ -68,7 +68,7 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
 
     @Override
     public String[] getFullProjection() {
-        return ContextProvider.Contexts.cFullProjection;
+        return ContextProvider.Contexts.FULL_PROJECTION;
     }
     
     

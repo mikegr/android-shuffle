@@ -62,15 +62,15 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	@Override
 	protected void refreshChildCount() {
 		Cursor cursor = getContentResolver().query(
-				ProjectProvider.Projects.cProjectTasksContentURI, 
-				ProjectProvider.Projects.cFullTaskProjection, null, null, null);
+				ProjectProvider.Projects.PROJECT_TASKS_CONTENT_URI, 
+				ProjectProvider.Projects.FULL_TASK_PROJECTION, null, null, null);
 		mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
 		
 	@Override
 	protected Cursor createGroupQuery() {
-		Cursor cursor = managedQuery(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.cFullProjection,
+		Cursor cursor = managedQuery(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.FULL_PROJECTION,
 				null, null, ProjectProvider.Projects.NAME + " ASC");
 		mGroupIdColumnIndex = cursor.getColumnIndex(ProjectProvider.Projects._ID);
 		return cursor;

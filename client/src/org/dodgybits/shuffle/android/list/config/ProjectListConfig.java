@@ -89,7 +89,7 @@ public class ProjectListConfig implements DrilldownListConfig<Project> {
 	public Cursor createQuery(Activity activity) {
 	    return activity.managedQuery(
 	            getPersister().getContentUri(), 
-	            ProjectProvider.Projects.cFullProjection,
+	            ProjectProvider.Projects.FULL_PROJECTION,
                 null, null, 
                 ProjectProvider.Projects.NAME + " ASC");
 	}

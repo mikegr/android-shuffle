@@ -225,7 +225,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     private void loadCursor() {
     	if (mUri != null && mState == State.STATE_EDIT)
     	{
-            mCursor = managedQuery(mUri, ContextProvider.Contexts.cFullProjection, null, null, null);
+            mCursor = managedQuery(mUri, ContextProvider.Contexts.FULL_PROJECTION, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {
 	            // The cursor is empty. This can happen if the event was deleted.
 	            finish();

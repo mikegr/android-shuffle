@@ -15,12 +15,12 @@ public class V10Migration extends AbstractMigration {
 	}
 	private void createTaskProjectIdIndex(SQLiteDatabase db) {
         db.execSQL("DROP INDEX IF EXISTS taskProjectIdIndex");
-		db.execSQL("CREATE INDEX taskProjectIdIndex ON " + TaskProvider.cTaskTableName
+		db.execSQL("CREATE INDEX taskProjectIdIndex ON " + TaskProvider.TASK_TABLE_NAME
 				+ " (" + TaskProvider.Tasks.PROJECT_ID + ");");
 	}
 	private void createTaskContextIdIndex(SQLiteDatabase db) {
         db.execSQL("DROP INDEX IF EXISTS taskContextIdIndex");
-		db.execSQL("CREATE INDEX taskContextIdIndex ON " + TaskProvider.cTaskTableName
+		db.execSQL("CREATE INDEX taskContextIdIndex ON " + TaskProvider.TASK_TABLE_NAME
 				+ " (" + TaskProvider.Tasks.CONTEXT_ID + ");");
 	}
 

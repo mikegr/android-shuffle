@@ -31,9 +31,9 @@ public class V1Migration extends AbstractMigration {
 	}
 
 	private void createTaskTable(SQLiteDatabase db) {
-		db.execSQL("DROP TABLE IF EXISTS " + TaskProvider.cTaskTableName);
+		db.execSQL("DROP TABLE IF EXISTS " + TaskProvider.TASK_TABLE_NAME);
 		db.execSQL("CREATE TABLE " 
-		        + TaskProvider.cTaskTableName 
+		        + TaskProvider.TASK_TABLE_NAME 
 		        + " ("
 				+ "_id INTEGER PRIMARY KEY," 
 				+ "description TEXT,"

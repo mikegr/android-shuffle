@@ -4,21 +4,23 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class ContextProvider extends AbstractCollectionProvider {
-	public static final String cContextTableName = "context";
+	public static final String CONTEXT_TABLE_NAME = "context";
 
-    public static final String cUpdateIntent = "org.dodgybits.shuffle.android.CONTEXT_UPDATE";
+    public static final String UPDATE_INTENT = "org.dodgybits.shuffle.android.CONTEXT_UPDATE";
 
-	private static final String AUTHORITY = Shuffle.PACKAGE+".contextprovider";
-
+	private static final String AUTHORITY = Shuffle.PACKAGE + ".contextprovider";
 
 	static final int CONTEXT_TASKS = 103;
+	
+    private static final String URL_COLLECTION_NAME = "contexts";
+
 
 	public ContextProvider() {
 		super(
 		        AUTHORITY,
-		        "contexts",
-		        cContextTableName,
-                cUpdateIntent,
+		        URL_COLLECTION_NAME,
+		        CONTEXT_TABLE_NAME,
+                UPDATE_INTENT,
 		        Contexts.NAME, 
 		        Contexts._ID, 
 		        Contexts.CONTENT_URI,
@@ -26,7 +28,11 @@ public class ContextProvider extends AbstractCollectionProvider {
 				Contexts.ICON,Contexts.TRACKS_ID, Contexts.MODIFIED_DATE);
 		
 		uriMatcher.addURI(AUTHORITY, "contextTasks", CONTEXT_TASKS);
-		restrictionBuilders.put(CONTEXT_TASKS, new CustomElementFilterRestrictionBuilder("context c, task t", "t.contextId = c._id", "c._id"));
+		restrictionBuilders.put(CONTEXT_TASKS, 
+		        new CustomElementFilterRestrictionBuilder(
+		                "context c, task t", "t.contextId = c._id", "c._id"));
+        groupByBuilders.put(CONTEXT_TASKS, 
+                new StandardGroupByBuilder("c._id"));
 		setDefaultSortOrder(Contexts.DEFAULT_SORT_ORDER);
 	}
 
@@ -40,7 +46,7 @@ public class ContextProvider extends AbstractCollectionProvider {
 		 */
 		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
 				+ "/contexts");
-		public static final Uri cContextTasksContentURI = Uri
+		public static final Uri CONTEXT_TASKS_CONTENT_URI = Uri
 				.parse("content://" + AUTHORITY + "/contextTasks");
 
 		/**
@@ -57,21 +63,15 @@ public class ContextProvider extends AbstractCollectionProvider {
 		/**
 		 * Projection for all the columns of a context.
 		 */
-		public static final String[] cFullProjection = new String[] { _ID,
+		public static final String[] FULL_PROJECTION = new String[] { _ID,
 				NAME, COLOUR, ICON, TRACKS_ID, MODIFIED_DATE };
 
 		public static final String TASK_COUNT = "count";
 		/**
 		 * Projection for fetching the task count for each context.
 		 */
-		public static final String[] cFullTaskProjection = new String[] { _ID,
+		public static final String[] FULL_TASK_PROJECTION = new String[] { _ID,
 				TASK_COUNT, };
 	}
-
-
-
-	
-	
-
 
 }

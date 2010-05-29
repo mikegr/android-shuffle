@@ -73,7 +73,7 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
     
     @Override
     public String[] getFullProjection() {
-        return ProjectProvider.Projects.cFullProjection;
+        return ProjectProvider.Projects.FULL_PROJECTION;
     }
     
 }

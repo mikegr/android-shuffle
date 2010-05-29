@@ -89,7 +89,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected void onResume() {
 		Log.d(cTag, "Fetching project " + mProjectId);
-		Cursor cursor = getContentResolver().query(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.cFullProjection,
+		Cursor cursor = getContentResolver().query(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.FULL_PROJECTION,
 				ProjectProvider.Projects._ID + " = ?", new String[] {String.valueOf(mProjectId)}, null);
 		if (cursor.moveToNext()) {
 			mProject = mPersister.read(cursor);

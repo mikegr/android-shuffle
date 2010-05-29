@@ -88,7 +88,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	@Override
 	protected void onResume() {
 		Log.d(cTag, "Fetching context " + mContextId);
-		Cursor cursor = getContentResolver().query(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.cFullProjection,
+		Cursor cursor = getContentResolver().query(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.FULL_PROJECTION,
 				ContextProvider.Contexts._ID + " = ?", new String[] {String.valueOf(mContextId)}, null);
 		if (cursor.moveToNext()) {
 			mContext = mContextPersister.read(cursor);

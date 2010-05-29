@@ -282,7 +282,7 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
         {
 	    	Log.d(cTag, "Writing contexts");
             Cursor cursor = getContentResolver().query(
-            		ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.cFullProjection, 
+            		ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.FULL_PROJECTION, 
             		null, null, null);
             int i = 0;
             int total = cursor.getCount();
@@ -302,7 +302,7 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
         {
 	    	Log.d(cTag, "Writing projects");
             Cursor cursor = getContentResolver().query(
-            		ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.cFullProjection, 
+            		ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.FULL_PROJECTION, 
             		null, null, null);
             int i = 0;
             int total = cursor.getCount();

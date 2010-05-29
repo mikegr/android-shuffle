@@ -206,7 +206,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     private void loadCursor() {
     	if (mUri != null && mState == State.STATE_EDIT)
     	{
-            mCursor = managedQuery(mUri, ProjectProvider.Projects.cFullProjection, null, null, null);
+            mCursor = managedQuery(mUri, ProjectProvider.Projects.FULL_PROJECTION, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {
 	            // The cursor is empty. This can happen if the event was deleted.
 	            finish();
