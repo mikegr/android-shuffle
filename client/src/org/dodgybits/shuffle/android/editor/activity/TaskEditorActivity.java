@@ -26,6 +26,7 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.util.Constants;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
@@ -476,13 +477,19 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         ContentResolver cr = getContentResolver();
         int updateCount = 0;
         Uri eventUri = null;
-        if (calEventId.isInitialised()) {
-        	eventUri = ContentUris.appendId(baseUri.buildUpon(), calEventId.getId()).build();
-            // it's possible the old event was deleted, check number of records updated
-            updateCount = cr.update(eventUri, values, null, null);
+        try {
+            if (calEventId.isInitialised()) {
+            	eventUri = ContentUris.appendId(baseUri.buildUpon(), calEventId.getId()).build();
+                // it's possible the old event was deleted, check number of records updated
+                updateCount = cr.update(eventUri, values, null, null);
+            }
+            if (updateCount == 0) {
+            	eventUri = cr.insert(baseUri, values);
+            }
         }
-        if (updateCount == 0) {
-        	eventUri = cr.insert(baseUri, values);
+        catch (Exception e) {
+            Log.e(cTag, "Failed to create calendar entry", e);
+            mAnalytics.onError(Constants.cFlurryCalendarUpdateError, e.getMessage(), getClass().getName());
         }
         return eventUri;
     }

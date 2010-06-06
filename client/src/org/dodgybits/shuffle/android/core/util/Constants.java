@@ -25,6 +25,8 @@ public final class Constants {
     public static final String cFlurryCountParam = "count";
     public static final String cFlurryEntityTypeParam = "entityType";
     
+    public static final String cFlurryCalendarUpdateError = "calendarUpdateError";
+    
     public static final String cIdType = "id";
     public static final String cStringType = "string";
 

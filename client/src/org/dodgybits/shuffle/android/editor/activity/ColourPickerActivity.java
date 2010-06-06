@@ -17,10 +17,10 @@
 package org.dodgybits.shuffle.android.editor.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.core.util.TextColours;
 import org.dodgybits.shuffle.android.list.view.LabelView;
 
-import roboguice.activity.GuiceActivity;
 import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +33,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ColourPickerActivity extends GuiceActivity implements
+public class ColourPickerActivity extends FlurryEnabledActivity implements
 		OnItemClickListener {
 
 	@SuppressWarnings("unused")

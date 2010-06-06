@@ -17,8 +17,8 @@
 package org.dodgybits.shuffle.android.editor.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 
-import roboguice.activity.GuiceActivity;
 import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +31,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class IconPickerActivity extends GuiceActivity implements OnItemClickListener {
+public class IconPickerActivity extends FlurryEnabledActivity implements OnItemClickListener {
 
     @SuppressWarnings("unused")
 	private static final String cTag = "IconPickerActivity";
