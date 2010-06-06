@@ -142,9 +142,12 @@ public class WidgetProvider extends AppWidgetProvider {
         
         int titleId = getIdentifier(androidContext, "title_" + queryName, cStringType);
         views.setTextViewText(R.id.title, androidContext.getString(titleId));
-        
-        Intent intent = new Intent(Intent.ACTION_INSERT, TaskProvider.Tasks.CONTENT_URI);
+        Intent intent = StandardTaskQueries.getActivityIntent(androidContext, queryName);
         PendingIntent pendingIntent = PendingIntent.getActivity(androidContext, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.title, pendingIntent);
+        
+        intent = new Intent(Intent.ACTION_INSERT, TaskProvider.Tasks.CONTENT_URI);
+        pendingIntent = PendingIntent.getActivity(androidContext, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.add_task, pendingIntent);
         
         Cursor taskCursor = androidContext.getContentResolver().query(
