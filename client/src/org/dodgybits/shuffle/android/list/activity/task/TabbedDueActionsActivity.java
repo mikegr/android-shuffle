@@ -43,6 +43,8 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	@InjectView(android.R.id.tabhost) TabHost mTabHost;
 	private PredefinedQuery mMode = PredefinedQuery.dueToday;
 	
+	public static final String DUE_MODE = "mode";
+	
     @Inject private TaskPersister mTaskPersister;
 	
     @Override
@@ -72,6 +74,12 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 			}
         	
         });
+        
+        mMode = PredefinedQuery.dueToday;
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.containsKey(DUE_MODE)) {
+            mMode = PredefinedQuery.valueOf(extras.getString(DUE_MODE));
+        }
     }
     
     @Override
@@ -79,9 +87,11 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         Log.d(cTag, "onResume+");
         super.onResume();
         
-        // ugh!! If I take the following out, the first tab contents does not display
-    	mTabHost.setCurrentTab(1);
-    	mTabHost.setCurrentTab(0);
+        // ugh!! If I take the following out, the tab contents does not display
+        int nextTab = mMode.ordinal() % 3;
+        int currentTab = mMode.ordinal() - 1;
+    	mTabHost.setCurrentTab(nextTab);
+    	mTabHost.setCurrentTab(currentTab);
     }
     
     @Override
