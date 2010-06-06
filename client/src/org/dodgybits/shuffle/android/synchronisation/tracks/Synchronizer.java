@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
@@ -25,8 +26,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
 
-import com.flurry.android.FlurryAgent;
-
 /**
  * Base class for handling synchronization, template method object.
  *
@@ -38,6 +37,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
     protected EntityPersister<Entity> mPersister;
     protected WebClient mWebClient;
     protected android.content.Context mContext;
+    private Analytics mAnalytics;
     protected final TracksSynchronizer mTracksSynchronizer;
     
     private int mBasePercent;
@@ -47,11 +47,13 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
             TracksSynchronizer tracksSynchronizer, 
             WebClient client,
             android.content.Context context,
+            Analytics analytics,
             int basePercent) {
         mPersister = persister;
         mTracksSynchronizer = tracksSynchronizer;
         mWebClient = client;
         mContext = context;
+        mAnalytics = analytics;
         mBasePercent = basePercent;
     }
     
@@ -173,7 +175,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
     
     private void logTracksError(Exception e) {
         Log.e(cTag, "Failed to parse " + endIndexTag() + " " + e.getMessage());
-        FlurryAgent.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
+        mAnalytics.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
     }
 
     private Id findEntityLocalIdByTracksId(Id tracksId, Uri contentUri) {

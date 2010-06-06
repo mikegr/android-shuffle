@@ -1,12 +1,15 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks.activity;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.android.synchronisation.tracks.SyncProgressListener;
 import org.dodgybits.shuffle.android.synchronisation.tracks.TracksSynchronizer;
 import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
+
+import com.google.inject.Inject;
 
 import roboguice.inject.InjectView;
 import android.os.AsyncTask;
@@ -24,8 +27,12 @@ public class SynchronizeActivity extends FlurryEnabledActivity implements SyncPr
     @InjectView(R.id.info_text) TextView info;
     @InjectView(R.id.progress_horizontal) ProgressBar progress;
 
+    @Inject Analytics mAnalytics;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
         setContentView(R.layout.synchronize);
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         super.onCreate(savedInstanceState);
@@ -40,7 +47,7 @@ public class SynchronizeActivity extends FlurryEnabledActivity implements SyncPr
     public void onStart() {
         super.onStart();
         try {
-            synchronizer = TracksSynchronizer.getActiveSynchronizer(this);
+            synchronizer = TracksSynchronizer.getActiveSynchronizer(this, mAnalytics);
         } catch (WebClient.ApiException ignored) {
 
         }

@@ -19,6 +19,7 @@ package org.dodgybits.shuffle.android.core.activity;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledListActivity;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
+import org.dodgybits.shuffle.android.core.util.Constants;
 import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
@@ -27,6 +28,8 @@ import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
@@ -58,6 +61,8 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
 
     private static final String[] cProjection = new String[]{"_id"};
 
+    private final static int WHATS_NEW_DIALOG = 0;
+    
     private Integer[] mIconIds = new Integer[5];
     private AsyncTask<?, ?, ?> mTask;
 
@@ -69,6 +74,7 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 
         addVersionToTitle();
+        checkLastVersion();
     }
 
     @Override
@@ -136,6 +142,22 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         MenuUtils.checkCommonItemsSelected(position + MenuUtils.INBOX_ID, this, -1, false);
+    }
+    
+    
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        Dialog dialog;
+        if (id == WHATS_NEW_DIALOG) {
+            dialog = new AlertDialog.Builder(this)
+            .setTitle(R.string.whats_new_dialog_title)
+            .setPositiveButton(R.string.ok_button_title, null)
+            .setMessage(R.string.whats_new_dialog_message)
+            .create();
+        } else {
+            dialog = super.onCreateDialog(id);
+        }
+        return dialog;
     }
     
     private interface CursorGenerator {
@@ -252,6 +274,20 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
         } catch (AndroidException e) {
             Log.e(cTag, "Failed to add version to title: " + e.getMessage());
         }
+    }
+    
+    private void checkLastVersion() {
+        final int lastVersion = Preferences.getLastVersion(this);
+        if (Math.abs(lastVersion) < Math.abs(Constants.cVersion)) {
+            // This is a new install or an upgrade.
+            
+            // show what's new message
+            SharedPreferences.Editor editor = Preferences.getEditor(this);
+            editor.putInt(Preferences.LAST_VERSION, Constants.cVersion);
+            editor.commit();
+            
+            showDialog(WHATS_NEW_DIALOG);
+        }        
     }
 
 }

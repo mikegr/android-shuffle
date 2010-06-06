@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
@@ -36,9 +37,10 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
             TracksSynchronizer tracksSynchronizer, 
             WebClient client, 
             Context context, 
+            Analytics analytics,
             int basePercent,
             String tracksUrl) {
-        super(persister, tracksSynchronizer, client, context, basePercent);
+        super(persister, tracksSynchronizer, client, context, analytics, basePercent);
 
         this.mTracksUrl = tracksUrl;
     }

@@ -97,6 +97,32 @@
     <string name="sample_data_title">Demonstration</string>
     <string name="clean_slate_title">Clean slate</string>
 
+    <!--  What's new dialog -->
+<string name="whats_new_dialog_title">Shuffle</string>
+<string name="whats_new_dialog_message">Thanks for downloading Shuffle.\n\n
+<b>New in this version:</b>\n
+\t• <b>Widget</b> for your favorite list.\n
+\t• Turn tasks into projects.\n
+\t• Fixed Google Calendar creation on Android 2.2.\n
+\t• Big rewrite of the codebase (to improve reliability and simplify addition of new features).\n
+\n
+<b>New in version 1.5.1:</b>\n
+\t• Patch for Tracks synch bugs.\n
+\n
+<b>New in version 1.5:</b>\n
+\t• Search actions (including in quick search box)\n
+\t• Enable removable of action scheduling\n
+\t• Remove actions from Inbox if project or context set\n
+\t• Add actions without projects to Next actions\n
+\t• Enable parallel execute of actions within a project\n
+\t• For Tracks synch, don\'t set all day flag unless a date is set\n
+\t• Show both start and due date in task lists\n
+\t• Updated Help screens\n
+\n
+\n
+Also note that this application sends anonymous usage statistics back to a server.  If you\'d rather not
+allow that, you can turn it off under Settings.</string>
+    
 	<!--  edit screens -->
     <string name="menu_done">Save</string>
     <string name="menu_doNotSave">Discard changes</string>
@@ -150,7 +176,9 @@
     
     <string name="title_calendar_preference">Calendar selection</string>
     <string name="summary_calendar_preference">For new Google Calendar entries</string>
-
+    
+    <string name="title_send_analytics_preference">Send usage data</string>
+    <string name="summary_send_analytics_preference">Anonymous data is used for finding bugs and prioritizing features.</string>
 
 	<string name="layout_preferences">Layout settings</string>
 

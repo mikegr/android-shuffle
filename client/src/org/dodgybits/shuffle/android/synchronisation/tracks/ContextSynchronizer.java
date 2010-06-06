@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.Map;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
@@ -29,9 +30,10 @@ public class ContextSynchronizer extends Synchronizer<Context> {
             TracksSynchronizer tracksSynchronizer, 
             WebClient client, 
             android.content.Context context, 
+            Analytics analytics,
             int basePercent, 
             String tracksUrl) {
-        super(persister, tracksSynchronizer, client, context, basePercent);
+        super(persister, tracksSynchronizer, client, context, analytics, basePercent);
 
         mTracksUrl = tracksUrl;
     }

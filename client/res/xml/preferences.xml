@@ -26,6 +26,13 @@
             android:summary="@string/summary_calendar_preference"
             android:dialogTitle="@string/title_calendar_preference" />
 
+        <CheckBoxPreference
+                android:key="send_analytics"
+                android:title="@string/title_send_analytics_preference"
+                android:summary="@string/summary_send_analytics_preference" 
+                android:defaultValue="true"                
+                />
+
     </PreferenceCategory>
 
     <PreferenceCategory

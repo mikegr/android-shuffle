@@ -40,7 +40,6 @@ import android.text.format.Time;
 import android.util.Log;
 import android.util.SparseIntArray;
 
-import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
 
 @ContextScoped
@@ -148,7 +147,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         
         Map<String, String> params = new HashMap<String,String>(mFlurryParams);
         params.put(cFlurryCountParam, String.valueOf(deletedRows));
-        FlurryAgent.onEvent(cFlurryDeleteEntityEvent, params);
+        mAnalytics.onEvent(cFlurryDeleteEntityEvent, params);
         
         return deletedRows;
     }
@@ -169,7 +168,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         mResolver.update(getContentUri(), values,
                 TaskProvider.Tasks._ID + "=?", new String[] { String.valueOf(taskId) });
         if (isComplete) {
-            FlurryAgent.onEvent(cFlurryCompleteTaskEvent);
+            mAnalytics.onEvent(cFlurryCompleteTaskEvent);
         }
         return isComplete;
     }
@@ -196,7 +195,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         values = new ContentValues();
         values.put(DISPLAY_ORDER, positionValue1);
         mResolver.update(uri, values, null, null);
-        FlurryAgent.onEvent(cFlurryReorderTasksEvent);
+        mAnalytics.onEvent(cFlurryReorderTasksEvent);
     }
 
     

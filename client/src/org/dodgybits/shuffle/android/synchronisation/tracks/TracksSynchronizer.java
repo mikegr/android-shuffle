@@ -7,6 +7,7 @@ import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryTracksSyn
 import java.util.LinkedList;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
@@ -17,15 +18,12 @@ import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 
 import roboguice.inject.ContentResolverProvider;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.flurry.android.FlurryAgent;
 
 
 /**
@@ -44,22 +42,24 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
     private final ContextSynchronizer mContextSynchronizer;
     private final ProjectSynchronizer mProjectSynchronizer;
     private final TaskSynchronizer mTaskSynchronizer;
-
-
+    private Analytics mAnalytics;
+    
+// TODO inject sync classes (BIG job)
+    
     public static TracksSynchronizer getActiveSynchronizer(
-            ContextWrapper context) throws WebClient.ApiException {
-        TracksSynchronizer synchronizer = getSingletonSynchronizer(context);
+            ContextWrapper context, Analytics analytics) throws WebClient.ApiException {
+        TracksSynchronizer synchronizer = getSingletonSynchronizer(context, analytics);
         while (synchronizer.getStatus() == Status.FINISHED) {
-            synchronizer = getSingletonSynchronizer(context);
+            synchronizer = getSingletonSynchronizer(context, analytics);
         }
         return synchronizer;
     }
 
-    private static TracksSynchronizer getSingletonSynchronizer(Context context) throws WebClient.ApiException {
+    private static TracksSynchronizer getSingletonSynchronizer(Context context, Analytics analytics) throws WebClient.ApiException {
         if (synchronizer == null || synchronizer.getStatus() == Status.FINISHED) {
 
             synchronizer = new TracksSynchronizer(
-                    context, 
+                    context, analytics,
                     new WebClient(context, Preferences.getTracksUser(context), 
                             Preferences.getTracksPassword(context)), 
                     Preferences.getTracksUrl(context)
@@ -68,26 +68,31 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
         return synchronizer;
     }
 
-    private TracksSynchronizer(Context context, 
+    private TracksSynchronizer(
+            Context context,
+            Analytics analytics,
             WebClient client, 
             String tracksUrl) {
+        mContext = context;
+        
         //TODO inject this
         ContentResolverProvider provider = new ContentResolverProvider() {
             @Override
             public ContentResolver get() {
-                return context.getContentResolver();
+                return mContext.getContentResolver();
             }
         };
+        
+        mAnalytics = analytics;
         
         EntityPersister<Task> taskPersister = new TaskPersister(provider);
         EntityPersister<org.dodgybits.shuffle.android.core.model.Context> contextPersister = new ContextPersister(provider);
         EntityPersister<Project> projectPersister = new ProjectPersister(provider);
         
-        mContextSynchronizer = new ContextSynchronizer(contextPersister, this, client, context, 0, tracksUrl);
-        mProjectSynchronizer = new ProjectSynchronizer(projectPersister, this, client, context, 33, tracksUrl);
-        mTaskSynchronizer = new TaskSynchronizer(taskPersister, this, client, context, 66, tracksUrl);
+        mContextSynchronizer = new ContextSynchronizer(contextPersister, this, client, context, mAnalytics, 0, tracksUrl);
+        mProjectSynchronizer = new ProjectSynchronizer(projectPersister, this, client, context, mAnalytics, 33, tracksUrl);
+        mTaskSynchronizer = new TaskSynchronizer(taskPersister, this, client, context, mAnalytics, 66, tracksUrl);
 
-        mContext = context;
         mMessages = new LinkedList<Integer>();
     }
 
@@ -112,20 +117,20 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
     @Override
     protected Void doInBackground(String... strings) {
         try {
-            FlurryAgent.onEvent(cFlurryTracksSyncStartedEvent);
+            mAnalytics.onEvent(cFlurryTracksSyncStartedEvent);
             mContextSynchronizer.synchronize();
             mProjectSynchronizer.synchronize();
             mTaskSynchronizer.synchronize();
             publishProgress(Progress.createProgress(100, "Synchronization Complete"));
-            FlurryAgent.onEvent(cFlurryTracksSyncCompletedEvent);
+            mAnalytics.onEvent(cFlurryTracksSyncCompletedEvent);
         } catch (WebClient.ApiException e) {
             Log.w(cTag, "Tracks call failed", e);
             publishProgress(Progress.createErrorProgress(mContext.getString(R.string.web_error_message)));
-            FlurryAgent.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
+            mAnalytics.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
         } catch (Exception e) {
             Log.w(cTag, "Synch failed", e);
             publishProgress(Progress.createErrorProgress(mContext.getString(R.string.error_message)));
-            FlurryAgent.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
+            mAnalytics.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
         }
         return null;
 
@@ -141,7 +146,7 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
             }
         }
         try {
-            synchronizer = getSingletonSynchronizer(mContext);
+            synchronizer = getSingletonSynchronizer(mContext, mAnalytics);
         } catch (WebClient.ApiException ignored) {
 
         }

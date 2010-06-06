@@ -5,9 +5,12 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.util.ItemCache;
 import org.dodgybits.shuffle.android.core.util.ItemCache.ValueBuilder;
 
+import android.util.Log;
+
 import com.google.inject.Inject;
 
 public class DefaultEntityCache<E extends Entity> implements EntityCache<E> {
+    private static final String cTag = "DefaultEntityCache";
 
     private EntityPersister<E> mPersister;
     private Builder mBuilder;
@@ -15,6 +18,8 @@ public class DefaultEntityCache<E extends Entity> implements EntityCache<E> {
     
     @Inject
     public DefaultEntityCache(EntityPersister<E> persister) {
+        Log.d(cTag, "Created entity cache");
+        
         mPersister = persister;
         mBuilder = new Builder();
         mCache = new ItemCache<Id, E>(mBuilder);

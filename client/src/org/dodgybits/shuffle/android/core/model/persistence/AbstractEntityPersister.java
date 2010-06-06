@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Id;
 
@@ -21,10 +22,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.flurry.android.FlurryAgent;
+import com.google.inject.Inject;
 
 public abstract class AbstractEntityPersister<E extends Entity> implements EntityPersister<E> {
 
+    @Inject protected Analytics mAnalytics;
+    
     protected ContentResolver mResolver;
     protected Map<String, String> mFlurryParams;
     
@@ -62,7 +65,7 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
         validate(e);
         Uri uri = mResolver.insert(getContentUri(), null);
         update(uri, e);
-        FlurryAgent.onEvent(cFlurryCreateEntityEvent, mFlurryParams);
+        mAnalytics.onEvent(cFlurryCreateEntityEvent, mFlurryParams);
         return uri;
     }
 
@@ -82,7 +85,7 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
 
             Map<String, String> params = new HashMap<String, String>(mFlurryParams);
             params.put(cFlurryCountParam, String.valueOf(rowsCreated));
-            FlurryAgent.onEvent(cFlurryCreateEntityEvent, params);
+            mAnalytics.onEvent(cFlurryCreateEntityEvent, params);
         }
     }
 
@@ -92,7 +95,7 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
         Uri uri = getUri(e);
         update(uri, e);
         
-        FlurryAgent.onEvent(cFlurryUpdateEntityEvent, mFlurryParams);
+        mAnalytics.onEvent(cFlurryUpdateEntityEvent, mFlurryParams);
     }
 
     @Override
@@ -100,7 +103,7 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
         Uri uri = getUri(id);
         boolean success = (mResolver.delete(uri, null, null) == 1);
         if (success) {
-            FlurryAgent.onEvent(cFlurryDeleteEntityEvent, mFlurryParams);
+            mAnalytics.onEvent(cFlurryDeleteEntityEvent, mFlurryParams);
         }
 
         return success;

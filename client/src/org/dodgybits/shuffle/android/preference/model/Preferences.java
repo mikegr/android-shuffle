@@ -26,10 +26,13 @@ public class Preferences {
     
     
 	public static final String FIRST_TIME = "first_time";
+	public static final String ANALYTICS_ENABLED = "send_analytics";
+	
 	public static final String SCREEN_KEY = "screen";
 	public static final String DELETE_COMPLETED_PERIOD_KEY = "delete_complete_period_str";
 	public static final String LAST_DELETE_COMPLETED_KEY = "last_delete_completed";
 	public static final String LAST_INBOX_CLEAN_KEY = "last_inbox_clean";
+	public static final String LAST_VERSION = "last_version";
 	
 	public static final String DISPLAY_CONTEXT_ICON_KEY = "display_context_icon";
 	public static final String DISPLAY_CONTEXT_NAME_KEY = "display_context_name";
@@ -62,10 +65,15 @@ public class Preferences {
     }
 
     public static int getTracksInterval(Context context) {
-             getSharedPreferences(context);
+        getSharedPreferences(context);
         return sPrefs.getInt(TRACKS_INTERVAL, 0);
     }
 
+    public static int getLastVersion(Context context) {
+        getSharedPreferences(context);
+        return sPrefs.getInt(LAST_VERSION, 0);
+    }
+    
     public enum DeleteCompletedPeriod {
 		hourly, daily, weekly, never
 	}
@@ -84,6 +92,11 @@ public class Preferences {
 		return sPrefs.getBoolean(FIRST_TIME, true);
 	}
 
+    public static boolean isAnalyticsEnabled(Context context) {
+        getSharedPreferences(context);
+        return sPrefs.getBoolean(ANALYTICS_ENABLED, true);
+    }
+	
     public static String getTracksUrl(Context context) {
         getSharedPreferences(context);
         return sPrefs.getString(TRACKS_URL, 

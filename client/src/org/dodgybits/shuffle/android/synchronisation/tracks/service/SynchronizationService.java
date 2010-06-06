@@ -1,6 +1,7 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks.service;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.android.synchronisation.tracks.SyncProgressListener;
@@ -8,10 +9,10 @@ import org.dodgybits.shuffle.android.synchronisation.tracks.TracksSynchronizer;
 import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
 import org.dodgybits.shuffle.android.synchronisation.tracks.activity.SynchronizeActivity;
 
+import roboguice.service.RoboService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -21,12 +22,14 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.google.inject.Inject;
+
 /**
  * This service handles synchronization in the background.
  * 
  * @author Morten Nielsen
  */
-public class SynchronizationService extends Service implements SyncProgressListener {
+public class SynchronizationService extends RoboService implements SyncProgressListener {
     private static final String cTag = "SynchronizationService";
     
     private NotificationManager mNotificationManager;
@@ -37,6 +40,8 @@ public class SynchronizationService extends Service implements SyncProgressListe
     private TracksSynchronizer synchronizer = null;
     private RemoteViews contentView;
 
+    @Inject Analytics mAnalytics;
+    
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -44,6 +49,8 @@ public class SynchronizationService extends Service implements SyncProgressListe
 
     @Override
     public void onCreate() {
+        super.onCreate();
+        
         String ns = Context.NOTIFICATION_SERVICE;
         mNotificationManager = (NotificationManager) getSystemService(ns);
 
@@ -114,7 +121,7 @@ public class SynchronizationService extends Service implements SyncProgressListe
         Log.d(cTag, "Starting synch");
         
         try {
-            synchronizer = TracksSynchronizer.getActiveSynchronizer(this);
+            synchronizer = TracksSynchronizer.getActiveSynchronizer(this, mAnalytics);
         } catch (WebClient.ApiException ignored) {
 
         }  
