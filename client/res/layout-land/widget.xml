@@ -59,7 +59,6 @@
        android:id="@+id/divider_2"
        android:layout_width="fill_parent"
        android:layout_height="1dip"
-       android:layout_toRightOf="@+id/context_icon_1"
        android:layout_marginTop="2dp"
        android:src="@android:drawable/divider_horizontal_bright"
        android:layout_below="@+id/description_1"
