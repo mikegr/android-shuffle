@@ -10,11 +10,11 @@ import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
 
-import roboguice.inject.ContextScoped;
-
 import android.os.Bundle;
 
-@ContextScoped
+import com.google.inject.Singleton;
+
+@Singleton
 public class ContextEncoder extends AbstractEntityEncoder implements EntityEncoder<Context> {
 
     @Override

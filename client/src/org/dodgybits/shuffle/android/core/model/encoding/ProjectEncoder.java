@@ -11,11 +11,11 @@ import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
 
-import roboguice.inject.ContextScoped;
-
 import android.os.Bundle;
 
-@ContextScoped
+import com.google.inject.Singleton;
+
+@Singleton
 public class ProjectEncoder extends AbstractEntityEncoder implements EntityEncoder<Project> {
 
     @Override

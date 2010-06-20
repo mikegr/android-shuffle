@@ -20,11 +20,11 @@ import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Ta
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 
-import roboguice.inject.ContextScoped;
-
 import android.os.Bundle;
 
-@ContextScoped
+import com.google.inject.Singleton;
+
+@Singleton
 public class TaskEncoder extends AbstractEntityEncoder implements
         EntityEncoder<Task> {
     
