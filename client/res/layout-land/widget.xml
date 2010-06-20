@@ -32,6 +32,7 @@
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
        android:layout_below="@+id/add_task"
+       android:layout_marginTop="1dp"
        android:paddingTop="5dip"
        style="@style/widget_project"       
        />
@@ -42,6 +43,7 @@
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
        android:layout_below="@+id/project_1"
+       android:layout_marginTop="1dp"
        style="@style/widget_context"       
     />
     
@@ -52,6 +54,7 @@
        android:layout_alignParentRight="true"
        android:layout_toRightOf="@+id/context_icon_1"
        android:layout_below="@+id/project_1"
+       android:layout_marginTop="1dp"
        style="@style/widget_description"
        />
     
@@ -60,7 +63,7 @@
        android:layout_width="fill_parent"
        android:layout_height="1dip"
        android:layout_marginTop="2dp"
-       android:src="@android:drawable/divider_horizontal_bright"
+       android:src="@drawable/divider_horizontal_bright"
        android:layout_below="@+id/description_1"
     />
     

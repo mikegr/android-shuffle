@@ -32,7 +32,6 @@
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
        android:layout_below="@+id/add_task"
-       android:paddingTop="2dip"
        style="@style/widget_project"       
        />
        
@@ -60,7 +59,7 @@
        android:layout_width="fill_parent"
        android:layout_height="1dip"
        android:layout_marginTop="2dp"
-       android:src="@android:drawable/divider_horizontal_bright"
+       android:src="@drawable/divider_horizontal_bright"
        android:layout_below="@+id/description_1"
     />
     
@@ -97,7 +96,7 @@
        android:layout_width="fill_parent"
        android:layout_height="1dip"
        android:layout_marginTop="2dp"
-       android:src="@android:drawable/divider_horizontal_bright"
+       android:src="@drawable/divider_horizontal_bright"
        android:layout_below="@+id/description_2"
     />
        
@@ -135,7 +134,7 @@
        android:layout_width="fill_parent"
        android:layout_height="1dip"
        android:layout_marginTop="2dp"
-       android:src="@android:drawable/divider_horizontal_bright"
+       android:src="@drawable/divider_horizontal_bright"
        android:layout_below="@+id/description_3"
     />
        
