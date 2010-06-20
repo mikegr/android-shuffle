@@ -26,144 +26,204 @@
        android:layout_alignParentRight="true"
     />
        
-    <TextView 
-       android:id="@+id/project_1"
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/add_task"
-       style="@style/widget_project"       
-       />
+	<RelativeLayout android:id="@+id/entry_1"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+        android:layout_below="@+id/add_task"
+        android:layout_marginLeft="2dp"
+	    android:focusable="true"
+	    android:clickable="true"
+	    android:background="@android:drawable/list_selector_background"
+	    >
+
+	    <TextView 
+	       android:id="@+id/project_1"
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentTop="true"
+	       android:layout_alignParentLeft="true"
+	       android:duplicateParentState="true"
+	       style="@style/widget_project"       
+	       />
+              
+	    <ImageView
+	       android:id="@+id/context_icon_1"   
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentLeft="true"
+	       android:layout_below="@+id/project_1"
+	       android:duplicateParentState="true"
+	       style="@style/widget_context"       
+	    />
+	    
+	    <TextView 
+	       android:id="@+id/description_1"
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentRight="true"
+	       android:layout_toRightOf="@+id/context_icon_1"
+	       android:layout_below="@+id/project_1"
+  		   android:layout_marginBottom="1dp"
+	       android:duplicateParentState="true"
+	       style="@style/widget_description"
+	       />
        
-    <ImageView
-       android:id="@+id/context_icon_1"   
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/project_1"
-       style="@style/widget_context"       
-    />
-    
-    <TextView 
-       android:id="@+id/description_1"
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentRight="true"
-       android:layout_toRightOf="@+id/context_icon_1"
-       android:layout_below="@+id/project_1"
-       style="@style/widget_description"
-       />
+    </RelativeLayout>   
        
     <ImageView
        android:id="@+id/divider_2"
        android:layout_width="fill_parent"
        android:layout_height="1dip"
-       android:layout_marginTop="2dp"
        android:src="@drawable/divider_horizontal_bright"
-       android:layout_below="@+id/description_1"
+       android:layout_below="@+id/entry_1"
     />
     
-    <TextView 
-       android:id="@+id/project_2"
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/description_1"
-       style="@style/widget_project"       
-       />
-
-    <ImageView
-       android:id="@+id/context_icon_2"   
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/project_2"
-       style="@style/widget_context"       
-    />
-
-    <TextView 
-       android:id="@+id/description_2"
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentRight="true"
-       android:layout_toRightOf="@+id/context_icon_2"
-       android:layout_below="@+id/project_2"
-       style="@style/widget_description"
-       />
+	<RelativeLayout android:id="@+id/entry_2"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+        android:layout_below="@+id/divider_2"
+        android:layout_marginLeft="2dp"
+	    android:focusable="true"
+	    android:clickable="true"
+	    android:background="@android:drawable/list_selector_background"
+	    >
+    
+    
+	    <TextView 
+	       android:id="@+id/project_2"
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentTop="true"
+	       android:layout_alignParentLeft="true"
+	       android:duplicateParentState="true"
+	       style="@style/widget_project"       
+	       />
+	
+	    <ImageView
+	       android:id="@+id/context_icon_2"   
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentLeft="true"
+	       android:layout_below="@+id/project_2"
+	       android:duplicateParentState="true"
+	       style="@style/widget_context"       
+	    />
+	
+	    <TextView 
+	       android:id="@+id/description_2"
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentRight="true"
+	       android:layout_toRightOf="@+id/context_icon_2"
+	       android:layout_below="@+id/project_2"
+  		   android:layout_marginBottom="1dp"
+	       android:duplicateParentState="true"
+	       style="@style/widget_description"
+	       />
+       
+    </RelativeLayout>   
        
     <ImageView
        android:id="@+id/divider_3"
        android:layout_width="fill_parent"
        android:layout_height="1dip"
-       android:layout_marginTop="2dp"
        android:src="@drawable/divider_horizontal_bright"
-       android:layout_below="@+id/description_2"
+       android:layout_below="@+id/entry_2"
     />
        
-    <TextView 
-       android:id="@+id/project_3"
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/description_2"
-       style="@style/widget_project"       
-       />
+	<RelativeLayout android:id="@+id/entry_3"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+        android:layout_below="@+id/divider_3"
+        android:layout_marginLeft="2dp"
+	    android:focusable="true"
+	    android:clickable="true"
+	    android:background="@android:drawable/list_selector_background"
+	    >
+    
+	    <TextView 
+	       android:id="@+id/project_3"
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentTop="true"
+	       android:layout_alignParentLeft="true"
+	       android:duplicateParentState="true"
+	       style="@style/widget_project"       
+	       />
        
-    <ImageView
-       android:id="@+id/context_icon_3"   
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/project_3"
-       style="@style/widget_context"       
-    />
+	    <ImageView
+	       android:id="@+id/context_icon_3"   
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentLeft="true"
+	       android:layout_below="@+id/project_3"
+	       android:duplicateParentState="true"
+	       style="@style/widget_context"       
+	    />
+	
+	    <TextView 
+	       android:id="@+id/description_3"
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentRight="true"
+	       android:layout_toRightOf="@+id/context_icon_3"
+	       android:layout_below="@+id/project_3"
+  		   android:layout_marginBottom="1dp"
+	       android:duplicateParentState="true"
+	       style="@style/widget_description"
+	       />
        
-
-    <TextView 
-       android:id="@+id/description_3"
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentRight="true"
-       android:layout_toRightOf="@+id/context_icon_3"
-       android:layout_below="@+id/project_3"
-       style="@style/widget_description"
-       />
+    </RelativeLayout>   
        
     <ImageView
        android:id="@+id/divider_4"
        android:layout_width="fill_parent"
        android:layout_height="1dip"
-       android:layout_marginTop="2dp"
        android:src="@drawable/divider_horizontal_bright"
-       android:layout_below="@+id/description_3"
+       android:layout_below="@+id/entry_3"
     />
        
-    <TextView 
-       android:id="@+id/project_4"
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/description_3"
-       style="@style/widget_project"       
-       />
-
-    <ImageView
-       android:id="@+id/context_icon_4"   
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/project_4"
-       style="@style/widget_context"       
-    />
-
-    <TextView 
-       android:id="@+id/description_4"
-       android:layout_width="wrap_content" 
-       android:layout_height="wrap_content"
-       android:layout_alignParentRight="true"
-       android:layout_toRightOf="@+id/context_icon_4"
-       android:layout_below="@+id/project_4"
-       style="@style/widget_description"
-       />
+	<RelativeLayout android:id="@+id/entry_4"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+        android:layout_below="@+id/divider_4"
+        android:layout_marginLeft="2dp"
+	    android:focusable="true"
+	    android:clickable="true"
+	    android:background="@android:drawable/list_selector_background"
+	    >
+       
+	    <TextView 
+	       android:id="@+id/project_4"
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentLeft="true"
+	       android:layout_below="@+id/description_3"
+	       android:duplicateParentState="true"
+	       style="@style/widget_project"       
+	       />
+	
+	    <ImageView
+	       android:id="@+id/context_icon_4"   
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentLeft="true"
+	       android:layout_below="@+id/project_4"
+	       android:duplicateParentState="true"
+	       style="@style/widget_context"       
+	    />
+	
+	    <TextView 
+	       android:id="@+id/description_4"
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentRight="true"
+	       android:layout_toRightOf="@+id/context_icon_4"
+	       android:layout_below="@+id/project_4"
+	       android:duplicateParentState="true"
+	       style="@style/widget_description"
+	       />
+       
+    </RelativeLayout>   
        
 </RelativeLayout>

@@ -191,7 +191,9 @@ public class WidgetProvider extends AppWidgetProvider {
                 Uri taskUri = builder.build();
                 intent = new Intent(Intent.ACTION_EDIT, taskUri);
                 Log.d(cTag, "Adding pending event for viewing uri " + taskUri);
+                int entryId = getIdIdentifier(androidContext, "entry_" + taskCount);
                 pendingIntent = PendingIntent.getActivity(androidContext, 0, intent, 0);
+                views.setOnClickPendingIntent(entryId, pendingIntent);
                 views.setOnClickPendingIntent(descriptionViewId, pendingIntent);
                 views.setOnClickPendingIntent(projectViewId, pendingIntent);
                 views.setOnClickPendingIntent(contextIconId, pendingIntent);
