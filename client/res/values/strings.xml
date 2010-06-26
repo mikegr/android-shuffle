@@ -102,9 +102,8 @@
 <string name="whats_new_dialog_message">Thanks for downloading Shuffle.\n\n
 <b>New in this version:</b>\n
 \t• <b>Widget</b> for your favorite list.\n
-\t• Turn tasks into projects.\n
 \t• Fixed Google Calendar creation on Android 2.2.\n
-\t• Big rewrite of the codebase (to improve reliability and simplify addition of new features).\n
+\t• Big code rewrite to improve reliability and simplify addition of new features.\n
 \n
 <b>New in version 1.5.1:</b>\n
 \t• Patch for Tracks synch bugs.\n
@@ -258,7 +257,7 @@ allow that, you can turn it off under Settings.</string>
     <string name="processingTasks">Processing tasks</string>
     <string name="readingLocalTasks">Reading local tasks</string>
     <string name="doneWithTasks">Done with tasks</string>
-    <string name="cannotSyncTasksWithoutContext">Cannot synchronize tasks without a context to Tracks</string>
+    <string name="cannotSyncTasksWithoutContext">Any actions without contexts will not appear in Tracks</string>
     <string name="readingRemoteContexts">Reading remote Contexts</string>
     <string name="processingContexts">Processing Contexts</string>
     <string name="readingLocalContexts">Reading local Contexts</string>
