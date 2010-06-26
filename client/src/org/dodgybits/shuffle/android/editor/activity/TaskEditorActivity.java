@@ -473,23 +473,38 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         	values.put("eventLocation", contextName);
         }
         
-        Uri baseUri = Uri.parse("content://calendar/events");
+        Uri eventUri = null;
+        try {
+            // try calendar Uri for Android 2.1 or earlier first
+            eventUri = addCalendarEntry(values, calEventId, Uri.parse("content://calendar/events"));
+        }
+        catch (Exception e) {
+            // try calendar Uri for Android 2.2 and later
+            Log.e(cTag, "First attempt failed to create calendar entry", e);
+            try
+            {
+                eventUri = addCalendarEntry(values, calEventId, Uri.parse("content://com.android.calendar/events"));
+            }
+            catch (Exception e2) {
+                Log.e(cTag, "Second attempt failed to create calendar entry", e2);
+                mAnalytics.onError(Constants.cFlurryCalendarUpdateError, e2.getMessage(), getClass().getName());
+            }            
+        }
+
+        return eventUri;
+    }
+    
+    private Uri addCalendarEntry(ContentValues values, Id oldId, Uri baseUri) {
         ContentResolver cr = getContentResolver();
         int updateCount = 0;
         Uri eventUri = null;
-        try {
-            if (calEventId.isInitialised()) {
-            	eventUri = ContentUris.appendId(baseUri.buildUpon(), calEventId.getId()).build();
-                // it's possible the old event was deleted, check number of records updated
-                updateCount = cr.update(eventUri, values, null, null);
-            }
-            if (updateCount == 0) {
-            	eventUri = cr.insert(baseUri, values);
-            }
+        if (oldId.isInitialised()) {
+            eventUri = ContentUris.appendId(baseUri.buildUpon(), oldId.getId()).build();
+            // it's possible the old event was deleted, check number of records updated
+            updateCount = cr.update(eventUri, values, null, null);
         }
-        catch (Exception e) {
-            Log.e(cTag, "Failed to create calendar entry", e);
-            mAnalytics.onError(Constants.cFlurryCalendarUpdateError, e.getMessage(), getClass().getName());
+        if (updateCount == 0) {
+            eventUri = cr.insert(baseUri, values);
         }
         return eventUri;
     }
