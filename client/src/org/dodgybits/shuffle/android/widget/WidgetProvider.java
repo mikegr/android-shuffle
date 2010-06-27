@@ -23,6 +23,7 @@ import static org.dodgybits.shuffle.android.core.util.Constants.cStringType;
 import java.util.HashMap;
 
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
@@ -73,7 +74,8 @@ public class WidgetProvider extends AppWidgetProvider {
         String action = intent.getAction();
         if (TaskProvider.UPDATE_INTENT.equals(action) ||
                 ProjectProvider.UPDATE_INTENT.equals(action) ||
-                ContextProvider.UPDATE_INTENT.equals(action)) {
+                ContextProvider.UPDATE_INTENT.equals(action) ||
+                Preferences.CLEAN_INBOX_INTENT.equals(action)) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             // Retrieve the identifiers for each instance of your chosen widget.
             ComponentName thisWidget = new ComponentName(context, WidgetProvider.class);
@@ -128,11 +130,12 @@ public class WidgetProvider extends AppWidgetProvider {
                 return androidContext.getContentResolver();
             }
         };
+        Analytics analytics = new Analytics(androidContext);
         
-        TaskPersister taskPersister = new TaskPersister(provider);
-        ProjectPersister projectPersister = new ProjectPersister(provider);
+        TaskPersister taskPersister = new TaskPersister(provider, analytics);
+        ProjectPersister projectPersister = new ProjectPersister(provider, analytics);
         EntityCache<Project> projectCache = new DefaultEntityCache<Project>(projectPersister);
-        ContextPersister contextPersister = new ContextPersister(provider);
+        ContextPersister contextPersister = new ContextPersister(provider, analytics);
         EntityCache<Context> contextCache = new DefaultEntityCache<Context>(contextPersister);
         
         RemoteViews views = new RemoteViews(androidContext.getPackageName(), R.layout.widget);
@@ -153,7 +156,7 @@ public class WidgetProvider extends AppWidgetProvider {
         Cursor taskCursor = androidContext.getContentResolver().query(
                 TaskProvider.Tasks.CONTENT_URI, 
                 TaskProvider.Tasks.cFullProjection, 
-                query.getSelection(), 
+                query.getSelection(androidContext), 
                 query.getSelectionArgs(), 
                 query.getSortOrder());
         

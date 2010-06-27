@@ -7,6 +7,7 @@ import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider
 import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.PARALLEL;
 import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.TRACKS_ID;
 
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
@@ -31,8 +32,8 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
     private static final int ARCHIVED_INDEX = 6;
     
     @Inject
-    public ProjectPersister(ContentResolverProvider provider) {
-        super(provider.get());
+    public ProjectPersister(ContentResolverProvider provider, Analytics analytics) {
+        super(provider.get(), analytics);
     }
     
     @Override

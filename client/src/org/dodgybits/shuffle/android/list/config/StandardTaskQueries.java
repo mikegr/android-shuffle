@@ -1,9 +1,7 @@
 package org.dodgybits.shuffle.android.list.config;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.model.TaskQuery.PredefinedQuery;
 import org.dodgybits.shuffle.android.list.activity.task.InboxActivity;
@@ -21,10 +19,8 @@ public class StandardTaskQueries {
     public static final String cDueNextMonth = "due_next_month";
     public static final String cNextTasks = "next_tasks";
     
-    private static final TaskQuery cInboxQuery = TaskQuery.newBuilder()
-        .setContexts(new ArrayList<Id>())
-        .setProjects(new ArrayList<Id>())
-        .build();
+    private static final TaskQuery cInboxQuery = 
+        TaskQuery.newBuilder().setPredefined(PredefinedQuery.inbox).build();
         
     private static final TaskQuery cDueTodayQuery = 
         TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueToday).build();

@@ -175,7 +175,7 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
             return getContentResolver().query(
                     TaskProvider.Tasks.CONTENT_URI, 
                     cProjection, 
-                    mTaskQuery.getSelection(), 
+                    mTaskQuery.getSelection(TopLevelActivity.this), 
                     mTaskQuery.getSelectionArgs(), 
                     mTaskQuery.getSortOrder());
         }

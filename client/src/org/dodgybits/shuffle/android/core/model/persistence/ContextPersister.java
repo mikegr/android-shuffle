@@ -6,6 +6,7 @@ import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider
 import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.NAME;
 import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.TRACKS_ID;
 
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
@@ -29,8 +30,8 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
     private static final int MODIFIED_INDEX = 5;
     
     @Inject
-    public ContextPersister(ContentResolverProvider provider) {
-        super(provider.get());
+    public ContextPersister(ContentResolverProvider provider, Analytics analytics) {
+        super(provider.get(), analytics);
     }
 
     @Override

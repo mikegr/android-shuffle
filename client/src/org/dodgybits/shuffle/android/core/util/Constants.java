@@ -8,7 +8,7 @@ public final class Constants {
     
     public static final String cPackage = "org.dodgybits.android.shuffle";
 
-    public static final int cVersion = 22;
+    public static final int cVersion = 23;
     
     public static final String cFlurryApiKey = "T7KF1PCGVU6V2FS8LILF";
     

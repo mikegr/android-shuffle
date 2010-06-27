@@ -12,8 +12,8 @@
 	-->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.dodgybits.android.shuffle" android:versionCode="22"
-	android:versionName="1.6.0">
+	package="org.dodgybits.android.shuffle" android:versionCode="23"
+	android:versionName="1.6.1">
 
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -383,6 +383,7 @@
                 <action android:name="org.dodgybits.shuffle.android.TASK_UPDATE" />
                 <action android:name="org.dodgybits.shuffle.android.PROJECT_UPDATE" />
                 <action android:name="org.dodgybits.shuffle.android.CONTEXT_UPDATE" />
+                <action android:name="org.dodgybits.shuffle.android.CLEAN_INBOX" />
             </intent-filter>
 		</receiver>
 

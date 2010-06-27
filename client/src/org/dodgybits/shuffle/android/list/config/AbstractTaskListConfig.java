@@ -81,7 +81,7 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
         return activity.managedQuery(
                 getTaskPersister().getContentUri(), 
                 TaskProvider.Tasks.cFullProjection, 
-                mTaskQuery.getSelection(), 
+                mTaskQuery.getSelection(activity), 
                 mTaskQuery.getSelectionArgs(), 
                 mTaskQuery.getSortOrder());
     }

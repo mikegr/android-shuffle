@@ -10,6 +10,7 @@ import org.dodgybits.shuffle.android.synchronisation.tracks.TracksSynchronizer;
 import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
 
 import com.google.inject.Inject;
+import com.google.inject.internal.Nullable;
 
 import roboguice.inject.InjectView;
 import android.os.AsyncTask;
@@ -24,8 +25,8 @@ import android.widget.TextView;
  */
 public class SynchronizeActivity extends FlurryEnabledActivity implements SyncProgressListener {
     private TracksSynchronizer synchronizer = null;
-    @InjectView(R.id.info_text) TextView info;
-    @InjectView(R.id.progress_horizontal) ProgressBar progress;
+    @InjectView(R.id.info_text) @Nullable TextView mInfo;
+    @InjectView(R.id.progress_horizontal) @Nullable ProgressBar mProgress;
 
     @Inject Analytics mAnalytics;
     
@@ -44,8 +45,8 @@ public class SynchronizeActivity extends FlurryEnabledActivity implements SyncPr
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         try {
             synchronizer = TracksSynchronizer.getActiveSynchronizer(this, mAnalytics);
         } catch (WebClient.ApiException ignored) {
@@ -58,12 +59,11 @@ public class SynchronizeActivity extends FlurryEnabledActivity implements SyncPr
                 synchronizer.execute();
             }
         }
-
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
         if (synchronizer != null) {
             synchronizer.unRegisterListener(this);
         }
@@ -72,7 +72,11 @@ public class SynchronizeActivity extends FlurryEnabledActivity implements SyncPr
 
     @Override
     public void progressUpdate(Progress progress) {
-        info.setText(progress.getDetails());
-        this.progress.setProgress(progress.getProgressPercent());
+        if (mInfo != null) {
+            mInfo.setText(progress.getDetails());
+        }
+        if (mProgress != null) {
+            mProgress.setProgress(progress.getProgressPercent());
+        }
     }
 }

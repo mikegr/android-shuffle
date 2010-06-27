@@ -47,6 +47,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -473,22 +474,19 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         	values.put("eventLocation", contextName);
         }
         
+        Uri baseUri;
+        if (Build.VERSION.SDK_INT >= 8) { //FIXME should use Build.VERSION_CODES.FROYO (might crash in 1.5 btw)
+            baseUri = Uri.parse("content://com.android.calendar/events");
+        } else {
+            baseUri = Uri.parse("content://calendar/events"); 
+        };
+        
         Uri eventUri = null;
         try {
-            // try calendar Uri for Android 2.1 or earlier first
-            eventUri = addCalendarEntry(values, calEventId, Uri.parse("content://calendar/events"));
-        }
-        catch (Exception e) {
-            // try calendar Uri for Android 2.2 and later
-            Log.e(cTag, "First attempt failed to create calendar entry", e);
-            try
-            {
-                eventUri = addCalendarEntry(values, calEventId, Uri.parse("content://com.android.calendar/events"));
-            }
-            catch (Exception e2) {
-                Log.e(cTag, "Second attempt failed to create calendar entry", e2);
-                mAnalytics.onError(Constants.cFlurryCalendarUpdateError, e2.getMessage(), getClass().getName());
-            }            
+            eventUri = addCalendarEntry(values, calEventId, baseUri);
+        } catch (Exception e) {
+            Log.e(cTag, "Attempt failed to create calendar entry", e);
+            mAnalytics.onError(Constants.cFlurryCalendarUpdateError, e.getMessage(), getClass().getName());
         }
 
         return eventUri;

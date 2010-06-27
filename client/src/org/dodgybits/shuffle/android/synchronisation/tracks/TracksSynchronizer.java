@@ -85,9 +85,9 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
         
         mAnalytics = analytics;
         
-        EntityPersister<Task> taskPersister = new TaskPersister(provider);
-        EntityPersister<org.dodgybits.shuffle.android.core.model.Context> contextPersister = new ContextPersister(provider);
-        EntityPersister<Project> projectPersister = new ProjectPersister(provider);
+        EntityPersister<Task> taskPersister = new TaskPersister(provider, analytics);
+        EntityPersister<org.dodgybits.shuffle.android.core.model.Context> contextPersister = new ContextPersister(provider, analytics);
+        EntityPersister<Project> projectPersister = new ProjectPersister(provider, analytics);
         
         mContextSynchronizer = new ContextSynchronizer(contextPersister, this, client, context, mAnalytics, 0, tracksUrl);
         mProjectSynchronizer = new ProjectSynchronizer(projectPersister, this, client, context, mAnalytics, 33, tracksUrl);

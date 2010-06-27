@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.dodgybits.shuffle.android.core.util.StringUtils;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
+import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -59,10 +60,10 @@ public class TaskQuery {
         return true;
     }
     
-    public final String getSelection() {
+    public final String getSelection(android.content.Context context) {
         List<String> expressions = new ArrayList<String>();
         if (mPredefined != null) {
-            expressions.add(predefinedSelection());
+            expressions.add(predefinedSelection(context));
         }
         if (mProjects != null) {
             expressions.add(idListSelection(mProjects, TaskProvider.Tasks.PROJECT_ID));
@@ -79,7 +80,7 @@ public class TaskQuery {
         return StringUtils.join(expressions, " AND ");
     }
         
-    private String predefinedSelection() {
+    private String predefinedSelection(android.content.Context context) {
         String result;
         switch (mPredefined) {
             case nextTasks:
@@ -90,6 +91,12 @@ public class TaskQuery {
                     "      t2.projectId = task.projectId AND t2.complete = 0 " +
                     "      ORDER BY due ASC, displayOrder ASC limit 1))" +
                     ")";
+                break;
+                
+            case inbox:
+                long lastCleanMS = Preferences.getLastInboxClean(context);
+                result = "(projectId is null AND contextId is null) OR (created > " + 
+                    lastCleanMS + ")";                
                 break;
                 
             default:
@@ -294,7 +301,7 @@ public class TaskQuery {
     }
 
     public enum PredefinedQuery {
-        nextTasks, dueToday, dueNextWeek, dueNextMonth
+        nextTasks, dueToday, dueNextWeek, dueNextMonth, inbox
     }
 
     public final class DateRange {

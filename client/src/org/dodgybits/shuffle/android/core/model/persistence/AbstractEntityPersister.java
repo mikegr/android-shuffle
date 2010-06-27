@@ -22,17 +22,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.google.inject.Inject;
-
 public abstract class AbstractEntityPersister<E extends Entity> implements EntityPersister<E> {
 
-    @Inject protected Analytics mAnalytics;
+    protected Analytics mAnalytics;
     
     protected ContentResolver mResolver;
     protected Map<String, String> mFlurryParams;
     
-    public AbstractEntityPersister(ContentResolver resolver) {
+    public AbstractEntityPersister(ContentResolver resolver, Analytics analytics) {
         mResolver = resolver;
+        mAnalytics = analytics;
         
         Map<String, String> params = new HashMap<String,String>();
         params.put(cFlurryEntityTypeParam, getEntityName());

@@ -17,6 +17,7 @@
 package org.dodgybits.shuffle.android.preference.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -55,6 +56,8 @@ public class Preferences {
     public static final String TRACKS_INTERVAL = "tracks_interval";
 
     public static final String WIDGET_QUERY_PREFIX = "widget_query_";
+    
+    public static final String CLEAN_INBOX_INTENT = "org.dodgybits.shuffle.android.CLEAN_INBOX";
     
     public static boolean validateTracksSettings(Context context) {
         String url = getTracksUrl(context);
@@ -217,6 +220,7 @@ public class Preferences {
 		SharedPreferences.Editor ed = getEditor(context);
 		ed.putLong(LAST_INBOX_CLEAN_KEY, System.currentTimeMillis());
 		ed.commit();
+		context.sendBroadcast(new Intent(CLEAN_INBOX_INTENT));
 	}
 
 	

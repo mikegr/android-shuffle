@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
@@ -64,8 +65,8 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     private static final int TASK_TRACK_INDEX = HAS_ALARM_INDEX  + 1;
     
     @Inject
-    public TaskPersister(ContentResolverProvider provider) {
-        super(provider.get());
+    public TaskPersister(ContentResolverProvider provider, Analytics analytics) {
+        super(provider.get(), analytics);
     }
     
     @Override
