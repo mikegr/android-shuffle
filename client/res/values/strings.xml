@@ -101,6 +101,9 @@
 <string name="whats_new_dialog_title">Shuffle</string>
 <string name="whats_new_dialog_message">Thanks for downloading Shuffle.\n\n
 <b>New in this version:</b>\n
+\t• Fix bug where can\'t remove context or project from action.\n
+\n
+<b>New in version 1.6.1:</b>\n
 \t• Fixed Tracks sync bug.\n
 \t• Reverted Inbox behavior.\n
 \n

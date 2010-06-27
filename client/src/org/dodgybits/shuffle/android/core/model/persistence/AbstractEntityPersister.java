@@ -167,6 +167,8 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
     protected static void writeId(ContentValues values, String key, Id id) {
         if (id.isInitialised()) {
             values.put(key, id.getId());
+        } else {
+            values.putNull(key);
         }
     }
     
