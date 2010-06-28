@@ -16,6 +16,7 @@
 
 package org.dodgybits.shuffle.android.editor.activity;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TimeZone;
@@ -475,7 +476,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         }
         
         Uri baseUri;
-        if (Build.VERSION.SDK_INT >= 8) { //FIXME should use Build.VERSION_CODES.FROYO (might crash in 1.5 btw)
+        if (osAtLeastFroyo()) {
             baseUri = Uri.parse("content://com.android.calendar/events");
         } else {
             baseUri = Uri.parse("content://calendar/events"); 
@@ -490,6 +491,18 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         }
 
         return eventUri;
+    }
+    
+    private boolean osAtLeastFroyo() {
+        boolean isFroyoOrAbove = false;
+        try {
+            Field field = Build.VERSION.class.getDeclaredField("SDK_INT");
+            int version = field.getInt(null);
+            isFroyoOrAbove = version >= 8;
+        } catch (Exception e) {
+            // ignore exception - field not available
+        }
+        return isFroyoOrAbove;
     }
     
     private Uri addCalendarEntry(ContentValues values, Id oldId, Uri baseUri) {
