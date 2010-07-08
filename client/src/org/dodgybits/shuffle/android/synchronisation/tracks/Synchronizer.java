@@ -3,7 +3,6 @@ package org.dodgybits.shuffle.android.synchronisation.tracks;
 import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryTracksSyncError;
 
 import java.io.StringReader;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +15,9 @@ import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.IContextLookup;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.IProjectLookup;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.Parser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -31,7 +33,7 @@ import android.util.Xml;
  *
  * @author Morten Nielsen
  */
-public abstract class Synchronizer<Entity extends TracksEntity> {
+public abstract class Synchronizer<Entity extends TracksEntity> implements IProjectLookup,IContextLookup {
     private static final String cTag = "Synchronizer";
     
     protected EntityPersister<Entity> mPersister;
@@ -84,11 +86,11 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
                 mBasePercent + 33, stageFinishedText()));
     }
 
-    protected Id findProjectIdByTracksId(Id tracksId) {
+    public Id findProjectIdByTracksId(Id tracksId) {
         return findEntityLocalIdByTracksId(tracksId, ProjectProvider.Projects.CONTENT_URI);
     }
 
-    protected Id findContextIdByTracksId(Id tracksId) {
+    public Id findContextIdByTracksId(Id tracksId) {
         return findEntityLocalIdByTracksId(tracksId, ContextProvider.Contexts.CONTENT_URI);
     }
     
@@ -120,9 +122,6 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
     protected abstract String createEntityUrl(Entity localEntity);
 
     protected abstract String createDocumentForEntity(Entity localEntity);
-
-    protected abstract Entity parseSingleEntity(XmlPullParser parser)
-        throws ParseException;
     
     protected abstract EntityBuilder<Entity> createBuilder();
     
@@ -148,7 +147,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
             while (eventType != XmlPullParser.END_DOCUMENT && !done) {
                 Entity entity = null;
                 try {
-                    entity = parseSingleEntity(parser);
+                    entity = getEntityParser().parseSingle(parser);
                 } catch (Exception e) {
                     logTracksError(e);
                     errorFree = false;
@@ -173,7 +172,9 @@ public abstract class Synchronizer<Entity extends TracksEntity> {
         return new TracksEntities(entities, errorFree);
     }
     
-    private void logTracksError(Exception e) {
+    protected abstract Parser<Entity> getEntityParser();
+
+	private void logTracksError(Exception e) {
         Log.e(cTag, "Failed to parse " + endIndexTag() + " " + e.getMessage());
         mAnalytics.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
     }

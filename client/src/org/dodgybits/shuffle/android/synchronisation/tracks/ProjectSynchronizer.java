@@ -2,7 +2,6 @@ package org.dodgybits.shuffle.android.synchronisation.tracks;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.ParseException;
 import java.util.Map;
 
 import org.dodgybits.android.shuffle.R;
@@ -13,11 +12,10 @@ import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.Parser;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.ProjectParser;
 import org.xmlpull.v1.XmlSerializer;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
 
@@ -29,6 +27,8 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
     
     private final String mTracksUrl;
 
+	private Parser<Project> mParser;
+
     public ProjectSynchronizer(
             EntityPersister<Project> persister,
             TracksSynchronizer tracksSynchronizer, 
@@ -38,7 +38,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
             int basePercent,
             String tracksUrl) {
         super(persister, tracksSynchronizer, client, context, analytics, basePercent);
-
+        mParser = new ProjectParser(this);
         mTracksUrl = tracksUrl;
     }
     
@@ -111,58 +111,6 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
         return writer.toString();
     }
 
-    protected Project parseSingleEntity(XmlPullParser parser) throws ParseException {
-        Builder builder = Project.newBuilder();
-        Project project = null;
-        
-        try {
-            int eventType = parser.getEventType();
-            
-            while (eventType != XmlPullParser.END_DOCUMENT && project == null) {
-                String name = parser.getName();
-                
-                switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        if (name.equalsIgnoreCase("name")) {
-                            builder.setName(parser.nextText());
-                        } else if (name.equalsIgnoreCase("id")) {
-                            Id tracksId = Id.create(Long.parseLong(parser.nextText()));
-                            builder.setTracksId(tracksId);
-                        } else if (name.equalsIgnoreCase("updated-at")) {
-                            String dateStr = parser.nextText();
-                            long modifiedDate = DateUtils.parseIso8601Date(dateStr);
-                            builder.setModifiedDate(modifiedDate);
-                        } else if (name.equalsIgnoreCase("default-context-id")) {
-                            String tokenValue = parser.nextText();
-                            if (!TextUtils.isEmpty(tokenValue)) {
-                                Id tracksId = Id.create(Long.parseLong(tokenValue));
-                                Id defaultContextId = findContextIdByTracksId(tracksId);
-                                if (defaultContextId.isInitialised()) {
-                                    builder.setDefaultContextId(defaultContextId);
-                                }
-                            }
-                        } else if (name.equalsIgnoreCase("state")) {
-                            boolean archived = !parser.nextText().equalsIgnoreCase("active");
-                            builder.setArchived(archived);
-                        }
-                        break;
-                        
-                    case XmlPullParser.END_TAG:
-                        if (name.equalsIgnoreCase("project")) {
-                            project = builder.build();
-                        }
-                        break;
-                }
-                eventType = parser.next();
-            }
-        } catch (IOException e) {
-            throw new ParseException("Unable to parse project:" + e.getMessage(), 0);
-        } catch (XmlPullParserException e) {
-            throw new ParseException("Unable to parse project:" + e.getMessage(), 0);
-        }
-        return project;
-    }
-
     @Override
     protected String createEntityUrl(Project project) {
         return mTracksUrl+ "/projects/" + project.getTracksId().getId() + ".xml";
@@ -177,5 +125,10 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
     protected String entityIndexUrl() {
         return mTracksUrl+ "/projects.xml";
     }
+
+	@Override
+	protected Parser<Project> getEntityParser() {
+		return mParser;
+	}
 
 }

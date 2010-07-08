@@ -2,7 +2,6 @@ package org.dodgybits.shuffle.android.synchronisation.tracks;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.ParseException;
 import java.util.Map;
 
 import org.dodgybits.android.shuffle.R;
@@ -13,8 +12,8 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.ContextParser;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.Parser;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Xml;
@@ -24,6 +23,7 @@ import android.util.Xml;
  */
 public class ContextSynchronizer extends Synchronizer<Context> {
     private final String mTracksUrl;
+	private Parser<Context> mParser;
     
     public ContextSynchronizer(
             EntityPersister<Context> persister,
@@ -34,7 +34,7 @@ public class ContextSynchronizer extends Synchronizer<Context> {
             int basePercent, 
             String tracksUrl) {
         super(persister, tracksSynchronizer, client, context, analytics, basePercent);
-
+        mParser = new ContextParser();
         mTracksUrl = tracksUrl;
     }
     
@@ -106,58 +106,6 @@ public class ContextSynchronizer extends Synchronizer<Context> {
         return writer.toString();
     }
 
-    @Override
-    protected Context parseSingleEntity(XmlPullParser parser) throws ParseException {
-
-        //               <context>
-//<created-at type="datetime">2009-12-29T21:14:19+00:00</created-at>
-//<hide type="boolean">false</hide>
-//<id type="integer">3486</id>
-//<name>beta</name>
-//<position type="integer">1</position>
-//<updated-at type="datetime">2009-12-29T21:14:19+00:00</updated-at>
-//</context>
-        Context context = null;
-        Builder builder = Context.newBuilder();
-        
-        try {
-            int eventType = parser.getEventType();
-
-            while (eventType != XmlPullParser.END_DOCUMENT && context == null) {
-                String name = parser.getName();
-
-                switch (eventType) {
-                    case XmlPullParser.START_DOCUMENT:
-                        break;
-                        
-                    case XmlPullParser.START_TAG:
-                        if (name.equalsIgnoreCase("name")) {
-                            builder.setName(parser.nextText());
-                        } else if (name.equalsIgnoreCase("id")) {
-                            Id tracksId = Id.create(Long.parseLong(parser.nextText()));
-                            builder.setTracksId(tracksId);
-                        } else if (name.equalsIgnoreCase("updated-at")) {
-                            String dateStr = parser.nextText();
-                            long date = DateUtils.parseIso8601Date(dateStr);
-                            builder.setModifiedDate(date);
-                        }
-                        break;
-                        
-                    case XmlPullParser.END_TAG:
-                        if (name.equalsIgnoreCase("context")) {
-                            context = builder.build();
-                        }
-                        break;
-                }
-                eventType = parser.next();
-            }
-        } catch (IOException e) {
-            throw new ParseException("Unable to parse context:" + e.getMessage(), 0);
-        } catch (XmlPullParserException e) {
-            throw new ParseException("Unable to parse context:" + e.getMessage(), 0);
-        }
-        return context;
-    }
 
     @Override
     protected String createEntityUrl(Context localContext) {
@@ -173,5 +121,12 @@ public class ContextSynchronizer extends Synchronizer<Context> {
     protected String entityIndexUrl() {
         return mTracksUrl+"/contexts.xml";
     }
+
+	@Override
+	protected Parser<Context> getEntityParser() {
+		return mParser;
+	}
+
+
 
 }

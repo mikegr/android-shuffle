@@ -2,7 +2,6 @@ package org.dodgybits.shuffle.android.synchronisation.tracks;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -14,12 +13,11 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.Parser;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.TaskParser;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
 
@@ -32,6 +30,9 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
     
     private final String mTracksUrl;
 
+
+	private Parser<Task> mParser;
+
     public TaskSynchronizer( 
             EntityPersister<Task> persister,
             TracksSynchronizer tracksSynchronizer, 
@@ -41,7 +42,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
             int basePercent,
             String tracksUrl) {
         super(persister, tracksSynchronizer, client, context, analytics, basePercent);
-
+        mParser = new TaskParser(this, this);
         this.mTracksUrl = tracksUrl;
     }
 
@@ -159,86 +160,6 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
         return writer.toString();
     }
 
-    protected Task parseSingleEntity(XmlPullParser parser) throws ParseException {
-        Task task = null;
-        final Builder builder = Task.newBuilder();
-        builder.setTimezone("UTC");
-        
-        try {
-            int eventType = parser.getEventType();
-            
-            while (eventType != XmlPullParser.END_DOCUMENT && task == null) {
-                final String name = parser.getName();
-                
-                long startDate = 0L;
-                long dueDate = 0L;
-
-                switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        if (name.equalsIgnoreCase("description")) {
-                            builder.setDescription(parser.nextText());
-                        } else if (name.equalsIgnoreCase("id")) {
-                            Id tracksId = Id.create(Long.parseLong(parser.nextText()));
-                            builder.setTracksId(tracksId);
-                        } else if (name.equalsIgnoreCase("updated-at")) {
-                            String dateStr = parser.nextText();
-                            long modifiedDate = DateUtils.parseIso8601Date(dateStr);
-                            builder.setModifiedDate(modifiedDate);
-                        } else if (name.equalsIgnoreCase("context-id")) {
-                            String tokenValue = parser.nextText();
-                            if (!TextUtils.isEmpty(tokenValue)) {
-                                Id tracksId = Id.create(Long.parseLong(tokenValue));
-                                Id contextId = findContextIdByTracksId(tracksId);
-                                builder.setContextId(contextId);
-                            }
-                        } else if (name.equalsIgnoreCase("project-id")) {
-                            String tokenValue = parser.nextText();
-                            if (!TextUtils.isEmpty(tokenValue)) {
-                                Id tracksId = Id.create(Long.parseLong(tokenValue));
-                                Id projectId = findProjectIdByTracksId(tracksId);
-                                builder.setProjectId(projectId);
-                            }
-                        } else if (name.equalsIgnoreCase("notes")) {
-                            builder.setDetails(parser.nextText());
-                        } else if (name.equalsIgnoreCase("created-at")) {
-                            String dateStr = parser.nextText();
-                            if (!TextUtils.isEmpty(dateStr)) {
-                                long created = DateUtils.parseIso8601Date(dateStr);
-                                builder.setCreatedDate(created);
-                            }
-                        } else if (name.equalsIgnoreCase("due")) {
-                            String dateStr = parser.nextText();
-                            if (!TextUtils.isEmpty(dateStr)) {
-                                dueDate = DateUtils.parseIso8601Date(dateStr);
-                                builder.setDueDate(dueDate);
-                            }
-                        } else if (name.equalsIgnoreCase("show-from")) {
-                            String dateStr = parser.nextText();
-                            if (!TextUtils.isEmpty(dateStr)) {
-                                startDate = DateUtils.parseIso8601Date(dateStr);
-                                builder.setStartDate(startDate);
-                            }
-                        }
-                        break;
-                        
-                    case XmlPullParser.END_TAG:
-                        if (name.equalsIgnoreCase("todo")) {
-                            boolean allDay = startDate > 0L || dueDate > 0L;
-                            builder.setAllDay(allDay);
-                            task = builder.build();
-                        }
-                        break;
-                }
-                eventType = parser.next();
-            }
-        } catch (IOException e) {
-            throw new ParseException("Unable to parse task:" + e.getMessage(), 0);
-        } catch (XmlPullParserException e) {
-            throw new ParseException("Unable to parse task:" + e.getMessage(), 0);
-        }
-        return task;
-    }
-
     @Override
     protected String createEntityUrl(Task task) {
         return mTracksUrl + "/todos/" + task.getTracksId() + ".xml";
@@ -253,5 +174,10 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
     protected String entityIndexUrl() {
         return mTracksUrl + "/todos.xml";
     }
+
+	@Override
+	protected Parser<Task> getEntityParser() {
+		return mParser;
+	}
 
 }
