@@ -2,6 +2,7 @@ package org.dodgybits.shuffle.android.synchronisation.tracks.parsing;
 
 import java.text.ParseException;
 
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
@@ -15,8 +16,8 @@ public class ContextParser extends Parser<Context> {
 
 	private Builder specificBuilder;
 
-	public ContextParser() {
-		super("context");
+	public ContextParser(Analytics analytics) {
+		super("context", analytics);
 		
 		appliers.put("name",
 				new Applier(){

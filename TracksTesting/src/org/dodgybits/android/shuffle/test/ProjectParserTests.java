@@ -23,7 +23,7 @@ public class ProjectParserTests extends TestCase {
 				// TODO Auto-generated method stub
 				return Id.create(1234);
 			}
-		});
+		}, null);
 	}
 	public void testProjectParserBasicParsingTest() {
 	     XmlPullParser xmlParser = Xml.newPullParser();

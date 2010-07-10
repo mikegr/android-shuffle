@@ -31,7 +31,7 @@ public class TaskParserTests extends TestCase {
 				// TODO Auto-generated method stub
 				return Id.create(2345);
 			}
-		});
+		}, null);
 	}
 	public void testTaskParserBasicParsingTest() {
 	     XmlPullParser xmlParser = Xml.newPullParser();

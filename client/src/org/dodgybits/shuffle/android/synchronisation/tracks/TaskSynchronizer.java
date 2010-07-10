@@ -41,8 +41,8 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
             Analytics analytics,
             int basePercent,
             String tracksUrl) {
-        super(persister, tracksSynchronizer, client, context, analytics, basePercent);
-        mParser = new TaskParser(this, this);
+        super(persister, tracksSynchronizer, client, context, basePercent);
+        mParser = new TaskParser(this, this, analytics);
         this.mTracksUrl = tracksUrl;
     }
 
@@ -165,10 +165,6 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
         return mTracksUrl + "/todos/" + task.getTracksId() + ".xml";
     }
 
-    @Override
-    protected String endIndexTag() {
-        return "todos";
-    }
 
     @Override
     protected String entityIndexUrl() {

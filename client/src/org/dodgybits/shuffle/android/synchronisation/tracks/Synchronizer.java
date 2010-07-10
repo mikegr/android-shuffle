@@ -1,13 +1,9 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks;
 
-import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryTracksSyncError;
-
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
@@ -17,17 +13,13 @@ import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.IContextLookup;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.IProjectLookup;
-import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.ParseResult;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.Parser;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Xml;
 
 /**
  * Base class for handling synchronization, template method object.
@@ -40,7 +32,6 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
     protected EntityPersister<Entity> mPersister;
     protected WebClient mWebClient;
     protected android.content.Context mContext;
-    private Analytics mAnalytics;
     protected final TracksSynchronizer mTracksSynchronizer;
     
     private int mBasePercent;
@@ -50,13 +41,11 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
             TracksSynchronizer tracksSynchronizer, 
             WebClient client,
             android.content.Context context,
-            Analytics analytics,
             int basePercent) {
         mPersister = persister;
         mTracksSynchronizer = tracksSynchronizer;
         mWebClient = client;
         mContext = context;
-        mAnalytics = analytics;
         mBasePercent = basePercent;
     }
     
@@ -67,7 +56,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         verifyLocalEntities(localEntities);
         mTracksSynchronizer.reportProgress(Progress.createProgress(mBasePercent,
                 readingRemoteText()));
-        TracksEntities tracksEntities = getTrackEntities();
+        TracksEntities<Entity> tracksEntities = getTrackEntities();
         int startCounter = localEntities.size() + 1;
         int count = 0;
         for (Entity localEntity : localEntities.values()) {
@@ -113,8 +102,6 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
 
     protected abstract String stageFinishedText();
 
-    protected abstract String endIndexTag();
-
     protected abstract String entityIndexUrl();
 
     protected abstract Entity createMergedLocalEntity(Entity localEntity,
@@ -126,9 +113,8 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
     
     protected abstract EntityBuilder<Entity> createBuilder();
     
-    private TracksEntities getTrackEntities() throws WebClient.ApiException {
-        Map<Id, Entity> entities = new HashMap<Id, Entity>();
-        boolean errorFree = true;
+    private TracksEntities<Entity> getTrackEntities() throws WebClient.ApiException {
+        
         String tracksEntityXml;
         
         try {
@@ -138,53 +124,14 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
             throw e;
         }
         
-        XmlPullParser parser = Xml.newPullParser();
-        try {
-            parser.setInput(new StringReader(tracksEntityXml));
-
-            int eventType = parser.getEventType();
-            boolean done = false;
-            
-            while (eventType != XmlPullParser.END_DOCUMENT && !done) {
-                ParseResult<Entity> result = null;
-                try {
-                    result = getEntityParser().parseSingle(parser);
-                } catch (Exception e) {
-                    logTracksError(e);
-                    errorFree = false;
-                }
-                if(!result.IsSuccess()) {
-                	errorFree = false;
-                }
-                
-                Entity entity = result.getResult();
-                
-                
-                if (entity != null && entity.isInitialized()) {
-                    entities.put(entity.getTracksId(), entity);
-                }
-                
-                eventType = parser.getEventType();
-                String name = parser.getName();
-                if (eventType == XmlPullParser.END_TAG &&
-                   name.equalsIgnoreCase(endIndexTag())) {
-                   done = true;
-                }
-            }
-        } catch (XmlPullParserException e) {
-            logTracksError(e);
-            errorFree = false;
-        }
         
-        return new TracksEntities(entities, errorFree);
+        return getEntityParser().parseDocument(tracksEntityXml);
     }
-    
+
+	    
     protected abstract Parser<Entity> getEntityParser();
 
-	private void logTracksError(Exception e) {
-        Log.e(cTag, "Failed to parse " + endIndexTag() + " " + e.getMessage());
-        mAnalytics.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
-    }
+
 
     private Id findEntityLocalIdByTracksId(Id tracksId, Uri contentUri) {
         Id id = Id.NONE;
@@ -242,7 +189,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         return foundEntity;
     }
     
-    private void synchronizeSingle(TracksEntities tracksEntities,
+    private void synchronizeSingle(TracksEntities<Entity> tracksEntities,
             Entity localEntity) {
         final Map<Id, Entity> remoteEntities = tracksEntities.getEntities();
         if (!localEntity.getTracksId().isInitialised()) {
@@ -335,22 +282,6 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         return list;
     }
 
-    private class TracksEntities {
-        private Map<Id, Entity> mEntities;
-        private boolean mErrorFree;
-        
-        public TracksEntities(Map<Id, Entity> entities, boolean errorFree) {
-            mEntities = entities;
-            mErrorFree = errorFree;
-        }
-        
-        public Map<Id, Entity> getEntities() {
-            return mEntities;
-        }
-        
-        public boolean isErrorFree() {
-            return mErrorFree;
-        }
-        
-    }
+ 
 }
+

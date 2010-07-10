@@ -1,25 +1,90 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks.parsing;
 
-import java.io.IOException;
-import java.util.HashMap;
+import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryTracksSyncError;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
+import org.dodgybits.shuffle.android.core.model.Id;
+import org.dodgybits.shuffle.android.synchronisation.tracks.TracksEntities;
+import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Log;
+import android.util.Xml;
 
-public abstract class Parser<E> {
-
+public abstract class Parser<E extends TracksEntity> {
+	private static final String cTag = "Parser";
 	protected HashMap<String, Applier> appliers;
 	
 	private String mEntityName;
 
-	public Parser(String entityName) {
+	private Analytics mAnalytics;
+
+	public Parser(String entityName, Analytics analytics) {
 		appliers = new HashMap<String, Applier>();
 		mEntityName = entityName;
+		mAnalytics = analytics;
 	}
+	public TracksEntities<E> parseDocument(String tracksEntityXml) {
+		Map<Id, E> entities = new HashMap<Id, E>();
+        boolean errorFree = true;
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setInput(new StringReader(tracksEntityXml));
 
+            int eventType = parser.getEventType();
+            boolean done = false;
+            
+            while (eventType != XmlPullParser.END_DOCUMENT && !done) {
+                ParseResult<E> result = null;
+                try {
+                    result = parseSingle(parser);
+                } catch (Exception e) {
+                    logTracksError(e);
+                    errorFree = false;
+                }
+                if(!result.IsSuccess()) {
+                	errorFree = false;
+                }
+                
+                E entity = result.getResult();
+                
+                
+                if (entity != null && entity.isInitialized()) {
+                    entities.put(entity.getTracksId(), entity);
+                }
+                
+                eventType = parser.getEventType();
+                String name = parser.getName();
+                if (eventType == XmlPullParser.END_TAG &&
+                   name.equalsIgnoreCase(endIndexTag())) {
+                   done = true;
+                }
+            }
+        } catch (XmlPullParserException e) {
+            logTracksError(e);
+            errorFree = false;
+        }
+        
+        return new TracksEntities<E>(entities, errorFree);
+	}
+	
+	private void logTracksError(Exception e) {
+        Log.e(cTag, "Failed to parse " + endIndexTag() + " " + e.getMessage());
+        mAnalytics.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
+    }
+
+	
+
+	private String endIndexTag() {
+		return this.mEntityName + "s"; 
+	}
 	public ParseResult<E> parseSingle(XmlPullParser parser) {
 		EntityBuilder<E> builder = createBuilder();
 		 E entity = null;

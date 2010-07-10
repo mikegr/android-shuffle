@@ -33,8 +33,8 @@ public class ContextSynchronizer extends Synchronizer<Context> {
             Analytics analytics,
             int basePercent, 
             String tracksUrl) {
-        super(persister, tracksSynchronizer, client, context, analytics, basePercent);
-        mParser = new ContextParser();
+        super(persister, tracksSynchronizer, client, context, basePercent);
+        mParser = new ContextParser(analytics);
         mTracksUrl = tracksUrl;
     }
     
@@ -110,11 +110,6 @@ public class ContextSynchronizer extends Synchronizer<Context> {
     @Override
     protected String createEntityUrl(Context localContext) {
         return mTracksUrl + "/contexts/" + localContext.getTracksId().getId() + ".xml";
-    }
-
-    @Override
-    protected String endIndexTag() {
-        return "contexts";
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.dodgybits.shuffle.android.synchronisation.tracks.parsing;
 import java.text.ParseException;
 
 
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
@@ -18,8 +19,8 @@ public class TaskParser extends Parser<Task> {
 	protected IContextLookup mContextLookup;
 	protected IProjectLookup mProjectLookup;
 
-	public TaskParser(IContextLookup contextLookup, IProjectLookup projectLookup) {
-		super("todo");
+	public TaskParser(IContextLookup contextLookup, IProjectLookup projectLookup, Analytics analytics) {
+		super("todo", analytics);
 		mContextLookup = contextLookup;
 		mProjectLookup = projectLookup;
 		

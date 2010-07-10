@@ -37,8 +37,8 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
             Analytics analytics,
             int basePercent,
             String tracksUrl) {
-        super(persister, tracksSynchronizer, client, context, analytics, basePercent);
-        mParser = new ProjectParser(this);
+        super(persister, tracksSynchronizer, client, context, basePercent);
+        mParser = new ProjectParser(this, analytics);
         mTracksUrl = tracksUrl;
     }
     
@@ -53,7 +53,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
 
     @Override
     protected String readingRemoteText() {
-        return mContext.getString(R.string.readingRemoteContexts);
+        return mContext.getString(R.string.readingRemoteProjects);
     }
 
     @Override
@@ -116,10 +116,6 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
         return mTracksUrl+ "/projects/" + project.getTracksId().getId() + ".xml";
     }
 
-    @Override
-    protected String endIndexTag() {
-        return "projects";
-    }
 
     @Override
     protected String entityIndexUrl() {

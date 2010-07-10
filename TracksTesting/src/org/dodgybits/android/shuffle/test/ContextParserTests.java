@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 public class ContextParserTests extends TestCase {
 
 	public ContextParser CreateSUT() {
-		return new ContextParser();
+		return new ContextParser(null);
 	}
 	public void testContextParserBasicParsingTest() {
 	     XmlPullParser xmlParser = Xml.newPullParser();

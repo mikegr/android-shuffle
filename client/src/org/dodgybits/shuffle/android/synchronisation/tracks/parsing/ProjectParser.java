@@ -2,6 +2,7 @@ package org.dodgybits.shuffle.android.synchronisation.tracks.parsing;
 
 import java.text.ParseException;
 
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
@@ -14,8 +15,8 @@ public class ProjectParser extends Parser<Project> {
 
 	private Builder specificBuilder;
 	private IContextLookup mContextLookup;
-	public ProjectParser(IContextLookup contextLookup) {
-		super("project");
+	public ProjectParser(IContextLookup contextLookup, Analytics analytics) {
+		super("project", analytics);
 		mContextLookup = contextLookup;
 		
 		appliers.put("name",
