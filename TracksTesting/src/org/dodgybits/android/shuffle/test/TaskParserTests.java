@@ -57,7 +57,7 @@ public class TaskParserTests extends TestCase {
 			e.printStackTrace();
 		}
 		TaskParser parser = CreateSUT();
-		Task task = parser.parseSingle(xmlParser);
+		Task task = parser.parseSingle(xmlParser).getResult();
 		Assert.assertEquals("Läs getting things done igen", task.getDescription());
 		Assert.assertEquals(Id.create(25076), task.getTracksId());
 		Assert.assertEquals(1265189839000l, task.getModifiedDate());

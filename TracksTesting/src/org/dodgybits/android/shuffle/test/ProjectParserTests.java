@@ -46,7 +46,7 @@ public class ProjectParserTests extends TestCase {
 			e.printStackTrace();
 		}
 		ProjectParser parser = CreateSUT();
-		Project project = parser.parseSingle(xmlParser);
+		Project project = parser.parseSingle(xmlParser).getResult();
 		Assert.assertEquals("Homework", project.getName());
 		Assert.assertEquals(Id.create(4532), project.getTracksId());
 		Assert.assertEquals(1265189839000l, project.getModifiedDate());
@@ -76,7 +76,7 @@ public class ProjectParserTests extends TestCase {
 			e.printStackTrace();
 		}
 		ProjectParser parser = CreateSUT();
-		Project project = parser.parseSingle(xmlParser);
+		Project project = parser.parseSingle(xmlParser).getResult();
 		Assert.assertEquals("Homework", project.getName());
 		Assert.assertEquals(Id.create(4532), project.getTracksId());
 		Assert.assertEquals(1265189839000l, project.getModifiedDate());

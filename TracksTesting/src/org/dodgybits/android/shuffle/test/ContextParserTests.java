@@ -35,7 +35,7 @@ public class ContextParserTests extends TestCase {
 			e.printStackTrace();
 		}
 		ContextParser parser = CreateSUT();
-		Context context = parser.parseSingle(xmlParser);
+		Context context = parser.parseSingle(xmlParser).getResult();
 		Assert.assertEquals("Online", context.getName());
 		Assert.assertEquals(Id.create(3710), context.getTracksId());
 		Assert.assertEquals(1265189839000l, context.getModifiedDate());
@@ -60,7 +60,7 @@ public class ContextParserTests extends TestCase {
 			e.printStackTrace();
 		}
 		ContextParser parser = CreateSUT();
-		Context context = parser.parseSingle(xmlParser);
+		Context context = parser.parseSingle(xmlParser).getResult();
 		Assert.assertEquals(context, null);
 
 		
