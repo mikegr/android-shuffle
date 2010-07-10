@@ -20,7 +20,7 @@ public abstract class Parser<E> {
 		mEntityName = entityName;
 	}
 
-	public E parseSingle(XmlPullParser parser) {
+	public ParseResult<E> parseSingle(XmlPullParser parser) {
 		EntityBuilder<E> builder = createBuilder();
 		 E entity = null;
 		 boolean success = true;
@@ -53,12 +53,12 @@ public abstract class Parser<E> {
 	            }
 	        } catch (IOException e) {
 	        	Log.d("Exception", "IO EXception", e);
-	            return null;
+	            return new ParseResult<E>();
 	        } catch (XmlPullParserException e) {
 	        	Log.d("Exception", "pullparser exception", e);
-	            return null;
+	            return new ParseResult<E>();
 	        }
-	        return success ? entity : null;
+	        return  new ParseResult<E>(entity, success);
 	}
 
 	protected abstract EntityBuilder<E> createBuilder();

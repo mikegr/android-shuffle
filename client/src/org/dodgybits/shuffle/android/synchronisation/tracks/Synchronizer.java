@@ -17,6 +17,7 @@ import org.dodgybits.shuffle.android.preference.view.Progress;
 import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.IContextLookup;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.IProjectLookup;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.ParseResult;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.Parser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -145,13 +146,19 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
             boolean done = false;
             
             while (eventType != XmlPullParser.END_DOCUMENT && !done) {
-                Entity entity = null;
+                ParseResult<Entity> result = null;
                 try {
-                    entity = getEntityParser().parseSingle(parser);
+                    result = getEntityParser().parseSingle(parser);
                 } catch (Exception e) {
                     logTracksError(e);
                     errorFree = false;
                 }
+                if(!result.IsSuccess()) {
+                	errorFree = false;
+                }
+                
+                Entity entity = result.getResult();
+                
                 
                 if (entity != null && entity.isInitialized()) {
                     entities.put(entity.getTracksId(), entity);
