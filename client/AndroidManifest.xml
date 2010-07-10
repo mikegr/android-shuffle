@@ -23,8 +23,7 @@
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
 
 	<supports-screens android:largeScreens="true"
-		android:normalScreens="true" android:smallScreens="false"
-		android:anyDensity="true" />
+		android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
 
 	<application android:theme="@style/ShuffleTheme"
 		android:icon="@drawable/app_icon_3d" android:label="@string/app_name"
@@ -393,5 +392,6 @@
 			</intent-filter>
 		</activity>
 	</application>
+
 
 </manifest> 
