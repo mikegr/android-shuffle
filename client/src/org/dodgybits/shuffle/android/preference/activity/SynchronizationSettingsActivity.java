@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -32,6 +33,7 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
     @InjectView(R.id.url) EditText mUrlTextbox;
     @InjectView(R.id.user) EditText mUserTextbox;
     @InjectView(R.id.pass) EditText mPassTextbox;
+    @InjectView(R.id.checkSettings) Button mCheckSettings;
     @InjectView(R.id.sync_interval) Spinner mInterval;
 
     @Override
@@ -66,19 +68,34 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
         mUserTextbox.setText(Preferences.getTracksUser(this));
         mPassTextbox.setText(Preferences.getTracksPassword(this));
 
-        CompoundButton.OnClickListener saveClick = new CompoundButton.OnClickListener() {
+        CompoundButton.OnClickListener checkSettings = new CompoundButton.OnClickListener() {
+			
+			@Override
+			public void onClick(View view) {
+				if(checkSettings()){
+                    int duration = Toast.LENGTH_SHORT;
 
-            @Override
-            public void onClick(View view) {
-                if (savePrefs()) {
-                    finish();
-                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            R.string.tracks_settings_valid, duration);
+                    toast.show();					
+				} else {
                     int duration = Toast.LENGTH_SHORT;
 
                     Toast toast = Toast.makeText(getApplicationContext(),
                             R.string.tracks_failed_to_check_url, duration);
                     toast.show();
-                }
+				}
+				
+				
+			}
+		};
+        
+        CompoundButton.OnClickListener saveClick = new CompoundButton.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                savePrefs();
+                finish();
             }
         };
 
@@ -97,6 +114,9 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
         view = findViewById(R.id.discardButton);
         view.setOnClickListener(cancelClick);
 
+        view = findViewById(R.id.checkSettings);
+        view.setOnClickListener(checkSettings);
+        
         View url = findViewById(R.id.url);
         url.setOnKeyListener(new View.OnKeyListener() {
 
@@ -131,6 +151,24 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
 
         }
 
+            ed.putString(TRACKS_URL, uri.toString());
+
+            ed.putInt(TRACKS_INTERVAL, mInterval.getSelectedItemPosition());
+            ed.putString(TRACKS_USER, mUserTextbox.getText().toString());
+            ed.putString(TRACKS_PASSWORD, mPassTextbox.getText().toString());
+
+            ed.commit();
+            return true;
+    }
+
+	private boolean checkSettings() {
+		URI uri = null;
+        try {
+            uri = new URI(mUrlTextbox.getText().toString());
+        } catch (URISyntaxException ignored) {
+
+        }
+
         try {
             WebClient client = new WebClient(this, mUserTextbox.getText()
                     .toString(), mPassTextbox.getText().toString());
@@ -141,19 +179,7 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
         } catch (WebClient.ApiException e) {
             return false;
         }
-
-        if (uri != null && uri.isAbsolute()) {
-
-            ed.putString(TRACKS_URL, uri.toString());
-
-            ed.putInt(TRACKS_INTERVAL, mInterval.getSelectedItemPosition());
-            ed.putString(TRACKS_USER, mUserTextbox.getText().toString());
-            ed.putString(TRACKS_PASSWORD, mPassTextbox.getText().toString());
-
-            ed.commit();
-            return true;
-        }
-        return false;
-    }
+		return true;
+	}
 
 }

@@ -278,7 +278,7 @@ allow that, you can turn it off under Settings.</string>
     <string name="doneWithProjects">Done with Projects</string>
     <string name="tracks_failed_to_check_url">Could not load contexts using these settings, something is wrong with them</string>
     <string name="tracks_background_sync">Background synchronization interval</string>
-    <string name="sync_interval_none">Never</string>
+    <string name="tracks_check_settings">Check settings</string><string name="tracks_settings_valid">Settings are valid</string><string name="sync_interval_none">Never</string>
     <string name="sync_interval_30min">30 minutes</string>
     <string name="sync_interval_1h">1 hour</string>
     <string name="sync_interval_2h">2 hours</string>
@@ -434,4 +434,6 @@ For feedback or bug reports, please check http://code.google.com/p/android-shuff
         <item quantity="other"><xliff:g id="count">%d</xliff:g> days</item>
     </plurals>
     
+
+
 </resources>

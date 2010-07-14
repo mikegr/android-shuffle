@@ -76,7 +76,6 @@
 	    <EditText android:id="@+id/pass" android:layout_width="fill_parent"
 	              android:layout_height="wrap_content"
 	              android:layout_alignParentLeft="true"
-	
 	              android:hint="@string/tracks_pass"
 	              android:singleLine="true"
 	              android:inputType="textPassword"
@@ -84,7 +83,13 @@
 	              style="@style/text_editable"
 	            >
 	    </EditText>
-	
+	    
+	    <Button android:id="@+id/checkSettings" android:layout_width="fill_parent"
+	    		android:text="@string/tracks_check_settings"
+	    		android:layout_height="wrap_content"
+	    		android:hint="@string/tracks_check_settings"
+	    	    />
+	    
 	    <TextView android:id="@+id/pass_label"
 	              android:layout_width="fill_parent"
 	              android:layout_height="wrap_content"
