@@ -43,7 +43,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
     }
     
     @Override
-    protected void verifyLocalEntities(Map<Id, Project> localEntities) {
+    protected void verifyEntitiesForSynchronization(Map<Id, Project> localEntities) {
     }
     
     @Override

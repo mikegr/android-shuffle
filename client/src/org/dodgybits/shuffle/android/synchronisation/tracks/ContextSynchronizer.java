@@ -39,7 +39,7 @@ public class ContextSynchronizer extends Synchronizer<Context> {
     }
     
     @Override
-    protected void verifyLocalEntities(Map<Id, Context> localEntities) {
+    protected void verifyEntitiesForSynchronization(Map<Id, Context> localEntities) {
     }
 
     @Override

@@ -52,29 +52,46 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
     public void synchronize() throws WebClient.ApiException {
         mTracksSynchronizer.reportProgress(Progress.createProgress(mBasePercent,
                 readingLocalText()));
+        
         Map<Id, Entity> localEntities = getShuffleEntities();
-        verifyLocalEntities(localEntities);
+        verifyEntitiesForSynchronization(localEntities);
+        
         mTracksSynchronizer.reportProgress(Progress.createProgress(mBasePercent,
                 readingRemoteText()));
+        
         TracksEntities<Entity> tracksEntities = getTrackEntities();
-        int startCounter = localEntities.size() + 1;
-        int count = 0;
-        for (Entity localEntity : localEntities.values()) {
-            count++;
-            int percent = mBasePercent
-                    + Math.round(((count * 100) / startCounter) * 0.33f);
-            mTracksSynchronizer.reportProgress(Progress.createProgress(percent,
-                    processingText()));
-            synchronizeSingle(tracksEntities, localEntity);
-        }
+        mergeAlreadySynchronizedEntities(localEntities, tracksEntities);
 
-        for (Entity remoteEntity : tracksEntities.getEntities().values()) {
-            insertEntity(remoteEntity);
-        }
+        addNewEntitiesToShuffle(tracksEntities);
 
         mTracksSynchronizer.reportProgress(Progress.createProgress(
                 mBasePercent + 33, stageFinishedText()));
     }
+
+	private void mergeAlreadySynchronizedEntities(
+			Map<Id, Entity> localEntities, TracksEntities<Entity> tracksEntities) {
+		int startCounter = localEntities.size() + 1;
+        int count = 0;
+        for (Entity localEntity : localEntities.values()) {
+            count++;
+            mTracksSynchronizer.reportProgress(Progress.createProgress(calculatePercent(startCounter, count),
+                    processingText()));
+
+            mergeSingle(tracksEntities, localEntity);
+        }
+	}
+
+	private int calculatePercent(int startCounter, int count) {
+		int percent = mBasePercent
+		        + Math.round(((count * 100) / startCounter) * 0.33f);
+		return percent;
+	}
+
+	private void addNewEntitiesToShuffle(TracksEntities<Entity> tracksEntities) {
+		for (Entity remoteEntity : tracksEntities.getEntities().values()) {
+            insertEntity(remoteEntity);
+        }
+	}
 
     public Id findProjectIdByTracksId(Id tracksId) {
         return findEntityLocalIdByTracksId(tracksId, ProjectProvider.Projects.CONTENT_URI);
@@ -92,7 +109,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         return findEntityTracksIdByLocalId(contextId, ContextProvider.Contexts.CONTENT_URI);
     }
     
-    protected abstract void verifyLocalEntities(Map<Id, Entity> localEntities);
+    protected abstract void verifyEntitiesForSynchronization(Map<Id, Entity> localEntities);
 
     protected abstract String readingRemoteText();
 
@@ -189,28 +206,16 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         return foundEntity;
     }
     
-    private void synchronizeSingle(TracksEntities<Entity> tracksEntities,
+    private void mergeSingle(TracksEntities<Entity> tracksEntities,
             Entity localEntity) {
         final Map<Id, Entity> remoteEntities = tracksEntities.getEntities();
         if (!localEntity.getTracksId().isInitialised()) {
-            Entity newEntity = findEntityByLocalName(remoteEntities.values(),
-                    localEntity);
-            
-            if (newEntity != null) {
-                remoteEntities.remove(newEntity.getTracksId());
-            } else {
-                newEntity = createEntityInTracks(localEntity);
-            }
-            
-            if (newEntity != null) {
-                updateEntity(createMergedLocalEntity(localEntity, newEntity));
-
-            }
+            handleLocalEntityNotYetInTracks(localEntity, remoteEntities);
             return;
         }
         Entity remoteEntity = remoteEntities.get(localEntity.getTracksId());
         if (remoteEntity != null) {
-            handleRemoteEntity(localEntity, remoteEntity);
+            mergeLocalAndRemoteEntityBasedOnModifiedDate(localEntity, remoteEntity);
             remoteEntities.remove(remoteEntity.getTracksId());
         } else if (tracksEntities.isErrorFree()){
             // only delete entities if we didn't encounter errors parsing
@@ -218,7 +223,24 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         }
     }
 
-    private void handleRemoteEntity(Entity localEntity, Entity remoteEntity) {
+	private void handleLocalEntityNotYetInTracks(Entity localEntity,
+			final Map<Id, Entity> remoteEntities) {
+		Entity newEntity = findEntityByLocalName(remoteEntities.values(),
+		        localEntity);
+		
+		if (newEntity != null) {
+		    remoteEntities.remove(newEntity.getTracksId());
+		} else {
+		    newEntity = createEntityInTracks(localEntity);
+		}
+		
+		if (newEntity != null) {
+		    updateEntity(createMergedLocalEntity(localEntity, newEntity));
+
+		}
+	}
+
+    private void mergeLocalAndRemoteEntityBasedOnModifiedDate(Entity localEntity, Entity remoteEntity) {
         final long remoteModified = remoteEntity.getModifiedDate();
         final long localModified = localEntity.getModifiedDate();
         

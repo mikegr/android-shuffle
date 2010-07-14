@@ -52,7 +52,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
     }
 
     @Override
-    protected void verifyLocalEntities(Map<Id, Task> localEntities) {
+    protected void verifyEntitiesForSynchronization(Map<Id, Task> localEntities) {
 
         LinkedList<Id> tasksWithoutContext = new LinkedList<Id>();
         for(Task t : localEntities.values()) {
