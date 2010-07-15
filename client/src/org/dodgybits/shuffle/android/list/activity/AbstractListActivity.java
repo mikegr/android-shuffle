@@ -269,7 +269,7 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
 	 * Permanently delete the given list item.
 	 */
 	protected void deleteItem(Id id) {
-	    getListConfig().getPersister().delete(id);
+	    getListConfig().getPersister().hide(id);
     	String text = getResources().getString(
     			R.string.itemDeletedToast, getListConfig().getItemName(this));
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();        

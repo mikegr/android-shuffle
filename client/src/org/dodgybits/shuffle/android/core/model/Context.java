@@ -27,11 +27,22 @@ public class Context implements TracksEntity {
     private int mColourIndex;
     private String mIconName;
     private long mModifiedDate;
+    private boolean mHidden;
     private Id mTracksId = Id.NONE;
 
     private Context() {
     };
 
+	@Override
+	public boolean getHidden() {
+		return mHidden;
+	}
+
+	@Override
+	public void setHidden(boolean value) {
+		mHidden = value;
+	}
+	
     public final Id getLocalId() {
         return mLocalId;
     }
@@ -174,6 +185,12 @@ public class Context implements TracksEntity {
             setTracksId(context.mTracksId);
             return this;
         }
+
+		@Override
+		public EntityBuilder<Context> setHidden(boolean value) {
+			result.setHidden(value);
+			return this;
+		}
 
     }
 

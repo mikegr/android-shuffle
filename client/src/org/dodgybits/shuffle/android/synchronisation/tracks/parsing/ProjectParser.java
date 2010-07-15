@@ -10,6 +10,7 @@ import org.dodgybits.shuffle.android.core.model.Project.Builder;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 public class ProjectParser extends Parser<Project> {
 
@@ -26,6 +27,33 @@ public class ProjectParser extends Parser<Project> {
 						
 						specificBuilder.setName(value);
 						return true;
+					}
+			
+		});
+		appliers.put("state",
+				new Applier(){
+					@Override
+					public boolean apply(String value) {
+						
+						String v = value.toLowerCase();
+						
+						if(v.equals("completed")) {
+							Log.d("projectparser",v);
+							specificBuilder.setHidden(true);
+							return true;
+						}
+						
+						if(v.equals("hidden")) {
+							specificBuilder.setHidden(true);
+							return true;
+						}
+						
+						if(v.equals("active")) {
+							specificBuilder.setHidden(false);
+							return true;
+						}
+						
+						return false;
 					}
 			
 		});
@@ -70,15 +98,7 @@ public class ProjectParser extends Parser<Project> {
                         return true;
 					}
 		});
-		appliers.put("state",
-				new Applier(){
-					@Override
-					public boolean apply(String value) {
-						boolean archived = !value.equalsIgnoreCase("active");
-                        specificBuilder.setArchived(archived);
-                        return true;
-					}
-		});
+	
 	}
 	@Override
 	protected EntityBuilder<Project> createBuilder() {

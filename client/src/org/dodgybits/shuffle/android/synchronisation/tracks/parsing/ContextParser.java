@@ -29,6 +29,18 @@ public class ContextParser extends Parser<Context> {
 					}
 			
 		});
+		
+		appliers.put("hide",
+				new Applier(){
+					@Override
+					public boolean apply(String value) {
+						boolean v = Boolean.parseBoolean(value);
+						specificBuilder.setHidden(v);
+						return true;
+					}
+			
+		});
+
 		appliers.put("id",
 				new Applier(){
 					@Override

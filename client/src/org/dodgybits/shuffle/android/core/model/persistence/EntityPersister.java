@@ -24,6 +24,8 @@ public interface EntityPersister<E extends Entity> {
     
     void update(E e);
     
-    boolean delete(Id id);
+    boolean hide(Id id);
+
+	boolean delete(Id id);
     
 }

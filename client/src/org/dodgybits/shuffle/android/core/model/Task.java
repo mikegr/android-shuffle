@@ -33,6 +33,7 @@ public final class Task implements TracksEntity {
     private String mTimezone;
     private boolean mAllDay;
     private boolean mHasAlarms;
+    private boolean mHidden;
     private Id mCalendarEventId = Id.NONE;
     // 0-indexed order within a project.
     private int mOrder;
@@ -41,7 +42,7 @@ public final class Task implements TracksEntity {
 
     private Task() {
     };
-
+    
     public final Id getLocalId() {
         return mLocalId;
     }
@@ -327,7 +328,24 @@ public final class Task implements TracksEntity {
             return this;
         }
 
+		@Override
+		public EntityBuilder<Task> setHidden(boolean value) {
+			result.setHidden(value);
+			return this;
+		}
+
     }
+
+
+	@Override
+	public boolean getHidden() {
+		return mHidden;
+	}
+
+	@Override
+	public void setHidden(boolean value) {
+		mHidden = value;
+	}
 
 
 }

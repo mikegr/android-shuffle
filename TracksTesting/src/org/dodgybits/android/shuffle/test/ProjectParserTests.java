@@ -48,6 +48,7 @@ public class ProjectParserTests extends TestCase {
 		ProjectParser parser = CreateSUT();
 		Project project = parser.parseSingle(xmlParser).getResult();
 		Assert.assertEquals("Homework", project.getName());
+		assertFalse(project.getHidden());
 		Assert.assertEquals(Id.create(4532), project.getTracksId());
 		Assert.assertEquals(1265189839000l, project.getModifiedDate());
 		assertEquals(Id.NONE, project.getDefaultContextId());
@@ -55,6 +56,72 @@ public class ProjectParserTests extends TestCase {
 
 		
 	}
+
+	public void testProjectParserBasicParsingTestForCompleted() {
+	     XmlPullParser xmlParser = Xml.newPullParser();
+
+	     try {
+			xmlParser.setInput(new StringReader("<project>"+
+			"<completed-at type=\"datetime\" nil=\"true\"/>"+
+			"<created-at type=\"datetime\">2010-01-09T21:21:13+01:00</created-at>"+
+			"<default-context-id type=\"integer\" nil=\"true\"/>"+
+			"<default-tags nil=\"true\"/>"+
+			"<description nil=\"true\"/>"+
+			"<id type=\"integer\">4532</id>"+
+			"<name>Homework</name>"+
+			"<position type=\"integer\">1</position>"+
+			"<state>completed</state>"+
+			"<updated-at type=\"datetime\">2010-02-03T10:37:19+01:00</updated-at>"+
+			"</project>"));
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ProjectParser parser = CreateSUT();
+		Project project = parser.parseSingle(xmlParser).getResult();
+		Assert.assertEquals("Homework", project.getName());
+		assertTrue(project.getHidden());
+		Assert.assertEquals(Id.create(4532), project.getTracksId());
+		Assert.assertEquals(1265189839000l, project.getModifiedDate());
+		assertEquals(Id.NONE, project.getDefaultContextId());
+		assertEquals(false, project.isArchived());
+
+		
+	}
+
+	
+	public void testProjectParserBasicParsingTestForHiddenProjects() {
+	     XmlPullParser xmlParser = Xml.newPullParser();
+
+	     try {
+			xmlParser.setInput(new StringReader("<project>"+
+			"<completed-at type=\"datetime\" nil=\"true\"/>"+
+			"<created-at type=\"datetime\">2010-01-09T21:21:13+01:00</created-at>"+
+			"<default-context-id type=\"integer\" nil=\"true\"/>"+
+			"<default-tags nil=\"true\"/>"+
+			"<description nil=\"true\"/>"+
+			"<id type=\"integer\">4532</id>"+
+			"<name>Homework</name>"+
+			"<position type=\"integer\">1</position>"+
+			"<state>hidden</state>"+
+			"<updated-at type=\"datetime\">2010-02-03T10:37:19+01:00</updated-at>"+
+			"</project>"));
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ProjectParser parser = CreateSUT();
+		Project project = parser.parseSingle(xmlParser).getResult();
+		Assert.assertEquals("Homework", project.getName());
+		assertTrue(project.getHidden());
+		Assert.assertEquals(Id.create(4532), project.getTracksId());
+		Assert.assertEquals(1265189839000l, project.getModifiedDate());
+		assertEquals(Id.NONE, project.getDefaultContextId());
+		assertEquals(false, project.isArchived());
+
+		
+	}
+
 	public void testProjectParserBasicParsingTestWithDefaultContext() {
 	     XmlPullParser xmlParser = Xml.newPullParser();
 

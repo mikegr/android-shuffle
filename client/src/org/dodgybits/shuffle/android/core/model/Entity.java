@@ -12,6 +12,9 @@ public interface Entity {
      */
     long getModifiedDate();
     
+    void setHidden(boolean value);
+    boolean getHidden();
+    
     boolean isInitialized();
     
 }

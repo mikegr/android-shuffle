@@ -98,6 +98,16 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
     }
 
     @Override
+    public boolean hide(Id id) {
+        E entity = findById(id);
+        if(entity == null) return false;
+        entity.setHidden(true);
+        this.update(entity);
+
+        return true;
+    }
+    
+    @Override
     public boolean delete(Id id) {
         Uri uri = getUri(id);
         boolean success = (mResolver.delete(uri, null, null) == 1);

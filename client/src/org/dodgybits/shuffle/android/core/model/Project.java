@@ -28,9 +28,12 @@ public class Project implements TracksEntity {
     private boolean mParallel;
     private boolean mArchived;
     private Id mTracksId = Id.NONE;
+	private boolean mHidden;
+	
 
     private Project() {
     };
+    
 
     public final Id getLocalId() {
         return mLocalId;
@@ -189,6 +192,24 @@ public class Project implements TracksEntity {
             return this;
         }
 
+		@Override
+		public EntityBuilder<Project> setHidden(boolean value) {
+			result.setHidden(value);
+			return this;
+		}
+
     }
+
+
+	@Override
+	public boolean getHidden() {
+		return mHidden;
+	}
+
+
+	@Override
+	public void setHidden(boolean value) {
+		mHidden = value;	
+	}
 
 }

@@ -24,7 +24,7 @@ public class ContextParserTests extends TestCase {
 	     try {
 			xmlParser.setInput(new StringReader("<context>"+
    "<created-at type=\"datetime\">2010-01-09T21:20:39+01:00</created-at>"+
-   "<hide type=\"boolean\">false</hide>"+
+   "<hide type=\"boolean\">true</hide>"+
    "<id type=\"integer\">3710</id>"+
    "<name>Online</name>"+
    "<position type=\"integer\">1</position>"+
@@ -37,6 +37,7 @@ public class ContextParserTests extends TestCase {
 		ContextParser parser = CreateSUT();
 		Context context = parser.parseSingle(xmlParser).getResult();
 		Assert.assertEquals("Online", context.getName());
+		Assert.assertTrue(context.getHidden());
 		Assert.assertEquals(Id.create(3710), context.getTracksId());
 		Assert.assertEquals(1265189839000l, context.getModifiedDate());
 
