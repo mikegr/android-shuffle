@@ -175,5 +175,11 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 	protected Parser<Task> getEntityParser() {
 		return mParser;
 	}
+	
+	@Override
+	protected void preHideEntity(Task t) {
+		Task task = Task.newBuilder().mergeFrom(t).setComplete(true).build();
+		mPersister.update(task);
+	}
 
 }

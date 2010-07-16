@@ -320,6 +320,7 @@ public final class Task implements TracksEntity {
             setDueDate(task.mDueDate);
             setTimezone(task.mTimezone);
             setAllDay(task.mAllDay);
+            setHidden(task.mHidden);
             setHasAlarm(task.mHasAlarms);
             setCalendarEventId(task.mCalendarEventId);
             setOrder(task.mOrder);

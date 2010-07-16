@@ -183,6 +183,7 @@ public class Context implements TracksEntity {
             setIconName(context.mIconName);
             setModifiedDate(context.mModifiedDate);
             setTracksId(context.mTracksId);
+            setHidden(context.mHidden);
             return this;
         }
 

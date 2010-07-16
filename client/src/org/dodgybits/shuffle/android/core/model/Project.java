@@ -189,6 +189,7 @@ public class Project implements TracksEntity {
             setParallel(project.mParallel);
             setArchived(project.mArchived);
             setTracksId(project.mTracksId);
+            setHidden(project.mHidden);
             return this;
         }
 

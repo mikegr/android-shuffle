@@ -191,12 +191,18 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         mPersister.update(entity);
     }
 
-    private boolean deleteEntity(Entity entity)
+    private boolean hideEntity(Entity entity)
     {
+    	preHideEntity(entity);
         return mPersister.hide(entity.getLocalId());
     }
     
-    private Entity findEntityByLocalName(Collection<Entity> remoteEntities,
+    protected  void preHideEntity(Entity entity) {
+		
+	}
+
+    
+	private Entity findEntityByLocalName(Collection<Entity> remoteEntities,
             Entity localEntity) {
         Entity foundEntity = null;
         for (Entity entity : remoteEntities)
@@ -219,7 +225,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
             remoteEntities.remove(remoteEntity.getTracksId());
         } else if (tracksEntities.isErrorFree()){
             // only delete entities if we didn't encounter errors parsing
-            deleteEntity(localEntity);
+            hideEntity(localEntity);
         }
     }
 
