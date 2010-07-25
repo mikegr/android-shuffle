@@ -52,7 +52,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 		
 		Cursor cursor = getContentResolver().query(
 				ContextProvider.Contexts.CONTEXT_TASKS_CONTENT_URI,
-				ContextProvider.Contexts.FULL_TASK_PROJECTION, null, null, null);
+				ContextProvider.Contexts.FULL_TASK_PROJECTION, "hidden :=0", null, null);
 		mTaskCountArray = getDrilldownListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}

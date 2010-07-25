@@ -26,7 +26,8 @@ public class V1Migration extends AbstractMigration {
 				+ "defaultContextId INTEGER," 
 				+ "tracks_id INTEGER," 
 				+ "modified INTEGER," 
-				+ "parallel INTEGER NOT NULL DEFAULT 0" 
+				+ "parallel INTEGER NOT NULL DEFAULT 0," 
+				+ "hidden INTEGER NOT NULL DEFAULT 0"
 				+ ");");
 	}
 
@@ -50,7 +51,8 @@ public class V1Migration extends AbstractMigration {
 				+ "calEventId INTEGER,"
 				+ "displayOrder INTEGER," 
 				+ "complete INTEGER," 
-				+ "tracks_id INTEGER" 
+				+ "tracks_id INTEGER,"
+				+ "hidden INTEGER NOT NULL DEFAULT 0"
 				+ ");");
 	}
 }

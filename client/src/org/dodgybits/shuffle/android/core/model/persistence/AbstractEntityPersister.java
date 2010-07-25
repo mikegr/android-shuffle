@@ -101,8 +101,9 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
     public boolean hide(Id id) {
         E entity = findById(id);
         if(entity == null) return false;
-        entity.setHidden(true);
-        this.update(entity);
+        ContentValues values = new ContentValues();
+        values.put("hidden", true);
+        mResolver.update(getUri(entity), values, null, null);
 
         return true;
     }

@@ -51,7 +51,7 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 		
 		Cursor cursor = getContentResolver().query(
 				ProjectProvider.Projects.PROJECT_TASKS_CONTENT_URI, 
-				ProjectProvider.Projects.FULL_TASK_PROJECTION, null, null, null);
+				ProjectProvider.Projects.FULL_TASK_PROJECTION, "hidden :=0", null, null);
         mTaskCountArray = getDrilldownListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}

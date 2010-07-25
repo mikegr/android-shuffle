@@ -32,6 +32,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
 		migrations.put(11, new V11Migration());
 		migrations.put(12, new V12Migration());
 		migrations.put(13, new V13Migration());
+		// v14 does nothing but allows the upgrading to catch up.
+		migrations.put(14, new V14Migration());
+		migrations.put(15, new V15Migration());
 	}
 
 	DatabaseHelper(Context context) {

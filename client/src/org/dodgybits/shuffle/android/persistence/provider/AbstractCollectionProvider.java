@@ -21,7 +21,7 @@ import android.util.Log;
 
 public abstract class AbstractCollectionProvider extends ContentProvider {
 	public static final String cDatabaseName = "shuffle.db";
-	static final int cDatabaseVersion = 14;
+	static final int cDatabaseVersion = 15;
 	public static final String cTag = "ShuffleProvider";
 	
 	public static interface ShuffleTable extends BaseColumns {

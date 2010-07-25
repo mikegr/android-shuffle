@@ -14,6 +14,7 @@ import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Ta
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DISPLAY_ORDER;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DUE_DATE;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.HAS_ALARM;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.HIDDEN;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.MODIFIED_DATE;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.PROJECT_ID;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.START_DATE;
@@ -63,6 +64,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     private static final int ALL_DAY_INDEX = COMPLETE_INDEX + 1;
     private static final int HAS_ALARM_INDEX = ALL_DAY_INDEX + 1;
     private static final int TASK_TRACK_INDEX = HAS_ALARM_INDEX  + 1;
+    private static final int HIDDEN_INDEX = TASK_TRACK_INDEX +1;
     
     @Inject
     public TaskPersister(ContentResolverProvider provider, Analytics analytics) {
@@ -88,7 +90,8 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
             .setComplete(readBoolean(cursor, COMPLETE_INDEX))
             .setAllDay(readBoolean(cursor, ALL_DAY_INDEX))
             .setHasAlarm(readBoolean(cursor, HAS_ALARM_INDEX))
-            .setTracksId(readId(cursor, TASK_TRACK_INDEX));
+            .setTracksId(readId(cursor, TASK_TRACK_INDEX))
+            .setHidden(readBoolean(cursor, HIDDEN_INDEX));
 
         return builder.build();
     }
@@ -104,6 +107,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         values.put(MODIFIED_DATE, task.getModifiedDate());
         values.put(START_DATE, task.getStartDate());
         values.put(DUE_DATE, task.getDueDate());
+        writeBoolean(values, HIDDEN, task.getHidden());
         
         String timezone = task.getTimezone();
         if (TextUtils.isEmpty(timezone))
@@ -140,10 +144,9 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     }
     
     public int deleteCompletedTasks() {
-        int deletedRows = mResolver.delete(
-                getContentUri(), 
-                TaskProvider.Tasks.COMPLETE + " = 1",
-                null);
+    	ContentValues values = new ContentValues();
+    	values.put(HIDDEN, true);
+    	int deletedRows = mResolver.update(getContentUri(), values, TaskProvider.Tasks.COMPLETE + " = 1", null);
         Log.d(cTag, "Deleted " + deletedRows + " completed tasks.");
         
         Map<String, String> params = new HashMap<String,String>(mFlurryParams);

@@ -195,7 +195,7 @@ public class Project implements TracksEntity {
 
 		@Override
 		public EntityBuilder<Project> setHidden(boolean value) {
-			result.setHidden(value);
+			result.mHidden = value;
 			return this;
 		}
 
@@ -207,10 +207,5 @@ public class Project implements TracksEntity {
 		return mHidden;
 	}
 
-
-	@Override
-	public void setHidden(boolean value) {
-		mHidden = value;	
-	}
 
 }

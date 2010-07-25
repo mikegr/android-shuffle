@@ -1,3 +1,4 @@
+
 package org.dodgybits.shuffle.android.core.model;
 
 public interface Entity {
@@ -12,7 +13,6 @@ public interface Entity {
      */
     long getModifiedDate();
     
-    void setHidden(boolean value);
     boolean getHidden();
     
     boolean isInitialized();

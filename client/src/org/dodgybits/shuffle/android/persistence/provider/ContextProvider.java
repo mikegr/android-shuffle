@@ -25,7 +25,7 @@ public class ContextProvider extends AbstractCollectionProvider {
 		        Contexts._ID, 
 		        Contexts.CONTENT_URI,
 		        Contexts._ID,Contexts.NAME, Contexts.COLOUR,
-				Contexts.ICON,Contexts.TRACKS_ID, Contexts.MODIFIED_DATE);
+				Contexts.ICON,Contexts.TRACKS_ID, Contexts.MODIFIED_DATE, Contexts.HIDDEN);
 		
 		uriMatcher.addURI(AUTHORITY, "contextTasks", CONTEXT_TASKS);
 		restrictionBuilders.put(CONTEXT_TASKS, 
@@ -59,12 +59,12 @@ public class ContextProvider extends AbstractCollectionProvider {
 		public static final String ICON = "iconName";
 		public static final String TRACKS_ID = "tracks_id";
 		public static final String MODIFIED_DATE = "modified";
-
+		public static final String HIDDEN = "hidden";
 		/**
 		 * Projection for all the columns of a context.
 		 */
 		public static final String[] FULL_PROJECTION = new String[] { _ID,
-				NAME, COLOUR, ICON, TRACKS_ID, MODIFIED_DATE };
+				NAME, COLOUR, ICON, TRACKS_ID, MODIFIED_DATE, HIDDEN };
 
 		public static final String TASK_COUNT = "count";
 		/**

@@ -38,10 +38,7 @@ public class Context implements TracksEntity {
 		return mHidden;
 	}
 
-	@Override
-	public void setHidden(boolean value) {
-		mHidden = value;
-	}
+
 	
     public final Id getLocalId() {
         return mLocalId;
@@ -189,7 +186,7 @@ public class Context implements TracksEntity {
 
 		@Override
 		public EntityBuilder<Context> setHidden(boolean value) {
-			result.setHidden(value);
+			result.mHidden = value;
 			return this;
 		}
 

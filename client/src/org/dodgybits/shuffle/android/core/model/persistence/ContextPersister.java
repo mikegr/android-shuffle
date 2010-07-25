@@ -1,6 +1,7 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
 import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.COLOUR;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.HIDDEN;
 import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.ICON;
 import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.MODIFIED_DATE;
 import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.NAME;
@@ -28,6 +29,7 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
     private static final int ICON_INDEX = 3;
     private static final int TRACKS_ID_INDEX = 4;
     private static final int MODIFIED_INDEX = 5;
+    private static final int HIDDEN_INDEX = 6;
     
     @Inject
     public ContextPersister(ContentResolverProvider provider, Analytics analytics) {
@@ -43,7 +45,8 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
             .setTracksId(readId(cursor, TRACKS_ID_INDEX))
             .setName(readString(cursor, NAME_INDEX))
             .setColourIndex(cursor.getInt(COLOUR_INDEX))
-            .setIconName(readString(cursor, ICON_INDEX));
+            .setIconName(readString(cursor, ICON_INDEX))
+            .setHidden(readBoolean(cursor, HIDDEN_INDEX));
         return builder.build();
     }
 
@@ -55,6 +58,7 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
         writeString(values, NAME, context.getName());
         values.put(COLOUR, context.getColourIndex());
         writeString(values, ICON, context.getIconName());
+        writeBoolean(values, HIDDEN, context.getHidden());
     }
     
     @Override
