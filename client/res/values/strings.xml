@@ -45,7 +45,7 @@
     <string name="title_project_tasks">Projects > %s</string>
     <string name="title_context_tasks">Contexts > %s</string>
     <string name="title_shortcut_picker">Pick shortcut screen</string>
-    <string name="title_widget_picker">Picxk widget screen</string>
+    <string name="title_widget_picker">Pick widget screen</string>
 
 	<!--  Option menu -->
     <string name="menu_save">Save</string>
