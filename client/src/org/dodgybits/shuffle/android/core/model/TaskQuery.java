@@ -23,6 +23,8 @@ public class TaskQuery {
     private DateRange mCreatedDateRange;
     private Boolean mComplete = null;
     private String mSortOrder;
+
+	private Boolean mShowHidden;
     
     public final PredefinedQuery getPredefinedQuery() {
         return mPredefined;
@@ -56,6 +58,10 @@ public class TaskQuery {
         return mSortOrder;
     }
     
+    public final Boolean showHidden() {
+    	return mShowHidden;
+    }
+    
     public final boolean isInitialized() {
         return true;
     }
@@ -75,6 +81,10 @@ public class TaskQuery {
         
         if (mComplete != null) {
             expressions.add(TaskProvider.Tasks.COMPLETE + "=" + (mComplete ? "1" : "0"));
+        }
+        
+        if(mShowHidden != null) {
+        	expressions.add(TaskProvider.Tasks.HIDDEN + "=" + (mShowHidden ? "1":"0"));
         }
         
         return StringUtils.join(expressions, " AND ");
@@ -275,6 +285,13 @@ public class TaskQuery {
         public final boolean isInitialized() {
             return result.isInitialized();
         }
+        public Boolean showHidden() {
+        	return result.mShowHidden;
+        }
+        
+        public void setShowHidden(Boolean value) {
+        	result.mShowHidden = value;
+        }
 
         public TaskQuery build() {
             if (result == null) {
@@ -297,6 +314,8 @@ public class TaskQuery {
             setSortOrder(query.mSortOrder);
             return this;
         }
+        
+      
 
     }
 

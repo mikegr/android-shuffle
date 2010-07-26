@@ -147,7 +147,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     	ContentValues values = new ContentValues();
     	values.put(HIDDEN, true);
     	int deletedRows = mResolver.update(getContentUri(), values, TaskProvider.Tasks.COMPLETE + " = 1", null);
-        Log.d(cTag, "Deleted " + deletedRows + " completed tasks.");
+        Log.d(cTag, "Hiding " + deletedRows + " completed tasks.");
         
         Map<String, String> params = new HashMap<String,String>(mFlurryParams);
         params.put(cFlurryCountParam, String.valueOf(deletedRows));
