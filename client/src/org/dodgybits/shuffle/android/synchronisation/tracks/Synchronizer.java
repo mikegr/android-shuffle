@@ -250,10 +250,10 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         final long remoteModified = remoteEntity.getModifiedDate();
         final long localModified = localEntity.getModifiedDate();
         
-        if (remoteModified == localModified)
+        if (remoteModified == localModified && remoteEntity.getHidden() == localEntity.getHidden())
             return;
 
-        if (remoteModified > localModified) {
+        if (remoteModified >= localModified) {
             updateEntity(createMergedLocalEntity(localEntity, remoteEntity));
         } else {
             updateTracks(localEntity);

@@ -62,7 +62,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 	@Override
 	protected Cursor createGroupQuery() {
 		Cursor cursor = managedQuery(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.FULL_PROJECTION,
-				null, null, ContextProvider.Contexts.NAME + " ASC");
+				ContextProvider.Contexts.HIDDEN + " = 0", null, ContextProvider.Contexts.NAME + " ASC");
 		mGroupIdColumnIndex = cursor.getColumnIndex(ContextProvider.Contexts._ID);
 		return cursor;
 	}

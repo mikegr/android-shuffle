@@ -71,7 +71,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	@Override
 	protected Cursor createGroupQuery() {
 		Cursor cursor = managedQuery(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.FULL_PROJECTION,
-				null, null, ProjectProvider.Projects.NAME + " ASC");
+				ProjectProvider.Projects.HIDDEN + " = 0", null, ProjectProvider.Projects.NAME + " ASC");
 		mGroupIdColumnIndex = cursor.getColumnIndex(ProjectProvider.Projects._ID);
 		return cursor;
 	}

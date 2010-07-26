@@ -330,7 +330,7 @@ public final class Task implements TracksEntity {
         }
 
 		@Override
-		public EntityBuilder<Task> setHidden(boolean value) {
+		public Builder setHidden(boolean value) {
 			result.mHidden = value;
 			return this;
 		}

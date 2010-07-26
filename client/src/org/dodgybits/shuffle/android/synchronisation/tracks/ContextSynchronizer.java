@@ -74,6 +74,7 @@ public class ContextSynchronizer extends Synchronizer<Context> {
         builder
             .setName(newContext.getName())
             .setModifiedDate(newContext.getModifiedDate())
+            .setHidden(newContext.getHidden())
             .setTracksId(newContext.getTracksId());
         return builder.build();
     }
@@ -94,6 +95,7 @@ public class ContextSynchronizer extends Synchronizer<Context> {
             serializer.startTag("", "hide").attribute("", "type", "boolean").text("false").endTag("", "hide");
             serializer.startTag("", "name").text(localContext.getName()).endTag("", "name");
             serializer.startTag("", "position").attribute("", "type", "integer").text("12").endTag("", "position");
+            serializer.startTag("", "state").text(localContext.getHidden() ? "hidden" : "active").endTag("", "state");
             serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(now).endTag("", "updated-at");
             serializer.endTag("", "context");
             // serializer.endDocument();

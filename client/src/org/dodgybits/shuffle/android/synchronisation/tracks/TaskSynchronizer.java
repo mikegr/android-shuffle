@@ -99,6 +99,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
             .setProjectId(newTask.getProjectId())
             .setModifiedDate(newTask.getModifiedDate())
             .setStartDate(newTask.getStartDate())
+            .setHidden(newTask.getHidden())
             .setDueDate(newTask.getDueDate())
             .setAllDay(newTask.isAllDay())
             .setTracksId(newTask.getTracksId());
