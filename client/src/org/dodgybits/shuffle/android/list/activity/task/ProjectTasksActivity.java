@@ -70,6 +70,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
         List<Id> ids = Arrays.asList(new Id[] {mProjectId});
         TaskQuery query = TaskQuery.newBuilder()
             .setProjects(new ArrayList<Id>(ids))
+            .setShowHidden(false)
             .setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC")
             .build();
         return new AbstractTaskListConfig(query, mTaskPersister) {
@@ -90,7 +91,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	protected void onResume() {
 		Log.d(cTag, "Fetching project " + mProjectId);
 		Cursor cursor = getContentResolver().query(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.FULL_PROJECTION,
-				ProjectProvider.Projects._ID + " = ?", new String[] {String.valueOf(mProjectId)}, null);
+				ProjectProvider.Projects._ID + " = ? ", new String[] {String.valueOf(mProjectId)}, null);
 		if (cursor.moveToNext()) {
 			mProject = mPersister.read(cursor);
 		}

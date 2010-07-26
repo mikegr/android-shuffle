@@ -69,6 +69,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	    List<Id> ids = Arrays.asList(new Id[] {mContextId});
 	    TaskQuery query = TaskQuery.newBuilder()
 	        .setContexts(new ArrayList<Id>(ids))
+	        .setShowHidden(false)
 	        .setSortOrder(TaskProvider.Tasks.CREATED_DATE + " ASC")
 	        .build();
 		return new AbstractTaskListConfig(query, mTaskPersister) {
@@ -89,7 +90,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	protected void onResume() {
 		Log.d(cTag, "Fetching context " + mContextId);
 		Cursor cursor = getContentResolver().query(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.FULL_PROJECTION,
-				ContextProvider.Contexts._ID + " = ?", new String[] {String.valueOf(mContextId)}, null);
+				ContextProvider.Contexts._ID + " = ? ", new String[] {String.valueOf(mContextId)}, null);
 		if (cursor.moveToNext()) {
 			mContext = mContextPersister.read(cursor);
 		}

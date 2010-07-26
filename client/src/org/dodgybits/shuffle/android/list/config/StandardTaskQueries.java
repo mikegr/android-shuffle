@@ -20,19 +20,20 @@ public class StandardTaskQueries {
     public static final String cNextTasks = "next_tasks";
     
     private static final TaskQuery cInboxQuery = 
-        TaskQuery.newBuilder().setPredefined(PredefinedQuery.inbox).build();
+        TaskQuery.newBuilder().setPredefined(PredefinedQuery.inbox).setShowHidden(false).build();
         
     private static final TaskQuery cDueTodayQuery = 
-        TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueToday).build();
+        TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueToday).setShowHidden(false).build();
 
     private static final TaskQuery cDueNextWeekQuery = 
-        TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueNextWeek).build();
+        TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueNextWeek).setShowHidden(false).build();
 
     private static final TaskQuery cDueNextMonthQuery = 
-        TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueNextMonth).build();
+        TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueNextMonth).setShowHidden(false).build();
     
     private static final TaskQuery cNextTasksQuery = 
         TaskQuery.newBuilder()
+        .setShowHidden(false)
             .setPredefined(PredefinedQuery.nextTasks)
             .build();
 

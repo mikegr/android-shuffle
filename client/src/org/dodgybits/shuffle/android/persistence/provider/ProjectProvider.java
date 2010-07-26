@@ -34,7 +34,7 @@ public class ProjectProvider extends AbstractCollectionProvider {
 		uriMatcher.addURI(AUTHORITY, "projectTasks", PROJECT_TASKS);
 		String idField = "p._id";
 		String tables = "project p, task t";
-		String restrictions = "t.projectId = p._id";
+		String restrictions = "t.projectId = p._id and t.hidden = 0";
 
 		restrictionBuilders.put(PROJECT_TASKS, 
 		        new CustomElementFilterRestrictionBuilder(

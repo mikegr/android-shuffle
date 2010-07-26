@@ -289,8 +289,9 @@ public class TaskQuery {
         	return result.mShowHidden;
         }
         
-        public void setShowHidden(Boolean value) {
+        public Builder setShowHidden(Boolean value) {
         	result.mShowHidden = value;
+        	return this;
         }
 
         public TaskQuery build() {

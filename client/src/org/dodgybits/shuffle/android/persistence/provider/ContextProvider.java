@@ -30,7 +30,7 @@ public class ContextProvider extends AbstractCollectionProvider {
 		uriMatcher.addURI(AUTHORITY, "contextTasks", CONTEXT_TASKS);
 		restrictionBuilders.put(CONTEXT_TASKS, 
 		        new CustomElementFilterRestrictionBuilder(
-		                "context c, task t", "t.contextId = c._id", "c._id"));
+		                "context c, task t", "t.contextId = c._id and t.hidden = 0", "c._id"));
         groupByBuilders.put(CONTEXT_TASKS, 
                 new StandardGroupByBuilder("c._id"));
 		setDefaultSortOrder(Contexts.DEFAULT_SORT_ORDER);
