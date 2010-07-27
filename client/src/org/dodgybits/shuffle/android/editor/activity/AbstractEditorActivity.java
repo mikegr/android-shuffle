@@ -25,6 +25,7 @@ import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -221,7 +222,9 @@ public abstract class AbstractEditorActivity<E extends Entity> extends FlurryEna
         if (mState == State.STATE_EDIT && mCursor != null) {
             mCursor.close();
             mCursor = null;
-            getContentResolver().delete(mUri, null, null);
+            ContentValues values = new ContentValues();
+            values.put("hidden", true);
+            getContentResolver().update(mUri, values,null, null);
         }
     }
     
