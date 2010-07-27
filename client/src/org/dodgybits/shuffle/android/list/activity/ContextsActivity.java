@@ -67,6 +67,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	protected void deleteChildren(Id groupId) {
 		ContentValues values = new ContentValues();
 		values.put("hidden", true);
+		values.put("modified", System.currentTimeMillis());
 		getContentResolver().update(
 		        getDrilldownListConfig().getChildPersister().getContentUri(),
 		        values,

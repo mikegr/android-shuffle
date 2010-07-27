@@ -103,6 +103,7 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
         if(entity == null) return false;
         ContentValues values = new ContentValues();
         values.put("hidden", true);
+        values.put("modified", System.currentTimeMillis());
         mResolver.update(getUri(entity), values, null, null);
 
         return true;

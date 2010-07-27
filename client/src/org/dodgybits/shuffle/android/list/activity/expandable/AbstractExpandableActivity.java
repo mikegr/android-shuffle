@@ -345,6 +345,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
         final TaskPersister childPersister = getListConfig().getChildPersister();
         final ContentValues values = new ContentValues();
 		values.put("hidden", true);
+		values.put("modified", System.currentTimeMillis());
     	switch (type) {
 	    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
 	        	Log.d(cTag, "Deleting child at position " + groupPosition + "," + childPosition);

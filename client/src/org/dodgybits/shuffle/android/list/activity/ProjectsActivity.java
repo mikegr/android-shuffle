@@ -66,6 +66,7 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	protected void deleteChildren(Id groupId) {
 		ContentValues values = new ContentValues();
 		values.put("hidden", true);
+		values.put("modified", System.currentTimeMillis());
 		getContentResolver().update(
 				getDrilldownListConfig().getChildPersister().getContentUri(), values, 
 				TaskProvider.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(groupId)});
