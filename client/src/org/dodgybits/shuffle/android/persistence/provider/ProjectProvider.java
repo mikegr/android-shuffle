@@ -12,6 +12,7 @@ public class ProjectProvider extends AbstractCollectionProvider {
 	private static final String AUTHORITY = Shuffle.PACKAGE+".projectprovider";
 
 	static final int PROJECT_TASKS = 203;
+	static final int ACTIVE_PROJECTS = 204;
 
 	private static final String URL_COLLECTION_NAME = "projects";
 	
@@ -43,6 +44,10 @@ public class ProjectProvider extends AbstractCollectionProvider {
 		        new StandardGroupByBuilder("p._id"));
 		setDefaultSortOrder(Projects.DEFAULT_SORT_ORDER);
 
+		uriMatcher.addURI(AUTHORITY, "activeProjects", ACTIVE_PROJECTS);
+		
+		restrictionBuilders.put(ACTIVE_PROJECTS, new CustomElementFilterRestrictionBuilder("project p", "p.hidden = 0", idField));
+		
 	}
 	
     /**
@@ -56,6 +61,7 @@ public class ProjectProvider extends AbstractCollectionProvider {
          */
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + URL_COLLECTION_NAME);
         public static final Uri PROJECT_TASKS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/projectTasks");
+        public static final Uri ACTIVE_PROJECTS = Uri.parse("content://" + AUTHORITY + "/activeProjects");
         public static final String DEFAULT_CONTEXT_ID = "defaultContextId";
         /**
          * The default sort order for this table

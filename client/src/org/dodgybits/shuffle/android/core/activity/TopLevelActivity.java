@@ -106,8 +106,8 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
         generators[INBOX] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cInbox));
         generators[DUE_TASKS] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cDueToday));
         generators[TOP_TASKS] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks));
-        generators[PROJECTS] = new UriCursorGenerator(ProjectProvider.Projects.CONTENT_URI);
-        generators[CONTEXTS] = new UriCursorGenerator(ContextProvider.Contexts.CONTENT_URI);
+        generators[PROJECTS] = new UriCursorGenerator(ProjectProvider.Projects.ACTIVE_PROJECTS);
+        generators[CONTEXTS] = new UriCursorGenerator(ContextProvider.Contexts.ACTIVE_CONTEXTS);
 
         mIconIds[INBOX] = R.drawable.inbox;
         mIconIds[DUE_TASKS] = R.drawable.due_actions;

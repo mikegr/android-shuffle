@@ -11,6 +11,7 @@ public class ContextProvider extends AbstractCollectionProvider {
 	private static final String AUTHORITY = Shuffle.PACKAGE + ".contextprovider";
 
 	static final int CONTEXT_TASKS = 103;
+	static final int ACTIVE_CONTEXTS = 104;
 	
     private static final String URL_COLLECTION_NAME = "contexts";
 
@@ -34,6 +35,10 @@ public class ContextProvider extends AbstractCollectionProvider {
         groupByBuilders.put(CONTEXT_TASKS, 
                 new StandardGroupByBuilder("c._id"));
 		setDefaultSortOrder(Contexts.DEFAULT_SORT_ORDER);
+		uriMatcher.addURI(AUTHORITY, "activeContexts", ACTIVE_CONTEXTS);
+		
+		restrictionBuilders.put(ACTIVE_CONTEXTS, new CustomElementFilterRestrictionBuilder("context c", "c.hidden = 0", "c._id"));
+		
 	}
 
 
@@ -48,6 +53,9 @@ public class ContextProvider extends AbstractCollectionProvider {
 				+ "/contexts");
 		public static final Uri CONTEXT_TASKS_CONTENT_URI = Uri
 				.parse("content://" + AUTHORITY + "/contextTasks");
+
+		public static final Uri ACTIVE_CONTEXTS = Uri
+		.parse("content://" + AUTHORITY + "/activeContexts");
 
 		/**
 		 * The default sort order for this table
