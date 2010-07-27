@@ -25,6 +25,7 @@ import org.dodgybits.shuffle.android.list.view.ProjectView;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -63,8 +64,10 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 
 	@Override
 	protected void deleteChildren(Id groupId) {
-		getContentResolver().delete(
-				getDrilldownListConfig().getChildPersister().getContentUri(), 
+		ContentValues values = new ContentValues();
+		values.put("hidden", true);
+		getContentResolver().update(
+				getDrilldownListConfig().getChildPersister().getContentUri(), values, 
 				TaskProvider.Tasks.PROJECT_ID + " = ?", new String[] {String.valueOf(groupId)});
 	}
 	

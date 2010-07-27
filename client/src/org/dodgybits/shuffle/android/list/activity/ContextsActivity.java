@@ -28,6 +28,7 @@ import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import com.google.inject.Inject;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -64,8 +65,11 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	
 	@Override
 	protected void deleteChildren(Id groupId) {
-		getContentResolver().delete(
-		        getDrilldownListConfig().getChildPersister().getContentUri(), 
+		ContentValues values = new ContentValues();
+		values.put("hidden", true);
+		getContentResolver().update(
+		        getDrilldownListConfig().getChildPersister().getContentUri(),
+		        values,
 				TaskProvider.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)});
 	}
 

@@ -31,6 +31,7 @@ import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -342,14 +343,16 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     	final int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
         final EntityPersister<G> groupPersister = getListConfig().getGroupPersister();
         final TaskPersister childPersister = getListConfig().getChildPersister();
-    	
+        final ContentValues values = new ContentValues();
+		values.put("hidden", true);
     	switch (type) {
 	    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
 	        	Log.d(cTag, "Deleting child at position " + groupPosition + "," + childPosition);
 				final long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
 		    	Log.i(cTag, "Deleting child id " + childId);
 				Uri childUri = ContentUris.withAppendedId(childPersister.getContentUri(), childId);			
-		        getContentResolver().delete(childUri, null, null);		    
+			
+			getContentResolver().update(childUri,values, null, null);		    
 		        showCancelToast(false);
 		        refreshChildCount();
 		        getExpandableListView().invalidate();
@@ -366,11 +369,12 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 		    					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 		    			    	Log.i(cTag, "Deleting group id " + groupId);
 		    					Uri uri = ContentUris.withAppendedId(groupPersister.getContentUri(), groupId);			
-		    			        getContentResolver().delete(uri, null, null);
+		    					ContentValues values = new ContentValues();
+		    					values.put("hidden", true);
+		    					getContentResolver().update(uri,values, null, null);
 		    			    	Log.i(cTag, "Deleting all child for group id " + groupId);
-		    					getContentResolver().delete(childPersister.getContentUri(), 
-		    							getListConfig().getGroupIdColumnName() + " = ?", 
-		    							new String[] {String.valueOf(groupId)});
+		    			    	
+		    					getContentResolver().update(childPersister.getContentUri(),values, getListConfig().getGroupIdColumnName() + " = ?", new String[] {String.valueOf(groupId)});
 		    			        showCancelToast(true);
 		    				} else {
 		    					Log.d(cTag, "Hit Cancel button. Do nothing.");
@@ -384,7 +388,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 			    	Log.i(cTag, "Deleting group id " + groupId);
 					Uri groupUri = ContentUris.withAppendedId(groupPersister.getContentUri(), groupId);			
-			        getContentResolver().delete(groupUri, null, null);
+					getContentResolver().update(groupUri,values, null, null);		    
 			        showCancelToast(true);
 	    		}
 	        	break;
