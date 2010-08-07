@@ -70,4 +70,36 @@ public class TaskParserTests extends TestCase {
 		
 	}
 	
+	public void testCompletedTasksAreCompletedWhenParsed() {
+	     XmlPullParser xmlParser = Xml.newPullParser();
+
+	     try {
+			xmlParser.setInput(new StringReader("<todo>"+
+			"<completed-at type=\"datetime\" nil=\"true\"/>"+
+			"<context-id type=\"integer\">3711</context-id>"+
+			"<created-at type=\"datetime\">2009-10-26T22:23:42+01:00</created-at>"+
+			"<description>Läs getting things done igen</description>"+
+			"<due type=\"datetime\" nil=\"true\"/>"+
+			"<id type=\"integer\">25076</id>"+
+			"<ip-address>90.232.35.15</ip-address>"+
+			"<notes>Primärt kring idéer och projekt</notes>"+
+			"<project-id type=\"integer\">4558</project-id>"+
+			"<recurring-todo-id type=\"integer\" nil=\"true\"/>"+
+			"<show-from type=\"datetime\" nil=\"true\"/>"+
+			"<state>completed</state>"+
+			"<updated-at type=\"datetime\">2010-02-03T10:37:19+01:00</updated-at>"+
+			"</todo>"));
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		TaskParser parser = CreateSUT();
+		Task task = parser.parseSingle(xmlParser).getResult();
+		assertEquals("completed date isn't parsed correctly",true,task.isComplete());
+		
+		
+		
+	}
+
+	
 }

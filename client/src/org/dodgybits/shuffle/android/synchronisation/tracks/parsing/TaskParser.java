@@ -24,6 +24,14 @@ public class TaskParser extends Parser<Task> {
 		mContextLookup = contextLookup;
 		mProjectLookup = projectLookup;
 		
+		appliers.put("state", new Applier() {
+			@Override
+			public boolean apply(String value) {
+				if( value.equals("completed"))
+				specificBuilder.setComplete(true);
+				return true;
+			}
+		});
 		
 		appliers.put("description",
 				new Applier(){
