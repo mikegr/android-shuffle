@@ -8,10 +8,13 @@ import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.http.HttpStatus;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
+import org.dodgybits.shuffle.android.synchronisation.tracks.ApiException;
 import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
+import org.dodgybits.shuffle.android.synchronisation.tracks.WebResult;
 
 import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
@@ -174,9 +177,11 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
                     .toString(), mPassTextbox.getText().toString());
 
             if (uri != null && uri.isAbsolute()) {
-                client.getUrlContent(uri.toString() + "/contexts.xml");
+                WebResult result = client.getUrlContent(uri.toString() + "/contexts.xml");
+                if(result.getStatus().getStatusCode() != HttpStatus.SC_OK)
+                	return false;
             }
-        } catch (WebClient.ApiException e) {
+        } catch (ApiException e) {
             return false;
         }
 		return true;

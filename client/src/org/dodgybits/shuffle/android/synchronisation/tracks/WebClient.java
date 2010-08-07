@@ -86,7 +86,7 @@ public class WebClient {
         return client;
     }
 
-    public synchronized String getUrlContent(String url) throws ApiException {
+    public synchronized WebResult getUrlContent(String url) throws ApiException {
         if (sUserAgent == null) {
             throw new ApiException("User-Agent string must be prepared");
         }
@@ -108,8 +108,8 @@ public class WebClient {
             StatusLine status = response.getStatusLine();
             Log.i(cTag, "get with response " + status.toString());
             if (status.getStatusCode() != HttpStatus.SC_OK) {
-                throw new ApiException("Invalid response from server: " +
-                        status.toString());
+            	return new WebResult(status, null);
+     
             }
 
             // Pull content stream from response
@@ -123,7 +123,7 @@ public class WebClient {
             while ((readBytes = inputStream.read(sBuffer)) != -1) {
                 content.write(sBuffer, 0, readBytes);
             }
-            return new String(content.toByteArray());
+            return new WebResult(status,new String(content.toByteArray()));
 
         } catch (IOException e) {
             throw new ApiException("Problem communicating with API", e);
@@ -236,16 +236,6 @@ public class WebClient {
         }
     }
 
-    @SuppressWarnings("serial")
-    public class ApiException extends Exception {
 
-        public ApiException(String reason) {
-            super(reason);
-        }
-        
-        public ApiException(String reason, Exception e) {
-            super(reason, e);
-        }
-
-    }
 }
+

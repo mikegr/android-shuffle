@@ -4,12 +4,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.preference.view.Progress;
+import org.dodgybits.shuffle.android.synchronisation.tracks.ApiException;
 import org.dodgybits.shuffle.android.synchronisation.tracks.model.TracksEntity;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.IContextLookup;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.IProjectLookup;
@@ -49,7 +52,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         mBasePercent = basePercent;
     }
     
-    public void synchronize() throws WebClient.ApiException {
+    public void synchronize() throws ApiException {
         mTracksSynchronizer.reportProgress(Progress.createProgress(mBasePercent,
                 readingLocalText()));
         
@@ -130,13 +133,20 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
     
     protected abstract EntityBuilder<Entity> createBuilder();
     
-    private TracksEntities<Entity> getTrackEntities() throws WebClient.ApiException {
+    private TracksEntities<Entity> getTrackEntities() throws ApiException {
         
         String tracksEntityXml;
         
         try {
-            tracksEntityXml = mWebClient.getUrlContent(entityIndexUrl());
-        } catch (WebClient.ApiException e) {
+        	WebResult result = mWebClient.getUrlContent(entityIndexUrl());
+        	StatusLine status = result.getStatus();
+        	if(status.getStatusCode() == HttpStatus.SC_OK)
+        		tracksEntityXml = result.getContent();
+        	else
+        		throw 
+        		new ApiException("Invalid response from server: " +
+                    status.toString());
+        } catch (ApiException e) {
             Log.w(cTag, e);
             throw e;
         }
@@ -191,15 +201,11 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         mPersister.update(entity);
     }
 
-    private boolean hideEntity(Entity entity)
+    protected  boolean hideEntity(Entity entity)
     {
-    	preHideEntity(entity);
         return mPersister.hide(entity.getLocalId());
     }
     
-    protected  void preHideEntity(Entity entity) {
-		
-	}
 
     
 	private Entity findEntityByLocalName(Collection<Entity> remoteEntities,
@@ -265,7 +271,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         String document = createDocumentForEntity(localEntity);
         try {
             mWebClient.putContentToUrl(createEntityUrl(localEntity), document);
-        } catch (WebClient.ApiException e) {
+        } catch (ApiException e) {
             Log.w(cTag, "Failed to update entity in tracks " + localEntity + ":" + e.getMessage(), e);
         }
     }
@@ -282,7 +288,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
                 builder.setTracksId(id);
                 entity = builder.build();
             }
-        } catch (WebClient.ApiException e) {
+        } catch (ApiException e) {
             Log.w(cTag, "Failed to create entity in tracks " + entity + ":" + e.getMessage(), e);
         }
         return entity;

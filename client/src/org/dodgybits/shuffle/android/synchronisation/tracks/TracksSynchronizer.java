@@ -47,7 +47,7 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
 // TODO inject sync classes (BIG job)
     
     public static TracksSynchronizer getActiveSynchronizer(
-            ContextWrapper context, Analytics analytics) throws WebClient.ApiException {
+            ContextWrapper context, Analytics analytics) throws ApiException {
         TracksSynchronizer synchronizer = getSingletonSynchronizer(context, analytics);
         while (synchronizer.getStatus() == Status.FINISHED) {
             synchronizer = getSingletonSynchronizer(context, analytics);
@@ -55,7 +55,7 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
         return synchronizer;
     }
 
-    private static TracksSynchronizer getSingletonSynchronizer(Context context, Analytics analytics) throws WebClient.ApiException {
+    private static TracksSynchronizer getSingletonSynchronizer(Context context, Analytics analytics) throws ApiException {
         if (synchronizer == null || synchronizer.getStatus() == Status.FINISHED) {
 
             synchronizer = new TracksSynchronizer(
@@ -123,7 +123,7 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
             mTaskSynchronizer.synchronize();
             publishProgress(Progress.createProgress(100, "Synchronization Complete"));
             mAnalytics.onEvent(cFlurryTracksSyncCompletedEvent);
-        } catch (WebClient.ApiException e) {
+        } catch (ApiException e) {
             Log.w(cTag, "Tracks call failed", e);
             publishProgress(Progress.createErrorProgress(mContext.getString(R.string.web_error_message)));
             mAnalytics.onError(cFlurryTracksSyncError, e.getMessage(), getClass().getName());
@@ -147,7 +147,7 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
         }
         try {
             synchronizer = getSingletonSynchronizer(mContext, mAnalytics);
-        } catch (WebClient.ApiException ignored) {
+        } catch (ApiException ignored) {
 
         }
     }

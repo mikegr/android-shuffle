@@ -5,18 +5,18 @@ import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.preference.view.Progress;
+import org.dodgybits.shuffle.android.synchronisation.tracks.ApiException;
 import org.dodgybits.shuffle.android.synchronisation.tracks.SyncProgressListener;
 import org.dodgybits.shuffle.android.synchronisation.tracks.TracksSynchronizer;
-import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
-
-import com.google.inject.Inject;
-import com.google.inject.internal.Nullable;
 
 import roboguice.inject.InjectView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.inject.Inject;
+import com.google.inject.internal.Nullable;
 
 /**
  * Activity to handle synchronization
@@ -49,7 +49,7 @@ public class SynchronizeActivity extends FlurryEnabledActivity implements SyncPr
         super.onResume();
         try {
             synchronizer = TracksSynchronizer.getActiveSynchronizer(this, mAnalytics);
-        } catch (WebClient.ApiException ignored) {
+        } catch (ApiException ignored) {
 
         }
 

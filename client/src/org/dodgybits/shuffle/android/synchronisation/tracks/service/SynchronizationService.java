@@ -4,9 +4,9 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.preference.view.Progress;
+import org.dodgybits.shuffle.android.synchronisation.tracks.ApiException;
 import org.dodgybits.shuffle.android.synchronisation.tracks.SyncProgressListener;
 import org.dodgybits.shuffle.android.synchronisation.tracks.TracksSynchronizer;
-import org.dodgybits.shuffle.android.synchronisation.tracks.WebClient;
 import org.dodgybits.shuffle.android.synchronisation.tracks.activity.SynchronizeActivity;
 
 import roboguice.service.RoboService;
@@ -122,7 +122,7 @@ public class SynchronizationService extends RoboService implements SyncProgressL
         
         try {
             synchronizer = TracksSynchronizer.getActiveSynchronizer(this, mAnalytics);
-        } catch (WebClient.ApiException ignored) {
+        } catch (ApiException ignored) {
 
         }  
         if (synchronizer != null) {

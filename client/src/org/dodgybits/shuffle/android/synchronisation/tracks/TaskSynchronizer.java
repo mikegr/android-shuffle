@@ -1,10 +1,12 @@
 package org.dodgybits.shuffle.android.synchronisation.tracks;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.http.HttpStatus;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.EntityBuilder;
@@ -13,8 +15,11 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
+import org.dodgybits.shuffle.android.synchronisation.tracks.ApiException;
+import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.ParseResult;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.Parser;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.TaskParser;
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.content.Context;
@@ -151,7 +156,6 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 
 
             serializer.endTag("", "todo");
-            // serializer.endDocument();
             serializer.flush();
         } catch (IOException ignored) {
             Log.d(cTag, "Failed to serialize task", ignored);
@@ -178,9 +182,38 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 	}
 	
 	@Override
-	protected void preHideEntity(Task t) {
-		Task task = Task.newBuilder().mergeFrom(t).setComplete(true).build();
-		mPersister.update(task);
+	protected boolean hideEntity(Task t) {
+        WebResult result;
+        
+        try {
+			result = mWebClient.getUrlContent(this.createEntityUrl(t));
+		} catch (ApiException e1) {
+			return false;
+		}
+        XmlPullParser parser = Xml.newPullParser();
+        if(result.getStatus().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+        	super.hideEntity(t);
+        }
+        if(result.getStatus().getStatusCode() != HttpStatus.SC_OK) {
+        	return false;
+        }
+        
+        try {
+            parser.setInput(new StringReader(result.getContent()));
+        } catch (Exception e) {
+        	return false;
+        } 
+        ParseResult<Task> parseResult = getEntityParser().parseSingle(parser);
+        
+		
+		if(parseResult.IsSuccess() && parseResult.getResult().isComplete()){
+			Task task = Task.newBuilder().mergeFrom(t).setComplete(true).build();
+			mPersister.update(task);
+			return true;
+		}
+		return false;
 	}
+
+
 
 }
