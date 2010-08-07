@@ -183,6 +183,10 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 	
 	@Override
 	protected boolean hideEntity(Task t) {
+		//Avoid extra calls if the entity is already hidden or completed.
+		if(t.isComplete() || t.getHidden()) 
+			return true;
+		
         WebResult result;
         
         try {
@@ -207,7 +211,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
         
 		
 		if(parseResult.IsSuccess() && parseResult.getResult().isComplete()){
-			Task task = Task.newBuilder().mergeFrom(t).setComplete(true).build();
+			Task task = Task.newBuilder().mergeFrom(t).mergeFrom(parseResult.getResult()).build();
 			mPersister.update(task);
 			return true;
 		}
