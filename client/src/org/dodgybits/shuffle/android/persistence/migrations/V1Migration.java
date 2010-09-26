@@ -23,11 +23,7 @@ public class V1Migration extends AbstractMigration {
 				+ "_id INTEGER PRIMARY KEY," 
 				+ "name TEXT,"
 				+ "archived INTEGER," 
-				+ "defaultContextId INTEGER," 
-				+ "tracks_id INTEGER," 
-				+ "modified INTEGER," 
-				+ "parallel INTEGER NOT NULL DEFAULT 0," 
-				+ "hidden INTEGER NOT NULL DEFAULT 0"
+				+ "defaultContextId INTEGER" 
 				+ ");");
 	}
 
@@ -44,15 +40,8 @@ public class V1Migration extends AbstractMigration {
 				+ "created INTEGER,"
 				+ "modified INTEGER," 
 				+ "due INTEGER,"
-				+ "start INTEGER," // created, modified, due, start in millis since epoch
-                + "timezone TEXT," // timezone for task
-				+ "allDay INTEGER NOT NULL DEFAULT 0,"
-				+ "hasAlarm INTEGER NOT NULL DEFAULT 0,"
-				+ "calEventId INTEGER,"
 				+ "displayOrder INTEGER," 
-				+ "complete INTEGER," 
-				+ "tracks_id INTEGER,"
-				+ "hidden INTEGER NOT NULL DEFAULT 0"
-				+ ");");
+				+ "complete INTEGER" 
+   				+ ");");
 	}
 }

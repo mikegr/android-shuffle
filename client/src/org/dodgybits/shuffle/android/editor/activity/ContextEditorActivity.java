@@ -149,7 +149,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     	super.doDeleteAction();
         mNameWidget.setText("");
     }
-    
+        
     /**
      * @return id of layout for this view
      */

@@ -14,7 +14,6 @@ import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Ta
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DISPLAY_ORDER;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DUE_DATE;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.HAS_ALARM;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.HIDDEN;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.MODIFIED_DATE;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.PROJECT_ID;
 import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.START_DATE;
@@ -30,6 +29,7 @@ import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks;
 
 import roboguice.inject.ContentResolverProvider;
 import roboguice.inject.ContextScoped;
@@ -64,7 +64,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     private static final int ALL_DAY_INDEX = COMPLETE_INDEX + 1;
     private static final int HAS_ALARM_INDEX = ALL_DAY_INDEX + 1;
     private static final int TASK_TRACK_INDEX = HAS_ALARM_INDEX  + 1;
-    private static final int HIDDEN_INDEX = TASK_TRACK_INDEX +1;
+    private static final int DELETED_INDEX = TASK_TRACK_INDEX +1;
     
     @Inject
     public TaskPersister(ContentResolverProvider provider, Analytics analytics) {
@@ -91,7 +91,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
             .setAllDay(readBoolean(cursor, ALL_DAY_INDEX))
             .setHasAlarm(readBoolean(cursor, HAS_ALARM_INDEX))
             .setTracksId(readId(cursor, TASK_TRACK_INDEX))
-            .setHidden(readBoolean(cursor, HIDDEN_INDEX));
+            .setDeleted(readBoolean(cursor, DELETED_INDEX));
 
         return builder.build();
     }
@@ -107,7 +107,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         values.put(MODIFIED_DATE, task.getModifiedDate());
         values.put(START_DATE, task.getStartDate());
         values.put(DUE_DATE, task.getDueDate());
-        writeBoolean(values, HIDDEN, task.getHidden());
+        writeBoolean(values, Tasks.DELETED, task.isDeleted());
         
         String timezone = task.getTimezone();
         if (TextUtils.isEmpty(timezone))
@@ -144,10 +144,8 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     }
     
     public int deleteCompletedTasks() {
-    	ContentValues values = new ContentValues();
-    	values.put(HIDDEN, true);
-    	int deletedRows = mResolver.update(getContentUri(), values, TaskProvider.Tasks.COMPLETE + " = 1", null);
-        Log.d(cTag, "Hiding " + deletedRows + " completed tasks.");
+        int deletedRows = setAsDeleted(TaskProvider.Tasks.COMPLETE + " = 1", null);
+        Log.d(cTag, "Deleting " + deletedRows + " completed tasks.");
         
         Map<String, String> params = new HashMap<String,String>(mFlurryParams);
         params.put(cFlurryCountParam, String.valueOf(deletedRows));

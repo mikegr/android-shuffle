@@ -71,7 +71,9 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	@Override
 	protected Cursor createGroupQuery() {
 		Cursor cursor = managedQuery(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.FULL_PROJECTION,
-				ProjectProvider.Projects.HIDDEN + " = 0", null, ProjectProvider.Projects.NAME + " ASC");
+				ProjectProvider.Projects.DELETED + " = 0", 
+				null, 
+				ProjectProvider.Projects.NAME + " ASC");
 		mGroupIdColumnIndex = cursor.getColumnIndex(ProjectProvider.Projects._ID);
 		return cursor;
 	}
@@ -89,7 +91,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	@Override
 	protected Cursor createChildQuery(long groupId) {
 		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.cFullProjection,
-				TaskProvider.Tasks.PROJECT_ID +  " = ? AND " + TaskProvider.Tasks.HIDDEN + "=0", new String[] {String.valueOf(groupId)}, 
+				TaskProvider.Tasks.PROJECT_ID +  " = ? AND " + TaskProvider.Tasks.DELETED + "=0", new String[] {String.valueOf(groupId)}, 
 				TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC");
 		mChildIdColumnIndex = cursor.getColumnIndex(TaskProvider.Tasks._ID);
 		return cursor;		

@@ -19,6 +19,7 @@ package org.dodgybits.shuffle.android.list.activity.expandable;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledExpandableListActivity;
 import org.dodgybits.shuffle.android.core.model.Entity;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
@@ -28,6 +29,7 @@ import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.ExpandableListConfig;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemListener;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
+import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.content.ContentUris;
@@ -343,18 +345,14 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     	final int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
         final EntityPersister<G> groupPersister = getListConfig().getGroupPersister();
         final TaskPersister childPersister = getListConfig().getChildPersister();
-        final ContentValues values = new ContentValues();
-		values.put("hidden", true);
-		values.put("modified", System.currentTimeMillis());
+        
     	switch (type) {
 	    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
 	        	Log.d(cTag, "Deleting child at position " + groupPosition + "," + childPosition);
 				final long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
 		    	Log.i(cTag, "Deleting child id " + childId);
-				Uri childUri = ContentUris.withAppendedId(childPersister.getContentUri(), childId);			
-			
-			getContentResolver().update(childUri,values, null, null);		    
-		        showCancelToast(false);
+		    	childPersister.setAsDeleted(Id.create(childId));
+		        showItemsDeletedToast(false);
 		        refreshChildCount();
 		        getExpandableListView().invalidate();
 	    		break;
@@ -369,14 +367,12 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 		    				if (which == DialogInterface.BUTTON1) {
 		    					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 		    			    	Log.i(cTag, "Deleting group id " + groupId);
-		    					Uri uri = ContentUris.withAppendedId(groupPersister.getContentUri(), groupId);			
-		    					ContentValues values = new ContentValues();
-		    					values.put("hidden", true);
-		    					getContentResolver().update(uri,values, null, null);
+		    			    	groupPersister.setAsDeleted(Id.create(groupId));
 		    			    	Log.i(cTag, "Deleting all child for group id " + groupId);
-		    			    	
-		    					getContentResolver().update(childPersister.getContentUri(),values, getListConfig().getGroupIdColumnName() + " = ?", new String[] {String.valueOf(groupId)});
-		    			        showCancelToast(true);
+		    			    	childPersister.setAsDeleted(
+		    			    	        getListConfig().getGroupIdColumnName() + " = ?", 
+		    			    	        new String[] {String.valueOf(groupId)});
+		    			        showItemsDeletedToast(true);
 		    				} else {
 		    					Log.d(cTag, "Hit Cancel button. Do nothing.");
 		    				}
@@ -388,15 +384,14 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 			    	Log.i(cTag, "Deleting childless group at position " + groupPosition);
 					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 			    	Log.i(cTag, "Deleting group id " + groupId);
-					Uri groupUri = ContentUris.withAppendedId(groupPersister.getContentUri(), groupId);			
-					getContentResolver().update(groupUri,values, null, null);		    
-			        showCancelToast(true);
+                    groupPersister.setAsDeleted(Id.create(groupId));
+			        showItemsDeletedToast(true);
 	    		}
 	        	break;
     	}
     }
 
-    private final void showCancelToast(boolean isGroup) {
+    private final void showItemsDeletedToast(boolean isGroup) {
     	String name = isGroup ? getListConfig().getGroupName(this)
     			: getListConfig().getChildName(this);
     	String text = getResources().getString(

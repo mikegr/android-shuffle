@@ -44,6 +44,7 @@ public abstract class AbstractDrilldownListActivity<G extends Entity> extends Ab
 		return (DrilldownListConfig<G>)getListConfig();
 	}
 	
+    
 	protected abstract void deleteChildren(Id groupId);
 	
     /**

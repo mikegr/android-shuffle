@@ -201,12 +201,10 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         mPersister.update(entity);
     }
 
-    protected  boolean hideEntity(Entity entity)
+    protected  boolean deleteEntity(Entity entity)
     {
-        return mPersister.hide(entity.getLocalId());
+        return mPersister.setAsDeleted(entity.getLocalId());
     }
-    
-
     
 	private Entity findEntityByLocalName(Collection<Entity> remoteEntities,
             Entity localEntity) {
@@ -231,7 +229,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
             remoteEntities.remove(remoteEntity.getTracksId());
         } else if (tracksEntities.isErrorFree()){
             // only delete entities if we didn't encounter errors parsing
-            hideEntity(localEntity);
+            deleteEntity(localEntity);
         }
     }
 
@@ -256,7 +254,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
         final long remoteModified = remoteEntity.getModifiedDate();
         final long localModified = localEntity.getModifiedDate();
         
-        if (remoteModified == localModified && remoteEntity.getHidden() == localEntity.getHidden())
+        if (remoteModified == localModified && remoteEntity.isDeleted() == localEntity.isDeleted())
             return;
 
         if (remoteModified >= localModified) {

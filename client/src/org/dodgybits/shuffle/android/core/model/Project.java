@@ -28,7 +28,7 @@ public class Project implements TracksEntity {
     private boolean mParallel;
     private boolean mArchived;
     private Id mTracksId = Id.NONE;
-	private boolean mHidden;
+	private boolean mDeleted;
 	
 
     private Project() {
@@ -66,6 +66,11 @@ public class Project implements TracksEntity {
     public final String getLocalName() {
         return mName;
     }
+    
+    @Override
+    public final boolean isDeleted() {
+        return mDeleted;
+    }
 
     public final boolean isInitialized() {
         if (TextUtils.isEmpty(mName)) {
@@ -74,13 +79,14 @@ public class Project implements TracksEntity {
         return true;
     }
     
+
     @Override
     public final String toString() {
         return String.format(
                 "[Project id=%1$s name='%2$s' defaultContextId='%3$s' " +
-                "parallel=%4$s archived=%5$s tracksId='%6$s']",
+                "parallel=%4$s archived=%5$s tracksId='%6$s' deleted=%7$s]",
                 mLocalId, mName, mDefaultContextId,
-                mParallel, mArchived, mTracksId);
+                mParallel, mArchived, mTracksId, mDeleted);
     }
     
     public static Builder newBuilder() {
@@ -189,23 +195,16 @@ public class Project implements TracksEntity {
             setParallel(project.mParallel);
             setArchived(project.mArchived);
             setTracksId(project.mTracksId);
-            setHidden(project.mHidden);
+            setDeleted(project.mDeleted);
             return this;
         }
 
 		@Override
-		public EntityBuilder<Project> setHidden(boolean value) {
-			result.mHidden = value;
+		public EntityBuilder<Project> setDeleted(boolean value) {
+			result.mDeleted = value;
 			return this;
 		}
 
     }
-
-
-	@Override
-	public boolean getHidden() {
-		return mHidden;
-	}
-
 
 }

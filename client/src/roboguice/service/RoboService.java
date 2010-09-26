@@ -10,7 +10,6 @@
  */
 package roboguice.service;
 
-import roboguice.activity.GuiceActivity;
 import roboguice.application.GuiceApplication;
 import roboguice.inject.ContextScope;
 import roboguice.inject.InjectorProvider;

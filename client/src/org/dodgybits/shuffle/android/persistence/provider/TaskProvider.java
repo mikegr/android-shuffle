@@ -22,7 +22,7 @@ public class TaskProvider extends AbstractCollectionProvider {
 		        Tasks.DETAILS,Tasks.CONTEXT_ID,Tasks.PROJECT_ID,Tasks.CREATED_DATE,
 				Tasks.MODIFIED_DATE,Tasks.START_DATE,Tasks.DUE_DATE,Tasks.TIMEZONE,
 				Tasks.CAL_EVENT_ID,Tasks.DISPLAY_ORDER,Tasks.COMPLETE,
-				Tasks.ALL_DAY,Tasks.HAS_ALARM,Tasks.TRACKS_ID, Tasks._ID, Tasks.HIDDEN);
+				Tasks.ALL_DAY,Tasks.HAS_ALARM,Tasks.TRACKS_ID, Tasks._ID, Tasks.DELETED);
 		
 		makeSearchable(Tasks._ID, 
 		        Tasks.DESCRIPTION, Tasks.DETAILS,
@@ -54,7 +54,6 @@ public class TaskProvider extends AbstractCollectionProvider {
 		public static final String CONTEXT_ID = "contextId";
 		public static final String PROJECT_ID = "projectId";
 		public static final String CREATED_DATE = "created";
-		public static final String MODIFIED_DATE = "modified";
 		public static final String START_DATE = "start";
 		public static final String DUE_DATE = "due";
 		public static final String TIMEZONE = "timezone";
@@ -63,8 +62,6 @@ public class TaskProvider extends AbstractCollectionProvider {
 		public static final String COMPLETE = "complete";
 		public static final String ALL_DAY = "allDay";
 		public static final String HAS_ALARM = "hasAlarm";
-		public static final String TRACKS_ID = "tracks_id";
-		public static final String HIDDEN = "hidden";
 
 		/**
 		 * Projection for all the columns of a task.
@@ -72,7 +69,7 @@ public class TaskProvider extends AbstractCollectionProvider {
 		public static final String[] cFullProjection = new String[] { _ID,
 				DESCRIPTION, DETAILS, PROJECT_ID, CONTEXT_ID, CREATED_DATE,
 				MODIFIED_DATE, START_DATE, DUE_DATE, TIMEZONE, CAL_EVENT_ID,
-				DISPLAY_ORDER, COMPLETE, ALL_DAY, HAS_ALARM, TRACKS_ID, HIDDEN };
+				DISPLAY_ORDER, COMPLETE, ALL_DAY, HAS_ALARM, TRACKS_ID, DELETED };
 
 
 	}

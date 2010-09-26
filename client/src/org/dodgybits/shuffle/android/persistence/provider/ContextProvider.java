@@ -1,7 +1,6 @@
 package org.dodgybits.shuffle.android.persistence.provider;
 
 import android.net.Uri;
-import android.provider.BaseColumns;
 
 public class ContextProvider extends AbstractCollectionProvider {
 	public static final String CONTEXT_TABLE_NAME = "context";
@@ -25,19 +24,23 @@ public class ContextProvider extends AbstractCollectionProvider {
 		        Contexts.NAME, 
 		        Contexts._ID, 
 		        Contexts.CONTENT_URI,
-		        Contexts._ID,Contexts.NAME, Contexts.COLOUR,
-				Contexts.ICON,Contexts.TRACKS_ID, Contexts.MODIFIED_DATE, Contexts.HIDDEN);
+		        Contexts._ID,Contexts.NAME, 
+		        Contexts.COLOUR,
+				Contexts.ICON,
+				Contexts.TRACKS_ID, 
+				Contexts.MODIFIED_DATE,
+				Contexts.DELETED);
 		
 		uriMatcher.addURI(AUTHORITY, "contextTasks", CONTEXT_TASKS);
 		restrictionBuilders.put(CONTEXT_TASKS, 
 		        new CustomElementFilterRestrictionBuilder(
-		                "context c, task t", "t.contextId = c._id and t.hidden = 0", "c._id"));
+		                "context c, task t", "t.contextId = c._id and t.deleted = 0", "c._id"));
         groupByBuilders.put(CONTEXT_TASKS, 
                 new StandardGroupByBuilder("c._id"));
 		setDefaultSortOrder(Contexts.DEFAULT_SORT_ORDER);
 		uriMatcher.addURI(AUTHORITY, "activeContexts", ACTIVE_CONTEXTS);
 		
-		restrictionBuilders.put(ACTIVE_CONTEXTS, new CustomElementFilterRestrictionBuilder("context c", "c.hidden = 0", "c._id"));
+		restrictionBuilders.put(ACTIVE_CONTEXTS, new CustomElementFilterRestrictionBuilder("context c", "c.deleted = 0", "c._id"));
 		
 	}
 
@@ -45,7 +48,7 @@ public class ContextProvider extends AbstractCollectionProvider {
 	/**
 	 * Contexts table
 	 */
-	public static final class Contexts implements BaseColumns {
+	public static final class Contexts implements ShuffleTable {
 		/**
 		 * The content:// style URL for this table
 		 */
@@ -65,14 +68,11 @@ public class ContextProvider extends AbstractCollectionProvider {
 		public static final String NAME = "name";
 		public static final String COLOUR = "colour";
 		public static final String ICON = "iconName";
-		public static final String TRACKS_ID = "tracks_id";
-		public static final String MODIFIED_DATE = "modified";
-		public static final String HIDDEN = "hidden";
 		/**
 		 * Projection for all the columns of a context.
 		 */
 		public static final String[] FULL_PROJECTION = new String[] { _ID,
-				NAME, COLOUR, ICON, TRACKS_ID, MODIFIED_DATE, HIDDEN };
+				NAME, COLOUR, ICON, TRACKS_ID, MODIFIED_DATE, DELETED };
 
 		public static final String TASK_COUNT = "count";
 		/**

@@ -770,7 +770,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private void setupContextSpinner() {
         Cursor contextCursor = getContentResolver().query(
         		ContextProvider.Contexts.CONTENT_URI, cContextProjection, 
-        		ContextProvider.Contexts.HIDDEN + "=0", null, ContextProvider.Contexts.NAME + " ASC");
+        		ContextProvider.Contexts.DELETED + "=0", null, ContextProvider.Contexts.NAME + " ASC");
         int arraySize = contextCursor.getCount() + 1;
         mContextIds = new long[arraySize];
         mContextIds[0] = 0;
@@ -791,7 +791,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private void setupProjectSpinner() {
         Cursor projectCursor = getContentResolver().query(
         		ProjectProvider.Projects.CONTENT_URI, cProjectProjection, 
-        		ProjectProvider.Projects.HIDDEN + " = 0", null, ProjectProvider.Projects.NAME + " ASC");
+        		ProjectProvider.Projects.DELETED + " = 0", null, ProjectProvider.Projects.NAME + " ASC");
         int arraySize = projectCursor.getCount() + 1;
         mProjectIds = new long[arraySize];
         mProjectIds[0] = 0;

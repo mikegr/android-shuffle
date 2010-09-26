@@ -104,7 +104,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
             .setProjectId(newTask.getProjectId())
             .setModifiedDate(newTask.getModifiedDate())
             .setStartDate(newTask.getStartDate())
-            .setHidden(newTask.getHidden())
+            .setDeleted(newTask.isDeleted())
             .setDueDate(newTask.getDueDate())
             .setAllDay(newTask.isAllDay())
             .setTracksId(newTask.getTracksId());
@@ -182,9 +182,9 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 	}
 	
 	@Override
-	protected boolean hideEntity(Task t) {
-		//Avoid extra calls if the entity is already hidden or completed.
-		if(t.isComplete() || t.getHidden()) 
+	protected boolean deleteEntity(Task t) {
+		//Avoid extra calls if the entity is already deleted or completed.
+		if(t.isComplete() || t.isDeleted()) 
 			return true;
 		
         WebResult result;
@@ -196,7 +196,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
 		}
         XmlPullParser parser = Xml.newPullParser();
         if(result.getStatus().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-        	super.hideEntity(t);
+        	super.deleteEntity(t);
         }
         if(result.getStatus().getStatusCode() != HttpStatus.SC_OK) {
         	return false;

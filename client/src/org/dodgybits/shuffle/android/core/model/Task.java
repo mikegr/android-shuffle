@@ -33,7 +33,7 @@ public final class Task implements TracksEntity {
     private String mTimezone;
     private boolean mAllDay;
     private boolean mHasAlarms;
-    private boolean mHidden;
+    private boolean mDeleted;
     private Id mCalendarEventId = Id.NONE;
     // 0-indexed order within a project.
     private int mOrder;
@@ -110,6 +110,12 @@ public final class Task implements TracksEntity {
     public final String getLocalName() {
         return mDescription;
     }
+    
+    @Override
+    public boolean isDeleted() {
+        return mDeleted;
+    }
+
 
     public final boolean isInitialized() {
         if (TextUtils.isEmpty(mDescription)) {
@@ -122,9 +128,9 @@ public final class Task implements TracksEntity {
     public final String toString() {
         return String.format(
                 "[Task id=%8$s description='%1$s' detail='%2$s' contextId=%3$s projectId=%4$s " +
-                "order=%5$s complete=%6$s tracksId=%7$s]",
+                "order=%5$s complete=%6$s tracksId='%7$s' deleted=%8$s]",
                 mDescription, mDetails, mContextId, mProjectId,
-                mOrder, mComplete, mTracksId, mLocalId);
+                mOrder, mComplete, mTracksId, mLocalId, mDeleted);
     }
     
     public static Builder newBuilder() {
@@ -294,6 +300,16 @@ public final class Task implements TracksEntity {
             return this;
         }
 
+        public boolean isDeleted() {
+            return result.mDeleted;
+        }
+        
+        @Override
+        public Builder setDeleted(boolean value) {
+            result.mDeleted = value;
+            return this;
+        }
+        
         public final boolean isInitialized() {
             return result.isInitialized();
         }
@@ -320,28 +336,17 @@ public final class Task implements TracksEntity {
             setDueDate(task.mDueDate);
             setTimezone(task.mTimezone);
             setAllDay(task.mAllDay);
-            setHidden(task.mHidden);
+            setDeleted(task.mDeleted);
             setHasAlarm(task.mHasAlarms);
             setCalendarEventId(task.mCalendarEventId);
             setOrder(task.mOrder);
             setComplete(task.mComplete);
             setTracksId(task.mTracksId);
+            setDeleted(task.mDeleted);
             return this;
         }
 
-		@Override
-		public Builder setHidden(boolean value) {
-			result.mHidden = value;
-			return this;
-		}
 
     }
-
-
-	@Override
-	public boolean getHidden() {
-		return mHidden;
-	}
-
 
 }

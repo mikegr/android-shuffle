@@ -62,7 +62,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 	@Override
 	protected Cursor createGroupQuery() {
 		Cursor cursor = managedQuery(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.FULL_PROJECTION,
-				ContextProvider.Contexts.HIDDEN + " = 0", null, ContextProvider.Contexts.NAME + " ASC");
+				ContextProvider.Contexts.DELETED + " = 0", null, ContextProvider.Contexts.NAME + " ASC");
 		mGroupIdColumnIndex = cursor.getColumnIndex(ContextProvider.Contexts._ID);
 		return cursor;
 	}
@@ -80,7 +80,8 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 	@Override
 	protected Cursor createChildQuery(long groupId) {
 		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.cFullProjection,
-				TaskProvider.Tasks.CONTEXT_ID + " = ? AND " + TaskProvider.Tasks.HIDDEN + "=0", new String[] {String.valueOf(groupId)}, 
+				TaskProvider.Tasks.CONTEXT_ID + " = ? AND " + TaskProvider.Tasks.DELETED + "=0", 
+				new String[] {String.valueOf(groupId)}, 
 				TaskProvider.Tasks.CREATED_DATE + " ASC");
 		mChildIdColumnIndex = cursor.getColumnIndex(TaskProvider.Tasks._ID);
 		return cursor;

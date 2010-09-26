@@ -14,6 +14,7 @@ import java.util.Map;
 import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Id;
+import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -98,19 +99,25 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
     }
 
     @Override
-    public boolean hide(Id id) {
-        E entity = findById(id);
-        if(entity == null) return false;
+    public boolean setAsDeleted(Id id) {
         ContentValues values = new ContentValues();
-        values.put("hidden", true);
-        values.put("modified", System.currentTimeMillis());
-        mResolver.update(getUri(entity), values, null, null);
+        values.put(ShuffleTable.DELETED, true);
+        values.put(ShuffleTable.MODIFIED_DATE, System.currentTimeMillis());
+        mResolver.update(getUri(id), values, null, null);
 
         return true;
     }
     
     @Override
-    public boolean delete(Id id) {
+    public int setAsDeleted(String selection, String[] selectionArgs) {
+        ContentValues values = new ContentValues();
+        values.put(ShuffleTable.DELETED, true);
+        values.put(ShuffleTable.MODIFIED_DATE, System.currentTimeMillis());
+        return mResolver.update(getContentUri(), values, selection, selectionArgs);
+    }
+    
+    @Override
+    public boolean deletePermanently(Id id) {
         Uri uri = getUri(id);
         boolean success = (mResolver.delete(uri, null, null) == 1);
         if (success) {

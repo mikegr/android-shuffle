@@ -31,6 +31,10 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 		static final String CONTENT_TYPE_PREFIX = CONTENT_TYPE_PRE_PREFIX+CONTENT_TYPE_PATH;
 		static final String CONTENT_ITEM_TYPE_PREFIX = CONTENT_ITEM_TYPE_PRE_PREFIX+CONTENT_TYPE_PATH;
 
+        public static final String MODIFIED_DATE = "modified";
+        public static final String TRACKS_ID = "tracks_id";
+        public static final String DELETED = "deleted";
+		
 	}
 
 	protected static final int SEARCH = 3;

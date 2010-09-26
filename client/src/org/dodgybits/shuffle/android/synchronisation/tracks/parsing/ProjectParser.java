@@ -39,17 +39,18 @@ public class ProjectParser extends Parser<Project> {
 						
 						if(v.equals("completed")) {
 							Log.d("projectparser",v);
-							specificBuilder.setHidden(true);
+							specificBuilder.setDeleted(true);
 							return true;
 						}
 						
+						// TODO convert hidden to new status field when added
 						if(v.equals("hidden")) {
-							specificBuilder.setHidden(true);
+							specificBuilder.setDeleted(true);
 							return true;
 						}
 						
 						if(v.equals("active")) {
-							specificBuilder.setHidden(false);
+							specificBuilder.setDeleted(false);
 							return true;
 						}
 						

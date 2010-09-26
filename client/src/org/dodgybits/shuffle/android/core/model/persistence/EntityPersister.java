@@ -24,8 +24,9 @@ public interface EntityPersister<E extends Entity> {
     
     void update(E e);
     
-    boolean hide(Id id);
+    boolean setAsDeleted(Id id);
+    int setAsDeleted(String selection, String[] selectionArgs);
 
-	boolean delete(Id id);
+	boolean deletePermanently(Id id);
     
 }

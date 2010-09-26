@@ -13,7 +13,7 @@ public interface Entity {
      */
     long getModifiedDate();
     
-    boolean getHidden();
+    boolean isDeleted();
     
     boolean isInitialized();
     

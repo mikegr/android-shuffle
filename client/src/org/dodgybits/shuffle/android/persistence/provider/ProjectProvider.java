@@ -1,7 +1,6 @@
 package org.dodgybits.shuffle.android.persistence.provider;
 
 import android.net.Uri;
-import android.provider.BaseColumns;
 
 public class ProjectProvider extends AbstractCollectionProvider {
 	   
@@ -26,16 +25,20 @@ public class ProjectProvider extends AbstractCollectionProvider {
 		        Projects.NAME,
 		        Projects._ID,
 		        Projects.CONTENT_URI,
-		        Projects._ID,Projects.NAME,
+		        Projects._ID,
+		        Projects.NAME,
 				Projects.DEFAULT_CONTEXT_ID, 
-				Projects.TRACKS_ID, Projects.MODIFIED_DATE,
-				Projects.PARALLEL, Projects.ARCHIVED, Projects.HIDDEN);
+				Projects.TRACKS_ID, 
+				Projects.MODIFIED_DATE,
+				Projects.PARALLEL, 
+				Projects.ARCHIVED, 
+				Projects.DELETED);
 		
 		makeSearchable(Projects._ID, Projects.NAME, Projects.NAME, Projects.NAME);
 		uriMatcher.addURI(AUTHORITY, "projectTasks", PROJECT_TASKS);
 		String idField = "p._id";
 		String tables = "project p, task t";
-		String restrictions = "t.projectId = p._id and t.hidden = 0";
+		String restrictions = "t.projectId = p._id and t.deleted = 0";
 
 		restrictionBuilders.put(PROJECT_TASKS, 
 		        new CustomElementFilterRestrictionBuilder(
@@ -46,14 +49,15 @@ public class ProjectProvider extends AbstractCollectionProvider {
 
 		uriMatcher.addURI(AUTHORITY, "activeProjects", ACTIVE_PROJECTS);
 		
-		restrictionBuilders.put(ACTIVE_PROJECTS, new CustomElementFilterRestrictionBuilder("project p", "p.hidden = 0", idField));
+		restrictionBuilders.put(ACTIVE_PROJECTS, 
+		        new CustomElementFilterRestrictionBuilder("project p", "p.deleted = 0", idField));
 		
 	}
 	
     /**
      * Projects table
      */
-    public static final class Projects implements BaseColumns {
+    public static final class Projects implements ShuffleTable {
         public static final String ARCHIVED = "archived";
         
         /**
@@ -67,13 +71,11 @@ public class ProjectProvider extends AbstractCollectionProvider {
          * The default sort order for this table
          */
         public static final String DEFAULT_SORT_ORDER = "name DESC";
-        public static final String MODIFIED_DATE = "modified";
         public static final String NAME = "name";
         
         public static final String PARALLEL = "parallel";
         public static final String TASK_COUNT = "count";
-        public static final String TRACKS_ID = "tracks_id";
-        public static final String HIDDEN = "hidden";
+
         /**
          * Projection for all the columns of a project.
          */
@@ -85,7 +87,7 @@ public class ProjectProvider extends AbstractCollectionProvider {
                 MODIFIED_DATE,
                 PARALLEL,
                 ARCHIVED,
-                HIDDEN
+                DELETED
         };
         /**
          * Projection for fetching the task count for each project.

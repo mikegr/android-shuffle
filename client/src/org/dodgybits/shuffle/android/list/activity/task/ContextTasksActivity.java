@@ -69,7 +69,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	    List<Id> ids = Arrays.asList(new Id[] {mContextId});
 	    TaskQuery query = TaskQuery.newBuilder()
 	        .setContexts(new ArrayList<Id>(ids))
-	        .setShowHidden(false)
+	        .setDeletedTasksVisible(false)
 	        .setSortOrder(TaskProvider.Tasks.CREATED_DATE + " ASC")
 	        .build();
 		return new AbstractTaskListConfig(query, mTaskPersister) {

@@ -25,6 +25,7 @@ import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.view.ContextView;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
+import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable;
 
 import com.google.inject.Inject;
 
@@ -65,13 +66,9 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	
 	@Override
 	protected void deleteChildren(Id groupId) {
-		ContentValues values = new ContentValues();
-		values.put("hidden", true);
-		values.put("modified", System.currentTimeMillis());
-		getContentResolver().update(
-		        getDrilldownListConfig().getChildPersister().getContentUri(),
-		        values,
-				TaskProvider.Tasks.CONTEXT_ID + " = ?", new String[] {String.valueOf(groupId)});
+	    getDrilldownListConfig().getChildPersister().setAsDeleted(
+	            TaskProvider.Tasks.CONTEXT_ID + " = ?", 
+	            new String[] {String.valueOf(groupId)});
 	}
 
 	@Override

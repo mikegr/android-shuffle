@@ -27,19 +27,12 @@ public class Context implements TracksEntity {
     private int mColourIndex;
     private String mIconName;
     private long mModifiedDate;
-    private boolean mHidden;
+    private boolean mDeleted;
     private Id mTracksId = Id.NONE;
 
     private Context() {
     };
 
-	@Override
-	public boolean getHidden() {
-		return mHidden;
-	}
-
-
-	
     public final Id getLocalId() {
         return mLocalId;
     }
@@ -68,6 +61,11 @@ public class Context implements TracksEntity {
         return mName;
     }
 
+    @Override
+    public boolean isDeleted() {
+        return mDeleted;
+    }
+    
     public final boolean isInitialized() {
         if (TextUtils.isEmpty(mName)) {
             return false;
@@ -79,9 +77,9 @@ public class Context implements TracksEntity {
     public final String toString() {
         return String.format(
                 "[Context id=%1$s name='%2$s' colourIndex='%3$s' " +
-                "iconName=%4$s tracksId='%5$s']",
+                "iconName=%4$s tracksId='%5$s' deleted=%6$s]",
                 mLocalId, mName, mColourIndex,
-                mIconName, mTracksId);
+                mIconName, mTracksId, mDeleted);
     }
     
     public static Builder newBuilder() {
@@ -180,13 +178,13 @@ public class Context implements TracksEntity {
             setIconName(context.mIconName);
             setModifiedDate(context.mModifiedDate);
             setTracksId(context.mTracksId);
-            setHidden(context.mHidden);
+            setDeleted(context.mDeleted);
             return this;
         }
 
 		@Override
-		public EntityBuilder<Context> setHidden(boolean value) {
-			result.mHidden = value;
+		public EntityBuilder<Context> setDeleted(boolean value) {
+			result.mDeleted = value;
 			return this;
 		}
 

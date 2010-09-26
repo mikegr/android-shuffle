@@ -70,7 +70,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
         List<Id> ids = Arrays.asList(new Id[] {mProjectId});
         TaskQuery query = TaskQuery.newBuilder()
             .setProjects(new ArrayList<Id>(ids))
-            .setShowHidden(false)
+            .setDeletedTasksVisible(false)
             .setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC")
             .build();
         return new AbstractTaskListConfig(query, mTaskPersister) {

@@ -6,7 +6,7 @@ import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider
 import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.NAME;
 import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.PARALLEL;
 import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.TRACKS_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.HIDDEN;
+import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.DELETED;
 import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
@@ -30,7 +30,7 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
     private static final int MODIFIED_INDEX = 4;
     private static final int PARALLEL_INDEX = 5;
     private static final int ARCHIVED_INDEX = 6;
-    private static final int HIDDEN_INDEX = 7;
+    private static final int DELETED_INDEX = 7;
     
     @Inject
     public ProjectPersister(ContentResolverProvider provider, Analytics analytics) {
@@ -48,7 +48,7 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
             .setDefaultContextId(readId(cursor, DEFAULT_CONTEXT_INDEX))
             .setParallel(readBoolean(cursor, PARALLEL_INDEX))
             .setArchived(readBoolean(cursor, ARCHIVED_INDEX))
-            .setHidden(readBoolean(cursor, HIDDEN_INDEX));
+            .setDeleted(readBoolean(cursor, DELETED_INDEX));
         
         return builder.build();
     }
@@ -62,7 +62,7 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
         writeId(values, DEFAULT_CONTEXT_ID, project.getDefaultContextId());
         writeBoolean(values, PARALLEL, project.isParallel());
         writeBoolean(values, ARCHIVED, project.isArchived());
-        writeBoolean(values, HIDDEN, project.getHidden());
+        writeBoolean(values, DELETED, project.isDeleted());
     }
     
     @Override

@@ -24,7 +24,7 @@ public class TaskQuery {
     private Boolean mComplete = null;
     private String mSortOrder;
 
-	private Boolean mShowHidden;
+	private Boolean mShowDeleted;
     
     public final PredefinedQuery getPredefinedQuery() {
         return mPredefined;
@@ -58,8 +58,8 @@ public class TaskQuery {
         return mSortOrder;
     }
     
-    public final Boolean showHidden() {
-    	return mShowHidden;
+    public final Boolean showDeleted() {
+    	return mShowDeleted;
     }
     
     public final boolean isInitialized() {
@@ -83,8 +83,8 @@ public class TaskQuery {
             expressions.add(TaskProvider.Tasks.COMPLETE + "=" + (mComplete ? "1" : "0"));
         }
         
-        if(mShowHidden != null) {
-        	expressions.add(TaskProvider.Tasks.HIDDEN + "=" + (mShowHidden ? "1":"0"));
+        if(mShowDeleted != null) {
+        	expressions.add(TaskProvider.Tasks.DELETED + "=" + (mShowDeleted ? "1":"0"));
         }
         
         return StringUtils.join(expressions, " AND ");
@@ -285,12 +285,12 @@ public class TaskQuery {
         public final boolean isInitialized() {
             return result.isInitialized();
         }
-        public Boolean showHidden() {
-        	return result.mShowHidden;
+        public Boolean isDeletedTasksVisible() {
+        	return result.mShowDeleted;
         }
         
-        public Builder setShowHidden(Boolean value) {
-        	result.mShowHidden = value;
+        public Builder setDeletedTasksVisible(Boolean value) {
+        	result.mShowDeleted = value;
         	return this;
         }
 
@@ -313,6 +313,7 @@ public class TaskQuery {
             setCreatedDateRange(query.mCreatedDateRange);
             setComplete(query.mComplete);
             setSortOrder(query.mSortOrder);
+            setDeletedTasksVisible(query.mShowDeleted);
             return this;
         }
         

@@ -18,10 +18,7 @@ public class V9Migration extends AbstractMigration {
 				+ "_id INTEGER PRIMARY KEY," 
 				+ "name TEXT,"
 				+ "colour INTEGER," 
-				+ "iconName TEXT," 
-				+ "tracks_id INTEGER," 
-				+ "modified INTEGER," 
-				+ "hidden INTEGER NOT NULL DEFAULT 0"
+				+ "iconName TEXT" 
 				+ ");");
 	}
 }

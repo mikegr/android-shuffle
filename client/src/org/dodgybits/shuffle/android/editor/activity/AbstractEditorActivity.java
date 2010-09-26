@@ -19,13 +19,14 @@ package org.dodgybits.shuffle.android.editor.activity;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledActivity;
 import org.dodgybits.shuffle.android.core.model.Entity;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
-import android.content.ContentValues;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -221,13 +222,12 @@ public abstract class AbstractEditorActivity<E extends Entity> extends
 		if (mState == State.STATE_EDIT && mCursor != null) {
 			mCursor.close();
 			mCursor = null;
-			ContentValues values = new ContentValues();
-			values.put("hidden", true);
-			values.put("modified", System.currentTimeMillis());
-			getContentResolver().update(mUri, values, null, null);
+			
+	        Id id = Id.create(ContentUris.parseId(mUri));
+	        getPersister().setAsDeleted(id);
 		}
 	}
-
+	
 	protected final void showSaveToast() {
 		String text;
 		if (mState == State.STATE_EDIT) {

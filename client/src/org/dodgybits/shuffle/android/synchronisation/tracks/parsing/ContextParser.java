@@ -35,7 +35,7 @@ public class ContextParser extends Parser<Context> {
 					@Override
 					public boolean apply(String value) {
 						boolean v = Boolean.parseBoolean(value);
-						specificBuilder.setHidden(v);
+						specificBuilder.setDeleted(v);
 						return true;
 					}
 			
