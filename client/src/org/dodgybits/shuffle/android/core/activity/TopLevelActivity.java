@@ -18,7 +18,7 @@ package org.dodgybits.shuffle.android.core.activity;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledListActivity;
-import org.dodgybits.shuffle.android.core.model.TaskQuery;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.util.Constants;
 import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
@@ -58,12 +58,16 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
     private static final int TOP_TASKS = 2;
     private static final int PROJECTS = 3;
     private static final int CONTEXTS = 4;
-
+    private static final int TICKLER = 5;
+    private static final int TRASH = 6;
+    
+    private static final int ITEM_COUNT = 7;
+    
     private static final String[] cProjection = new String[]{"_id"};
 
     private final static int WHATS_NEW_DIALOG = 0;
     
-    private Integer[] mIconIds = new Integer[5];
+    private Integer[] mIconIds = new Integer[ITEM_COUNT];
     private AsyncTask<?, ?, ?> mTask;
 
 
@@ -102,18 +106,22 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
         Log.d(cTag, "onResume+");
         super.onResume();
 
-        CursorGenerator[] generators = new CursorGenerator[5];
+        CursorGenerator[] generators = new CursorGenerator[ITEM_COUNT];
         generators[INBOX] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cInbox));
         generators[DUE_TASKS] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cDueToday));
         generators[TOP_TASKS] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks));
         generators[PROJECTS] = new UriCursorGenerator(ProjectProvider.Projects.ACTIVE_PROJECTS);
         generators[CONTEXTS] = new UriCursorGenerator(ContextProvider.Contexts.ACTIVE_CONTEXTS);
+        generators[TICKLER] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cTickler));
+        generators[TRASH] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cTrash));
 
         mIconIds[INBOX] = R.drawable.inbox;
         mIconIds[DUE_TASKS] = R.drawable.due_actions;
         mIconIds[TOP_TASKS] = R.drawable.next_actions;
         mIconIds[PROJECTS] = R.drawable.projects;
         mIconIds[CONTEXTS] = R.drawable.contexts;
+        mIconIds[TICKLER] = R.drawable.ic_media_pause;
+        mIconIds[TRASH] = R.drawable.user_trash;
 
         mTask = new CalculateCountTask().execute(generators);
 
@@ -165,19 +173,19 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
     }
     
     private class TaskCursorGenerator implements CursorGenerator {
-        private TaskQuery mTaskQuery;
+        private TaskSelector mTaskSelector;
         
-        public TaskCursorGenerator(TaskQuery query) {
-            mTaskQuery = query;
+        public TaskCursorGenerator(TaskSelector query) {
+            mTaskSelector = query;
         }
         
         public Cursor generate() {
             return getContentResolver().query(
                     TaskProvider.Tasks.CONTENT_URI, 
                     cProjection, 
-                    mTaskQuery.getSelection(TopLevelActivity.this), 
-                    mTaskQuery.getSelectionArgs(), 
-                    mTaskQuery.getSortOrder());
+                    mTaskSelector.getSelection(TopLevelActivity.this), 
+                    mTaskSelector.getSelectionArgs(), 
+                    mTaskSelector.getSortOrder());
         }
     }
      

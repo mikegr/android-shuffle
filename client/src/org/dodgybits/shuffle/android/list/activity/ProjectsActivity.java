@@ -16,17 +16,13 @@
 
 package org.dodgybits.shuffle.android.list.activity;
 
-import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.list.activity.task.ProjectTasksActivity;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.ProjectListConfig;
 import org.dodgybits.shuffle.android.list.view.ProjectView;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
-import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
-import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -63,13 +59,6 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
 	    return mListConfig;
 	}
 
-    @Override
-    protected void deleteChildren(Id groupId) {
-        getDrilldownListConfig().getChildPersister().setAsDeleted(
-                TaskProvider.Tasks.PROJECT_ID + " = ?", 
-                new String[] {String.valueOf(groupId)});
-    }
-	
 	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
 		ListAdapter adapter =

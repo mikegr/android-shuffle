@@ -43,10 +43,7 @@ public abstract class AbstractDrilldownListActivity<G extends Entity> extends Ab
 	{
 		return (DrilldownListConfig<G>)getListConfig();
 	}
-	
     
-	protected abstract void deleteChildren(Id groupId);
-	
     /**
      * Permanently delete the selected item.
      */
@@ -59,8 +56,6 @@ public abstract class AbstractDrilldownListActivity<G extends Entity> extends Ab
     				if (which == DialogInterface.BUTTON1) {
     			    	Log.i(cTag, "Deleting group id " + groupId);
     			    	AbstractDrilldownListActivity.super.deleteItem(groupId);
-    			    	Log.i(cTag, "Deleting all child for group id " + groupId);
-    			    	deleteChildren(groupId);
     				} else {
     					Log.d(cTag, "Hit Cancel button. Do nothing.");
     				}

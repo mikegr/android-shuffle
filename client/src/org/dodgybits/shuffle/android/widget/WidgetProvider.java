@@ -27,12 +27,12 @@ import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.DefaultEntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
@@ -140,7 +140,7 @@ public class WidgetProvider extends AppWidgetProvider {
         
         RemoteViews views = new RemoteViews(androidContext.getPackageName(), R.layout.widget);
         
-        TaskQuery query = StandardTaskQueries.getQuery(queryName);
+        TaskSelector query = StandardTaskQueries.getQuery(queryName);
         if (query == null) return;
         
         int titleId = getIdentifier(androidContext, "title_" + queryName, cStringType);
@@ -155,7 +155,7 @@ public class WidgetProvider extends AppWidgetProvider {
         
         Cursor taskCursor = androidContext.getContentResolver().query(
                 TaskProvider.Tasks.CONTENT_URI, 
-                TaskProvider.Tasks.cFullProjection, 
+                TaskProvider.Tasks.FULL_PROJECTION, 
                 query.getSelection(androidContext), 
                 query.getSelectionArgs(), 
                 query.getSortOrder());

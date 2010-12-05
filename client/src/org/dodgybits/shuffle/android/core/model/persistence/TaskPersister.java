@@ -140,11 +140,11 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     
     @Override
     public String[] getFullProjection() {
-        return TaskProvider.Tasks.cFullProjection;
+        return TaskProvider.Tasks.FULL_PROJECTION;
     }
     
     public int deleteCompletedTasks() {
-        int deletedRows = setAsDeleted(TaskProvider.Tasks.COMPLETE + " = 1", null);
+        int deletedRows = moveToTrash(TaskProvider.Tasks.COMPLETE + " = 1", null);
         Log.d(cTag, "Deleting " + deletedRows + " completed tasks.");
         
         Map<String, String> params = new HashMap<String,String>(mFlurryParams);

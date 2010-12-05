@@ -29,6 +29,7 @@ public class Project implements TracksEntity {
     private boolean mArchived;
     private Id mTracksId = Id.NONE;
 	private boolean mDeleted;
+	private boolean mActive;
 	
 
     private Project() {
@@ -72,13 +73,17 @@ public class Project implements TracksEntity {
         return mDeleted;
     }
 
-    public final boolean isInitialized() {
+    public final boolean isValid() {
         if (TextUtils.isEmpty(mName)) {
             return false;
         }
         return true;
     }
     
+    @Override
+    public boolean isActive() {
+        return mActive;
+    }
 
     @Override
     public final String toString() {
@@ -172,9 +177,19 @@ public class Project implements TracksEntity {
             result.mTracksId = value;
             return this;
         }
+        
+        public boolean isActive() {
+            return result.mActive;
+        }
+        
+        public Builder setActive(boolean value) {
+            result.mActive = value;
+            return this;
+        }
+        
 
         public final boolean isInitialized() {
-            return result.isInitialized();
+            return result.isValid();
         }
 
         public Project build() {
@@ -196,6 +211,7 @@ public class Project implements TracksEntity {
             setArchived(project.mArchived);
             setTracksId(project.mTracksId);
             setDeleted(project.mDeleted);
+            setActive(project.mActive);
             return this;
         }
 

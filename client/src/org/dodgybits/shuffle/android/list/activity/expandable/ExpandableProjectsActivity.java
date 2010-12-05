@@ -90,7 +90,7 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	@Override
 	protected Cursor createChildQuery(long groupId) {
-		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.cFullProjection,
+		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.FULL_PROJECTION,
 				TaskProvider.Tasks.PROJECT_ID +  " = ? AND " + TaskProvider.Tasks.DELETED + "=0", new String[] {String.valueOf(groupId)}, 
 				TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC");
 		mChildIdColumnIndex = cursor.getColumnIndex(TaskProvider.Tasks._ID);

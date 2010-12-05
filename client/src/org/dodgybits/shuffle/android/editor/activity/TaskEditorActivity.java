@@ -16,7 +16,6 @@
 
 package org.dodgybits.shuffle.android.editor.activity;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TimeZone;
@@ -28,6 +27,7 @@ import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.util.Constants;
+import org.dodgybits.shuffle.android.core.util.OSUtils;
 import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
@@ -48,7 +48,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -133,6 +132,9 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
 	private @InjectView(R.id.completed_entry) View mCompleteEntry;
     private CheckBox mCompletedCheckBox;
     
+    private @InjectView(R.id.deleted_entry) View mDeletedEntry;
+    private CheckBox mDeletedCheckBox;
+    
 	private @InjectView(R.id.gcal_entry) View mUpdateCalendarEntry;
     private CheckBox mUpdateCalendarCheckBox;
 	private TextView mCalendarLabel;
@@ -171,6 +173,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         } else if (mState == State.STATE_INSERT) {
             setTitle(R.string.title_new_task);
             mCompleteEntry.setVisibility(View.GONE);
+            mDeletedEntry.setVisibility(View.GONE);
             // see if the context or project were suggested for this task
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
@@ -280,6 +283,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         } else {
             mDueTime.set(task.getDueDate());
         }
+        
 
         setWhenDefaults();   
         populateWhen();
@@ -293,6 +297,9 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         
         mCompletedCheckBox.setChecked(task.isComplete());
 
+        mDeletedEntry.setVisibility(task.isDeleted() ? View.VISIBLE : View.GONE);
+        mDeletedCheckBox.setChecked(task.isDeleted());
+        
         updateCalendarPanel();
         
         // Load reminders (if there are any)
@@ -340,7 +347,9 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         final boolean complete = mCompletedCheckBox.isChecked();
         final boolean hasAlarms = !mReminderItems.isEmpty();
         final int order = calculateTaskOrder(projectId);
-
+        final boolean deleted = mDeletedCheckBox.isChecked();
+        final boolean active = true;
+        
         builder
             .setDescription(description)
             .setModifiedDate(modified)
@@ -349,6 +358,8 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             .setProjectId(projectId)
             .setAllDay(allDay)
             .setComplete(complete)
+            .setDeleted(deleted)
+            .setActive(active)
             .setHasAlarm(hasAlarms)
             .setOrder(order);
 
@@ -476,7 +487,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         }
         
         Uri baseUri;
-        if (osAtLeastFroyo()) {
+        if (OSUtils.osAtLeastFroyo()) {
             baseUri = Uri.parse("content://com.android.calendar/events");
         } else {
             baseUri = Uri.parse("content://calendar/events"); 
@@ -491,18 +502,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         }
 
         return eventUri;
-    }
-    
-    private boolean osAtLeastFroyo() {
-        boolean isFroyoOrAbove = false;
-        try {
-            Field field = Build.VERSION.class.getDeclaredField("SDK_INT");
-            int version = field.getInt(null);
-            isFroyoOrAbove = version >= 8;
-        } catch (Exception e) {
-            // ignore exception - field not available
-        }
-        return isFroyoOrAbove;
     }
     
     private Uri addCalendarEntry(ContentValues values, Id oldId, Uri baseUri) {
@@ -689,7 +688,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         // Get the task if we're editing
     	if (mUri != null && mState == State.STATE_EDIT)
     	{
-	        mCursor = managedQuery(mUri, TaskProvider.Tasks.cFullProjection, null, null, null);
+	        mCursor = managedQuery(mUri, TaskProvider.Tasks.FULL_PROJECTION, null, null, null);
 	        if (mCursor == null || mCursor.getCount() == 0) {
 	            // The cursor is empty. This can happen if the event was deleted.
 	            finish();
@@ -713,6 +712,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         mCompleteEntry.setOnClickListener(this);
         mCompleteEntry.setOnFocusChangeListener(this);
         mCompletedCheckBox = (CheckBox) mCompleteEntry.findViewById(R.id.completed_entry_checkbox);
+        
+        mDeletedEntry.setOnClickListener(this);
+        mDeletedEntry.setOnFocusChangeListener(this);
+        mDeletedCheckBox = (CheckBox) mDeletedEntry.findViewById(R.id.deleted_entry_checkbox);
     	
         mUpdateCalendarEntry.setOnClickListener(this);
         mUpdateCalendarEntry.setOnFocusChangeListener(this);

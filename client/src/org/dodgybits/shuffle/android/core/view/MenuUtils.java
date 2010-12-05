@@ -25,7 +25,9 @@ import org.dodgybits.shuffle.android.list.activity.expandable.ExpandableContexts
 import org.dodgybits.shuffle.android.list.activity.expandable.ExpandableProjectsActivity;
 import org.dodgybits.shuffle.android.list.activity.task.InboxActivity;
 import org.dodgybits.shuffle.android.list.activity.task.TabbedDueActionsActivity;
+import org.dodgybits.shuffle.android.list.activity.task.TicklerActivity;
 import org.dodgybits.shuffle.android.list.activity.task.TopTasksActivity;
+import org.dodgybits.shuffle.android.list.activity.task.TrashActivity;
 import org.dodgybits.shuffle.android.preference.activity.PreferencesActivity;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import org.dodgybits.shuffle.android.synchronisation.tracks.activity.SynchronizeActivity;
@@ -62,17 +64,21 @@ public class MenuUtils {
     public static final int TOP_TASKS_ID = Menu.FIRST + 12;
     public static final int PROJECT_ID = Menu.FIRST + 13;
     public static final int CONTEXT_ID = Menu.FIRST + 14;
-    public static final int PREFERENCE_ID = Menu.FIRST + 15;
-    public static final int HELP_ID = Menu.FIRST + 16;
-    public static final int SYNC_ID = Menu.FIRST + 17;
-    public static final int SEARCH_ID = Menu.FIRST + 18;
+    public static final int TICKLER_ID = Menu.FIRST + 15;
+    public static final int TRASH_ID = Menu.FIRST + 16;
+    
+    public static final int PREFERENCE_ID = Menu.FIRST + 20;
+    public static final int HELP_ID = Menu.FIRST + 21;
+    public static final int SYNC_ID = Menu.FIRST + 22;
+    public static final int SEARCH_ID = Menu.FIRST + 23;
     public static final int CLEAN_INBOX_ID = Menu.FIRST + 50;
+    public static final int PERMANENTLY_DELETE_ID = Menu.FIRST + 51;
 
     // Menu item for activity specific items
-    public static final int COMPLETE_ID = Menu.FIRST + 100;
-    public static final int MOVE_UP_ID = Menu.FIRST + 101;
-    public static final int MOVE_DOWN_ID = Menu.FIRST + 102;
-
+    public static final int PUT_BACK_ID = Menu.FIRST + 100;
+    public static final int COMPLETE_ID = Menu.FIRST + 101;
+    public static final int MOVE_UP_ID = Menu.FIRST + 102;
+    public static final int MOVE_DOWN_ID = Menu.FIRST + 103;
     
     // Editor menus
     private static final int SAVE_ORDER = 1;
@@ -82,9 +88,11 @@ public class MenuUtils {
     
     // Context menus
     private static final int EDIT_ORDER = 1;
-    private static final int COMPLETE_ORDER = 3;
-    private static final int MOVE_UP_ORDER = 4;
-    private static final int MOVE_DOWN_ORDER = 5;
+    
+    private static final int PUT_BACK_ORDER = 3;
+    private static final int COMPLETE_ORDER = 4;
+    private static final int MOVE_UP_ORDER = 5;
+    private static final int MOVE_DOWN_ORDER = 6;
     private static final int DELETE_ORDER = 10;
     
     // List menus
@@ -92,6 +100,7 @@ public class MenuUtils {
     private static final int INSERT_CHILD_ORDER = 1;
     private static final int INSERT_GROUP_ORDER = 2;
     private static final int CLEAN_INBOX_ORDER = 101;
+    private static final int PERMANENTLY_DELETE_ORDER = 102;
     
     
     // General menus
@@ -131,6 +140,10 @@ public class MenuUtils {
         	.setChecked(PROJECT_ID == currentViewMenuId);
         viewMenu.add(Menu.NONE, CONTEXT_ID, 4, R.string.title_context)
         	.setChecked(CONTEXT_ID == currentViewMenuId);
+        viewMenu.add(Menu.NONE, TICKLER_ID, 5, R.string.title_context)
+            .setChecked(TICKLER_ID == currentViewMenuId);
+        viewMenu.add(Menu.NONE, TRASH_ID, 6, R.string.title_context)
+            .setChecked(TRASH_ID == currentViewMenuId);
 	}
 	
 	public static void addEditorMenuItems(Menu menu, int state) {
@@ -198,6 +211,10 @@ public class MenuUtils {
         }		
 	}
 	
+	public static void addPutBackMenuItem(Menu menu) {
+	    menu.add(Menu.CATEGORY_ALTERNATIVE, PUT_BACK_ID, PUT_BACK_ORDER, R.string.menu_put_back);
+	}
+	
 	public static void addCompleteMenuItem(Menu menu) {
         menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, COMPLETE_ORDER, R.string.menu_complete)
         	.setIcon(R.drawable.btn_check_on).setAlphabeticShortcut('x');
@@ -208,11 +225,15 @@ public class MenuUtils {
         	.setIcon(android.R.drawable.ic_menu_delete).setAlphabeticShortcut('d');
     }
 
-
 	public static void addCleanInboxMenuItem(Menu menu) {
         menu.add(Menu.NONE, CLEAN_INBOX_ID, CLEAN_INBOX_ORDER, R.string.clean_inbox_button_title)
         	.setIcon(R.drawable.edit_clear).setAlphabeticShortcut('i');
     }
+	
+	public static void addPermanentlyDeleteMenuItem(Menu menu) {
+	    menu.add(Menu.NONE, PERMANENTLY_DELETE_ID, PERMANENTLY_DELETE_ORDER, R.string.permanently_delete_button_title)
+	    .setIcon(R.drawable.icon_delete);
+	}
 
 	public static void addMoveMenuItems(Menu menu, boolean enableUp, boolean enableDown) {
 		if (enableUp) {
@@ -282,6 +303,15 @@ public class MenuUtils {
         		if (finishCurrentActivity) activity.finish();
         	}
         	return true;
+        case TICKLER_ID:
+            Log.d(cTag, "Switching to tickler list");
+            activity.startActivity(new Intent(activity, TicklerActivity.class));
+            return true;
+        case TRASH_ID:
+            Log.d(cTag, "Bringing up trash");
+            activity.startActivity(new Intent(activity, TrashActivity.class));
+            return true;
+        	
         case PREFERENCE_ID:
         	Log.d(cTag, "Bringing up preferences");
         	activity.startActivity(new Intent(activity, PreferencesActivity.class));

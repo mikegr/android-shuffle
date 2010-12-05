@@ -2,6 +2,7 @@ package org.dodgybits.shuffle.android.persistence.provider;
 
 import android.content.ContentValues;
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 public class TaskProvider extends AbstractCollectionProvider {
 	
@@ -12,17 +13,33 @@ public class TaskProvider extends AbstractCollectionProvider {
     private static final String URL_COLLECTION_NAME = "tasks";
 	
 	public TaskProvider() {
-		super(AUTHORITY,
-		        URL_COLLECTION_NAME,
-		        TASK_TABLE_NAME,
-		        UPDATE_INTENT,
-		        Tasks.DESCRIPTION,Tasks._ID,
-		        Tasks.CONTENT_URI,
-		        Tasks.DESCRIPTION,
-		        Tasks.DETAILS,Tasks.CONTEXT_ID,Tasks.PROJECT_ID,Tasks.CREATED_DATE,
-				Tasks.MODIFIED_DATE,Tasks.START_DATE,Tasks.DUE_DATE,Tasks.TIMEZONE,
-				Tasks.CAL_EVENT_ID,Tasks.DISPLAY_ORDER,Tasks.COMPLETE,
-				Tasks.ALL_DAY,Tasks.HAS_ALARM,Tasks.TRACKS_ID, Tasks._ID, Tasks.DELETED);
+        super(
+                AUTHORITY,           // authority
+                URL_COLLECTION_NAME, // collectionNamePlural
+                TASK_TABLE_NAME,     // tableName
+                UPDATE_INTENT,       // update intent action
+                Tasks.DESCRIPTION,   // primary key
+                BaseColumns._ID,     // id field
+                Tasks.CONTENT_URI,   // content URI
+                BaseColumns._ID,     // fields...
+                Tasks.DESCRIPTION,
+                Tasks.DETAILS,
+                Tasks.CONTEXT_ID,
+                Tasks.PROJECT_ID,
+                Tasks.CREATED_DATE,
+                Tasks.START_DATE,
+                Tasks.DUE_DATE,
+                Tasks.TIMEZONE,
+                Tasks.CAL_EVENT_ID,
+                Tasks.DISPLAY_ORDER,
+                Tasks.COMPLETE,
+                Tasks.ALL_DAY,
+                Tasks.HAS_ALARM,
+                ShuffleTable.TRACKS_ID, 
+                ShuffleTable.MODIFIED_DATE,
+                ShuffleTable.DELETED,
+                ShuffleTable.ACTIVE
+                );
 		
 		makeSearchable(Tasks._ID, 
 		        Tasks.DESCRIPTION, Tasks.DETAILS,
@@ -66,10 +83,10 @@ public class TaskProvider extends AbstractCollectionProvider {
 		/**
 		 * Projection for all the columns of a task.
 		 */
-		public static final String[] cFullProjection = new String[] { _ID,
+		public static final String[] FULL_PROJECTION = new String[] { _ID,
 				DESCRIPTION, DETAILS, PROJECT_ID, CONTEXT_ID, CREATED_DATE,
 				MODIFIED_DATE, START_DATE, DUE_DATE, TIMEZONE, CAL_EVENT_ID,
-				DISPLAY_ORDER, COMPLETE, ALL_DAY, HAS_ALARM, TRACKS_ID, DELETED };
+				DISPLAY_ORDER, COMPLETE, ALL_DAY, HAS_ALARM, TRACKS_ID, DELETED, ACTIVE };
 
 
 	}
@@ -85,17 +102,13 @@ public class TaskProvider extends AbstractCollectionProvider {
 
 		@Override
 		protected void addDefaultValues(ContentValues values) {
+		    super.addDefaultValues(values);
+		    
+		    // Make sure that the fields are all set
+		    
 			Long now = System.currentTimeMillis();
-
-			// Make sure that the fields are all set
 			if (!values.containsKey(Tasks.CREATED_DATE)) {
 				values.put(Tasks.CREATED_DATE, now);
-			}
-			if (!values.containsKey(Tasks.MODIFIED_DATE)) {
-				values.put(Tasks.MODIFIED_DATE, now);
-			}
-			if (!values.containsKey(Tasks.DESCRIPTION)) {
-				values.put(Tasks.DESCRIPTION, "");
 			}
 			if (!values.containsKey(Tasks.DETAILS)) {
 				values.put(Tasks.DETAILS, "");

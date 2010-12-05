@@ -66,6 +66,25 @@ public class AlertUtils {
 		builder.create().show();
 	}
 	
+	public static void showEmptyTrashWarning(final Context context, final OnClickListener buttonListener)
+	{
+        CharSequence title = context.getString(R.string.warning_title);
+        CharSequence deleteButtonText = context.getString(R.string.menu_delete);
+        CharSequence cancelButtonText = context.getString(R.string.cancel_button_title);
+        OnCancelListener cancelListener = new OnCancelListener() {
+            public void onCancel(DialogInterface dialog) {
+                Log.d(cTag, "Cancelled delete. Do nothing.");
+            }
+        };
+        Builder builder = new Builder(context);
+        builder.setTitle(title).setIcon(R.drawable.dialog_warning)
+            .setMessage(R.string.emptyTrashWarning)
+            .setNegativeButton(cancelButtonText, buttonListener)
+            .setPositiveButton(deleteButtonText, buttonListener)
+            .setOnCancelListener(cancelListener);
+        builder.create().show();
+	}
+	
 	public static void showWarning(final Context context, final String message) {
 		CharSequence title = context.getString(R.string.warning_title);
 		CharSequence buttonText = context.getString(R.string.ok_button_title);

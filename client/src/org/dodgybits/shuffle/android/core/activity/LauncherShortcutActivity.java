@@ -83,12 +83,12 @@ public class LauncherShortcutActivity extends FlurryEnabledListActivity {
     	if (position == NEW_TASK) {
     		shortcutIntent = new Intent(Intent.ACTION_INSERT, TaskProvider.Tasks.CONTENT_URI);
     		iconResource = Intent.ShortcutIconResource.fromContext(
-                    this,  R.drawable.add_task_3d);
+                    this,  R.drawable.shuffle_icon_add);
     	} else {
     		shortcutIntent = new Intent(this, LauncherShortcutActivity.class);
     		shortcutIntent.putExtra(cScreenId, position);
     		iconResource = Intent.ShortcutIconResource.fromContext(
-                    this,  R.drawable.app_icon_3d);
+                    this,  R.drawable.shuffle_icon);
     	}
 
         Intent intent = new Intent();

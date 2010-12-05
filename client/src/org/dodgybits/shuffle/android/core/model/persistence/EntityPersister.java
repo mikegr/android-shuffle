@@ -24,8 +24,10 @@ public interface EntityPersister<E extends Entity> {
     
     void update(E e);
     
-    boolean setAsDeleted(Id id);
-    int setAsDeleted(String selection, String[] selectionArgs);
+    boolean moveToTrash(Id id);
+    int moveToTrash(String selection, String[] selectionArgs);
+
+    int emptyTrash();
 
 	boolean deletePermanently(Id id);
     

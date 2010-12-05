@@ -1,6 +1,7 @@
 package org.dodgybits.shuffle.android.persistence.provider;
 
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 public class ContextProvider extends AbstractCollectionProvider {
 	public static final String CONTEXT_TABLE_NAME = "context";
@@ -14,22 +15,24 @@ public class ContextProvider extends AbstractCollectionProvider {
 	
     private static final String URL_COLLECTION_NAME = "contexts";
 
-
 	public ContextProvider() {
 		super(
-		        AUTHORITY,
-		        URL_COLLECTION_NAME,
-		        CONTEXT_TABLE_NAME,
-                UPDATE_INTENT,
+		        AUTHORITY,           // authority
+		        URL_COLLECTION_NAME, // collectionNamePlural
+		        CONTEXT_TABLE_NAME,  // tableName
+                UPDATE_INTENT,       // update intent action
+		        Contexts.NAME,       // primary key
+		        BaseColumns._ID,     // id field
+		        Contexts.CONTENT_URI,// content URI
+		        BaseColumns._ID,     // fields...
 		        Contexts.NAME, 
-		        Contexts._ID, 
-		        Contexts.CONTENT_URI,
-		        Contexts._ID,Contexts.NAME, 
 		        Contexts.COLOUR,
 				Contexts.ICON,
-				Contexts.TRACKS_ID, 
-				Contexts.MODIFIED_DATE,
-				Contexts.DELETED);
+				ShuffleTable.TRACKS_ID, 
+				ShuffleTable.MODIFIED_DATE,
+				ShuffleTable.DELETED,
+				ShuffleTable.ACTIVE
+				);
 		
 		uriMatcher.addURI(AUTHORITY, "contextTasks", CONTEXT_TASKS);
 		restrictionBuilders.put(CONTEXT_TASKS, 
@@ -37,6 +40,7 @@ public class ContextProvider extends AbstractCollectionProvider {
 		                "context c, task t", "t.contextId = c._id and t.deleted = 0", "c._id"));
         groupByBuilders.put(CONTEXT_TASKS, 
                 new StandardGroupByBuilder("c._id"));
+        elementInserters.put(COLLECTION_MATCH_ID, new ContextInserter());
 		setDefaultSortOrder(Contexts.DEFAULT_SORT_ORDER);
 		uriMatcher.addURI(AUTHORITY, "activeContexts", ACTIVE_CONTEXTS);
 		
@@ -71,8 +75,16 @@ public class ContextProvider extends AbstractCollectionProvider {
 		/**
 		 * Projection for all the columns of a context.
 		 */
-		public static final String[] FULL_PROJECTION = new String[] { _ID,
-				NAME, COLOUR, ICON, TRACKS_ID, MODIFIED_DATE, DELETED };
+		public static final String[] FULL_PROJECTION = new String[] { 
+		    _ID,
+		    NAME, 
+		    COLOUR, 
+		    ICON, 
+		    TRACKS_ID, 
+		    MODIFIED_DATE, 
+		    DELETED, 
+		    ACTIVE 
+		    };
 
 		public static final String TASK_COUNT = "count";
 		/**
@@ -81,5 +93,14 @@ public class ContextProvider extends AbstractCollectionProvider {
 		public static final String[] FULL_TASK_PROJECTION = new String[] { _ID,
 				TASK_COUNT, };
 	}
+	
+    private class ContextInserter extends ElementInserterImpl {
+
+        public ContextInserter() {
+            super(Contexts.NAME);
+        }
+
+    }
+	
 
 }

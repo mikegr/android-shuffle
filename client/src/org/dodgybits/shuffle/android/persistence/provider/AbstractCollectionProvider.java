@@ -21,7 +21,7 @@ import android.util.Log;
 
 public abstract class AbstractCollectionProvider extends ContentProvider {
 	public static final String cDatabaseName = "shuffle.db";
-	static final int cDatabaseVersion = 15;
+	static final int cDatabaseVersion = 16;
 	public static final String cTag = "ShuffleProvider";
 	
 	public static interface ShuffleTable extends BaseColumns {
@@ -34,7 +34,7 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
         public static final String MODIFIED_DATE = "modified";
         public static final String TRACKS_ID = "tracks_id";
         public static final String DELETED = "deleted";
-		
+        public static final String ACTIVE = "active";
 	}
 
 	protected static final int SEARCH = 3;
@@ -403,7 +403,18 @@ public abstract class AbstractCollectionProvider extends ContentProvider {
 
 
 		protected void addDefaultValues(ContentValues values) {
-			if (!values.containsKey(primaryKey)) {
+            Long now = System.currentTimeMillis();
+            if (!values.containsKey(ShuffleTable.MODIFIED_DATE)) {
+                values.put(ShuffleTable.MODIFIED_DATE, now);
+            }
+            if (!values.containsKey(ShuffleTable.DELETED)) {
+                values.put(ShuffleTable.DELETED, 0);
+            }
+            if (!values.containsKey(ShuffleTable.ACTIVE)) {
+                values.put(ShuffleTable.ACTIVE, 1);
+            }
+            
+            if (!values.containsKey(primaryKey)) {
 				values.put(primaryKey, "");
 			}
 		}

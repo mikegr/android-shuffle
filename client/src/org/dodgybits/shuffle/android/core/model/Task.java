@@ -33,6 +33,7 @@ public final class Task implements TracksEntity {
     private String mTimezone;
     private boolean mAllDay;
     private boolean mHasAlarms;
+    private boolean mActive;
     private boolean mDeleted;
     private Id mCalendarEventId = Id.NONE;
     // 0-indexed order within a project.
@@ -43,6 +44,7 @@ public final class Task implements TracksEntity {
     private Task() {
     };
     
+    @Override
     public final Id getLocalId() {
         return mLocalId;
     }
@@ -67,6 +69,7 @@ public final class Task implements TracksEntity {
         return mCreatedDate;
     }
 
+    @Override
     public final long getModifiedDate() {
         return mModifiedDate;
     }
@@ -115,9 +118,14 @@ public final class Task implements TracksEntity {
     public boolean isDeleted() {
         return mDeleted;
     }
+    
+    @Override
+    public boolean isActive() {
+        return mActive;
+    }
 
-
-    public final boolean isInitialized() {
+    @Override
+    public final boolean isValid() {
         if (TextUtils.isEmpty(mDescription)) {
             return false;
         }
@@ -128,9 +136,9 @@ public final class Task implements TracksEntity {
     public final String toString() {
         return String.format(
                 "[Task id=%8$s description='%1$s' detail='%2$s' contextId=%3$s projectId=%4$s " +
-                "order=%5$s complete=%6$s tracksId='%7$s' deleted=%8$s]",
+                "order=%5$s complete=%6$s tracksId='%7$s' deleted=%8$s active=%9$s]",
                 mDescription, mDetails, mContextId, mProjectId,
-                mOrder, mComplete, mTracksId, mLocalId, mDeleted);
+                mOrder, mComplete, mTracksId, mLocalId, mDeleted, mActive);
     }
     
     public static Builder newBuilder() {
@@ -310,8 +318,17 @@ public final class Task implements TracksEntity {
             return this;
         }
         
+        public boolean isActive() {
+            return result.mActive;
+        }
+        
+        public Builder setActive(boolean value) {
+            result.mActive = value;
+            return this;
+        }
+        
         public final boolean isInitialized() {
-            return result.isInitialized();
+            return result.isValid();
         }
 
         public Task build() {
@@ -343,6 +360,7 @@ public final class Task implements TracksEntity {
             setComplete(task.mComplete);
             setTracksId(task.mTracksId);
             setDeleted(task.mDeleted);
+            setActive(task.mActive);
             return this;
         }
 

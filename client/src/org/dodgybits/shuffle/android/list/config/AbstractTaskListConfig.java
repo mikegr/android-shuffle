@@ -18,9 +18,9 @@ package org.dodgybits.shuffle.android.list.config;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.app.Activity;
@@ -30,9 +30,9 @@ import android.database.Cursor;
 public abstract class AbstractTaskListConfig implements TaskListConfig {
 
     private TaskPersister mPersister;
-    private TaskQuery mTaskQuery;
+    private TaskSelector mTaskSelector;
     
-    public AbstractTaskListConfig(TaskQuery query, TaskPersister persister) {
+    public AbstractTaskListConfig(TaskSelector query, TaskPersister persister) {
         mPersister = persister;
         setTaskQuery(query);
     }
@@ -67,23 +67,23 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     }
     
     @Override
-    public TaskQuery getTaskQuery() {
-        return mTaskQuery;
+    public TaskSelector getTaskQuery() {
+        return mTaskSelector;
     }
     
     @Override
-    public void setTaskQuery(TaskQuery query) {
-        mTaskQuery = query;
+    public void setTaskQuery(TaskSelector query) {
+        mTaskSelector = query;
     }
     
     @Override
     public Cursor createQuery(Activity activity) {
         return activity.managedQuery(
                 getTaskPersister().getContentUri(), 
-                TaskProvider.Tasks.cFullProjection, 
-                mTaskQuery.getSelection(activity), 
-                mTaskQuery.getSelectionArgs(), 
-                mTaskQuery.getSortOrder());
+                TaskProvider.Tasks.FULL_PROJECTION, 
+                mTaskSelector.getSelection(activity), 
+                mTaskSelector.getSelectionArgs(), 
+                mTaskSelector.getSortOrder());
     }
 	
 }

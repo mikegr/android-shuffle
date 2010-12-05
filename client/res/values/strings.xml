@@ -25,6 +25,8 @@
     <string name="title_due_today">Due Today</string>
     <string name="title_due_next_week">Due Next Week</string>
     <string name="title_due_next_month">Due Next Month</string>
+    <string name="title_tickler">Tickler</string>
+    <string name="title_trash">Trash</string>
     <string name="title_new_task">New action</string>
     <string name="title_edit_task">Edit action</string>
     <string name="title_view_task">View action</string>
@@ -51,6 +53,7 @@
     <string name="menu_save">Save</string>
     <string name="menu_save_and_add">Save and New</string>
     <string name="menu_delete">Delete</string>
+    <string name="menu_put_back">Put back</string>
     <string name="menu_complete">Toggle complete</string>
     <string name="menu_move_up">Move up</string>
     <string name="menu_move_down">Move down</string>
@@ -151,6 +154,7 @@ allow that, you can turn it off under Settings.</string>
     <string name="update_gcal_title">Update Google Calendar</string>
     <string name="update_gcal_detail">Updated entry will load after saving</string>
     <string name="completed_title">Completed</string>
+    <string name="deleted_title">Deleted</string>
     <string name="clear_title">Clear dates</string>
 
 	<!--  project & context edit screens -->
@@ -246,14 +250,20 @@ allow that, you can turn it off under Settings.</string>
     <string name="clean_inbox_button_title">Clean up Inbox</string>
     <string name="clean_slate_button_title">Delete</string>
 
+    <string name="permanently_delete_button_title">Permanently delete</string>
+
     <!-- Toast displayed when an item is created -->
     <string name="itemCreatedToast"><xliff:g id="itemName">%s</xliff:g> created.</string>
 
+    <string name="emptyTrashWarning">Permanently deleted all items in Trash?</string>
+    <string name="emptyTrashToast">Permanently deleted actions <xliff:g id="entityCount">%s</xliff:g> actions, projects and contexts.</string>
+    
     <!-- Toast displayed when an item is saved -->
     <string name="itemSavedToast"><xliff:g id="itemName">%s</xliff:g> saved.</string>
 
     <!-- Toast displayed when an item is saved -->
     <string name="itemDeletedToast"><xliff:g id="itemName">%s</xliff:g> deleted.</string>
+
     
    <!-- synchronization-->
     <string name="synchronizing">Synchronizing with Tracks</string>

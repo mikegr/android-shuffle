@@ -322,7 +322,7 @@ public class PreferencesCreateBackupActivity extends FlurryEnabledActivity
         {
 	    	Log.d(cTag, "Writing tasks");
             Cursor cursor = getContentResolver().query(
-            		TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.cFullProjection, 
+            		TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.FULL_PROJECTION, 
             		null, null, null);
             int i = 0;
             int total = cursor.getCount();

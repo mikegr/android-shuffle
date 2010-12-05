@@ -56,7 +56,7 @@ public abstract class Parser<E extends TracksEntity> {
                 E entity = result.getResult();
                 
                 
-                if (entity != null && entity.isInitialized()) {
+                if (entity != null && entity.isValid()) {
                     entities.put(entity.getTracksId(), entity);
                 }
                 

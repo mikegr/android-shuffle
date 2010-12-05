@@ -18,18 +18,12 @@ package org.dodgybits.shuffle.android.list.activity;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.list.activity.task.ContextTasksActivity;
 import org.dodgybits.shuffle.android.list.config.ContextListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.view.ContextView;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
-import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
-import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable;
 
-import com.google.inject.Inject;
-
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -37,6 +31,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
+
+import com.google.inject.Inject;
 
 /**
  * Display list of contexts with task children.
@@ -64,13 +60,6 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
 	    return mListConfig;
 	}
 	
-	@Override
-	protected void deleteChildren(Id groupId) {
-	    getDrilldownListConfig().getChildPersister().setAsDeleted(
-	            TaskProvider.Tasks.CONTEXT_ID + " = ?", 
-	            new String[] {String.valueOf(groupId)});
-	}
-
 	@Override
 	protected ListAdapter createListAdapter(Cursor cursor) {
 		ListAdapter adapter =

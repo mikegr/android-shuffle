@@ -37,67 +37,67 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 
-public class InboxActivity extends AbstractTaskListActivity {
+public class TicklerActivity extends AbstractTaskListActivity {
 
     @Inject private TaskPersister mTaskPersister;
 
-	@Override
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
-		
-		mOtherButton.setText(R.string.clean_inbox_button_title);
-		Drawable cleanIcon = getResources().getDrawable(R.drawable.edit_clear);
-		cleanIcon.setBounds(0, 0, 24, 24);
-		mOtherButton.setCompoundDrawables(cleanIcon, null, null, null);
-		mOtherButton.setVisibility(View.VISIBLE);
-	}
-	
-	@Override
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        
+        mOtherButton.setText(R.string.permanently_delete_button_title);
+        Drawable cleanIcon = getResources().getDrawable(R.drawable.edit_clear);
+        cleanIcon.setBounds(0, 0, 24, 24);
+        mOtherButton.setCompoundDrawables(cleanIcon, null, null, null);
+        mOtherButton.setVisibility(View.VISIBLE);
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	MenuUtils.addCleanInboxMenuItem(menu);
+//        MenuUtils.addCleanInboxMenuItem(menu);
         super.onCreateOptionsMenu(menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case MenuUtils.CLEAN_INBOX_ID:
-        	doCleanup();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//        case MenuUtils.CLEAN_INBOX_ID:
+//            doCleanup();
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     protected ListConfig<Task> createListConfig()
-	{
-        TaskSelector query = StandardTaskQueries.getQuery(StandardTaskQueries.cInbox);
-		return new AbstractTaskListConfig(query, mTaskPersister) {
+    {
+        TaskSelector query = StandardTaskQueries.getQuery(StandardTaskQueries.cTickler);
+        return new AbstractTaskListConfig(query, mTaskPersister) {
 
-		    public int getCurrentViewMenuId() {
-		    	return MenuUtils.INBOX_ID;
-		    }
-		    
-		    public String createTitle(ContextWrapper context)
-		    {
-		    	return context.getString(R.string.title_inbox);
-		    }
-			
-		};
-	}
-	    
-	@Override
-	protected void onOtherButtonClicked() {
-		doCleanup();
-	}
-	
-	private void doCleanup() {
-    	Preferences.cleanUpInbox(this);
-        Toast.makeText(this, R.string.clean_inbox_message, Toast.LENGTH_SHORT).show();
-    	// need to restart the activity since the query has changed
-    	// mCursor.requery() not enough
-    	startActivity(new Intent(this, InboxActivity.class));
-		finish();
-	}
+            public int getCurrentViewMenuId() {
+                return MenuUtils.INBOX_ID;
+            }
+            
+            public String createTitle(ContextWrapper context)
+            {
+                return context.getString(R.string.title_tickler);
+            }
+            
+        };
+    }
+        
+    @Override
+    protected void onOtherButtonClicked() {
+        deletePermanently();
+    }
+    
+    private void deletePermanently() {
+//        Preferences.cleanUpInbox(this);
+//        Toast.makeText(this, R.string.clean_inbox_message, Toast.LENGTH_SHORT).show();
+//        // need to restart the activity since the query has changed
+//        // mCursor.requery() not enough
+//        startActivity(new Intent(this, InboxActivity.class));
+//        finish();
+    }
 }

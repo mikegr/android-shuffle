@@ -79,7 +79,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 
 	@Override
 	protected Cursor createChildQuery(long groupId) {
-		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.cFullProjection,
+		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.FULL_PROJECTION,
 				TaskProvider.Tasks.CONTEXT_ID + " = ? AND " + TaskProvider.Tasks.DELETED + "=0", 
 				new String[] {String.valueOf(groupId)}, 
 				TaskProvider.Tasks.CREATED_DATE + " ASC");

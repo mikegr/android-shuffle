@@ -99,21 +99,35 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
     }
 
     @Override
-    public boolean setAsDeleted(Id id) {
+    public boolean moveToTrash(Id id) {
         ContentValues values = new ContentValues();
         values.put(ShuffleTable.DELETED, true);
         values.put(ShuffleTable.MODIFIED_DATE, System.currentTimeMillis());
-        mResolver.update(getUri(id), values, null, null);
-
-        return true;
+        return (mResolver.update(getUri(id), values, null, null) == 1);
     }
     
     @Override
-    public int setAsDeleted(String selection, String[] selectionArgs) {
+    public int moveToTrash(String selection, String[] selectionArgs) {
         ContentValues values = new ContentValues();
         values.put(ShuffleTable.DELETED, true);
         values.put(ShuffleTable.MODIFIED_DATE, System.currentTimeMillis());
         return mResolver.update(getContentUri(), values, selection, selectionArgs);
+    }
+    
+    public boolean putBack(Id id) {
+        ContentValues values = new ContentValues();
+        values.put(ShuffleTable.DELETED, false);
+        values.put(ShuffleTable.MODIFIED_DATE, System.currentTimeMillis());
+        return (mResolver.update(getUri(id), values, null, null) == 1);
+    }
+    
+    @Override
+    public int emptyTrash() {
+        int rowsDeleted = mResolver.delete(getContentUri(), "deleted = 1", null);
+        Map<String, String> params = new HashMap<String, String>(mFlurryParams);
+        params.put(cFlurryCountParam, String.valueOf(rowsDeleted));
+        mAnalytics.onEvent(cFlurryDeleteEntityEvent, params);
+        return rowsDeleted;
     }
     
     @Override
@@ -134,7 +148,7 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
     abstract protected String getEntityName();
     
     private void validate(E e) {
-        if (e == null || !e.isInitialized()) {
+        if (e == null || !e.isValid()) {
             throw new IllegalArgumentException("Cannot persist uninitialised entity " + e);
         }
     }

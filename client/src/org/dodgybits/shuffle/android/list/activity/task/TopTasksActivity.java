@@ -18,8 +18,8 @@ package org.dodgybits.shuffle.android.list.activity.task;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.TaskQuery;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
@@ -41,7 +41,7 @@ public class TopTasksActivity extends AbstractTaskListActivity {
 
 	protected ListConfig<Task> createListConfig()
 	{
-        TaskQuery query = StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks);
+        TaskSelector query = StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks);
     
         return new AbstractTaskListConfig(query, mTaskPersister) {
 	    

@@ -1,9 +1,11 @@
 package org.dodgybits.shuffle.android.list.config;
 
+import static org.dodgybits.shuffle.android.core.model.persistence.selector.Flag.yes;
+
 import java.util.HashMap;
 
-import org.dodgybits.shuffle.android.core.model.TaskQuery;
-import org.dodgybits.shuffle.android.core.model.TaskQuery.PredefinedQuery;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector.PredefinedQuery;
 import org.dodgybits.shuffle.android.list.activity.task.InboxActivity;
 import org.dodgybits.shuffle.android.list.activity.task.TabbedDueActionsActivity;
 import org.dodgybits.shuffle.android.list.activity.task.TopTasksActivity;
@@ -18,35 +20,43 @@ public class StandardTaskQueries {
     public static final String cDueNextWeek = "due_next_week";
     public static final String cDueNextMonth = "due_next_month";
     public static final String cNextTasks = "next_tasks";
+    public static final String cTickler = "tickler";
+    public static final String cTrash = "trash";
     
-    private static final TaskQuery cInboxQuery = 
-        TaskQuery.newBuilder().setPredefined(PredefinedQuery.inbox).setDeletedTasksVisible(false).build();
+    private static final TaskSelector cInboxQuery = 
+        TaskSelector.newBuilder().setPredefined(PredefinedQuery.inbox).build();
         
-    private static final TaskQuery cDueTodayQuery = 
-        TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueToday).setDeletedTasksVisible(false).build();
+    private static final TaskSelector cDueTodayQuery = 
+        TaskSelector.newBuilder().setPredefined(PredefinedQuery.dueToday).build();
 
-    private static final TaskQuery cDueNextWeekQuery = 
-        TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueNextWeek).setDeletedTasksVisible(false).build();
+    private static final TaskSelector cDueNextWeekQuery = 
+        TaskSelector.newBuilder().setPredefined(PredefinedQuery.dueNextWeek).build();
 
-    private static final TaskQuery cDueNextMonthQuery = 
-        TaskQuery.newBuilder().setPredefined(PredefinedQuery.dueNextMonth).setDeletedTasksVisible(false).build();
+    private static final TaskSelector cDueNextMonthQuery = 
+        TaskSelector.newBuilder().setPredefined(PredefinedQuery.dueNextMonth).build();
     
-    private static final TaskQuery cNextTasksQuery = 
-        TaskQuery.newBuilder()
-        .setDeletedTasksVisible(false)
-            .setPredefined(PredefinedQuery.nextTasks)
-            .build();
+    private static final TaskSelector cNextTasksQuery = 
+        TaskSelector.newBuilder().setPredefined(PredefinedQuery.nextTasks).build();
 
-    private static final HashMap<String,TaskQuery> cQueryMap = new HashMap<String,TaskQuery>();
+    private static final TaskSelector cTicklerQuery = 
+        TaskSelector.newBuilder().setPredefined(PredefinedQuery.tickler).build();
+    
+    private static final TaskSelector cTrashQuery = 
+        TaskSelector.newBuilder().setDeleted(yes).build();
+    
+
+    private static final HashMap<String,TaskSelector> cQueryMap = new HashMap<String,TaskSelector>();
     static {
         cQueryMap.put(cInbox, cInboxQuery);
         cQueryMap.put(cDueToday, cDueTodayQuery);
         cQueryMap.put(cDueNextWeek, cDueNextWeekQuery);
         cQueryMap.put(cDueNextMonth, cDueNextMonthQuery);
         cQueryMap.put(cNextTasks, cNextTasksQuery);
+        cQueryMap.put(cTickler, cTicklerQuery);
+        cQueryMap.put(cTrash, cTrashQuery);
     }
     
-    public static TaskQuery getQuery(String name) {
+    public static TaskSelector getQuery(String name) {
         return cQueryMap.get(name);
     }
     

@@ -1,6 +1,7 @@
 package org.dodgybits.shuffle.android.persistence.provider;
 
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 public class ProjectProvider extends AbstractCollectionProvider {
 	   
@@ -17,23 +18,25 @@ public class ProjectProvider extends AbstractCollectionProvider {
 	
 
 	public ProjectProvider() {
-		super(
-		        AUTHORITY,
-		        URL_COLLECTION_NAME, 
-		        PROJECT_TABLE_NAME,
-                UPDATE_INTENT,
-		        Projects.NAME,
-		        Projects._ID,
-		        Projects.CONTENT_URI,
-		        Projects._ID,
-		        Projects.NAME,
-				Projects.DEFAULT_CONTEXT_ID, 
-				Projects.TRACKS_ID, 
-				Projects.MODIFIED_DATE,
-				Projects.PARALLEL, 
-				Projects.ARCHIVED, 
-				Projects.DELETED);
-		
+        super(
+                AUTHORITY,           // authority
+                URL_COLLECTION_NAME, // collectionNamePlural
+                PROJECT_TABLE_NAME,  // tableName
+                UPDATE_INTENT,       // update intent action
+                Projects.NAME,       // primary key
+                BaseColumns._ID,     // id field
+                Projects.CONTENT_URI,// content URI
+                BaseColumns._ID,     // fields...
+                Projects.NAME, 
+                Projects.DEFAULT_CONTEXT_ID,
+                Projects.PARALLEL,
+                Projects.ARCHIVED,
+                ShuffleTable.TRACKS_ID, 
+                ShuffleTable.MODIFIED_DATE,
+                ShuffleTable.DELETED,
+                ShuffleTable.ACTIVE
+                );
+	    
 		makeSearchable(Projects._ID, Projects.NAME, Projects.NAME, Projects.NAME);
 		uriMatcher.addURI(AUTHORITY, "projectTasks", PROJECT_TASKS);
 		String idField = "p._id";
@@ -45,6 +48,7 @@ public class ProjectProvider extends AbstractCollectionProvider {
 		                tables, restrictions, idField));
 		groupByBuilders.put(PROJECT_TASKS, 
 		        new StandardGroupByBuilder("p._id"));
+        elementInserters.put(COLLECTION_MATCH_ID, new ProjectInserter());
 		setDefaultSortOrder(Projects.DEFAULT_SORT_ORDER);
 
 		uriMatcher.addURI(AUTHORITY, "activeProjects", ACTIVE_PROJECTS);
@@ -87,7 +91,8 @@ public class ProjectProvider extends AbstractCollectionProvider {
                 MODIFIED_DATE,
                 PARALLEL,
                 ARCHIVED,
-                DELETED
+                DELETED,
+                ACTIVE
         };
         /**
          * Projection for fetching the task count for each project.
@@ -97,5 +102,14 @@ public class ProjectProvider extends AbstractCollectionProvider {
             TASK_COUNT,
         };
     }
+    
+    private class ProjectInserter extends ElementInserterImpl {
+
+        public ProjectInserter() {
+            super(Projects.NAME);
+        }
+        
+    }
+    
     
 }

@@ -29,11 +29,9 @@ import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.ExpandableListConfig;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemListener;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
-import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -351,7 +349,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 	        	Log.d(cTag, "Deleting child at position " + groupPosition + "," + childPosition);
 				final long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
 		    	Log.i(cTag, "Deleting child id " + childId);
-		    	childPersister.setAsDeleted(Id.create(childId));
+		    	childPersister.moveToTrash(Id.create(childId));
 		        showItemsDeletedToast(false);
 		        refreshChildCount();
 		        getExpandableListView().invalidate();
@@ -367,11 +365,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 		    				if (which == DialogInterface.BUTTON1) {
 		    					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 		    			    	Log.i(cTag, "Deleting group id " + groupId);
-		    			    	groupPersister.setAsDeleted(Id.create(groupId));
-		    			    	Log.i(cTag, "Deleting all child for group id " + groupId);
-		    			    	childPersister.setAsDeleted(
-		    			    	        getListConfig().getGroupIdColumnName() + " = ?", 
-		    			    	        new String[] {String.valueOf(groupId)});
+		    			    	groupPersister.moveToTrash(Id.create(groupId));
 		    			        showItemsDeletedToast(true);
 		    				} else {
 		    					Log.d(cTag, "Hit Cancel button. Do nothing.");
@@ -384,7 +378,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 			    	Log.i(cTag, "Deleting childless group at position " + groupPosition);
 					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
 			    	Log.i(cTag, "Deleting group id " + groupId);
-                    groupPersister.setAsDeleted(Id.create(groupId));
+                    groupPersister.moveToTrash(Id.create(groupId));
 			        showItemsDeletedToast(true);
 	    		}
 	        	break;

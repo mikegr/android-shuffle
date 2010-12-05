@@ -203,7 +203,7 @@ public abstract class Synchronizer<Entity extends TracksEntity> implements IProj
 
     protected  boolean deleteEntity(Entity entity)
     {
-        return mPersister.setAsDeleted(entity.getLocalId());
+        return mPersister.moveToTrash(entity.getLocalId());
     }
     
 	private Entity findEntityByLocalName(Collection<Entity> remoteEntities,

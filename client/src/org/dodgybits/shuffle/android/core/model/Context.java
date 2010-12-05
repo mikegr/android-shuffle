@@ -28,6 +28,7 @@ public class Context implements TracksEntity {
     private String mIconName;
     private long mModifiedDate;
     private boolean mDeleted;
+    private boolean mActive;
     private Id mTracksId = Id.NONE;
 
     private Context() {
@@ -66,7 +67,13 @@ public class Context implements TracksEntity {
         return mDeleted;
     }
     
-    public final boolean isInitialized() {
+    @Override
+    public boolean isActive() {
+        return mActive;
+    }
+    
+    
+    public final boolean isValid() {
         if (TextUtils.isEmpty(mName)) {
             return false;
         }
@@ -77,9 +84,9 @@ public class Context implements TracksEntity {
     public final String toString() {
         return String.format(
                 "[Context id=%1$s name='%2$s' colourIndex='%3$s' " +
-                "iconName=%4$s tracksId='%5$s' deleted=%6$s]",
+                "iconName=%4$s tracksId='%5$s' active=%6$s deleted=%7$s]",
                 mLocalId, mName, mColourIndex,
-                mIconName, mTracksId, mDeleted);
+                mIconName, mTracksId, mActive, mDeleted);
     }
     
     public static Builder newBuilder() {
@@ -157,8 +164,17 @@ public class Context implements TracksEntity {
             return this;
         }
 
+        public boolean isActive() {
+            return result.mActive;
+        }
+        
+        public Builder setActive(boolean value) {
+            result.mActive = value;
+            return this;
+        }
+        
         public final boolean isInitialized() {
-            return result.isInitialized();
+            return result.isValid();
         }
 
         public Context build() {
@@ -179,6 +195,7 @@ public class Context implements TracksEntity {
             setModifiedDate(context.mModifiedDate);
             setTracksId(context.mTracksId);
             setDeleted(context.mDeleted);
+            setActive(context.mActive);
             return this;
         }
 

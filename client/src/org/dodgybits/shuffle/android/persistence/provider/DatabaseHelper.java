@@ -13,6 +13,7 @@ import org.dodgybits.shuffle.android.persistence.migrations.V11Migration;
 import org.dodgybits.shuffle.android.persistence.migrations.V12Migration;
 import org.dodgybits.shuffle.android.persistence.migrations.V13Migration;
 import org.dodgybits.shuffle.android.persistence.migrations.V14Migration;
+import org.dodgybits.shuffle.android.persistence.migrations.V15Migration;
 import org.dodgybits.shuffle.android.persistence.migrations.V1Migration;
 import org.dodgybits.shuffle.android.persistence.migrations.V9Migration;
 
@@ -32,6 +33,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
 		ALL_MIGRATIONS.put(12, new V12Migration());
 		ALL_MIGRATIONS.put(13, new V13Migration());
 		ALL_MIGRATIONS.put(14, new V14Migration());
+		ALL_MIGRATIONS.put(15, new V15Migration());
 	}
 
 	DatabaseHelper(Context context) {

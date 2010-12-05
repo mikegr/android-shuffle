@@ -18,6 +18,7 @@ package org.dodgybits.shuffle.android.preference.activity;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledPreferenceActivity;
+import org.dodgybits.shuffle.android.core.util.OSUtils;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.content.AsyncQueryHandler;
@@ -36,6 +37,8 @@ public class PreferencesActivity extends FlurryEnabledPreferenceActivity {
     
     private static final Uri CALENDAR_CONTENT_URI =
         Uri.parse("content://calendar/calendars"); // Calendars.CONTENT_URI
+    private static final Uri CALENDAR_CONTENT_URI_FROYO_PLUS =
+        Uri.parse("content://com.android.calendar/calendars"); // Calendars.CONTENT_URI
     
     private static final String[] CALENDARS_PROJECTION = new String[] {
         "_id", // Calendars._ID,
@@ -63,14 +66,26 @@ public class PreferencesActivity extends FlurryEnabledPreferenceActivity {
         setCalendarPreferenceEntries();
     }
 
+    private Uri getCalendarContentUri() {
+        Uri uri;
+        if(OSUtils.osAtLeastFroyo()) {
+            uri = CALENDAR_CONTENT_URI_FROYO_PLUS;
+        } else {
+            uri = CALENDAR_CONTENT_URI;
+        }
+        return uri;
+    }
+            
+    
     private void setCalendarPreferenceEntries() {
         mPreference = (ListPreference)findPreference(Preferences.CALENDAR_ID_KEY);
         // disable the pref until we load the values (if at all)
         mPreference.setEnabled(false);
         
         // Start a query in the background to read the list of calendars
+        
         mQueryHandler = new QueryHandler(getContentResolver());
-        mQueryHandler.startQuery(0, null, CALENDAR_CONTENT_URI, CALENDARS_PROJECTION,
+        mQueryHandler.startQuery(0, null, getCalendarContentUri(), CALENDARS_PROJECTION,
                 CALENDARS_WHERE, null /* selection args */, CALENDARS_SORT);
     }
     

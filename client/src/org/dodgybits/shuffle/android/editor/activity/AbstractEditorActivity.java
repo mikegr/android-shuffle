@@ -224,7 +224,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends
 			mCursor = null;
 			
 	        Id id = Id.create(ContentUris.parseId(mUri));
-	        getPersister().setAsDeleted(id);
+	        getPersister().moveToTrash(id);
 		}
 	}
 	
