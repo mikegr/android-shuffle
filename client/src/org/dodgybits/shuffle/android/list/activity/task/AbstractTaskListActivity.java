@@ -16,11 +16,15 @@
 
 package org.dodgybits.shuffle.android.list.activity.task;
 
+import android.preference.ListPreference;
+import android.widget.*;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.activity.AbstractListActivity;
+import org.dodgybits.shuffle.android.list.activity.ListPreferenceActivity;
 import org.dodgybits.shuffle.android.list.config.TaskListConfig;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemListener;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
@@ -39,11 +43,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -53,12 +52,14 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 	implements SwipeListItemListener, View.OnClickListener {
 
 	private static final String cTag = "AbstractTaskListActivity";
-	
+	private static final int cFilterConfig = 676;
+
     @Inject Provider<TaskView> mTaskViewProvider;
 	
 	@InjectView(R.id.add_task_button) @Nullable Button mAddTaskButton;
 	protected Button mOtherButton;
-	
+	protected ImageButton mFilterButton;
+
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -81,6 +82,9 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 			mOtherButton.setCompoundDrawables(deleteIcon, null, null, null);
 			mOtherButton.setVisibility(View.VISIBLE);
 			mOtherButton.setOnClickListener(this);
+
+            mFilterButton = (ImageButton) findViewById(R.id.filter_button);
+            mFilterButton.setOnClickListener(this);
 		}
 	}
 	
@@ -120,6 +124,10 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
             case R.id.other_button:
             	onOtherButtonClicked();
                 break;
+
+            case R.id.filter_button:
+                onFilterButtonClicked();
+                break;
         }
     }
     
@@ -132,8 +140,25 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 		CharSequence message = getString(R.string.clean_task_message, new Object[] {deletedTasks});
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-    	
-	@Override
+
+    protected void onFilterButtonClicked() {
+        Intent intent = new Intent(this, ListPreferenceActivity.class);
+        ((TaskListConfig)getListConfig()).getListPreferenceSettings().addToIntent(intent);
+        startActivityForResult(intent, cFilterConfig);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == cFilterConfig) {
+            Log.d(cTag, "Got result " + resultCode);
+            updateCursor();
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected Intent getClickIntent(Uri uri) {
     	return new Intent(Intent.ACTION_EDIT, uri);
     }
@@ -181,7 +206,28 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 	    	getTaskPersister().toggleTaskComplete(c);
     	}
     }
-	
+
+    protected TaskListConfig getTaskListConfig() {
+        return (TaskListConfig)getListConfig();
+    }
+
+    protected void updateCursor() {
+        SimpleCursorAdapter adapter = (SimpleCursorAdapter)getListAdapter();
+        Cursor oldCursor = adapter.getCursor();
+        if (oldCursor != null) {
+            // changeCursor always closes the cursor,
+            // so need to stop managing the old one first
+            stopManagingCursor(oldCursor);
+        }
+
+        getTaskListConfig().setTaskSelector(createTaskQuery());
+        Cursor cursor = getListConfig().createQuery(this);
+        adapter.changeCursor(cursor);
+        setTitle(getListConfig().createTitle(this));
+    }
+
+    abstract protected TaskSelector createTaskQuery();
+
 	protected boolean showTaskContext() {
 		return true;
 	}

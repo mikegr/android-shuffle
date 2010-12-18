@@ -188,5 +188,35 @@
         <item>"2880"</item>
         <item>"10080"</item>
     </string-array>
-    
+
+    <string-array name="list_preferences_flag_values" translatable="false">
+        <item>ignored</item>
+        <item>yes</item>
+        <item>no</item>
+    </string-array>
+
+    <string-array name="list_preferences_active_labels" translatable="false">
+        <item>Show All</item>
+        <item>Show On Hold Only</item>
+        <item>Hide On Hold</item>
+    </string-array>
+
+    <string-array name="list_preferences_deleted_labels" translatable="false">
+        <item>Show All</item>
+        <item>Show Deleted Only</item>
+        <item>Hide Deleted</item>
+    </string-array>
+
+    <string-array name="list_preferences_pending_labels" translatable="false">
+        <item>Show All</item>
+        <item>Show Pending Only</item>
+        <item>Hide Pending</item>
+    </string-array>
+
+    <string-array name="list_preferences_completed_labels" translatable="false">
+        <item>Show All</item>
+        <item>Show Completed Only</item>
+        <item>Hide Completed</item>
+    </string-array>
+
 </resources>

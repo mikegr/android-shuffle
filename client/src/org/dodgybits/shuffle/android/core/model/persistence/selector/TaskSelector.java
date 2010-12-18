@@ -11,6 +11,7 @@ import java.util.List;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.util.StringUtils;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.text.format.DateUtils;
@@ -25,7 +26,8 @@ public class TaskSelector extends AbstractEntitySelector {
     private Flag mComplete = ignored;
     private Flag mDeleted = no;
     private Flag mActive = yes;
-    
+    private Flag mPending = ignored;
+
     private TaskSelector() {
     }
     
@@ -52,14 +54,18 @@ public class TaskSelector extends AbstractEntitySelector {
     public final Flag getActive() {
         return mActive;
     }
-    
+
+    public final Flag getPending() {
+        return mPending;
+    }
+
     public final String getSelection(android.content.Context context) {
         List<String> expressions = getSelectionExpressions(context);
         String selection = StringUtils.join(expressions, " AND ");
         Log.d(cTag, selection);
         return selection;
     }
-    
+
     @Override
     protected List<String> getSelectionExpressions(android.content.Context context) {
         List<String> expressions = super.getSelectionExpressions(context);
@@ -70,7 +76,8 @@ public class TaskSelector extends AbstractEntitySelector {
         
         addActiveExpression(expressions);
         addDeletedExpression(expressions);
-        
+        addPendingExpression(expressions);
+
         addListExpression(expressions, TaskProvider.Tasks.PROJECT_ID, mProjects);
         addListExpression(expressions, TaskProvider.Tasks.CONTEXT_ID, mContexts);
         addFlagExpression(expressions, TaskProvider.Tasks.COMPLETE, mComplete);
@@ -114,6 +121,18 @@ public class TaskSelector extends AbstractEntitySelector {
             expressions.add(expression);
         }
     }
+
+    private void addPendingExpression(List<String> expressions) {
+        long now = System.currentTimeMillis();
+        if (mPending == yes) {
+            String expression = "(start > " + now + ")";
+            expressions.add(expression);
+        } else if (mPending == no) {
+            String expression = "(start <= " + now + ")";
+            expressions.add(expression);
+        }
+    }
+
 
     private String predefinedSelection(android.content.Context context) {
         String result;
@@ -195,9 +214,9 @@ public class TaskSelector extends AbstractEntitySelector {
     public final String toString() {
         return String.format(
                 "[TaskSelector predefined=%1$s projects=%2$s contexts='%3$s' " +
-                "complete=%4$s sortOrder=%5$s active=%6$s deleted=%7$s]",
+                "complete=%4$s sortOrder=%5$s active=%6$s deleted=%7$s pending=%8$s]",
                 mPredefined, mProjects, mContexts, mComplete, 
-                mSortOrder, mActive, mDeleted);
+                mSortOrder, mActive, mDeleted, mPending);
     }
     
     public static Builder newBuilder() {
@@ -269,6 +288,15 @@ public class TaskSelector extends AbstractEntitySelector {
             mResult.mComplete = value;
             return this;
         }
+
+        public Flag getPending() {
+            return mResult.mPending;
+        }
+
+        public Builder setPending(Flag value) {
+            mResult.mPending = value;
+            return this;
+        }
         
         public Builder mergeFrom(TaskSelector query) {
             setActive(query.mActive);
@@ -279,9 +307,21 @@ public class TaskSelector extends AbstractEntitySelector {
             setProjects(query.mProjects);
             setContexts(query.mContexts);
             setComplete(query.mComplete);
-            
+            setPending(query.mPending);
+
             return this;
         }
+
+        public Builder applyListPreferences(android.content.Context context, ListPreferenceSettings settings) {
+            setActive(settings.getActive(context));
+            setComplete(settings.getCompleted(context));
+            setDeleted(settings.getDeleted(context));
+            setPending(settings.getPending(context));
+
+            return this;
+        }
+
+
         
     }
 

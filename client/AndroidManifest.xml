@@ -369,6 +369,8 @@
 		<activity
 			android:name="org.dodgybits.shuffle.android.preference.activity.SynchronizationSettingsActivity" />
 
+        <activity android:name="org.dodgybits.shuffle.android.list.activity.ListPreferenceActivity"/>
+
 		<!--  synchronisation -->
 
 		<activity
@@ -398,7 +400,8 @@
 				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
 			</intent-filter>
 		</activity>
-	</application>
+
+    </application>
 
 
 </manifest> 

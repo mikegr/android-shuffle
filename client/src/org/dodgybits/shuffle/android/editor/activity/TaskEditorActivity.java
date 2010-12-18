@@ -450,7 +450,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     protected EntityPersister<Task> getPersister() {
         return mPersister;
     }
-    
+
         
     private Uri addOrUpdateCalendarEvent(
             Id calEventId, String title, String description,
@@ -610,6 +610,12 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             
             case R.id.completed_entry: {
                 CheckBox checkBox = (CheckBox) v.findViewById(R.id.completed_entry_checkbox);
+                checkBox.toggle();
+                break;
+            }
+
+            case R.id.deleted_entry: {
+                CheckBox checkBox = (CheckBox) v.findViewById(R.id.deleted_entry_checkbox);
                 checkBox.toggle();
                 break;
             }
@@ -1000,7 +1006,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
      * For existing tasks, check if the project changed, and if so
      * treat like a new task, otherwise leave the order as is.
      * 
-     * @param newProject the project selected for this task
+     * @param projectId the project selected for this task
      * @return 0-indexed order of task when displayed in the project view
      */
     private Integer calculateTaskOrder(Id projectId) {

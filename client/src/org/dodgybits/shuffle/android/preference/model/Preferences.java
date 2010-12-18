@@ -58,125 +58,100 @@ public class Preferences {
     public static final String WIDGET_QUERY_PREFIX = "widget_query_";
     
     public static final String CLEAN_INBOX_INTENT = "org.dodgybits.shuffle.android.CLEAN_INBOX";
-    
+
     public static boolean validateTracksSettings(Context context) {
         String url = getTracksUrl(context);
         String password = getTracksPassword(context);
         String user = getTracksUser(context);
         return user.length() != 0 && password.length() != 0 && url.length() != 0;
-
     }
 
     public static int getTracksInterval(Context context) {
-        getSharedPreferences(context);
-        return sPrefs.getInt(TRACKS_INTERVAL, 0);
+        return getSharedPreferences(context).getInt(TRACKS_INTERVAL, 0);
     }
 
     public static int getLastVersion(Context context) {
-        getSharedPreferences(context);
-        return sPrefs.getInt(LAST_VERSION, 0);
+        return getSharedPreferences(context).getInt(LAST_VERSION, 0);
     }
     
     public enum DeleteCompletedPeriod {
 		hourly, daily, weekly, never
 	}
 	
-	private static SharedPreferences sPrefs = null;
-	
 	private static SharedPreferences getSharedPreferences(Context context) {
-		if (sPrefs == null) {
-			sPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-		}
-		return sPrefs;
+		return PreferenceManager.getDefaultSharedPreferences(context);
 	}
 	
 	public static boolean isFirstTime(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getBoolean(FIRST_TIME, true);
+		return getSharedPreferences(context).getBoolean(FIRST_TIME, true);
 	}
 
     public static boolean isAnalyticsEnabled(Context context) {
-        getSharedPreferences(context);
-        return sPrefs.getBoolean(ANALYTICS_ENABLED, true);
+        return getSharedPreferences(context).getBoolean(ANALYTICS_ENABLED, true);
     }
 	
     public static String getTracksUrl(Context context) {
-        getSharedPreferences(context);
-        return sPrefs.getString(TRACKS_URL, 
+        return getSharedPreferences(context).getString(TRACKS_URL,
                 context.getString(org.dodgybits.android.shuffle.R.string.tracks_url_settings));
     }
 
-       public static String getTracksUser(Context context) {
-        getSharedPreferences(context);
-        return sPrefs.getString(TRACKS_USER, "");
+   public static String getTracksUser(Context context) {
+        return getSharedPreferences(context).getString(TRACKS_USER, "");
     }
 
-        public static String getTracksPassword(Context context) {
-        getSharedPreferences(context);
-        return sPrefs.getString(TRACKS_PASSWORD, "");
+    public static String getTracksPassword(Context context) {
+        return getSharedPreferences(context).getString(TRACKS_PASSWORD, "");
     }
 	
 	public static String getDeleteCompletedPeriod(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getString(DELETE_COMPLETED_PERIOD_KEY, DeleteCompletedPeriod.never.name());
+		return getSharedPreferences(context).getString(DELETE_COMPLETED_PERIOD_KEY, DeleteCompletedPeriod.never.name());
 	}
 
 	public static long getLastDeleteCompleted(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getLong(LAST_DELETE_COMPLETED_KEY, 0L);
+		return getSharedPreferences(context).getLong(LAST_DELETE_COMPLETED_KEY, 0L);
 	}
 
 	public static long getLastInboxClean(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getLong(LAST_INBOX_CLEAN_KEY, 0L);
+		return getSharedPreferences(context).getLong(LAST_INBOX_CLEAN_KEY, 0L);
 	}
 	
 	public static int getDefaultReminderMinutes(Context context) {
-		getSharedPreferences(context);
         String durationString =
-        	sPrefs.getString(Preferences.DEFAULT_REMINDER_KEY, "0");
+        	getSharedPreferences(context).getString(Preferences.DEFAULT_REMINDER_KEY, "0");
 		return Integer.parseInt(durationString);
 	}
 	
 
 	public static Boolean isProjectViewExpandable(Context context) {
-		getSharedPreferences(context);
-		return !sPrefs.getBoolean(PROJECT_VIEW_KEY, false);
+		return !getSharedPreferences(context).getBoolean(PROJECT_VIEW_KEY, false);
 	}
 
 	public static Boolean isContextViewExpandable(Context context) {
-		getSharedPreferences(context);
-		return !sPrefs.getBoolean(CONTEXT_VIEW_KEY, true);
+		return !getSharedPreferences(context).getBoolean(CONTEXT_VIEW_KEY, true);
 	}
 
 	public static boolean displayContextIcon(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getBoolean(DISPLAY_CONTEXT_ICON_KEY, true);
+		return getSharedPreferences(context).getBoolean(DISPLAY_CONTEXT_ICON_KEY, true);
 	}
 
 	public static boolean displayContextName(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getBoolean(DISPLAY_CONTEXT_NAME_KEY, true);
+		return getSharedPreferences(context).getBoolean(DISPLAY_CONTEXT_NAME_KEY, true);
 	}
 
 	public static boolean displayDueDate(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getBoolean(DISPLAY_DUE_DATE_KEY, true);
+		return getSharedPreferences(context).getBoolean(DISPLAY_DUE_DATE_KEY, true);
 	}
 
 	public static boolean displayProject(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getBoolean(DISPLAY_PROJECT_KEY, true);
+		return getSharedPreferences(context).getBoolean(DISPLAY_PROJECT_KEY, true);
 	}
 
 	public static boolean displayDetails(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.getBoolean(DISPLAY_DETAILS_KEY, true);
+		return getSharedPreferences(context).getBoolean(DISPLAY_DETAILS_KEY, true);
 	}
 
 	public static int[] getTopLevelCounts(Context context) {
-		getSharedPreferences(context);
-		String countString = sPrefs.getString(Preferences.TOP_LEVEL_COUNTS_KEY, null);
+		String countString = getSharedPreferences(context).getString(Preferences.TOP_LEVEL_COUNTS_KEY, null);
 		int[] result = null;
 		if (countString != null) {
 			String[] counts = countString.split(",");
@@ -189,9 +164,8 @@ public class Preferences {
 	}
 	
 	public static int getCalendarId(Context context) {
-        getSharedPreferences(context);
         int id = 1;
-        String calendarIdStr = sPrefs.getString(CALENDAR_ID_KEY, null);
+        String calendarIdStr = getSharedPreferences(context).getString(CALENDAR_ID_KEY, null);
         if (calendarIdStr != null) {
             try {
                 id = Integer.parseInt(calendarIdStr, 10);
@@ -205,15 +179,14 @@ public class Preferences {
 	public static String getWidgetQueryKey(int widgetId) {
 	    return WIDGET_QUERY_PREFIX + widgetId;
 	}
-	
+
+
 	public static String getWidgetQuery(Context context, String key) {
-        getSharedPreferences(context);
-        return sPrefs.getString(key, null);
+        return getSharedPreferences(context).getString(key, null);
 	}
 	
 	public static SharedPreferences.Editor getEditor(Context context) {
-		getSharedPreferences(context);
-		return sPrefs.edit();
+		return getSharedPreferences(context).edit();
 	}
 	
 	public static void cleanUpInbox(Context context) {

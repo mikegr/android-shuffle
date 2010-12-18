@@ -48,6 +48,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 
 import com.google.inject.Inject;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class ProjectTasksActivity extends AbstractTaskListActivity {
 
@@ -68,13 +69,8 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	@Override
     protected ListConfig<Task> createListConfig()
 	{
-        List<Id> ids = Arrays.asList(new Id[] {mProjectId});
-        TaskSelector query = TaskSelector.newBuilder()
-            .setProjects(new ArrayList<Id>(ids))
-            .setDeleted(Flag.no)
-            .setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC")
-            .build();
-        return new AbstractTaskListConfig(query, mTaskPersister) {
+        ListPreferenceSettings settings = new ListPreferenceSettings("project_tasks");
+        return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister,settings) {
 
 		    public int getCurrentViewMenuId() {
 		    	return 0;
@@ -87,7 +83,18 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 			
 		};
 	}
-	
+
+    @Override
+    protected TaskSelector createTaskQuery() {
+        List<Id> ids = Arrays.asList(new Id[] {mProjectId});
+        TaskSelector query = TaskSelector.newBuilder()
+            .setProjects(new ArrayList<Id>(ids))
+            .setDeleted(Flag.no)
+            .setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC")
+            .build();
+        return query;
+    }
+
 	@Override
 	protected void onResume() {
 		Log.d(cTag, "Fetching project " + mProjectId);
@@ -104,7 +111,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     /**
      * Return the intent generated when a list item is clicked.
      * 
-     * @param url type of data selected
+     * @param uri type of data selected
      */ 
     protected Intent getClickIntent(Uri uri) {
     	long taskId = ContentUris.parseId(uri);

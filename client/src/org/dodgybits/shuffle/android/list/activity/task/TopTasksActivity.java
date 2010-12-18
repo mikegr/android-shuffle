@@ -19,6 +19,7 @@ package org.dodgybits.shuffle.android.list.activity.task;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
@@ -29,6 +30,7 @@ import com.google.inject.Inject;
 
 import android.content.ContextWrapper;
 import android.os.Bundle;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class TopTasksActivity extends AbstractTaskListActivity {
 
@@ -41,9 +43,9 @@ public class TopTasksActivity extends AbstractTaskListActivity {
 
 	protected ListConfig<Task> createListConfig()
 	{
-        TaskSelector query = StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks);
-    
-        return new AbstractTaskListConfig(query, mTaskPersister) {
+        ListPreferenceSettings settings = new ListPreferenceSettings("next_tasks").setDefaultCompleted(Flag.no);
+
+        return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
 	    
 		    public int getCurrentViewMenuId() {
 		    	return MenuUtils.TOP_TASKS_ID;
@@ -56,5 +58,10 @@ public class TopTasksActivity extends AbstractTaskListActivity {
 			
 		};
 	}
+
+    @Override
+    protected TaskSelector createTaskQuery() {
+        return StandardTaskQueries.getQuery(StandardTaskQueries.cNextTasks);
+    }
 
 }

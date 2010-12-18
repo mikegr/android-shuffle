@@ -31,6 +31,7 @@ import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
+import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
@@ -43,6 +44,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.inject.Inject;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class ContextTasksActivity extends AbstractTaskListActivity {
 
@@ -68,13 +70,8 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	@Override
     protected ListConfig<Task> createListConfig()
 	{
-	    List<Id> ids = Arrays.asList(new Id[] {mContextId});
-	    TaskSelector query = TaskSelector.newBuilder()
-	        .setContexts(new ArrayList<Id>(ids))
-	        .setDeleted(no)
-	        .setSortOrder(TaskProvider.Tasks.CREATED_DATE + " ASC")
-	        .build();
-		return new AbstractTaskListConfig(query, mTaskPersister) {
+        ListPreferenceSettings settings = new ListPreferenceSettings("context_tasks");
+		return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
 
 		    public int getCurrentViewMenuId() {
 		    	return 0;
@@ -87,7 +84,19 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 			
 		};
 	}
-	
+
+
+    @Override
+    protected TaskSelector createTaskQuery() {
+        List<Id> ids = Arrays.asList(new Id[] {mContextId});
+        TaskSelector query = TaskSelector.newBuilder()
+            .setContexts(new ArrayList<Id>(ids))
+            .setDeleted(no)
+            .setSortOrder(TaskProvider.Tasks.CREATED_DATE + " ASC")
+            .build();
+        return query;
+    }
+
 	@Override
 	protected void onResume() {
 		Log.d(cTag, "Fetching context " + mContextId);

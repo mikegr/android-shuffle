@@ -26,15 +26,18 @@ import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import android.app.Activity;
 import android.content.ContextWrapper;
 import android.database.Cursor;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public abstract class AbstractTaskListConfig implements TaskListConfig {
 
     private TaskPersister mPersister;
     private TaskSelector mTaskSelector;
-    
-    public AbstractTaskListConfig(TaskSelector query, TaskPersister persister) {
+    private ListPreferenceSettings mSettings;
+
+    public AbstractTaskListConfig(TaskSelector query, TaskPersister persister, ListPreferenceSettings settings) {
         mPersister = persister;
-        setTaskQuery(query);
+        mSettings = settings;
+        setTaskSelector(query);
     }
     
     @Override
@@ -67,23 +70,31 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     }
     
     @Override
-    public TaskSelector getTaskQuery() {
+    public TaskSelector getTaskSelector() {
         return mTaskSelector;
     }
     
     @Override
-    public void setTaskQuery(TaskSelector query) {
+    public void setTaskSelector(TaskSelector query) {
         mTaskSelector = query;
     }
     
     @Override
     public Cursor createQuery(Activity activity) {
+        TaskSelector selector = TaskSelector.newBuilder().
+                mergeFrom(mTaskSelector).
+                applyListPreferences(activity, getListPreferenceSettings()).build();
+
         return activity.managedQuery(
                 getTaskPersister().getContentUri(), 
                 TaskProvider.Tasks.FULL_PROJECTION, 
-                mTaskSelector.getSelection(activity), 
-                mTaskSelector.getSelectionArgs(), 
-                mTaskSelector.getSortOrder());
+                selector.getSelection(activity),
+                selector.getSelectionArgs(),
+                selector.getSortOrder());
     }
-	
+
+    @Override
+    public ListPreferenceSettings getListPreferenceSettings() {
+        return mSettings;
+    }
 }

@@ -19,6 +19,7 @@ package org.dodgybits.shuffle.android.list.activity.task;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector.PredefinedQuery;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
@@ -28,6 +29,7 @@ import org.dodgybits.shuffle.android.list.config.TaskListConfig;
 
 import com.google.inject.Inject;
 
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 import roboguice.inject.InjectView;
 import android.content.ContextWrapper;
 import android.database.Cursor;
@@ -97,7 +99,8 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
     @Override
     protected ListConfig<Task> createListConfig()
 	{
-		return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister) {
+        ListPreferenceSettings settings = new ListPreferenceSettings("due_tasks").setDefaultCompleted(Flag.no);
+		return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
 
 			@Override
 			public int getContentViewResId() {
@@ -116,12 +119,9 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 		    
 		};
 	}
-	
-	private TaskListConfig getTaskListConfig() {
-	    return (TaskListConfig)getListConfig();
-	}
-    	
-	private TaskSelector createTaskQuery() {
+
+    @Override
+	protected TaskSelector createTaskQuery() {
         return TaskSelector.newBuilder().setPredefined(mMode).build();
 	}
 	
@@ -132,19 +132,10 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         tabSpec.setIndicator(tabName); //, this.getResources().getDrawable(iconId));
         return tabSpec;
     }
-    
-	private void updateCursor() {
-    	SimpleCursorAdapter adapter = (SimpleCursorAdapter)getListAdapter();
-    	Cursor oldCursor = adapter.getCursor();
-    	if (oldCursor != null) {
-    		// changeCursor always closes the cursor, 
-    		// so need to stop managing the old one first
-    		stopManagingCursor(oldCursor);
-    	}
-    	
-    	getTaskListConfig().setTaskQuery(createTaskQuery());
-    	Cursor cursor = getListConfig().createQuery(this);
-    	adapter.changeCursor(cursor);
+
+    @Override
+	protected void updateCursor() {
+        super.updateCursor();
     	setTitle(getListConfig().createTitle(this));
 	}    
 	

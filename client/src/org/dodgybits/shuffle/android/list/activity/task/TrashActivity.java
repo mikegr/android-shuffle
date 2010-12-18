@@ -22,6 +22,7 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
@@ -44,6 +45,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class TrashActivity extends AbstractTaskListActivity {
     private static final String cTag = "TrashActivity";
@@ -110,8 +112,8 @@ public class TrashActivity extends AbstractTaskListActivity {
     @Override
     protected ListConfig<Task> createListConfig()
     {
-        TaskSelector query = StandardTaskQueries.getQuery(StandardTaskQueries.cTrash);
-        return new AbstractTaskListConfig(query, mTaskPersister) {
+        ListPreferenceSettings settings = new ListPreferenceSettings("trash").setDefaultDeleted(Flag.yes);
+        return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
 
             public int getCurrentViewMenuId() {
                 return MenuUtils.TRASH_ID;
@@ -124,7 +126,12 @@ public class TrashActivity extends AbstractTaskListActivity {
             
         };
     }
-        
+
+    @Override
+    protected TaskSelector createTaskQuery() {
+        return StandardTaskQueries.getQuery(StandardTaskQueries.cTrash);
+    }
+
     @Override
     protected void onOtherButtonClicked() {
         deletePermanently();

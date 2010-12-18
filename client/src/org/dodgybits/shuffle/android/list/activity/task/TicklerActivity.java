@@ -24,6 +24,7 @@ import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.content.ContextWrapper;
@@ -72,8 +73,8 @@ public class TicklerActivity extends AbstractTaskListActivity {
     @Override
     protected ListConfig<Task> createListConfig()
     {
-        TaskSelector query = StandardTaskQueries.getQuery(StandardTaskQueries.cTickler);
-        return new AbstractTaskListConfig(query, mTaskPersister) {
+        ListPreferenceSettings settings = new ListPreferenceSettings("tickler");
+        return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
 
             public int getCurrentViewMenuId() {
                 return MenuUtils.INBOX_ID;
@@ -86,7 +87,12 @@ public class TicklerActivity extends AbstractTaskListActivity {
             
         };
     }
-        
+
+    @Override
+    protected TaskSelector createTaskQuery() {
+        return StandardTaskQueries.getQuery(StandardTaskQueries.cTickler);
+    }
+
     @Override
     protected void onOtherButtonClicked() {
         deletePermanently();

@@ -294,6 +294,14 @@ allow that, you can turn it off under Settings.</string>
     <string name="sync_interval_2h">2 hours</string>
     <string name="sync_interval_3h">3 hours</string>
 
+    <!-- list filter preferences -->
+    <string name="list_settings_title">Settings</string>
+    <string name="active_items_title">On hold items</string>
+    <string name="deleted_items_title">Deleted items</string>
+    <string name="pending_items_title">Actions starting in future</string>
+    <string name="completed_items_title">Completed actions</string>
+
+
 	<!--  messages -->
     <string name="no_due_date">No due date</string>
     <string name="no_icon">No icon</string>

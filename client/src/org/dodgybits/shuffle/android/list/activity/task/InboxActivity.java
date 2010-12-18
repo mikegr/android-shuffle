@@ -16,16 +16,6 @@
 
 package org.dodgybits.shuffle.android.list.activity.task;
 
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
-import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
-import org.dodgybits.shuffle.android.list.config.ListConfig;
-import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
-import org.dodgybits.shuffle.android.preference.model.Preferences;
-
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -34,8 +24,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import com.google.inject.Inject;
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
+import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
+import org.dodgybits.shuffle.android.list.config.ListConfig;
+import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
+import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 public class InboxActivity extends AbstractTaskListActivity {
 
@@ -72,8 +71,8 @@ public class InboxActivity extends AbstractTaskListActivity {
     @Override
     protected ListConfig<Task> createListConfig()
 	{
-        TaskSelector query = StandardTaskQueries.getQuery(StandardTaskQueries.cInbox);
-		return new AbstractTaskListConfig(query, mTaskPersister) {
+        ListPreferenceSettings settings = new ListPreferenceSettings("inbox");
+		return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
 
 		    public int getCurrentViewMenuId() {
 		    	return MenuUtils.INBOX_ID;
@@ -86,7 +85,12 @@ public class InboxActivity extends AbstractTaskListActivity {
 			
 		};
 	}
-	    
+
+    @Override
+    protected TaskSelector createTaskQuery() {
+        return StandardTaskQueries.getQuery(StandardTaskQueries.cInbox);
+    }
+
 	@Override
 	protected void onOtherButtonClicked() {
 		doCleanup();
