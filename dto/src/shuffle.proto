@@ -10,6 +10,8 @@ message Context {
   optional string icon = 4;
   optional Date modified = 5;
   optional int64 tracksId = 6;
+  optional bool active = 7;
+  optional bool deleted = 8;
 }
 
 message Project {
@@ -19,6 +21,8 @@ message Project {
   optional Date modified = 4;
   optional int64 tracksId = 5;
   optional bool parallel = 6;
+  optional bool active = 7;
+  optional bool deleted = 8;
 }
 
 message Task {
@@ -37,6 +41,8 @@ message Task {
   optional int32 order = 13;
   optional bool complete = 14;
   optional int64 tracksId = 15;
+  optional bool active = 16;
+  optional bool deleted = 17;
 }
 
 message Date {

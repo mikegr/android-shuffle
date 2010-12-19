@@ -30,8 +30,8 @@
 
     <style name="list" parent="activity">
     	<item name="android:divider">@android:drawable/divider_horizontal_bright</item> 
-    	<item name="android:background">@drawable/list_background</item> 
-    	<item name="android:cacheColorHint">@drawable/list_background</item>
+    	<item name="android:background">@drawable/list_background_active</item>
+    	<item name="android:cacheColorHint">@drawable/list_background_active</item>
     	<item name="android:listSelector">@drawable/list_selector_background</item>
     	<item name="android:drawSelectorOnTop">true</item>
 	</style>

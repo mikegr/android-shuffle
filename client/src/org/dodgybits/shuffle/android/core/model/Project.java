@@ -89,9 +89,9 @@ public class Project implements TracksEntity {
     public final String toString() {
         return String.format(
                 "[Project id=%1$s name='%2$s' defaultContextId='%3$s' " +
-                "parallel=%4$s archived=%5$s tracksId='%6$s' deleted=%7$s]",
+                "parallel=%4$s archived=%5$s tracksId='%6$s' deleted=%7$s active=%8$s]",
                 mLocalId, mName, mDefaultContextId,
-                mParallel, mArchived, mTracksId, mDeleted);
+                mParallel, mArchived, mTracksId, mDeleted, mActive);
     }
     
     public static Builder newBuilder() {

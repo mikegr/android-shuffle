@@ -1,24 +1,17 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
-import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.COLOUR;
-import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.DELETED;
-import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.ICON;
-import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.MODIFIED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.NAME;
-import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.TRACKS_ID;
-
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
+import com.google.inject.Inject;
 import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
-
 import roboguice.inject.ContentResolverProvider;
 import roboguice.inject.ContextScoped;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
 
-import com.google.inject.Inject;
+import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.Contexts.*;
 
 @ContextScoped
 public class ContextPersister extends AbstractEntityPersister<Context> {
@@ -30,7 +23,8 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
     private static final int TRACKS_ID_INDEX = 4;
     private static final int MODIFIED_INDEX = 5;
     private static final int DELETED_INDEX = 6;
-    
+    private static final int ACTIVE_INDEX = 7;
+
     @Inject
     public ContextPersister(ContentResolverProvider provider, Analytics analytics) {
         super(provider.get(), analytics);
@@ -46,7 +40,9 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
             .setName(readString(cursor, NAME_INDEX))
             .setColourIndex(cursor.getInt(COLOUR_INDEX))
             .setIconName(readString(cursor, ICON_INDEX))
-            .setDeleted(readBoolean(cursor, DELETED_INDEX));
+            .setDeleted(readBoolean(cursor, DELETED_INDEX))
+            .setActive(readBoolean(cursor, ACTIVE_INDEX));
+
         return builder.build();
     }
 
@@ -59,6 +55,7 @@ public class ContextPersister extends AbstractEntityPersister<Context> {
         values.put(COLOUR, context.getColourIndex());
         writeString(values, ICON, context.getIconName());
         writeBoolean(values, DELETED, context.isDeleted());
+        writeBoolean(values, ACTIVE, context.isActive());
     }
     
     @Override

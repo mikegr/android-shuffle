@@ -124,6 +124,11 @@ public final class Task implements TracksEntity {
         return mActive;
     }
 
+    public boolean isPending() {
+        long now = System.currentTimeMillis();
+        return mStartDate > now;
+    }
+
     @Override
     public final boolean isValid() {
         if (TextUtils.isEmpty(mDescription)) {

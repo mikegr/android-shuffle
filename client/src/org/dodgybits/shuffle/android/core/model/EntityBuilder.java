@@ -6,6 +6,7 @@ public interface EntityBuilder<E> {
     EntityBuilder<E> setLocalId(Id id);
     EntityBuilder<E> setModifiedDate(long ms);
     EntityBuilder<E> setTracksId(Id id);
+    EntityBuilder<E> setActive(boolean value);
     EntityBuilder<E> setDeleted(boolean value);
     E build();
     

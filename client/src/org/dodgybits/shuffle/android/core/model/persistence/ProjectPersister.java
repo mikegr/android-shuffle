@@ -1,24 +1,18 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
-import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.ARCHIVED;
-import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.DEFAULT_CONTEXT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.MODIFIED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.NAME;
-import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.PARALLEL;
-import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.TRACKS_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.DELETED;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
+import com.google.inject.Inject;
 import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Project.Builder;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
-
 import roboguice.inject.ContentResolverProvider;
 import roboguice.inject.ContextScoped;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
 
-import com.google.inject.Inject;
+import static org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable.ACTIVE;
+import static org.dodgybits.shuffle.android.persistence.provider.ProjectProvider.Projects.*;
 
 @ContextScoped
 public class ProjectPersister extends AbstractEntityPersister<Project> {
@@ -31,7 +25,8 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
     private static final int PARALLEL_INDEX = 5;
     private static final int ARCHIVED_INDEX = 6;
     private static final int DELETED_INDEX = 7;
-    
+    private static final int ACTIVE_INDEX = 8;
+
     @Inject
     public ProjectPersister(ContentResolverProvider provider, Analytics analytics) {
         super(provider.get(), analytics);
@@ -48,8 +43,9 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
             .setDefaultContextId(readId(cursor, DEFAULT_CONTEXT_INDEX))
             .setParallel(readBoolean(cursor, PARALLEL_INDEX))
             .setArchived(readBoolean(cursor, ARCHIVED_INDEX))
-            .setDeleted(readBoolean(cursor, DELETED_INDEX));
-        
+            .setDeleted(readBoolean(cursor, DELETED_INDEX))
+            .setActive(readBoolean(cursor, ACTIVE_INDEX));
+
         return builder.build();
     }
     
@@ -63,6 +59,7 @@ public class ProjectPersister extends AbstractEntityPersister<Project> {
         writeBoolean(values, PARALLEL, project.isParallel());
         writeBoolean(values, ARCHIVED, project.isArchived());
         writeBoolean(values, DELETED, project.isDeleted());
+        writeBoolean(values, ACTIVE, project.isActive());
     }
     
     @Override

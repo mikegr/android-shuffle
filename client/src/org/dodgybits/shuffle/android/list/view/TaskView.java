@@ -16,6 +16,7 @@
 
 package org.dodgybits.shuffle.android.list.view;
 
+import android.graphics.drawable.Drawable;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
@@ -72,10 +73,6 @@ public class TaskView extends ItemView<Task> {
         mDetails = (TextView) findViewById(R.id.details);
         mShowContext = true;
         mShowProject = true;
-        
-        int bgColour = getResources().getColor(R.drawable.list_background);
-        GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM, 1.1f, 0.95f);
-        setBackgroundDrawable(drawable);
     }
         
     protected int getViewResourceId() {
@@ -92,13 +89,30 @@ public class TaskView extends ItemView<Task> {
     
     
     public void updateView(Task task) {
+        updateBackground(task);
         updateContext(task);
         updateDescription(task);
         updateWhen(task);
         updateProject(task);
         updateDetails(task);
     }
-    
+
+    private void updateBackground(Task task) {
+        int bgColour;
+        if (task.isDeleted()) {
+            bgColour = getResources().getColor(R.drawable.list_background_deleted);
+        } else if (task.isActive()) {
+            bgColour = getResources().getColor(R.drawable.list_background_active);
+        } else {
+            bgColour = getResources().getColor(R.drawable.list_background_inactive);
+        }
+
+        GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM, 1.1f, 0.95f);
+        setBackgroundDrawable(drawable);
+
+    }
+
+
     private void updateContext(Task task) {
         Context context = mContextCache.findById(task.getContextId());
         boolean displayContext = Preferences.displayContextName(getContext());
@@ -165,9 +179,14 @@ public class TaskView extends ItemView<Task> {
         final String details = task.getDetails();
         if (Preferences.displayDetails(getContext()) && (details != null)) {
             mDetails.setText(details);
-            mDetails.setVisibility(View.VISIBLE);
-        } else {
-            mDetails.setVisibility(View.INVISIBLE);
         }
+
+        if (task.isDeleted()) {
+            Drawable deletedIcon = getResources().getDrawable(R.drawable.emblem_unreadable);
+            mDetails.setCompoundDrawablesWithIntrinsicBounds(null, null, deletedIcon, null);
+        } else {
+            mDetails.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        }
+
     }
 }

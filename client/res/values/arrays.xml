@@ -197,8 +197,8 @@
 
     <string-array name="list_preferences_active_labels" translatable="false">
         <item>Show All</item>
-        <item>Show On Hold Only</item>
-        <item>Hide On Hold</item>
+        <item>Show Active Only</item>
+        <item>Hide Active</item>
     </string-array>
 
     <string-array name="list_preferences_deleted_labels" translatable="false">

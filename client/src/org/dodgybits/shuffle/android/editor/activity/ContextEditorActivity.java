@@ -16,6 +16,7 @@
 
 package org.dodgybits.shuffle.android.editor.activity;
 
+import android.widget.*;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Context.Builder;
@@ -39,10 +40,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -65,6 +62,12 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     @InjectView(R.id.icon_clear_button) private ImageButton mClearIconButton;
 	@InjectView(R.id.context_preview) private ContextView mContext;
 
+    private @InjectView(R.id.deleted_entry) View mDeletedEntry;
+    private CheckBox mDeletedCheckBox;
+
+    private @InjectView(R.id.active_entry) View mActiveEntry;
+    private @InjectView(R.id.active_entry_checkbox) CheckBox mActiveCheckBox;
+
 	@Inject private EntityPersister<Context> mPersister;
 	@Inject private EntityEncoder<Context> mEncoder;
 	
@@ -74,25 +77,8 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         super.onCreate(icicle);
         
         loadCursor();
-        // The text view for our context description, identified by its ID in the XML file.
-		mNameWidget.addTextChangedListener(this);
-		
-		mColourIndex = -1;
-		
-		mIcon = ContextIcon.NONE;
-		
-		View colourEntry = findViewById(R.id.colour_entry);
-		colourEntry.setOnClickListener(this);
-		colourEntry.setOnFocusChangeListener(this);
-		
-		View iconEntry = findViewById(R.id.icon_entry);
-		iconEntry.setOnClickListener(this);
-		iconEntry.setOnFocusChangeListener(this);
-		
-		mClearIconButton.setOnClickListener(this);
-		mClearIconButton.setOnFocusChangeListener(this);
-		
-    
+        findViewsAndAddListeners();
+
         if (mState == State.STATE_EDIT) {
             // Make sure we are at the one and only row in the cursor.
             mCursor.moveToFirst();
@@ -101,11 +87,13 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
           	updateUIFromItem(mOriginalItem);
         } else if (mState == State.STATE_INSERT) {
             setTitle(R.string.title_new_context);
+            mDeletedEntry.setVisibility(View.GONE);
+            mDeletedCheckBox.setChecked(false);
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
         }
     }
-    
+
     @Override
     protected boolean isValid() {
         String name = mNameWidget.getText().toString();
@@ -179,7 +167,9 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
         builder.setModifiedDate(System.currentTimeMillis());
         builder.setColourIndex(mColourIndex);
         builder.setIconName(mIcon.iconName);
-        
+        builder.setDeleted(mDeletedCheckBox.isChecked());
+        builder.setActive(mActiveCheckBox.isChecked());
+
         return builder.build();
     }
     
@@ -207,6 +197,11 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
 
     	updatePreview();
 
+        mActiveCheckBox.setChecked(context.isActive());
+
+        mDeletedEntry.setVisibility(context.isDeleted() ? View.VISIBLE : View.GONE);
+        mDeletedCheckBox.setChecked(context.isDeleted());
+
         if (mOriginalItem == null) {
         	mOriginalItem = context;
         }    	
@@ -232,6 +227,35 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
             }
     	}
     }
+
+    private void findViewsAndAddListeners() {
+        // The text view for our context description, identified by its ID in the XML file.
+		mNameWidget.addTextChangedListener(this);
+
+		mColourIndex = -1;
+
+		mIcon = ContextIcon.NONE;
+
+		View colourEntry = findViewById(R.id.colour_entry);
+		colourEntry.setOnClickListener(this);
+		colourEntry.setOnFocusChangeListener(this);
+
+		View iconEntry = findViewById(R.id.icon_entry);
+		iconEntry.setOnClickListener(this);
+		iconEntry.setOnFocusChangeListener(this);
+
+		mClearIconButton.setOnClickListener(this);
+		mClearIconButton.setOnFocusChangeListener(this);
+
+        mActiveEntry.setOnClickListener(this);
+        mActiveEntry.setOnFocusChangeListener(this);
+
+        mDeletedEntry.setOnClickListener(this);
+        mDeletedEntry.setOnFocusChangeListener(this);
+        mDeletedCheckBox = (CheckBox) mDeletedEntry.findViewById(R.id.deleted_entry_checkbox);
+    }
+
+
     
     @Override
     public void onClick(View v) {
@@ -258,7 +282,17 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
 	        	updatePreview();
 	        	break;
             }
-            
+
+            case R.id.active_entry: {
+                mActiveCheckBox.toggle();
+                break;
+            }
+
+            case R.id.deleted_entry: {
+                mDeletedCheckBox.toggle();
+                break;
+            }
+
             default:
             	super.onClick(v);
             	break;

@@ -139,34 +139,34 @@ public class TaskSelector extends AbstractEntitySelector {
         long now = System.currentTimeMillis();
         switch (mPredefined) {
             case nextTasks:
-                result = "(complete = 0) AND " +
+                result = "((complete = 0) AND " +
                     "   (start < " + now + ") AND " +
                     "   ((projectId is null) OR " +
                     "   (projectId IN (select p._id from project p where p.parallel = 1)) OR " +
                     "   (task._id = (select t2._id FROM task t2 WHERE " +
                     "      t2.projectId = task.projectId AND t2.complete = 0 " +
                     "      ORDER BY due ASC, displayOrder ASC limit 1))" +
-                    ")";
+                    "))";
                 break;
                 
             case inbox:
                 long lastCleanMS = Preferences.getLastInboxClean(context);
-                result = "(projectId is null AND contextId is null) OR (created > " + 
-                    lastCleanMS + ")";                
+                result = "((projectId is null AND contextId is null) OR (created > " +
+                    lastCleanMS + "))";
                 break;
                 
             case tickler:
-                result = "(complete = 0) AND (active = 0)";
+                result = "((complete = 0) AND (active = 0))";
                 break;
                 
             default:
                 long startMS = 0L;
                 long endOfToday = getEndDate();
                 long endOfTomorrow = endOfToday + DateUtils.DAY_IN_MILLIS;
-                result = "complete = 0" +
+                result = "(complete = 0" +
                     " AND (due > " + startMS + ")" +
                     " AND ( (due < " + endOfToday + ") OR" +
-                    "( allDay = 1 AND due < " + endOfTomorrow + " ) )";
+                    "( allDay = 1 AND due < " + endOfTomorrow + " ) ))";
                 break;
         }
         

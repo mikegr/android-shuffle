@@ -29,13 +29,15 @@ public class TaskProtocolTranslator implements EntityProtocolTranslator<Task, or
             .setDueDate(ProtocolUtil.toDate(task.getDueDate()))
             .setAllDay(task.isAllDay())
             .setOrder(task.getOrder())
-            .setComplete(task.isComplete());
-        
+            .setComplete(task.isComplete())
+            .setActive(task.isActive())
+            .setDeleted(task.isDeleted());
+
         final String details = task.getDetails();
         if (details != null) {
             builder.setDetails(details);
         }
-        
+
         final Id contextId = task.getContextId();
         if (contextId.isInitialised()) {
             builder.setContextId(contextId.getId());
@@ -50,7 +52,7 @@ public class TaskProtocolTranslator implements EntityProtocolTranslator<Task, or
         if (timezone != null) {
             builder.setTimezone(timezone);
         }
-        
+
         final Id calEventId = task.getCalendarEventId();
         if (calEventId.isInitialised()) {
             builder.setCalEventId(calEventId.getId());
@@ -60,7 +62,7 @@ public class TaskProtocolTranslator implements EntityProtocolTranslator<Task, or
         if (tracksId.isInitialised()) {
             builder.setTracksId(tracksId.getId());
         }
-        
+
         return builder.build();
     }
 
@@ -80,7 +82,19 @@ public class TaskProtocolTranslator implements EntityProtocolTranslator<Task, or
             .setHasAlarm(false)
             .setOrder(dto.getOrder())
             .setComplete(dto.getComplete());
-            
+
+        if (dto.hasActive()) {
+            builder.setActive(dto.getActive());
+        } else {
+            builder.setActive(true);
+        }
+
+        if (dto.hasDeleted()) {
+            builder.setDeleted(dto.getDeleted());
+        } else {
+            builder.setDeleted(false);
+        }
+
         if (dto.hasContextId()) {
             Id contextId = Id.create(dto.getContextId());
             Context context = mContextDirectory.findById(contextId);

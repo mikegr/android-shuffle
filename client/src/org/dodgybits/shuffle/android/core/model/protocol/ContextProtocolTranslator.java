@@ -12,7 +12,9 @@ public class ContextProtocolTranslator  implements EntityProtocolTranslator<Cont
             .setId(context.getLocalId().getId())
             .setName((context.getName()))
             .setModified(ProtocolUtil.toDate(context.getModifiedDate()))
-            .setColourIndex(context.getColourIndex());
+            .setColourIndex(context.getColourIndex())
+            .setActive(context.isActive())
+            .setDeleted(context.isDeleted());
         
         final Id tracksId = context.getTracksId();
         if (tracksId.isInitialised()) {
@@ -35,7 +37,19 @@ public class ContextProtocolTranslator  implements EntityProtocolTranslator<Cont
             .setName(dto.getName())
             .setModifiedDate(ProtocolUtil.fromDate(dto.getModified()))
             .setColourIndex(dto.getColourIndex());
-            
+
+        if (dto.hasActive()) {
+            builder.setActive(dto.getActive());
+        } else {
+            builder.setActive(true);
+        }
+
+        if (dto.hasDeleted()) {
+            builder.setDeleted(dto.getDeleted());
+        } else {
+            builder.setDeleted(false);
+        }
+
         if (dto.hasTracksId()) {
             builder.setTracksId(Id.create(dto.getTracksId()));
         }

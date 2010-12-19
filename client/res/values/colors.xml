@@ -18,7 +18,10 @@
 	<drawable name="even_stripe">#e5edfa</drawable>
 	<drawable name="odd_stripe">#ffffffff</drawable>
 
-    <drawable name="list_background">#dce3ef</drawable>
+    <drawable name="list_background_active">#dce3ef</drawable>
+    <drawable name="list_background_inactive">#bbbbbb</drawable>
+    <drawable name="list_background_deleted">#D17780</drawable>
+
     <drawable name="project">#0063be</drawable>
     <drawable name="description">#000000</drawable>
     <drawable name="details">#002663</drawable>

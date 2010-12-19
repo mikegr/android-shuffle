@@ -133,7 +133,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private CheckBox mCompletedCheckBox;
     
     private @InjectView(R.id.deleted_entry) View mDeletedEntry;
-    private CheckBox mDeletedCheckBox;
+    private @InjectView(R.id.deleted_entry_checkbox) CheckBox mDeletedCheckBox;
     
 	private @InjectView(R.id.gcal_entry) View mUpdateCalendarEntry;
     private CheckBox mUpdateCalendarCheckBox;
@@ -174,6 +174,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             setTitle(R.string.title_new_task);
             mCompleteEntry.setVisibility(View.GONE);
             mDeletedEntry.setVisibility(View.GONE);
+            mDeletedCheckBox.setChecked(false);
             // see if the context or project were suggested for this task
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
@@ -609,14 +610,12 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             }
             
             case R.id.completed_entry: {
-                CheckBox checkBox = (CheckBox) v.findViewById(R.id.completed_entry_checkbox);
-                checkBox.toggle();
+                mCompletedCheckBox.toggle();
                 break;
             }
 
             case R.id.deleted_entry: {
-                CheckBox checkBox = (CheckBox) v.findViewById(R.id.deleted_entry_checkbox);
-                checkBox.toggle();
+                mDeletedCheckBox.toggle();
                 break;
             }
 
@@ -721,8 +720,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         
         mDeletedEntry.setOnClickListener(this);
         mDeletedEntry.setOnFocusChangeListener(this);
-        mDeletedCheckBox = (CheckBox) mDeletedEntry.findViewById(R.id.deleted_entry_checkbox);
-    	
+
         mUpdateCalendarEntry.setOnClickListener(this);
         mUpdateCalendarEntry.setOnFocusChangeListener(this);
         mUpdateCalendarCheckBox = (CheckBox) mUpdateCalendarEntry.findViewById(R.id.update_calendar_checkbox);

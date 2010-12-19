@@ -1,38 +1,5 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
-import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryCompleteTaskEvent;
-import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryCountParam;
-import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryDeleteEntityEvent;
-import static org.dodgybits.shuffle.android.core.util.Constants.cFlurryReorderTasksEvent;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.ALL_DAY;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.CAL_EVENT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.COMPLETE;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.CONTEXT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.CREATED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DESCRIPTION;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DETAILS;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DISPLAY_ORDER;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DUE_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.HAS_ALARM;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.MODIFIED_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.PROJECT_ID;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.START_DATE;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.TIMEZONE;
-import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.TRACKS_ID;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
-
-import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
-import org.dodgybits.shuffle.android.core.model.Id;
-import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.Task.Builder;
-import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
-import org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks;
-
-import roboguice.inject.ContentResolverProvider;
-import roboguice.inject.ContextScoped;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -41,8 +8,23 @@ import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.util.SparseIntArray;
-
 import com.google.inject.Inject;
+import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
+import org.dodgybits.shuffle.android.core.model.Id;
+import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.Task.Builder;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
+import roboguice.inject.ContentResolverProvider;
+import roboguice.inject.ContextScoped;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
+
+import static org.dodgybits.shuffle.android.core.util.Constants.*;
+import static org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable.ACTIVE;
+import static org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable.DELETED;
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.*;
 
 @ContextScoped
 public class TaskPersister extends AbstractEntityPersister<Task> {
@@ -65,7 +47,8 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     private static final int HAS_ALARM_INDEX = ALL_DAY_INDEX + 1;
     private static final int TASK_TRACK_INDEX = HAS_ALARM_INDEX  + 1;
     private static final int DELETED_INDEX = TASK_TRACK_INDEX +1;
-    
+    private static final int ACTIVE_INDEX = DELETED_INDEX +1;
+
     @Inject
     public TaskPersister(ContentResolverProvider provider, Analytics analytics) {
         super(provider.get(), analytics);
@@ -91,7 +74,8 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
             .setAllDay(readBoolean(cursor, ALL_DAY_INDEX))
             .setHasAlarm(readBoolean(cursor, HAS_ALARM_INDEX))
             .setTracksId(readId(cursor, TASK_TRACK_INDEX))
-            .setDeleted(readBoolean(cursor, DELETED_INDEX));
+            .setDeleted(readBoolean(cursor, DELETED_INDEX))
+            .setActive(readBoolean(cursor, ACTIVE_INDEX));
 
         return builder.build();
     }
@@ -107,8 +91,9 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         values.put(MODIFIED_DATE, task.getModifiedDate());
         values.put(START_DATE, task.getStartDate());
         values.put(DUE_DATE, task.getDueDate());
-        writeBoolean(values, Tasks.DELETED, task.isDeleted());
-        
+        writeBoolean(values, DELETED, task.isDeleted());
+        writeBoolean(values, ACTIVE, task.isActive());
+
         String timezone = task.getTimezone();
         if (TextUtils.isEmpty(timezone))
         {

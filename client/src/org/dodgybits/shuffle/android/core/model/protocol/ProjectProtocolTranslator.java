@@ -19,8 +19,10 @@ public class ProjectProtocolTranslator implements EntityProtocolTranslator<Proje
             .setId(project.getLocalId().getId())
             .setName((project.getName()))
             .setModified(ProtocolUtil.toDate(project.getModifiedDate()))
-            .setParallel(project.isParallel());
-        
+            .setParallel(project.isParallel())
+            .setActive(project.isActive())
+            .setDeleted(project.isDeleted());
+
         final Id defaultContextId = project.getDefaultContextId();
         if (defaultContextId.isInitialised()) {
             builder.setDefaultContextId(defaultContextId.getId());
@@ -42,7 +44,19 @@ public class ProjectProtocolTranslator implements EntityProtocolTranslator<Proje
             .setName(dto.getName())
             .setModifiedDate(ProtocolUtil.fromDate(dto.getModified()))
             .setParallel(dto.getParallel());
-            
+
+        if (dto.hasActive()) {
+            builder.setActive(dto.getActive());
+        } else {
+            builder.setActive(true);
+        }
+
+        if (dto.hasDeleted()) {
+            builder.setDeleted(dto.getDeleted());
+        } else {
+            builder.setDeleted(false);
+        }
+
         if (dto.hasDefaultContextId()) {
             Id defaultContextId = Id.create(dto.getDefaultContextId());
             Context context = mContextDirectory.findById(defaultContextId);
