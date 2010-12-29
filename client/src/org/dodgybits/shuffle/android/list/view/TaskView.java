@@ -16,10 +16,20 @@
 
 package org.dodgybits.shuffle.android.list.view;
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
 import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+import com.google.inject.Inject;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Project;
@@ -29,19 +39,6 @@ import org.dodgybits.shuffle.android.core.util.DateUtils;
 import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.core.view.DrawableUtils;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
-
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.StrikethroughSpan;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-
-import com.google.inject.Inject;
 
 public class TaskView extends ItemView<Task> {
     private EntityCache<Context> mContextCache;
@@ -84,24 +81,30 @@ public class TaskView extends ItemView<Task> {
         mShowProject = true;
 
         createStatusStrings();
+
+        int bgColour  = getResources().getColor(R.drawable.list_background);
+        GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM, 1.1f, 0.95f);
+        setBackgroundDrawable(drawable);
     }
 
     private void createStatusStrings() {
         String deleted = getResources().getString(R.string.deleted);
         int deletedColour = getResources().getColor(R.drawable.red);
-        ForegroundColorSpan deletedSpan = new ForegroundColorSpan(deletedColour);
+        ForegroundColorSpan deletedColorSpan = new ForegroundColorSpan(deletedColour);
 
         String inactive = getResources().getString(R.string.inactive);
         int inactiveColour = getResources().getColor(R.drawable.mid_gray);
-        ForegroundColorSpan inactiveSpan = new ForegroundColorSpan(deletedColour);
+        ForegroundColorSpan inactiveColorSpan = new ForegroundColorSpan(inactiveColour);
 
         mDeleted = new SpannableString(deleted);
-        mDeleted.setSpan(deletedSpan, 0, deleted.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        mDeletedAndInactive = new SpannableString(deleted + " " + inactive);
-        mDeletedAndInactive.setSpan(deletedSpan, 0, deleted.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        mDeletedAndInactive.setSpan(inactiveSpan, deleted.length(), mDeletedAndInactive.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        mDeleted.setSpan(deletedColorSpan, 0, deleted.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mDeletedAndInactive = new SpannableString(inactive + " " + deleted);
+        mDeletedAndInactive.setSpan(inactiveColorSpan, 0, inactive.length(),
+                Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        mDeletedAndInactive.setSpan(deletedColorSpan, inactive.length(), mDeletedAndInactive.length(),
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mInactive = new SpannableString(inactive);
-        mInactive.setSpan(inactiveSpan, 0, inactive.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mInactive.setSpan(inactiveColorSpan, 0, inactive.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
     }
 
         
@@ -119,28 +122,21 @@ public class TaskView extends ItemView<Task> {
     
     
     public void updateView(Task task) {
-        updateBackground(task);
-        updateContext(task);
+        Project project = mProjectCache.findById(task.getProjectId());
+        Context context = mContextCache.findById(task.getContextId());
+
+        updateContext(context);
         updateDescription(task);
         updateWhen(task);
-        updateProject(task);
+        updateProject(project);
         updateDetails(task);
-        updateStatus(task);
+        updateStatus(task, context, project);
     }
 
-    private void updateBackground(Task task) {
-        int bgColour  = getResources().getColor(R.drawable.list_background);
-        GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM, 1.1f, 0.95f);
-        setBackgroundDrawable(drawable);
-
-    }
-
-
-    private void updateContext(Task task) {
-        Context context = mContextCache.findById(task.getContextId());
+    private void updateContext(Context context) {
         boolean displayContext = Preferences.displayContextName(getContext());
         boolean displayIcon = Preferences.displayContextIcon(getContext());
-        if (mShowContext && context != null && (displayContext || displayIcon)) {           
+        if (mShowContext && context != null && (displayContext || displayIcon)) {
             mContext.setText(displayContext ? context.getName() : "");
             mContext.setColourIndex(context.getColourIndex());
             // add context icon if preferences indicate to
@@ -187,8 +183,7 @@ public class TaskView extends ItemView<Task> {
         }
     }
     
-    private void updateProject(Task task) {
-        Project project = mProjectCache.findById(task.getProjectId());
+    private void updateProject(Project project) {
         if (mShowProject && Preferences.displayProject(getContext()) && (project != null)) {
             mProject.setText(project.getName());
         } else {
@@ -205,20 +200,32 @@ public class TaskView extends ItemView<Task> {
         }
     }
 
-    private void updateStatus(Task task) {
-        if (task.isDeleted()) {
-            if (task.isActive()) {
+    private void updateStatus(Task task, Context context, Project project) {
+        if (isTaskDeleted(task, context, project)) {
+            if (isTaskActive(task, context, project)) {
                 mStatus.setText(mDeleted);
             } else {
                 mStatus.setText(mDeletedAndInactive);
             }
         } else {
-            if (task.isActive()) {
+            if (isTaskActive(task, context, project)) {
                 mStatus.setText("");
             } else {
-                mStatus.setText(mDeletedAndInactive);
+                mStatus.setText(mInactive);
             }
         }
+    }
+
+    private boolean isTaskActive(Task task, Context context, Project project) {
+        return task.isActive() &&
+                (context == null || context.isActive()) &&
+                (project == null || project.isActive());
+    }
+
+    private boolean isTaskDeleted(Task task, Context context, Project project) {
+        return task.isDeleted() ||
+                (context != null && context.isDeleted()) ||
+                (project != null && project.isDeleted());
     }
 
 }
