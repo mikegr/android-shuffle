@@ -30,8 +30,8 @@
 
     <style name="list" parent="activity">
     	<item name="android:divider">@android:drawable/divider_horizontal_bright</item> 
-    	<item name="android:background">@drawable/list_background_active</item>
-    	<item name="android:cacheColorHint">@drawable/list_background_active</item>
+    	<item name="android:background">@drawable/list_background</item>
+    	<item name="android:cacheColorHint">@drawable/list_background</item>
     	<item name="android:listSelector">@drawable/list_selector_background</item>
     	<item name="android:drawSelectorOnTop">true</item>
 	</style>
@@ -150,6 +150,14 @@
         <item name="android:typeface">sans</item>
     	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
 	</style>
+
+    <style name="list_status_text" parent="ShuffleTheme">
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:paddingTop">3dip</item>
+        <item name="android:paddingRight">2dip</item>
+        <item name="android:textScaleX">0.9</item>
+    </style>
 
 	<style name="due_date" parent="text">
     	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>

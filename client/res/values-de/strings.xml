@@ -235,7 +235,7 @@
     <string name="no_due_tasks">Keine befristeten Handlungen.</string>
     <string name="no_projects">Es wurden noch keine Projekte erstellt. Erzeugen Sie neue Handlungen, und weisen Sie diesen einem Projekt zu.</string>
     <string name="no_contexts">Es wurden noch keine Kategorie erstellt. Erzeugen Sie neue Handlungen, und weisen Sie diesen einer Kategorie zu.</string>
-    <string name="delete_warning">Sind Sie sicher, dass Sie die gewälten %s und ihre %d %ss löschen wollen?</string>
+    <string name="delete_warning">Sind Sie sicher, dass Sie die gewälten %1$s und ihre %2$d %3$ss löschen wollen?</string>
     <string name="delete_completed_warning">Alle erledigten Handlungen entfernen?</string>
     <string name="clean_slate_warning">Wirklich <i>alle</i> Handlungen, Projekte und selbsterstellte Kategorien entfernen?</string>
     <string name="clean_task_message">%d erledigte Aufgaben wurden gelöscht.</string>

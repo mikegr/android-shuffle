@@ -250,7 +250,7 @@
     <string name="no_due_tasks">無預約活動。</string>
     <string name="no_projects">沒有內容可以顯示。從活動清單建立活動並指派它們到相應的內容。</string>
     <string name="no_contexts">沒有情景可以顯示。從活動清單建立活動並指派它們到相應的內容。</string>
-    <string name="delete_warning">確定要移除所選的 %s 和它的 %d %ss?</string>
+    <string name="delete_warning">確定要移除所選的 %1$s 和它的 %2$d %3$s?</string>
     <string name="delete_completed_warning">移除所有已完成工作?</string>
     <string name="clean_slate_warning">移除 <i>全部</i> 活動, 內容和定義的情景?</string>
     <string name="clean_task_message">移除 %d 條已完成活動。</string>

@@ -250,7 +250,7 @@
     <string name="no_due_tasks">无预约活动。</string>
     <string name="no_projects">没有内容可以显示。从活动列表创建活动并指派它们到相应的内容。</string>
     <string name="no_contexts">没有情景可以显示。从活动列表创建活动并指派它们到相应的内容。</string>
-    <string name="delete_warning">确定要删除所选的 %s 和它的 %d %ss?</string>
+    <string name="delete_warning">确定要删除所选的 %1$s 和它的 %2$d %3$ss?</string>
     <string name="delete_completed_warning">删除所有已完成任务?</string>
     <string name="clean_slate_warning">删除 <i>全部</i> 活动, 内容和定义的情景?</string>
     <string name="clean_task_message">删除 %d 条已完成活动。</string>

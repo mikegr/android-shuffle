@@ -254,7 +254,7 @@
     <string name="no_due_tasks">Brak akcji do wykonania.</string>
     <string name="no_projects">Brak projektów do wyświetlenia. Zacznij od utworzenia zadań w Skrzynce i przypisania ich do projektów.</string>
     <string name="no_contexts">Brak kontekstów do wyświetlenia. Zacznij od utworzenia zadań w Skrzynce i przypisania ich do kontekstów.</string>
-    <string name="delete_warning">Na pewno usunąć zaznaczone %s i jego %d %ss?</string>
+    <string name="delete_warning">Na pewno usunąć zaznaczone %1$s i jego %2$d %3$ss?</string>
     <string name="delete_completed_warning">Usunąć wszystkie ukończone zadania?</string>
     <string name="clean_slate_warning">Usunąć <i>wszystkie</i> zadania, projekty i własne konteksty?</string>
     <string name="clean_task_message">Usunięto %d ukończonych zadań.</string>

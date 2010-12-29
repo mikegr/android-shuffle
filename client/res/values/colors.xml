@@ -18,9 +18,7 @@
 	<drawable name="even_stripe">#e5edfa</drawable>
 	<drawable name="odd_stripe">#ffffffff</drawable>
 
-    <drawable name="list_background_active">#dce3ef</drawable>
-    <drawable name="list_background_inactive">#bbbbbb</drawable>
-    <drawable name="list_background_deleted">#D17780</drawable>
+    <drawable name="list_background">#dce3ef</drawable>
 
     <drawable name="project">#0063be</drawable>
     <drawable name="description">#000000</drawable>
@@ -36,9 +34,11 @@
 	<drawable name="transparent_blue">#8080d0ff</drawable>
 
 	<drawable name="white">#ffffff</drawable>
+    <drawable name="red">#ff0000</drawable>
 	<drawable name="light_gray">#e7e3e7</drawable>
 	<drawable name="dark_brown">#312f28</drawable>
 	<drawable name="light_brown">#dadabe</drawable>
+    <drawable name="mid_gray">#424242</drawable>
 	<drawable name="dark_gray">#313031</drawable>
 	<drawable name="black">#000000</drawable>
 

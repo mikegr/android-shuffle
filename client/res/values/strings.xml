@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources>
 	<!--  Activity titles -->
     <string name="app_name">Shuffle</string>
     <string name="title_inbox">Inbox</string>
@@ -84,12 +84,15 @@
     <string name="project_name">Project</string>
     <string name="context_name">Context</string>
     <string name="nothing"></string>
+    <string name="deleted">Deleted</string>
+    <string name="inactive">Inactive</string>
     <string name="none_empty">None</string>
     <string name="undefined">None</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="previous_button_title">Previous</string>
     <string name="next_button_title">Next</string>
+
     
     <!--  search -->
     <string name="search_label">Shuffle</string>
@@ -217,21 +220,21 @@ allow that, you can turn it off under Settings.</string>
 	<string name="summary_create_backup_preference">Save all actions, projects and contexts</string>
 
     <string name="filename_title">Backup file</string>
-	<string name="backup_progress">Writing <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string>
-	<string name="toast_backup_saved">Data successfully backed up to <xliff:g id="filename">%s</xliff:g>.</string>
+	<string name="backup_progress">Writing %1$s %2$s.</string>
+	<string name="toast_backup_saved">Data successfully backed up to %1$s.</string>
 
 	<string name="title_restore_backup_preference">Restore from SD Card</string>
 	<string name="summary_restore_backup_preference">Recover data from backup</string>
-	<string name="toast_backup_restored">Data successfully recovered from <xliff:g id="filename">%s</xliff:g>.</string>
-	<string name="restore_progress">Reading <xliff:g id="type">%s</xliff:g> <xliff:g id="name">%s</xliff:g>.</string>
+	<string name="toast_backup_restored">Data successfully recovered from %1$s.</string>
+	<string name="restore_progress">Reading %1$s %2$s.</string>
 	<string name="restore_button_title">Restore</string>
 
     <string name="warning_filename_empty">You must specify a filename.</string>
-	<string name="warning_filename_exists"><xliff:g id="filename">%s</xliff:g> already exists.</string>
-	<string name="warning_media_not_mounted">Media is not mounted <xliff:g id="error">%s</xliff:g></string>
-	<string name="warning_backup_failed">Backup failed <xliff:g id="error">%s</xliff:g></string>
+	<string name="warning_filename_exists">%1$s already exists.</string>
+	<string name="warning_media_not_mounted">Media is not mounted %1$s</string>
+	<string name="warning_backup_failed">Backup failed %1$s</string>
     <string name="warning_no_files">There are no files to display.</string>
-	<string name="warning_restore_failed">Restore failed <xliff:g id="error">%s</xliff:g></string>
+	<string name="warning_restore_failed">Restore failed %1$s</string>
     <string name="status_checking_media">Checking media state.</string>
     <string name="status_creating_backup">Creating backup file.</string>
     <string name="status_backup_complete">Backup complete.</string>
@@ -254,16 +257,16 @@ allow that, you can turn it off under Settings.</string>
     <string name="permanently_delete_button_title">Permanently delete</string>
 
     <!-- Toast displayed when an item is created -->
-    <string name="itemCreatedToast"><xliff:g id="itemName">%s</xliff:g> created.</string>
+    <string name="itemCreatedToast">%1$s created.</string>
 
     <string name="emptyTrashWarning">Permanently deleted all items in Trash?</string>
-    <string name="emptyTrashToast">Permanently deleted actions <xliff:g id="entityCount">%s</xliff:g> actions, projects and contexts.</string>
+    <string name="emptyTrashToast">Permanently deleted actions %1$s actions, projects and contexts.</string>
     
     <!-- Toast displayed when an item is saved -->
-    <string name="itemSavedToast"><xliff:g id="itemName">%s</xliff:g> saved.</string>
+    <string name="itemSavedToast">%1$s saved.</string>
 
     <!-- Toast displayed when an item is saved -->
-    <string name="itemDeletedToast"><xliff:g id="itemName">%s</xliff:g> deleted.</string>
+    <string name="itemDeletedToast">%1$s deleted.</string>
 
     
    <!-- synchronization-->
@@ -310,10 +313,10 @@ allow that, you can turn it off under Settings.</string>
     <string name="no_due_tasks">There are no actions due.</string>
     <string name="no_projects">There are no projects to display. Get started by creating actions in the Inbox and assigning them to projects.</string>
     <string name="no_contexts">There are no contexts to display. Get started by creating actions in the Inbox and assigning them to contexts.</string>
-    <string name="delete_warning">Are you sure you want to delete the selected %s and it\'s %d %ss?</string>
+    <string name="delete_warning">Are you sure you want to delete the selected %1$s and it\'s %2$d %3$s(s)?</string>
     <string name="delete_completed_warning">Delete all completed tasks?</string>
     <string name="clean_slate_warning">Delete <i>all</i> actions, projects and custom contexts?</string>
-    <string name="clean_task_message">Deleted %d completed actions.</string>
+    <string name="clean_task_message">Deleted %1$d completed actions.</string>
     <string name="clean_inbox_message">Cleared out actions with projects or contexts from Inbox.</string>
     <string name="clean_slate_message">Deleted all actions, projects and custom contexts.</string>
    	<string name="error_title">Error</string>
@@ -419,7 +422,7 @@ For feedback or bug reports, please check http://code.google.com/p/android-shuff
         <item quantity="one">1 minute</item>
         <!-- This is the label for 2 or more minutes. The actual number of
              minutes is a parameter. -->
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> minutes</item>
+        <item quantity="other">%1$d minutes</item>
     </plurals>
     <!-- We use the abbreviation "mins" instead of "minutes" to keep the string short.
          This is the number of minutes displayed for a calendar reminder.  For example,
@@ -430,7 +433,7 @@ For feedback or bug reports, please check http://code.google.com/p/android-shuff
         <item quantity="one">1 min</item>
         <!-- This is the label for 2 or more minutes. The actual number of
              minutes is a parameter. -->
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> mins</item>
+        <item quantity="other">%1$d mins</item>
     </plurals>
     <!-- This is the number of hours displayed for a calendar reminder.  For example,
          a reminder of 1 hour would be displayed as '1 hour'.  The translation
@@ -440,7 +443,7 @@ For feedback or bug reports, please check http://code.google.com/p/android-shuff
         <item quantity="one">1 hour</item>
         <!-- This is the label for a reminder of 2 or more hours. The actual number of
              hours is a parameter. -->
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> hours</item>
+        <item quantity="other">%1$d hours</item>
     </plurals>
     <!-- This is the number of days displayed for a calendar reminder.  For example,
          a reminder of 2 days would be displayed as '2 days'.  The translation
@@ -450,7 +453,7 @@ For feedback or bug reports, please check http://code.google.com/p/android-shuff
         <item quantity="one">1 day</item>
         <!-- This is the label for a reminder of 2 or more days. The actual number of
              days is a parameter. -->
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> days</item>
+        <item quantity="other">%1$d days</item>
     </plurals>
     
 

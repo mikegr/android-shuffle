@@ -56,17 +56,6 @@
         android:ellipsize="marquee"
         style="@style/list_sub_text_2" />
     
-	<TextView android:id="@+id/description"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_above="@+id/details"
-		android:paddingBottom="0dip" 
-		android:paddingLeft="5dip" 
-		android:paddingRight="5dip"
-		android:singleLine="true"
-		android:ellipsize="middle"
-		style="@style/list_text" />
 
     <org.dodgybits.shuffle.android.list.view.LabelView
         android:id="@+id/context" 
@@ -80,5 +69,27 @@
         android:paddingRight="3dip"
         style="@style/context" />
 
-		
+    <TextView android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/context"
+		android:singleLine="true"
+		style="@style/list_status_text"
+            />
+
+    <TextView android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/details"
+        android:layout_toLeftOf="@+id/status"
+        android:paddingBottom="0dip"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        style="@style/list_text" />
+
+
 </RelativeLayout>

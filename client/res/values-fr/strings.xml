@@ -239,7 +239,7 @@
     <string name="no_due_tasks">Aucune tâche due.</string>
     <string name="no_projects">Aucun projet à afficher. Commencer par créer des tâches dans la Inbox et affecter les à des projets.</string>
     <string name="no_contexts">Aucun contexte à afficher. Commencer par créer des tâches dans la Inbox et affecter les à des contextes.</string>
-    <string name="delete_warning">Confirmez-vous la suppresssion de la sélection %s et de ses %d %ss?</string>
+    <string name="delete_warning">Confirmez-vous la suppresssion de la sélection %1$s et de ses %2$d %3$s(s)?</string>
     <string name="delete_completed_warning">Supprimer toutes les tâches terminées?</string>
     <string name="clean_slate_warning"><i>Tout</i> supprimer: tâches, projets et contextes personnels?</string>
     <string name="clean_task_message">%d tâches (terminées) supprimées.</string>

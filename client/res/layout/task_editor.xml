@@ -38,12 +38,6 @@
 			<requestFocus />
 		</EditText>
 		
-	    <View
-	        android:layout_width="fill_parent"
-	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_bright"
-	    />
-
 		<TextView android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:paddingLeft="5dip"
 			android:paddingRight="5dip" android:text="@string/project_title"
@@ -75,12 +69,6 @@
 
 		</RelativeLayout>
 		
-	    <View
-	        android:layout_width="fill_parent"
-	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_bright"
-	    />
-
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:paddingLeft="5dip"
 			android:paddingRight="5dip" android:text="@string/context_title"
@@ -112,12 +100,6 @@
 
 		</RelativeLayout>
 
-	    <View
-	        android:layout_width="fill_parent"
-	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_bright"
-	    />
-
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:paddingLeft="5dip"
 			android:paddingRight="5dip" android:text="@string/details_title"
@@ -131,12 +113,6 @@
 			android:autoText="true"
 			android:singleLine="false"
 			style="@style/text_editable" />
-
-	    <View
-	        android:layout_width="fill_parent"
-	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_bright"
-	    />
 
 		<LinearLayout android:id="@+id/scheduling_section"
 		    android:layout_width="fill_parent"
@@ -217,12 +193,6 @@
 
 		</LinearLayout>
 
-	    <View
-	        android:layout_width="fill_parent"
-	        android:layout_height="1dip"
-	        android:background="@android:drawable/divider_horizontal_bright"
-	    />
- 
 		<LinearLayout android:id="@+id/completed_entry"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
