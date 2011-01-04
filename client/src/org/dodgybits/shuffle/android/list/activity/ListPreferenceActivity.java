@@ -1,15 +1,15 @@
 package org.dodgybits.shuffle.android.list.activity;
 
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.util.Constants;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
+
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.util.Log;
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.shuffle.android.core.util.Constants;
-import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
-import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 public class ListPreferenceActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
     private static final String cTag = "ListPreferenceActivity";

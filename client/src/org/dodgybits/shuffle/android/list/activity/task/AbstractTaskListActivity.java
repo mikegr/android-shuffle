@@ -16,8 +16,6 @@
 
 package org.dodgybits.shuffle.android.list.activity.task;
 
-import android.preference.ListPreference;
-import android.widget.*;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
@@ -43,6 +41,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;

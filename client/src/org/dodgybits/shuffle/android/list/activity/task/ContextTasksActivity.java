@@ -31,9 +31,9 @@ import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
-import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 import android.content.ContentUris;
 import android.content.ContextWrapper;
@@ -44,7 +44,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.inject.Inject;
-import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class ContextTasksActivity extends AbstractTaskListActivity {
 

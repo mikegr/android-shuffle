@@ -25,19 +25,16 @@ import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelecto
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
-import org.dodgybits.shuffle.android.list.config.TaskListConfig;
-
-import com.google.inject.Inject;
-
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
+
 import roboguice.inject.InjectView;
 import android.content.ContextWrapper;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+
+import com.google.inject.Inject;
 
 public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	private static final String cTag = "TabbedDueActionsActivity";

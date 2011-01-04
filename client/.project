@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Shuffle-Android</name>
+	<name>client</name>
 	<comment></comment>
 	<projects>
+		<project>dto</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

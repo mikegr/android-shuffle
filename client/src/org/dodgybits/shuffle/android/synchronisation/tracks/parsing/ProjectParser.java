@@ -45,12 +45,12 @@ public class ProjectParser extends Parser<Project> {
 						
 						// TODO convert hidden to new status field when added
 						if(v.equals("hidden")) {
-							specificBuilder.setDeleted(true);
+							specificBuilder.setActive(false);
 							return true;
 						}
 						
 						if(v.equals("active")) {
-							specificBuilder.setDeleted(false);
+							specificBuilder.setActive(true);
 							return true;
 						}
 						
