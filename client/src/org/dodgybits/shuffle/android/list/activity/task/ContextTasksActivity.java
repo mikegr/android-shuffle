@@ -69,7 +69,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	@Override
     protected ListConfig<Task> createListConfig()
 	{
-        ListPreferenceSettings settings = new ListPreferenceSettings("context_tasks");
+        ListPreferenceSettings settings = new ListPreferenceSettings("context");
 		return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
 
 		    public int getCurrentViewMenuId() {

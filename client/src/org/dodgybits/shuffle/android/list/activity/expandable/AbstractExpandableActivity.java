@@ -324,7 +324,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 	/**
 	 * Return the intent generated when a list item is clicked.
 	 * 
-	 * @param url type of data selected
+	 * @param uri type of data selected
 	 */
 	protected Intent getClickIntent(Uri uri) {
 		return new Intent(Intent.ACTION_EDIT, uri);

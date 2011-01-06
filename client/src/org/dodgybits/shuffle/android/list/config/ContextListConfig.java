@@ -21,6 +21,8 @@ import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.ContextSelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 
@@ -29,6 +31,8 @@ import android.content.ContextWrapper;
 import android.database.Cursor;
 
 import com.google.inject.Inject;
+import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class ContextListConfig implements DrilldownListConfig<Context> {
     private ContextPersister mGroupPersister;
@@ -87,10 +91,16 @@ public class ContextListConfig implements DrilldownListConfig<Context> {
 
     @Override
     public Cursor createQuery(Activity activity) {
+        ListPreferenceSettings settings = new ListPreferenceSettings("context");
+        ContextSelector selector = ContextSelector.newBuilder()
+                .setSortOrder(ContextProvider.Contexts.NAME + " ASC")
+                .applyListPreferences(activity, settings).build();
+
         return activity.managedQuery(
-                getPersister().getContentUri(), 
+                getPersister().getContentUri(),
                 ContextProvider.Contexts.FULL_PROJECTION,
-                null, null, 
-                ContextProvider.Contexts.NAME + " ASC");
-    }    
+                selector.getSelection(activity),
+                selector.getSelectionArgs(),
+                selector.getSortOrder());
+    }
 }

@@ -13,320 +13,240 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:padding="4dip"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:paddingBottom="10dip" style="@style/editor">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
 
-	<TextView android:id="@+id/name_label"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-		android:paddingLeft="5dip"
-		android:paddingRight="5dip" 
-		android:text="@string/name_title"
-		style="@style/label" 
-		/>
+    <RelativeLayout
+        android:padding="4dip"
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:paddingBottom="10dip" style="@style/editor">
 
-	<EditText android:id="@+id/name" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-        android:layout_alignParentLeft="true"
-		android:layout_below="@+id/name_label"        
-		android:hint="@string/name_title"
-		android:capitalize="sentences"
-		android:autoText="true"
-		android:singleLine="true"
-		android:maxLength="50" 
-		style="@style/text_editable"
-		>
-		<requestFocus />
-	</EditText>
+        <TextView android:id="@+id/name_label"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:paddingLeft="5dip"
+            android:paddingRight="5dip"
+            android:text="@string/name_title"
+            style="@style/label"
+            />
 
-    <View android:id="@+id/colour_separator"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-		android:layout_below="@+id/name"        
-        android:background="@android:drawable/divider_horizontal_bright"
-    />
+        <EditText android:id="@+id/name" android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/name_label"
+            android:hint="@string/name_title"
+            android:capitalize="sentences"
+            android:autoText="true"
+            android:singleLine="true"
+            android:maxLength="50"
+            style="@style/text_editable"
+            >
+            <requestFocus />
+        </EditText>
 
-	<LinearLayout android:id="@+id/colour_entry"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-		android:layout_below="@+id/colour_separator"        
-	    android:paddingRight="?android:attr/scrollbarSize"
-	    android:minHeight="?android:attr/listPreferredItemHeight"
-	    android:background="@android:drawable/list_selector_background"
-	    android:orientation="horizontal"
-	    android:gravity="center_vertical"
-	    android:focusable="true"
-	    android:clickable="true"
-	    >
-	
-	    <RelativeLayout
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginLeft="14dip"
-	        android:layout_marginTop="6dip"
-	        android:layout_marginBottom="6dip"
-	        android:layout_weight="1"
-	        android:duplicateParentState="true"
-	        >
-	
-	        <TextView android:id="@+id/colour_label"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:singleLine="true"
-	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:ellipsize="marquee"
-	            android:fadingEdge="horizontal"
-	            android:duplicateParentState="true"
-	            android:text="@string/colour_title"
-	            />
-			
-	    </RelativeLayout>
-	
-		<TextView android:id="@+id/colour_display"
-			android:layout_width="40dip" 
-			android:layout_height="40dip" 
-	        android:focusable="false"
-	        android:clickable="false"
-			/>
-			
-		<ImageButton android:id="@+id/unused_clear_button"
-	        style="@style/MinusButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="40dip"
-			android:visibility="invisible" 
-			/>
-		
-	</LinearLayout>
-	
-    <View android:id="@+id/icon_separator"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-		android:layout_below="@+id/colour_entry"        
-        android:background="@android:drawable/divider_horizontal_bright"
-    />
-
-	<LinearLayout android:id="@+id/icon_entry"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-		android:layout_below="@+id/icon_separator"        
-	    android:paddingRight="?android:attr/scrollbarSize"
-	    android:minHeight="?android:attr/listPreferredItemHeight"
-	    android:background="@android:drawable/list_selector_background"
-	    android:orientation="horizontal"
-	    android:gravity="center_vertical"
-	    android:focusable="true"
-	    android:clickable="true"
-	    >
-	
-	    <RelativeLayout
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginLeft="14dip"
-	        android:layout_marginTop="6dip"
-	        android:layout_marginBottom="6dip"
-	        android:layout_weight="1"
-	        android:duplicateParentState="true"
-	        >
-	
-	        <TextView android:id="@+id/icon_label"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:singleLine="true"
-	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:ellipsize="marquee"
-	            android:fadingEdge="horizontal"
-	            android:duplicateParentState="true"
-	            android:text="@string/icon_title"
-	            />
-			
-	    </RelativeLayout>
-	
-		<ImageView android:id="@+id/icon_display"
-			android:layout_width="40dip" 
-			android:layout_height="40dip" 
-	        android:focusable="false"
-	        android:clickable="false"
-			/>
-
-		<TextView android:id="@+id/icon_none"
-			android:layout_width="80dip" 
-			android:layout_height="40dip" 
-	        android:focusable="false"
-	        android:clickable="false"
-			android:text="@string/no_icon" 
-			android:visibility="gone" 
-			android:gravity="center"
-			/>
-		
-		<ImageButton android:id="@+id/icon_clear_button"
-	        style="@style/MinusButton"
-			android:layout_marginLeft="40dip"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-		
-	</LinearLayout>
-
-    <View android:id="@+id/preview_separator"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-		android:layout_below="@+id/icon_entry"        
-        android:background="@android:drawable/divider_horizontal_bright"
-    />
-    
-    <TextView android:id="@+id/preview_label"
-        android:layout_marginLeft="14dip"
-        android:layout_marginTop="6dip"
-        android:layout_marginBottom="6dip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:layout_below="@+id/preview_separator"
-		android:layout_alignParentLeft="true"        
-        android:singleLine="true"
-        android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
-        android:text="@string/preview_title"
-		style="@style/label" 
+        <View android:id="@+id/colour_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:layout_below="@+id/name"
+            android:background="@android:drawable/divider_horizontal_bright"
         />
-    
-    
-	<org.dodgybits.shuffle.android.list.view.ContextView
-		android:id="@+id/context_preview" 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dip"
-        android:layout_marginBottom="20dip"
-		android:layout_below="@+id/preview_separator"        
-		android:drawablePadding="2dip"
-		android:paddingLeft="3dip"
-		android:paddingRight="3dip"
-		style="@style/context" 
-		/>
 
-    <View android:id="@+id/active_divider"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/context_preview"
-        android:background="@android:drawable/divider_horizontal_bright"
-    />
-
-    <LinearLayout android:id="@+id/active_entry"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/active_divider"
-        android:paddingRight="?android:attr/scrollbarSize"
-        android:minHeight="?android:attr/listPreferredItemHeight"
-        android:background="@android:drawable/list_selector_background"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:focusable="true"
-        android:clickable="true"
-        >
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <LinearLayout android:id="@+id/colour_entry"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/colour_separator"
+            android:paddingRight="?android:attr/scrollbarSize"
+            android:minHeight="?android:attr/listPreferredItemHeight"
+            android:background="@android:drawable/list_selector_background"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:focusable="true"
+            android:clickable="true"
+            >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dip"
+                android:layout_marginTop="6dip"
+                android:layout_marginBottom="6dip"
+                android:layout_weight="1"
+                android:duplicateParentState="true"
+                >
+
+                <TextView android:id="@+id/colour_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:duplicateParentState="true"
+                    android:text="@string/colour_title"
+                    />
+
+            </RelativeLayout>
+
+            <TextView android:id="@+id/colour_display"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:focusable="false"
+                android:clickable="false"
+                />
+
+            <ImageButton android:id="@+id/unused_clear_button"
+                style="@style/MinusButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dip"
+                android:visibility="invisible"
+                />
+
+        </LinearLayout>
+
+        <View android:id="@+id/icon_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:layout_below="@+id/colour_entry"
+            android:background="@android:drawable/divider_horizontal_bright"
+        />
+
+        <LinearLayout android:id="@+id/icon_entry"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/icon_separator"
+            android:paddingRight="?android:attr/scrollbarSize"
+            android:minHeight="?android:attr/listPreferredItemHeight"
+            android:background="@android:drawable/list_selector_background"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:focusable="true"
+            android:clickable="true"
+            >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dip"
+                android:layout_marginTop="6dip"
+                android:layout_marginBottom="6dip"
+                android:layout_weight="1"
+                android:duplicateParentState="true"
+                >
+
+                <TextView android:id="@+id/icon_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:duplicateParentState="true"
+                    android:text="@string/icon_title"
+                    />
+
+            </RelativeLayout>
+
+            <ImageView android:id="@+id/icon_display"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:focusable="false"
+                android:clickable="false"
+                />
+
+            <TextView android:id="@+id/icon_none"
+                android:layout_width="80dip"
+                android:layout_height="40dip"
+                android:focusable="false"
+                android:clickable="false"
+                android:text="@string/no_icon"
+                android:visibility="gone"
+                android:gravity="center"
+                />
+
+            <ImageButton android:id="@+id/icon_clear_button"
+                style="@style/MinusButton"
+                android:layout_marginLeft="40dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <View android:id="@+id/preview_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:layout_below="@+id/icon_entry"
+            android:background="@android:drawable/divider_horizontal_bright"
+        />
+
+        <TextView android:id="@+id/preview_label"
             android:layout_marginLeft="14dip"
             android:layout_marginTop="6dip"
             android:layout_marginBottom="6dip"
-            android:layout_weight="1"
-            android:duplicateParentState="true"
-            >
-
-            <TextView android:id="@+id/label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:duplicateParentState="true"
-                android:text="@string/active_title"
-                />
-
-        </RelativeLayout>
-
-        <CheckBox android:id="@+id/active_entry_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:focusable="false"
-            android:clickable="false"
-            />
-
-    </LinearLayout>
-
-    <View android:id="@+id/deleted_divider"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/active_entry"
-        android:background="@android:drawable/divider_horizontal_bright"
-    />
-
-
-    <LinearLayout android:id="@+id/deleted_entry"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/deleted_divider"
-        android:paddingRight="?android:attr/scrollbarSize"
-        android:minHeight="?android:attr/listPreferredItemHeight"
-        android:background="@android:drawable/list_selector_background"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:focusable="true"
-        android:clickable="true"
-        >
-
-        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dip"
-            android:layout_marginTop="6dip"
-            android:layout_marginBottom="6dip"
-            android:layout_weight="1"
-            android:duplicateParentState="true"
-            >
-
-            <TextView android:id="@+id/label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:duplicateParentState="true"
-                android:text="@string/deleted_title"
-                />
-
-        </RelativeLayout>
-
-        <CheckBox android:id="@+id/deleted_entry_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:focusable="false"
-            android:clickable="false"
+            android:layout_below="@+id/preview_separator"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:text="@string/preview_title"
+            style="@style/label"
             />
 
-    </LinearLayout>
 
-    <View android:id="@+id/end_separator"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-		android:layout_below="@+id/context_preview"        
-        android:background="@android:drawable/divider_horizontal_bright"
-    />
+        <org.dodgybits.shuffle.android.list.view.ContextView
+            android:id="@+id/context_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dip"
+            android:layout_marginBottom="20dip"
+            android:layout_below="@+id/preview_separator"
+            android:drawablePadding="2dip"
+            android:paddingLeft="3dip"
+            android:paddingRight="3dip"
+            style="@style/context"
+            />
 
-    <include android:id="@+id/save_panel" layout="@layout/editor_save_panel" 
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:layout_alignParentBottom="true"
-    />
+        <View android:id="@+id/active_divider"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/context_preview"
+            android:background="@android:drawable/divider_horizontal_bright"
+        />
 
-</RelativeLayout>
+        <include layout="@layout/editor_active_entry"
+                 android:id="@+id/active_entry"
+                />
+
+
+        <View android:id="@+id/deleted_divider"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/active_entry"
+            android:background="@android:drawable/divider_horizontal_bright"
+        />
+
+
+        <include layout="@layout/editor_delete_entry"
+                android:id="@+id/deleted_entry"
+                />
+
+
+        <include android:id="@+id/save_panel" layout="@layout/editor_save_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/deleted_entry"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+        />
+
+    </RelativeLayout>
+
+</ScrollView>

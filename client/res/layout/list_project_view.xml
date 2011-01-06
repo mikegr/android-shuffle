@@ -40,7 +40,17 @@
 	  android:paddingRight="5dip"
 	  style="@style/list_text"
 	  />
-    
+
+    <org.dodgybits.shuffle.android.list.view.StatusView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+		android:singleLine="true"
+        android:paddingRight="10dip"
+		style="@style/list_status_text"
+            />
 
  </RelativeLayout>
  

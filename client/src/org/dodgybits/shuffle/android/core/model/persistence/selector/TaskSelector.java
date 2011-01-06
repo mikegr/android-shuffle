@@ -24,8 +24,6 @@ public class TaskSelector extends AbstractEntitySelector {
     private List<Id> mProjects;
     private List<Id> mContexts;
     private Flag mComplete = ignored;
-    private Flag mDeleted = no;
-    private Flag mActive = yes;
     private Flag mPending = ignored;
 
     private TaskSelector() {
@@ -45,14 +43,6 @@ public class TaskSelector extends AbstractEntitySelector {
 
     public final Flag getComplete() {
         return mComplete;
-    }
-    
-    public final Flag getDeleted() {
-        return mDeleted;
-    }
-    
-    public final Flag getActive() {
-        return mActive;
     }
 
     public final Flag getPending() {
@@ -235,24 +225,6 @@ public class TaskSelector extends AbstractEntitySelector {
             return builder;
         }
         
-        @Override
-        public Builder setSortOrder(String value) {
-            mResult.mSortOrder = value;
-            return this;
-        }
-        
-        @Override
-        public Builder setActive(Flag value) {
-            mResult.mActive = value;
-            return this;
-        }
-        
-        @Override
-        public Builder setDeleted(Flag value) {
-            mResult.mDeleted = value;
-            return this;
-        }
-        
         public PredefinedQuery getPredefined() {
             return mResult.mPredefined;
         }
@@ -299,9 +271,7 @@ public class TaskSelector extends AbstractEntitySelector {
         }
         
         public Builder mergeFrom(TaskSelector query) {
-            setActive(query.mActive);
-            setDeleted(query.mDeleted);
-            setSortOrder(query.mSortOrder);
+            super.mergeFrom(query);
 
             setPredefined(query.mPredefined);
             setProjects(query.mProjects);
@@ -313,22 +283,18 @@ public class TaskSelector extends AbstractEntitySelector {
         }
 
         public Builder applyListPreferences(android.content.Context context, ListPreferenceSettings settings) {
-            setActive(settings.getActive(context));
+            super.applyListPreferences(context, settings);
+
             setComplete(settings.getCompleted(context));
-            setDeleted(settings.getDeleted(context));
             setPending(settings.getPending(context));
 
             return this;
         }
 
-
-        
     }
 
     public enum PredefinedQuery {
         nextTasks, dueToday, dueNextWeek, dueNextMonth, inbox, tickler
     }
 
-    
-    
 }

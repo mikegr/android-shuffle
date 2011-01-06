@@ -31,7 +31,8 @@ import android.widget.TextView;
 public class ProjectView extends ItemView<Project> {
 	private TextView mName;
 	private ImageView mParallelIcon;
-	
+    private StatusView mStatus;
+
 	private SparseIntArray mTaskCountArray;
 	private ForegroundColorSpan mSpan;
 	
@@ -44,7 +45,8 @@ public class ProjectView extends ItemView<Project> {
 		
 		mName = (TextView) findViewById(R.id.name);
 		mParallelIcon = (ImageView) findViewById(R.id.parallel_image);
-		
+        mStatus = (StatusView)findViewById(R.id.status);
+
         int colour = getResources().getColor(R.drawable.pale_blue);
         mSpan = new ForegroundColorSpan(colour);
 		
@@ -61,27 +63,38 @@ public class ProjectView extends ItemView<Project> {
 	
 	@Override
 	public void updateView(Project project) {
-		if (mTaskCountArray != null) {
-			Integer count = mTaskCountArray.get((int)project.getLocalId().getId());
-			if (count == null) count = 0;
-			
+        updateNameLabel(project);
+        updateStatus(project);
+        updateParallelIcon(project);
+	}
+
+    private void updateNameLabel(Project project) {
+        if (mTaskCountArray != null) {
+            Integer count = mTaskCountArray.get((int)project.getLocalId().getId());
+            if (count == null) count = 0;
+
             CharSequence label = project.getName() + "  (" + count + ")";
             SpannableString spannable = new SpannableString(label);
             spannable.setSpan(mSpan, project.getName().length(),
                     label.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-			mName.setText(spannable);
-		} else {
-			mName.setText(project.getName());
-		}
-		
-		if (mParallelIcon != null) {
-    		if (project.isParallel()) {
-    		    mParallelIcon.setImageResource(R.drawable.parallel);
-    		} else {
+            mName.setText(spannable);
+        } else {
+            mName.setText(project.getName());
+        }
+    }
+
+    private void updateStatus(Project project) {
+        mStatus.updateStatus(project.isActive(), project.isDeleted());
+    }
+
+    private void updateParallelIcon(Project project) {
+        if (mParallelIcon != null) {
+            if (project.isParallel()) {
+                mParallelIcon.setImageResource(R.drawable.parallel);
+            } else {
                 mParallelIcon.setImageResource(R.drawable.sequence);
-    		}
-		}
-		
-	}
+            }
+        }
+    }
 
 }

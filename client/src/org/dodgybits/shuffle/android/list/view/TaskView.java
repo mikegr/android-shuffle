@@ -30,10 +30,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,13 +48,9 @@ public class TaskView extends ItemView<Task> {
     protected TextView mDateDisplay;
     protected TextView mProject;
     protected TextView mDetails;
-    protected TextView mStatus;
+    protected StatusView mStatus;
     protected boolean mShowContext;
     protected boolean mShowProject;
-
-    protected SpannableString mDeleted;
-    protected SpannableString mDeletedAndInactive;
-    protected SpannableString mInactive;
 
     @Inject
     public TaskView(
@@ -77,38 +71,16 @@ public class TaskView extends ItemView<Task> {
         mDateDisplay = (TextView) findViewById(R.id.due_date);
         mProject = (TextView) findViewById(R.id.project);
         mDetails = (TextView) findViewById(R.id.details);
-        mStatus = (TextView) findViewById(R.id.status);
+        mStatus = (StatusView) findViewById(R.id.status);
         mShowContext = true;
         mShowProject = true;
-
-        createStatusStrings();
 
         int bgColour  = getResources().getColor(R.drawable.list_background);
         GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM, 1.1f, 0.95f);
         setBackgroundDrawable(drawable);
     }
 
-    private void createStatusStrings() {
-        String deleted = getResources().getString(R.string.deleted);
-        int deletedColour = getResources().getColor(R.drawable.red);
-        ForegroundColorSpan deletedColorSpan = new ForegroundColorSpan(deletedColour);
 
-        String inactive = getResources().getString(R.string.inactive);
-        int inactiveColour = getResources().getColor(R.drawable.mid_gray);
-        ForegroundColorSpan inactiveColorSpan = new ForegroundColorSpan(inactiveColour);
-
-        mDeleted = new SpannableString(deleted);
-        mDeleted.setSpan(deletedColorSpan, 0, deleted.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        mDeletedAndInactive = new SpannableString(inactive + " " + deleted);
-        mDeletedAndInactive.setSpan(inactiveColorSpan, 0, inactive.length(),
-                Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        mDeletedAndInactive.setSpan(deletedColorSpan, inactive.length(), mDeletedAndInactive.length(),
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        mInactive = new SpannableString(inactive);
-        mInactive.setSpan(inactiveColorSpan, 0, inactive.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-    }
-
-        
     protected int getViewResourceId() {
         return R.layout.list_task_view;
     }
@@ -202,19 +174,9 @@ public class TaskView extends ItemView<Task> {
     }
 
     private void updateStatus(Task task, Context context, Project project) {
-        if (isTaskDeleted(task, context, project)) {
-            if (isTaskActive(task, context, project)) {
-                mStatus.setText(mDeleted);
-            } else {
-                mStatus.setText(mDeletedAndInactive);
-            }
-        } else {
-            if (isTaskActive(task, context, project)) {
-                mStatus.setText("");
-            } else {
-                mStatus.setText(mInactive);
-            }
-        }
+        mStatus.updateStatus(
+                isTaskActive(task, context, project),
+                isTaskDeleted(task, context, project));
     }
 
     private boolean isTaskActive(Task task, Context context, Project project) {

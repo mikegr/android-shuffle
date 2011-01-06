@@ -35,6 +35,7 @@ public class ContextView extends ItemView<Context> {
 	protected TextColours mTextColours;
 	private ImageView mIcon;
 	private TextView mName;
+    private StatusView mStatus;
 	private View mColour;
 	private SparseIntArray mTaskCountArray;
 
@@ -55,6 +56,7 @@ public class ContextView extends ItemView<Context> {
         
         mColour = (View) findViewById(R.id.colour);
 		mName = (TextView) findViewById(R.id.name);
+        mStatus = (StatusView)findViewById(R.id.status);
 		mIcon = (ImageView) findViewById(R.id.icon);
 		mTextColours = TextColours.getInstance(androidContext);
 	}
@@ -70,29 +72,47 @@ public class ContextView extends ItemView<Context> {
 	
 	@Override
 	public void updateView(Context context) {
-		// add context icon
-	    ContextIcon icon = ContextIcon.createIcon(context.getIconName(), getResources());
-		int iconResource = icon.largeIconId;
-		if (iconResource > 0) {
-			mIcon.setImageResource(iconResource);
-			mIcon.setVisibility(View.VISIBLE);
-		} else {
-			mIcon.setVisibility(View.INVISIBLE);
-		}
-		if (mTaskCountArray != null) {
-			Integer count = mTaskCountArray.get((int)context.getLocalId().getId());
-			if (count == null) count = 0;
-			mName.setText(context.getName() + " (" + count + ")");
-		} else {
-			mName.setText(context.getName());
-		}
-    	int textColour = mTextColours.getTextColour(context.getColourIndex());
-		mName.setTextColor(textColour);
-
-		int bgColour = mTextColours.getBackgroundColour(context.getColourIndex());
-    	GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM);
-    	drawable.setCornerRadius(12.0f);
-    	mColour.setBackgroundDrawable(drawable);
+        updateIcon(context);
+        updateNameLabel(context);
+        updateStatus(context);
+        updateBackground(context);
 	}
+
+    private void updateIcon(Context context) {
+        ContextIcon icon = ContextIcon.createIcon(context.getIconName(), getResources());
+        int iconResource = icon.largeIconId;
+        if (iconResource > 0) {
+            mIcon.setImageResource(iconResource);
+            mIcon.setVisibility(View.VISIBLE);
+        } else {
+            mIcon.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void updateNameLabel(Context context) {
+        if (mTaskCountArray != null) {
+            Integer count = mTaskCountArray.get((int)context.getLocalId().getId());
+            if (count == null) count = 0;
+            mName.setText(context.getName() + " (" + count + ")");
+        } else {
+            mName.setText(context.getName());
+        }
+        int textColour = mTextColours.getTextColour(context.getColourIndex());
+        mName.setTextColor(textColour);
+    }
+
+    private void updateStatus(Context context) {
+        if (mStatus != null) {
+            mStatus.updateStatus(context.isActive(), context.isDeleted());
+        }
+    }
+
+    private void updateBackground(Context context) {
+        int bgColour = mTextColours.getBackgroundColour(context.getColourIndex());
+        GradientDrawable drawable = DrawableUtils.createGradient(bgColour, Orientation.TOP_BOTTOM);
+        drawable.setCornerRadius(12.0f);
+        mColour.setBackgroundDrawable(drawable);
+    }
+
 
 }

@@ -69,7 +69,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	@Override
     protected ListConfig<Task> createListConfig()
 	{
-        ListPreferenceSettings settings = new ListPreferenceSettings("project_tasks");
+        ListPreferenceSettings settings = new ListPreferenceSettings("project");
         return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister,settings) {
 
 		    public int getCurrentViewMenuId() {
