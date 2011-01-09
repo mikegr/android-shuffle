@@ -46,7 +46,7 @@ public class ShuffleModule extends AbstractAndroidModule {
 	      bind(new TypeLiteral<EntityEncoder<Project>>() {}).to(ProjectEncoder.class);
 	      bind(new TypeLiteral<EntityEncoder<Task>>() {}).to(TaskEncoder.class);
 
-          bind(DueActionsListConfig.class).annotatedWith(DueTasks.class).to(DueActionsListConfig.class);
+        bind(DueActionsListConfig.class).annotatedWith(DueTasks.class).to(DueActionsListConfig.class);
 	}
 
     @Provides @Inbox

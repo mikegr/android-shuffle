@@ -23,6 +23,7 @@ import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.annotation.Inbox;
+import org.dodgybits.shuffle.android.list.annotation.TopTasks;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
@@ -38,7 +39,7 @@ public class TopTasksActivity extends AbstractTaskListActivity {
 
     @Inject private TaskPersister mTaskPersister;
 
-    @Inject @Inbox
+    @Inject @TopTasks
     private TaskListConfig mTaskListConfig;
 
     @Override
