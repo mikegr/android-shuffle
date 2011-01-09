@@ -29,7 +29,7 @@ public class Project implements TracksEntity {
     private boolean mArchived;
     private Id mTracksId = Id.NONE;
 	private boolean mDeleted;
-	private boolean mActive;
+	private boolean mActive = true;
 	
 
     private Project() {
@@ -182,11 +182,22 @@ public class Project implements TracksEntity {
             return result.mActive;
         }
         
+        @Override
         public Builder setActive(boolean value) {
             result.mActive = value;
             return this;
         }
-        
+
+
+        public boolean isDeleted() {
+            return result.mDeleted;
+        }
+
+        @Override
+        public Builder setDeleted(boolean value) {
+            result.mDeleted = value;
+            return this;
+        }
 
         public final boolean isInitialized() {
             return result.isValid();
@@ -214,12 +225,6 @@ public class Project implements TracksEntity {
             setActive(project.mActive);
             return this;
         }
-
-		@Override
-		public EntityBuilder<Project> setDeleted(boolean value) {
-			result.mDeleted = value;
-			return this;
-		}
 
     }
 

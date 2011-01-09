@@ -33,7 +33,7 @@ public final class Task implements TracksEntity {
     private String mTimezone;
     private boolean mAllDay;
     private boolean mHasAlarms;
-    private boolean mActive;
+    private boolean mActive = true;
     private boolean mDeleted;
     private Id mCalendarEventId = Id.NONE;
     // 0-indexed order within a project.
@@ -327,6 +327,7 @@ public final class Task implements TracksEntity {
             return result.mActive;
         }
         
+        @Override
         public Builder setActive(boolean value) {
             result.mActive = value;
             return this;

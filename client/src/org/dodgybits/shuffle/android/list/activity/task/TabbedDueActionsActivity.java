@@ -23,7 +23,9 @@ import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector.PredefinedQuery;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.annotation.DueTasks;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
+import org.dodgybits.shuffle.android.list.config.DueActionsListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
@@ -40,8 +42,11 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 	private static final String cTag = "TabbedDueActionsActivity";
 
 	@InjectView(android.R.id.tabhost) TabHost mTabHost;
-	private PredefinedQuery mMode = PredefinedQuery.dueToday;
-	
+
+    @Inject @DueTasks
+    private DueActionsListConfig mListConfig;
+
+
 	public static final String DUE_MODE = "mode";
 	
     @Inject private TaskPersister mTaskPersister;
@@ -68,16 +73,16 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
 			public void onTabChanged(String tabId) {
 				Log.d(cTag, "Switched to tab: " + tabId);
 				if (tabId == null) tabId = PredefinedQuery.dueToday.name();
-				mMode = PredefinedQuery.valueOf(tabId);
+				mListConfig.setMode(PredefinedQuery.valueOf(tabId));
 				updateCursor();
 			}
         	
         });
         
-        mMode = PredefinedQuery.dueToday;
+        mListConfig.setMode(PredefinedQuery.dueToday);
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.containsKey(DUE_MODE)) {
-            mMode = PredefinedQuery.valueOf(extras.getString(DUE_MODE));
+            mListConfig.setMode(PredefinedQuery.valueOf(extras.getString(DUE_MODE)));
         }
     }
     
@@ -87,8 +92,8 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         super.onResume();
         
         // ugh!! If I take the following out, the tab contents does not display
-        int nextTab = mMode.ordinal() % 3;
-        int currentTab = mMode.ordinal() - 1;
+        int nextTab = mListConfig.getMode().ordinal() % 3;
+        int currentTab = mListConfig.getMode().ordinal() - 1;
     	mTabHost.setCurrentTab(nextTab);
     	mTabHost.setCurrentTab(currentTab);
     }
@@ -96,32 +101,9 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
     @Override
     protected ListConfig<Task> createListConfig()
 	{
-        ListPreferenceSettings settings = new ListPreferenceSettings("due_tasks").setDefaultCompleted(Flag.no);
-		return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
-
-			@Override
-			public int getContentViewResId() {
-				return R.layout.tabbed_due_tasks;
-			}
-			
-		    public int getCurrentViewMenuId() {
-				return MenuUtils.CALENDAR_ID;
-		    }
-		    
-		    public String createTitle(ContextWrapper context)
-		    {
-				return context.getString(R.string.title_calendar, getSelectedPeriod());
-		    }
-			
-		    
-		};
+		return mListConfig;
 	}
 
-    @Override
-	protected TaskSelector createTaskQuery() {
-        return TaskSelector.newBuilder().setPredefined(mMode).build();
-	}
-	
     private TabSpec createTabSpec(int tabTitleRes, String tagId, int iconId) {
         TabSpec tabSpec = mTabHost.newTabSpec(tagId);
         tabSpec.setContent(R.id.task_list);
@@ -129,28 +111,5 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
         tabSpec.setIndicator(tabName); //, this.getResources().getDrawable(iconId));
         return tabSpec;
     }
-
-    @Override
-	protected void updateCursor() {
-        super.updateCursor();
-    	setTitle(getListConfig().createTitle(this));
-	}    
-	
-	private String getSelectedPeriod() {
-		String result = null;
-		switch (mMode) {
-		case dueToday:
-			result = getString(R.string.day_button_title).toLowerCase();
-			break;
-		case dueNextWeek:
-			result = getString(R.string.week_button_title).toLowerCase();
-			break;
-		case dueNextMonth:
-			result = getString(R.string.month_button_title).toLowerCase();
-			break;
-		}
-		return result;
-	}
-	
 
 }

@@ -80,13 +80,12 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 		    {
 		    	return context.getString(R.string.title_context_tasks, mContext.getName());
 		    }
-			
+
+
 		};
 	}
 
-
-    @Override
-    protected TaskSelector createTaskQuery() {
+    private TaskSelector createTaskQuery() {
         List<Id> ids = Arrays.asList(new Id[] {mContextId});
         TaskSelector query = TaskSelector.newBuilder()
             .setContexts(new ArrayList<Id>(ids))

@@ -30,15 +30,20 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.annotation.Inbox;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
+import org.dodgybits.shuffle.android.list.config.TaskListConfig;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 public class InboxActivity extends AbstractTaskListActivity {
 
     @Inject private TaskPersister mTaskPersister;
+
+    @Inject @Inbox
+    private TaskListConfig mTaskListConfig;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -71,25 +76,8 @@ public class InboxActivity extends AbstractTaskListActivity {
     @Override
     protected ListConfig<Task> createListConfig()
 	{
-        ListPreferenceSettings settings = new ListPreferenceSettings("inbox");
-		return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
-
-		    public int getCurrentViewMenuId() {
-		    	return MenuUtils.INBOX_ID;
-		    }
-		    
-		    public String createTitle(ContextWrapper context)
-		    {
-		    	return context.getString(R.string.title_inbox);
-		    }
-			
-		};
+        return mTaskListConfig;
 	}
-
-    @Override
-    protected TaskSelector createTaskQuery() {
-        return StandardTaskQueries.getQuery(StandardTaskQueries.cInbox);
-    }
 
 	@Override
 	protected void onOtherButtonClicked() {

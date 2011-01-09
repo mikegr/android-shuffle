@@ -28,7 +28,7 @@ public class Context implements TracksEntity {
     private String mIconName;
     private long mModifiedDate;
     private boolean mDeleted;
-    private boolean mActive;
+    private boolean mActive = true;
     private Id mTracksId = Id.NONE;
 
     private Context() {
@@ -172,6 +172,18 @@ public class Context implements TracksEntity {
             result.mActive = value;
             return this;
         }
+
+
+        public boolean isDeleted() {
+            return result.mDeleted;
+        }
+
+        @Override
+        public Builder setDeleted(boolean value) {
+            result.mDeleted = value;
+            return this;
+        }
+
         
         public final boolean isInitialized() {
             return result.isValid();
@@ -198,12 +210,6 @@ public class Context implements TracksEntity {
             setActive(context.mActive);
             return this;
         }
-
-		@Override
-		public EntityBuilder<Context> setDeleted(boolean value) {
-			result.mDeleted = value;
-			return this;
-		}
 
     }
 

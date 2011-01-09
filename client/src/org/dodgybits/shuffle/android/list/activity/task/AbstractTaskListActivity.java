@@ -224,13 +224,10 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
             stopManagingCursor(oldCursor);
         }
 
-        getTaskListConfig().setTaskSelector(createTaskQuery());
         Cursor cursor = getListConfig().createQuery(this);
         adapter.changeCursor(cursor);
         setTitle(getListConfig().createTitle(this));
     }
-
-    abstract protected TaskSelector createTaskQuery();
 
 	protected boolean showTaskContext() {
 		return true;

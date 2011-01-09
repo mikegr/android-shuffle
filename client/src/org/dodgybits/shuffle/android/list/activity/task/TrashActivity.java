@@ -16,20 +16,6 @@
 
 package org.dodgybits.shuffle.android.list.activity.task;
 
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.shuffle.android.core.model.Id;
-import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
-import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
-import org.dodgybits.shuffle.android.core.view.AlertUtils;
-import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
-import org.dodgybits.shuffle.android.list.config.ListConfig;
-import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
-
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -37,14 +23,25 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.Toast;
-
 import com.google.inject.Inject;
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Id;
+import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
+import org.dodgybits.shuffle.android.core.view.AlertUtils;
+import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
+import org.dodgybits.shuffle.android.list.config.ListConfig;
+import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class TrashActivity extends AbstractTaskListActivity {
@@ -113,7 +110,9 @@ public class TrashActivity extends AbstractTaskListActivity {
     protected ListConfig<Task> createListConfig()
     {
         ListPreferenceSettings settings = new ListPreferenceSettings("trash").setDefaultDeleted(Flag.yes);
-        return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
+        return new AbstractTaskListConfig(
+                StandardTaskQueries.getQuery(StandardTaskQueries.cTrash),
+                mTaskPersister, settings) {
 
             public int getCurrentViewMenuId() {
                 return MenuUtils.TRASH_ID;
@@ -125,11 +124,6 @@ public class TrashActivity extends AbstractTaskListActivity {
             }
             
         };
-    }
-
-    @Override
-    protected TaskSelector createTaskQuery() {
-        return StandardTaskQueries.getQuery(StandardTaskQueries.cTrash);
     }
 
     @Override

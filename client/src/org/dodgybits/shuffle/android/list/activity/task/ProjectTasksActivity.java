@@ -16,10 +16,19 @@
 
 package org.dodgybits.shuffle.android.list.activity.task;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import android.content.ContentUris;
+import android.content.ContextWrapper;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import com.google.inject.Inject;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
@@ -33,22 +42,11 @@ import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
-
-import android.content.ContentUris;
-import android.content.ContextWrapper;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
-
-import com.google.inject.Inject;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ProjectTasksActivity extends AbstractTaskListActivity {
 
@@ -84,8 +82,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 		};
 	}
 
-    @Override
-    protected TaskSelector createTaskQuery() {
+    private TaskSelector createTaskQuery() {
         List<Id> ids = Arrays.asList(new Id[] {mProjectId});
         TaskSelector query = TaskSelector.newBuilder()
             .setProjects(new ArrayList<Id>(ids))

@@ -37,7 +37,7 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     public AbstractTaskListConfig(TaskSelector query, TaskPersister persister, ListPreferenceSettings settings) {
         mPersister = persister;
         mSettings = settings;
-        setTaskSelector(query);
+        mTaskSelector = query;
     }
     
     @Override

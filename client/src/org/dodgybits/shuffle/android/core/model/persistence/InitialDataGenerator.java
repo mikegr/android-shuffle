@@ -83,7 +83,6 @@ public class InitialDataGenerator {
      * Delete any existing projects, contexts and tasks and create the standard
      * contexts.
      * 
-     * @param androidContext the android context, in this case the activity.
      * @param handler the android message handler
      */
     public void cleanSlate(Handler handler) {
@@ -107,7 +106,6 @@ public class InitialDataGenerator {
 	/**
 	 * Clean out the current data and populate the database with a set of sample
 	 * data.
-     * @param androidContext the context, that being the view
      * @param handler the message handler
      */
 	public void createSampleData(Handler handler) {
@@ -234,6 +232,8 @@ public class InitialDataGenerator {
         Context.Builder builder = Context.newBuilder();
         builder
             .setName(name)
+            .setActive(true)
+            .setDeleted(false)
             .setColourIndex(colourIndex)
             .setIconName(iconName);
         return builder.build();
@@ -268,6 +268,8 @@ public class InitialDataGenerator {
 		    .setStartDate(start)
 		    .setDueDate(due)
 		    .setTimezone(timezone)
+            .setActive(true)
+            .setDeleted(false)
 		    .setOrder(ORDER++);
 		return builder.build();
 	}
@@ -276,6 +278,8 @@ public class InitialDataGenerator {
         Project.Builder builder = Project.newBuilder();
         builder
             .setName(name)
+            .setActive(true)
+            .setDeleted(false)
             .setDefaultContextId(defaultContextId)
             .setModifiedDate(System.currentTimeMillis());
         return builder.build();

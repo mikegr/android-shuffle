@@ -84,8 +84,7 @@ public class TicklerActivity extends AbstractTaskListActivity {
         };
     }
 
-    @Override
-    protected TaskSelector createTaskQuery() {
+    private TaskSelector createTaskQuery() {
         return StandardTaskQueries.getQuery(StandardTaskQueries.cTickler);
     }
 
