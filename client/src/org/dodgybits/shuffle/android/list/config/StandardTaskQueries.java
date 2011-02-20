@@ -21,8 +21,7 @@ public class StandardTaskQueries {
     public static final String cDueNextMonth = "due_next_month";
     public static final String cNextTasks = "next_tasks";
     public static final String cTickler = "tickler";
-    public static final String cTrash = "trash";
-    
+
     private static final TaskSelector cInboxQuery = 
         TaskSelector.newBuilder().setPredefined(PredefinedQuery.inbox).build();
         
@@ -41,9 +40,6 @@ public class StandardTaskQueries {
     private static final TaskSelector cTicklerQuery = 
         TaskSelector.newBuilder().setPredefined(PredefinedQuery.tickler).build();
     
-    private static final TaskSelector cTrashQuery = 
-        TaskSelector.newBuilder().setDeleted(yes).build();
-    
 
     private static final HashMap<String,TaskSelector> cQueryMap = new HashMap<String,TaskSelector>();
     static {
@@ -53,7 +49,6 @@ public class StandardTaskQueries {
         cQueryMap.put(cDueNextMonth, cDueNextMonthQuery);
         cQueryMap.put(cNextTasks, cNextTasksQuery);
         cQueryMap.put(cTickler, cTicklerQuery);
-        cQueryMap.put(cTrash, cTrashQuery);
     }
     
     public static TaskSelector getQuery(String name) {

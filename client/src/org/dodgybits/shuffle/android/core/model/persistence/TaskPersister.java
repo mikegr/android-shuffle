@@ -4,6 +4,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -13,13 +14,16 @@ import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
+import org.dodgybits.shuffle.android.core.util.StringUtils;
+import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import roboguice.inject.ContentResolverProvider;
 import roboguice.inject.ContextScoped;
+import roboguice.util.Ln;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 import static org.dodgybits.shuffle.android.core.util.Constants.*;
 import static org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider.ShuffleTable.ACTIVE;
@@ -127,7 +131,36 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     public String[] getFullProjection() {
         return TaskProvider.Tasks.FULL_PROJECTION;
     }
-    
+
+    @Override
+    public int emptyTrash() {
+        // find tasks that are deleted or who's context or project is deleted
+        TaskSelector selector = TaskSelector.newBuilder().setDeleted(Flag.yes).build();
+
+        Cursor cursor = mResolver.query(getContentUri(),
+                new String[] {BaseColumns._ID},
+                selector.getSelection(null),
+                selector.getSelectionArgs(),
+                selector.getSortOrder());
+        List<String> ids = new ArrayList<String>();
+        while (cursor.moveToNext()) {
+            ids.add(cursor.getString(ID_INDEX));
+        }
+        cursor.close();
+
+        int rowsDeleted = 0;
+        if (ids.size() > 0) {
+            Ln.i("About to delete tasks %s", ids);
+            String queryString = "_id IN (" + StringUtils.join(ids, ",") + ")";
+            rowsDeleted = mResolver.delete(getContentUri(), queryString, null);
+            Map<String, String> params = new HashMap<String, String>(mFlurryParams);
+            params.put(cFlurryCountParam, String.valueOf(rowsDeleted));
+            mAnalytics.onEvent(cFlurryDeleteEntityEvent, params);
+        }
+
+        return rowsDeleted;
+    }
+
     public int deleteCompletedTasks() {
         int deletedRows = moveToTrash(TaskProvider.Tasks.COMPLETE + " = 1", null);
         Log.d(cTag, "Deleting " + deletedRows + " completed tasks.");
@@ -138,6 +171,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         
         return deletedRows;
     }
+
 
     /**
      * Toggle whether the task at the given cursor position is complete.

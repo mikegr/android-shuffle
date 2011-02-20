@@ -1,19 +1,20 @@
 package org.dodgybits.shuffle.android.core.model.persistence.selector;
 
+import android.util.Log;
+import org.dodgybits.shuffle.android.core.model.Id;
+import org.dodgybits.shuffle.android.core.util.StringUtils;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dodgybits.shuffle.android.core.model.Id;
-import org.dodgybits.shuffle.android.core.util.StringUtils;
-
-import android.util.Log;
-import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
+import static org.dodgybits.shuffle.android.core.model.persistence.selector.Flag.ignored;
 
 public abstract class AbstractEntitySelector implements EntitySelector {
     private static final String cTag = "AbstractEntitySelector";
 
-    protected Flag mActive;
-    protected Flag mDeleted;
+    protected Flag mActive = ignored;
+    protected Flag mDeleted = ignored;
     protected String mSortOrder;
     
     @Override

@@ -265,7 +265,7 @@ allow that, you can turn it off under Settings.</string>
     <string name="itemCreatedToast">%1$s created.</string>
 
     <string name="warning_empty_trash">Permanently remove all deleted items?</string>
-    <string name="toast_empty_trash">Permanently deleted %1$s action(s), %2$s project(s) and %3$s context(s).</string>
+    <string name="toast_empty_trash">Permanently deleted %1$s action(s), %2$s context(s) and %3$s projects(s).</string>
     
     <!-- Toast displayed when an item is saved -->
     <string name="itemSavedToast">%1$s saved.</string>

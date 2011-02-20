@@ -49,10 +49,9 @@ public class PreferencesPermanentlyDeleteActivity extends PreferencesDeleteActiv
     
 	@Override
 	protected void onDelete() {
-        Ln.d("Cleaning the slate");
         int taskCount = mTaskPersister.emptyTrash();
-        int contextCount = mContextPersister.emptyTrash();
         int projectCount = mProjectPersister.emptyTrash();
+        int contextCount = mContextPersister.emptyTrash();
 
         Ln.i("Permanently deleted %s tasks, %s contexts and %s projects", taskCount, contextCount, projectCount);
         CharSequence message = getString(R.string.toast_empty_trash, new Object[] {taskCount, contextCount, projectCount});
