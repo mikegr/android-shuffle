@@ -16,10 +16,6 @@ public class ListPreferenceSettings {
     public static final String LIST_FILTER_DELETED = ".list_deleted";
     public static final String LIST_FILTER_PENDING = ".list_pending";
 
-    public static enum View {
-        inbox,
-    }
-
     private static final String PREFIX = "prefix";
     private static final String BUNDLE = "list-preference-settings";
     private static final String DEFAULT_COMPLETED = "defaultCompleted";

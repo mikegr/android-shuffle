@@ -86,6 +86,8 @@
     <string name="nothing"></string>
     <string name="deleted">Deleted</string>
     <string name="inactive">Inactive</string>
+    <string name="from_context">(via context)</string>
+    <string name="from_project">(via project)</string>
     <string name="none_empty">None</string>
     <string name="undefined">None</string>
     <string name="today">Today</string>
