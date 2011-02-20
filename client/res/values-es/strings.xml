@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Android Shuffle Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+	<!--  Activity titles -->
+    <string name="app_name">Shuffle</string>
+    <string name="title_inbox">Bandeja de entrada</string>
+    <string name="title_project">Proyectos</string>
+    <string name="title_context">Contextos</string>
+    <string name="title_next_tasks">Acciones siguientes</string>
+    <string name="title_due_tasks">Acciones pendientes</string>
+    <string name="title_due_today">Finalizan hoy</string>
+    <string name="title_due_next_week">Finalizan siguiente semana</string>
+    <string name="title_due_next_month">Finalizan siguiente mes</string>
+    <string name="title_tickler">Recordatorio</string>
+    <string name="title_trash">Papelera</string>
+    <string name="title_new_task">Nueva acción</string>
+    <string name="title_edit_task">Editar acción</string>
+    <string name="title_view_task">Ver acción</string>
+    <string name="title_new_project">Nuevo proyecto</string>
+    <string name="title_edit_project">Editar proyecto</string>
+    <string name="title_new_context">Nuevo contexto</string>
+    <string name="title_edit_context">Editar contexto</string>
+    <string name="title_task_extras">Acciones extras</string>
+    <string name="title_preferences">Preferencias</string>
+    <string name="title_preferences_appearance">Preferencias > Apariencia de la acción</string>
+    <string name="title_preferences_clean">Preferencias > Limpieza</string>
+    <string name="title_preferences_create_backup">Crear backup</string>
+    <string name="title_preferences_restore_backup">Restaurar backup</string>
+    <string name="title_help">Ayuda</string>
+    <string name="title_icon_picker">Elegir icono</string>
+    <string name="title_colour_picker">Elegir color</string>
+    <string name="title_calendar">Acciones pendientes %s</string>
+    <string name="title_project_tasks">Proyectos > %s</string>
+    <string name="title_context_tasks">Contextos > %s</string>
+    <string name="title_shortcut_picker">Selección de acceso directo</string>
+    <string name="title_widget_picker">Selección de widget</string>
+
+	<!--  Option menu -->
+    <string name="menu_save">Guardar</string>
+    <string name="menu_save_and_add">Guardar y nuevo</string>
+    <string name="menu_delete">Borrar</string>
+    <string name="menu_put_back">Retrasar</string>
+    <string name="menu_complete">Marcar completada</string>
+    <string name="menu_move_up">Subir</string>
+    <string name="menu_move_down">Bajar</string>
+    <string name="menu_insert">Añadir %s</string>
+    <string name="menu_revert">Revertir</string>
+    <string name="menu_discard">Descartar</string>
+    <string name="menu_view">Perspectiva</string>
+    <string name="menu_preferences">Preferencias</string>
+    <string name="menu_sync">Sincronizar</string>
+    <string name="menu_search">Buscar</string>
+    <string name="menu_help">Ayuda</string>
+
+    <!--  general purpose -->
+    <string name="project_title">Proyecto</string>
+    <string name="context_title">Contextos</string>
+    <string name="details_title">Detalles</string>
+    <string name="set_button_title">Marcar</string>
+    <string name="clear_button_title">Limpiar</string>
+    <string name="edit_button_title">Editar</string>
+    <string name="extras_button_title">Detalles extras...</string>
+    <string name="save_button_title">Guardar</string>
+    <string name="ok_button_title">Ok</string>
+    <string name="cancel_button_title">Cancelar</string>
+    <string name="replace_button_title">Remplazar</string>
+	<string name="warning_title">Atención</string>
+	<string name="info_title">Información</string>
+    <string name="task_name">Acción</string>
+    <string name="project_name">Proyecto</string>
+    <string name="context_name">Contexto</string>
+    <string name="nothing"></string>
+    <string name="deleted">Borrado</string>
+    <string name="inactive">Inactivo</string>
+    <string name="none_empty">Ninguno</string>
+    <string name="undefined">Ninguno</string>
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
+    <string name="previous_button_title">Anterior</string>
+    <string name="next_button_title">Siguiente</string>
+
+    
+    <!--  search -->
+    <string name="search_label">Shuffle</string>
+    <string name="search_hint">Buscar por descripción o detalles</string>
+    <string name="search_settings_description">Descripción y detalles de las acciones</string>
+    
+    <!--  Welcome screen -->
+    <string name="sample_data_title">Demostración</string>
+    <string name="clean_slate_title">Borrar datos de demostración</string>
+
+    <!--  What's new dialog -->
+<string name="whats_new_dialog_title">Shuffle</string>
+<string name="whats_new_dialog_message">Gracias por descargar Shuffle.\n\n
+<b>Novedades en la versión actual:</b>\n
+\t• Corrección del error de edición de tareas en Android 1.5.\n
+\n
+<b>Novedades en la versión 1.6.2:</b>\n
+\t• Corrección del error que impedia borrar el contexto o proyecto de una acción.\n
+\n
+<b>Novedades en la versión 1.6.1:</b>\n
+\t• Corrección del error de sincronización con Tracks.\n
+\t• Restaurado el comportamiento de la bandeja de entrada.\n
+\n
+<b>Novedades en la versión 1.6.0:</b>\n
+\t• <b>Widget</b> para tus listas favoritas.\n
+\t• Corrección del error al crear un calendario de Google en Android 2.2.\n
+\t• Reescritura del código para hacerlo más robusto y simplificar la adición de nuevas funciones.\n
+\n
+<b>Novedades en la versión 1.5.1:</b>\n
+\t• Parche para corregir errores de sincronización con Tracks.\n
+\n
+<b>Novedades en la versión 1.5.0:</b>\n
+\t• Buscar acciones (incluido en la caja de búsqueda rápida)\n
+\t• Añadida la opción de borrar la programación de las acciones\n
+\t• Las acciones se eliminan de la bandeja de entrada si se define un proyecto o contexto\n
+\t• Se pueden añadir acciones sin proyectos a Acciones siguientes\n
+\t• Habilitada la opción de ejecutar acciones en paralelo dentro de un proyecto\n
+\t• En la sincronización con Tracks, no se marca el flag Todo el día si no se ha definido una fecha\n
+\t• Se muestran las fechas de inicio y fin en la lista de actividades\n
+\t• Actualizada la pantalla de Ayuda\n
+\n
+\n
+Ten en cuenta que la aplicación realiza estadísticas anónimas de uso y las manda a un servidor web. Si no deseas este comportamiento, se puede desactivar en la Configuración.</string>
+    
+	<!--  edit screens -->
+    <string name="menu_done">Guardar</string>
+    <string name="menu_doNotSave">Descartar cambios</string>
+
+	<!--  task edit screen -->
+    <string name="description_title">Descripción</string>
+    <string name="scheduling_title">Repetición</string>
+    <string name="scheduling_collapsed">Pulsa para mostrar las opciones de repetición</string>
+    <string name="scheduling_expanded">Pulsa para ocultar las opciones de repetición</string>
+    <string name="start_title">Inicio</string>
+    <string name="due_title">Fin</string>
+    <string name="all_day_title">Todo el día</string>
+    <string name="reminders_title">Recordatorios</string>
+    <string name="add_to_gcal_title">Añadir al calendario de Google</string>
+    <string name="add_to_gcal_detail_disabled">Añade una fecha para activar esta opción</string>
+    <string name="add_to_gcal_detail">Se creará una nueva entrada después de guardar</string>
+    <string name="update_gcal_title">Actualizar calendario de Google</string>
+    <string name="update_gcal_detail">Actualizar la entrada después de guardar</string>
+    <string name="completed_title">Completada</string>
+    <string name="active_title">Activa</string>
+    <string name="deleted_title">Borrada</string>
+    <string name="clear_title">Borrar fechas</string>
+
+	<!--  project & context edit screens -->
+    <string name="colour_title">Color</string>
+    <string name="archived_title">Archivado</string>
+    <string name="icon_title">Icono</string>
+    <string name="name_title">Nombre</string>
+    <string name="sequence_title">Acciones completadas secuencialmente</string>
+    <string name="parallel_title">Acciones completadas en paralelo</string>
+    <string name="default_context_title">Contexto por defecto</string>
+    <string name="preview_title">Vista preliminar</string>
+    <string name="context_errands">Recados</string>
+	<string name="context_online">Online</string>
+    <string name="context_athome">En casa</string>
+    <string name="context_atwork">En el trabajo</string>
+	<string name="context_contact">Contactos</string>
+	<string name="context_read">Lectura</string>
+
+	<!--  Calendar screen -->
+    <string name="day_button_title">Hoy</string>
+    <string name="week_button_title">Siguiente semana</string>
+    <string name="month_button_title">Siguiente mes</string>
+	
+	<!--  preferences screen -->    
+    <string name="display_task_list_title">Mostrar en la lista de acciones</string>
+    <string name="context_icon_title">Icono de contexto</string>
+    <string name="context_name_title">Nombre del contexto</string>
+    <string name="due_date_title">Fecha de fin</string>
+
+
+    <string name="general_preferences">Configuración de Google</string>
+    
+    <string name="title_calendar_preference">Selección de calendario</string>
+    <string name="summary_calendar_preference">Para nuevas entradas del calendario de Google</string>
+    
+    <string name="title_send_analytics_preference">Mandar estadísticas de uso</string>
+    <string name="summary_send_analytics_preference">Se transmiten estadísticas anónimas para encontrar errores y priorizar las funciones.</string>
+
+	<string name="layout_preferences">Preferencias</string>
+
+	<string name="title_project_view_preference">Preferencias de la vista de proyecto</string>
+	<string name="summary_project_view_preference">Mostrar las acciones del proyecto en una pantalla separada</string>
+
+	<string name="title_context_view_preference">Preferencias de la vista de contexto</string>
+	<string name="summary_context_view_preference">Mostrar las acciones del contexto en una pantalla separada</string>
+
+	<string name="title_action_appearance_preference">Apariencia de las acciones</string>
+	<string name="summary_action_appearance_preference">Personalizar la apariencia de las acciones en las vistas</string>
+
+
+    <string name="sync_preferences">Preferencias de sincronización</string>
+
+    <string name="changeSynchronizationSettings">Configuración de la sincronización</string>
+
+
+	<string name="backup_preferences">Preferencias de backup</string>
+	
+	<string name="title_create_backup_preference">Backup en la tarjeta SD</string>
+	<string name="summary_create_backup_preference">Guardar todas las acciones, proyectos y contextos</string>
+
+    <string name="filename_title">Archivo de backup</string>
+	<string name="backup_progress">Escribiendo %1$s %2$s.</string>
+	<string name="toast_backup_saved">El backup se ha realizado correctamente en %1$s.</string>
+
+	<string name="title_restore_backup_preference">Restaurar desde la tarjeta SD</string>
+	<string name="summary_restore_backup_preference">Restaurar datos del backup</string>
+	<string name="toast_backup_restored">La restauración se ha realizado correctamente en %1$s.</string>
+	<string name="restore_progress">Leyendo %1$s %2$s.</string>
+	<string name="restore_button_title">Restaurar</string>
+
+    <string name="warning_filename_empty">Debes especificar el nombre del archivo.</string>
+	<string name="warning_filename_exists">Ya existe %1$s.</string>
+	<string name="warning_media_not_mounted">La tarjeta de memoria no está montada %1$s</string>
+	<string name="warning_backup_failed">Error en el backup %1$s</string>
+    <string name="warning_no_files">No hay archivos que mostrar.</string>
+	<string name="warning_restore_failed">La restauración ha fallado %1$s</string>
+    <string name="status_checking_media">Comprobando estado del medio.</string>
+    <string name="status_creating_backup">Creando archivo de backup.</string>
+    <string name="status_backup_complete">Backup completado.</string>
+    <string name="status_reading_backup">Leyendo archivo de backup.</string>
+    <string name="status_restore_complete">Restauración completada.</string>
+
+	<string name="cleanup_preferences">Preferencias de borrado</string>
+
+	<string name="dialog_title_cleanup_preference">Borrar acciones completadas</string>
+
+	<string name="title_delete_completed_preference">Borrar acciones completadas</string>
+
+	<string name="title_delete_all_preference">¡Borrarlo todo!</string>
+	<string name="summary_delete_all_preference">Borrar todas las acciones, proyectos y contextos definidos por el usuario.</string>
+
+    <string name="delete_completed_button_title">Borrar</string>
+    <string name="clean_inbox_button_title">Borrar bandeja de entrada</string>
+    <string name="clean_slate_button_title">Borrar</string>
+
+    <string name="permanently_delete_button_title">Borrado permanente</string>
+
+    <!-- Toast displayed when an item is created -->
+    <string name="itemCreatedToast">Se ha creado %1$.</string>
+
+    <string name="emptyTrashWarning">¿Vaciar todos los elementos de la papelera?</string>
+    <string name="emptyTrashToast">Borrado permanente de las acciones %1$, proyectos y contextos.</string>
+    
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemSavedToast">Se ha guardado %1$.</string>
+
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemDeletedToast">Se ha eliminado %1$.</string>
+
+    
+   <!-- synchronization-->
+    <string name="synchronizing">Configuración con Tracks</string>
+    <string name="tracksUser">Usuario</string>
+    <string name="tracksInstallation">Instalación</string>
+    <string name="tracks_url">URL de Tracks</string>
+    <string name="tracks_url_settings">http://my.gtdify.com</string>
+    <string name="tracks_user">Usuario</string>
+    <string name="tracks_pass">Password</string>
+    <string name="readingRemoteTasks">Leyendo tareas remotas</string>
+    <string name="processingTasks">Procesando tareas</string>
+    <string name="readingLocalTasks">Leyendo tareas locales</string>
+    <string name="doneWithTasks">Tareas finalizadas</string>
+    <string name="cannotSyncTasksWithoutContext">Las acciones sin contexto no aparecerán en Tracks</string>
+    <string name="readingRemoteContexts">Leyendo contextos remotos</string>
+    <string name="processingContexts">Procesando contextos</string>
+    <string name="readingLocalContexts">Leyendo contextos locales</string>
+    <string name="doneWithContexts">Contextos finalizados</string>
+    <string name="readingRemoteProjects">Leyendo proyectos remotos</string>
+    <string name="processingProjects">Procesando proyectos</string>
+    <string name="readingLocalProjects">Leyendo proyectos locales</string>
+    <string name="doneWithProjects">Proyectos finalizados</string>
+    <string name="tracks_failed_to_check_url">No se han podido cargar los contextos con la configuración actual, algo está mal en la configuración.</string>
+    <string name="tracks_background_sync">Intervalo de sincronización en segundo plano</string>
+    <string name="tracks_check_settings">Comprobar configuración</string>
+	<string name="tracks_settings_valid">La configuración es válida</string>
+	<string name="sync_interval_none">Nunca</string>
+    <string name="sync_interval_30min">30 minutos</string>
+    <string name="sync_interval_1h">1 hora</string>
+    <string name="sync_interval_2h">2 horas</string>
+    <string name="sync_interval_3h">3 horas</string>
+
+    <!-- list filter preferences -->
+    <string name="list_settings_title">Configuración</string>
+    <string name="active_items_title">Acciones activas</string>
+    <string name="deleted_items_title">Acciones eliminadas</string>
+    <string name="pending_items_title">La acción empieza en el futuro</string>
+    <string name="completed_items_title">Acciones completadas</string>
+
+
+	<!--  messages -->
+    <string name="no_due_date">Sin fecha de finalización</string>
+    <string name="no_icon">Sin icono</string>
+    <string name="no_tasks">No hay acciones que mostrar. Empieza seleccionando \"Añadir acción" desde el menú.</string>
+    <string name="no_due_tasks">No hay acciones pendientes.</string>
+    <string name="no_projects">No hay proyectos que mostrar. Empieza creando acciones en la bandeja de entrada y asignándolas a un proyecto.</string>
+    <string name="no_contexts">No hay contextos que mostrar. Empieza creando acciones en la bandeja de entrada y asignándolas a un contexto.</string>
+    <string name="delete_warning">¿Seguro que quieres borrar la selección %1$ y sus %2$d %3$s(s)?</string>
+    <string name="delete_completed_warning">¿Borrar acciones completadas?</string>
+    <string name="clean_slate_warning">¿Borrar <i>todas</i> las acciones, proyectos y contextos definidos por el usuario?</string>
+    <string name="clean_task_message">Borrar las acciones completadas %1$.</string>
+    <string name="clean_inbox_message">Quitar las acciones que tengan definidos proyectos o contextos de la bandeja de entrada.</string>
+    <string name="clean_slate_message">Se han borrado todas las acciones, proyectos y contextos definidos por el usuario.</string>
+   	<string name="error_title">Error</string>
+	<string name="error_message">Se ha producido un error al cargar la acción</string>
+	<string name="web_error_message">No se puede conectar con Tracks</string>    
+    <string name="welcome1">
+Bienvenido a Shuffle, una herramienta de organización personal inspirada por la metodología GTD. Si quieres conocer como usar mejor Shuffle, pulsa en \"Demostración\" para cargar un conjunto de proyectos y acciones. Posteriormente puedes empezar de nuevo pulsando \"Borrar todo\" en el menú de configuración.
+    </string>
+    <string name="welcome2">
+O empieza sin acciones o proyectos definidos y usando un conjunto de contextos por defecto...	
+    </string>
+    <string name="welcome3">
+Para más instrucciones y consejos pulsa en el menú Ayuda.
+    </string>
+    <string name="help0">
+Shuffle es una herramienta de organización personal inspirada por la metodología GTD. Te permite introducir los datos rápidamente y ordenar las \'acciones\'. Con 5 perspectivas puedes realizar las acciones de la forma que quieras.
+\n
+Un flujo de trabajo simple y elegante que te anima a ordenar las acciones en proyectos y opcionalmente clasificarlas en un contexto.
+Esta estructura permite dividir proyectos grandes en pequeñas tareas fácilmente realizables.\n
+Igual que el proyecto evoluciona, puedes borrar las acciones antiguas al finalizarlas y añadir nuevas acciones y reordenarlas dependiendo de las prioridades actuales.
+    </string>
+    <string name="help1">
+Este es el mejor lugar para añadir las acciones.
+La <b>bandeja de entrada</b> es el lugar donde se inician las nuevas acciones antes de que sean procesadas.
+Revisa regularmente la bandeja de entrada, analiza cada acción y descartala, hazla o asignala a un proyecto o contexto.\n
+Una vez que has procesado toda la lista, pulsa en el botón <i>Limpiar bandeja de entrada</i> del menú para eliminar las acciones de la bandeja de entrada que tienen asociada una categoría.
+    </string>
+    <string name="help2">
+La vista de <b>proyecto</b> muestra todos tus proyectos y te permite visualizar las acciones asociadas a cada proyecto. De forma adicional a la forma normal de añadir, editar y eliminar acciones, la vista de proyectos permite reordenar acciones en el orden en el que quieres realizarlas.
+\n
+Para algunos proyectos tiene sentido completar las acciones una detrás de otra. Para otros, las acciones se pueden completar en cualquier orden. Esto se configura en la creación o edición de un proyecto.
+\n
+Los proyectos, igual que los contextos, se pueden visualizar de dos formas, drill-down y vista expandible. En el primero al pulsar en un proyecto las acciones se muestran en una vista nueva. En el segundo caso, las acciones se muestran en la misma vista.
+    </string>
+    <string name="help3">
+Los <b>contextos</b> son situaciones en las que se pueden realizar ciertas acciones. Shuffle tiene definidos varios contextos para empezar:
+<i>En casa</i>, <i>En el trabajo</i>, <i>Online</i>, <i>Recados</i>, <i>Contactos</i> y <i>Lectura</i>. \n Puedes modificar o eliminar los contextos existentes o añadir nuevos contextos dependiendo de tu situación.\n
+\n
+Igual que en la vista de proyectos, los contextos se pueden ver en drill-down o con el modo expandido, configurable en Configuración.
+    </string>
+    <string name="help4">
+<b>Siguiente acción</b> es el mejor lugar para determinar lo que tienes que hacer. \n
+Muestra las siguientes acciones\n
+- Aquellas sin un proyecto\n
+- La primera acción de un proyecto secuencial\n
+- Todas las acciones de un proyecto paralelo\n
+Esta lista muestra rápidamente las acciones más importantes por las que tienes que empezar.
+    </string>
+    <string name="help5">
+<b>Acciones pendientes</b> permite seguir las acciones que tienen una fecha de finalización.
+Hay 3 vistas - <i>Hoy</i>, <i>Esta semana</i> y
+<i>Este mes</i> cada una muestra las acciones que finalizan en la escala de tiempo seleccionada. Las acciones que han superado la fecha de finalización se muestran en todas las vistas.
+    </string>
+    <string name="help6">
+Varias opciones de Shuffle son configurables por el usuario. La vista <b>Configuración</b> está disponible en todas las perspectivas usando el menú\n
+<b>Calendario</b>  - Selecciona el calendario que se usará al unir las acciones con el calendario de Google. \n
+<b>Vista de proyectos/contextos</b>  - Muestra proyectos y contextos en dos pantallas (drill-down) o en una estructura de árbol (expandible). \n
+<b>Apariencia de las acciones</b> - Permite configurar que información se muestra en las acciones de cada perspectiva.  \n
+<b>Configuración de Tracks</b> - Configura la sincronización con el servidor de Tracks. \n
+<b>Backup en la tarjeta SD</b> - Guarda una copia de todas las acciones, contextos y proyectos en la tarjeta SD. El archivo se puede copiar posteriormente en el ordenador. \n
+<b>Restaurar desde la tarjeta SD</b> - Restaura todos los datos del backup. No se controla la aparición de acciones duplicadas, por esta razón es mejor restaurar en una instalación limpia (sin datos) de Shuffle. \n
+<b>Borrar acciones completadas</b> - Borra permanentemente todas las acciones completadas. \n
+<b>¡Borrar todo!</b> - Borra permanentemente todas las acciones, proyectos y contextos creados por el usuario. \n
+    </string>
+    <string name="help7">
+Algunos trucos que puede que no conozcas:\n
+1) En cualquier vista de lista, mantén pulsado sobre un elemento para mostrar un menú de opciones.\n
+2) Pulsar el botón Atras guarda antes de cerrar.\n
+3) Usa la opción <i>Guardar y nuevo</i> del menú para crear un grupo de acciones seguidas.\n
+4) Puedes marcar una acción como completada pulsando con los dedos sobre ella en una lista.\n
+5) Crea accesos directos en la pantalla inicial de Android para varias vistas y acciones de Shuffle.\n
+6) En la configuración global &gt; Buscar, permite que las acciones de Shuffle aparezcan en la barra de búsqueda rápida (versiones de Android superiores a la 1.6)
+    </string>
+    <string name="help8">
+Gracias al equipo que está detrás del proyecto de escritorio Tango, una colección de iconos de código abierto que se usa en Shuffle. Gracias también a David Gibb por su realimentación en el diseño, Morten Nielson por el trabajo de sincronización con Tracks, y a Gudrun por tolerar las noches y fines de semana pasados trabajando con Android.\n
+\n
+Para sugerencias o reporte de errores, comprueba http://code.google.com/p/android-shuffle/issues/list o mándame un correo a andy@dodgybits.org
+    </string>
+
+
+    <!-- Reminder format strings -->
+    <plurals name="Nminutes">
+        <!-- This is the label for a 1-minute reminder. -->
+        <item quantity="one">1 minuto</item>
+        <!-- This is the label for 2 or more minutes. The actual number of
+             minutes is a parameter. -->
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
+    <!-- We use the abbreviation "mins" instead of "minutes" to keep the string short.
+         This is the number of minutes displayed for a calendar reminder.  For example,
+         a reminder of 10 minutes would be displayed as '10 mins'.  The translation
+         should use the shortest acceptable abbreviation to save space. -->
+    <plurals name="Nmins">
+        <!-- This is the label for a 1-minute reminder. -->
+        <item quantity="one">1 min</item>
+        <!-- This is the label for 2 or more minutes. The actual number of
+             minutes is a parameter. -->
+        <item quantity="other">%1$d mins</item>
+    </plurals>
+    <!-- This is the number of hours displayed for a calendar reminder.  For example,
+         a reminder of 1 hour would be displayed as '1 hour'.  The translation
+         should use the shortest acceptable abbreviation of 'hour' to save space. -->
+    <plurals name="Nhours">
+        <!-- This is the label for a 1-hour reminder. -->
+        <item quantity="one">1 hora</item>
+        <!-- This is the label for a reminder of 2 or more hours. The actual number of
+             hours is a parameter. -->
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <!-- This is the number of days displayed for a calendar reminder.  For example,
+         a reminder of 2 days would be displayed as '2 days'.  The translation
+         should use the shortest acceptable abbreviation of 'day' to save space. -->
+    <plurals name="Ndays">
+        <!-- This is the label for a reminder of 1 day. -->
+        <item quantity="one">1 día</item>
+        <!-- This is the label for a reminder of 2 or more days. The actual number of
+             days is a parameter. -->
+        <item quantity="other">%1$d días</item>
+    </plurals>
+    
+
+
+</resources>

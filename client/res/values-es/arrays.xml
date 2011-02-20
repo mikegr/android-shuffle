@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Android Shuffle Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <array name="clean">
+        <item>Nunca</item>
+        <item>Por hora</item>
+        <item>Diaria</item>
+        <item>Semanal</item>
+    </array>
+    <array name="clean_keys">
+        <item>nunca</item>
+        <item>por hora</item>
+        <item>diaria</item>
+        <item>semanal</item>
+    </array>
+    <array name="perspectives">
+        <item>Bandeja de entrada</item>
+        <item>Acciones pendientes</item>
+        <item>Acciones siguientes</item>
+        <item>Proyectos</item>
+        <item>Contextos</item>
+        <item>Recordatorio</item>
+        <item>Papelera</item>
+    </array>
+    <array name="view_types">
+        <item>Pantalla actual</item>
+        <item>Pantalla nueva</item>
+    </array>
+    <array name="help_screens">
+        <item>Introducción</item>
+        <item>Bandeja de entrada</item>
+        <item>Proyectos</item>
+        <item>Contextos</item>
+        <item>Acciones siguientes</item>
+        <item>Acciones pendientes</item>
+        <item>Configuración</item>
+        <item>Trucos</item>
+        <item>Agradecimientos</item>
+    </array>
+    <array name="preference_screens">
+        <item>Apariencia de la Acción</item>
+        <item>Apariencia de la Lista</item>
+        <item>Limpiar</item>
+    </array>
+	    
+    <array name="text_colours">
+    	<item>c5b6985</item>
+    	<item>c2c6cfc</item>
+    	<item>c1800c9</item>
+    	<item>c5528a1</item>
+    	<item>c854f61</item>
+    	<item>cca000f</item>
+
+    	<item>cdee5f2</item>
+    	<item>ce1ecfe</item>
+    	<item>ce0e2fe</item>
+    	<item>ce1d5f8</item>
+    	<item>cfde9f4</item>
+    	<item>cffe3e3</item>
+
+    	<item>cea7015</item>
+    	<item>cb16d12</item>
+    	<item>ca98b13</item>
+    	<item>c626332</item>
+    	<item>c639930</item>
+    	<item>c006634</item>
+    	
+    	<item>cfef0e2</item>
+    	<item>cf9dcb4</item>
+    	<item>cf2e7b4</item>
+    	<item>cfeffd5</item>
+    	<item>cf9ffef</item>
+    	<item>cf1f5ec</item>
+    </array>
+    <array name="background_colours">
+    	<item>cdee5f2</item>
+    	<item>ce1ecfe</item>
+    	<item>ce0e2fe</item>
+    	<item>ce1d5f8</item>
+    	<item>cfde9f4</item>
+    	<item>cffe3e3</item>
+
+    	<item>c5b6985</item>
+    	<item>c2c6cfc</item>
+    	<item>c1800c9</item>
+    	<item>c5528a1</item>
+    	<item>c854f61</item>
+    	<item>cca000f</item>
+
+    	<item>cfef0e2</item>
+    	<item>cf9dcb4</item>
+    	<item>cf2e7b4</item>
+		<item>cfeffd5</item>
+    	<item>cf9ffef</item>
+    	<item>cf1f5ec</item>
+
+    	<item>cea7015</item>
+    	<item>cb16d12</item>
+    	<item>ca98b13</item>
+    	<item>c626332</item>
+    	<item>c639930</item>
+    	<item>c006634</item>
+    </array>
+    
+    <!-- Choices for the "Reminder minutes" spinner.
+         These must be kept in sync with the reminder_minutes_values array.
+    -->
+    <string-array name="reminder_minutes_labels">
+        <item>5 minutos</item>
+        <item>10 minutos</item>
+        <item>15 minutos</item>
+        <item>20 minutos</item>
+        <item>25 minutos</item>
+        <item>30 minutos</item>
+        <item>45 minutos</item>
+        <item>1 hora</item>
+        <item>2 horas</item>
+        <item>3 horas</item>
+        <item>12 horas</item>
+        <item>24 horas</item>
+        <item>2 días</item>
+        <item>1 semana</item>
+    </string-array>
+    
+    <string-array name="reminder_minutes_values" translatable="false">
+        <item>"5"</item>
+        <item>"10"</item>
+        <item>"15"</item>
+        <item>"20"</item>
+        <item>"25"</item>
+        <item>"30"</item>
+        <item>"45"</item>
+        <item>"60"</item>
+        <item>"120"</item>
+        <item>"180"</item>
+        <item>"720"</item>
+        <item>"1440"</item>
+        <item>"2880"</item>
+        <item>"10080"</item>
+    </string-array>
+    
+    <string-array name="preferences_default_reminder_labels">
+        <item>Ninguno</item>
+        <item>5 minutos</item>
+        <item>10 minutos</item>
+        <item>15 minutos</item>
+        <item>20 minutos</item>
+        <item>25 minutos</item>
+        <item>30 minutos</item>
+        <item>45 minutos</item>
+        <item>1 hora</item>
+        <item>2 horas</item>
+        <item>3 horas</item>
+        <item>12 horas</item>
+        <item>24 horas</item>
+        <item>2 días</item>
+        <item>1 semana</item>
+    </string-array>
+    
+    <string-array name="preferences_default_reminder_values" translatable="false">
+        <item>"0"</item>
+        <item>"5"</item>
+        <item>"10"</item>
+        <item>"15"</item>
+        <item>"20"</item>
+        <item>"25"</item>
+        <item>"30"</item>
+        <item>"45"</item>
+        <item>"60"</item>
+        <item>"120"</item>
+        <item>"180"</item>
+        <item>"720"</item>
+        <item>"1440"</item>
+        <item>"2880"</item>
+        <item>"10080"</item>
+    </string-array>
+
+    <string-array name="list_preferences_flag_values" translatable="false">
+        <item>ignorado</item>
+        <item>si</item>
+        <item>no</item>
+    </string-array>
+
+    <string-array name="list_preferences_active_labels" translatable="false">
+        <item>Mostrar todas</item>
+        <item>Mostrar activas</item>
+        <item>Ocultar activas</item>
+    </string-array>
+
+    <string-array name="list_preferences_deleted_labels" translatable="false">
+        <item>Mostrar todas</item>
+        <item>Mostrar borradas</item>
+        <item>Ocultar borradas</item>
+    </string-array>
+
+    <string-array name="list_preferences_pending_labels" translatable="false">
+        <item>Mostrar todas</item>
+        <item>Mostrar pendientes</item>
+        <item>Ocultar pendientes</item>
+    </string-array>
+
+    <string-array name="list_preferences_completed_labels" translatable="false">
+        <item>Mostrar todas</item>
+        <item>Mostrar completadas</item>
+        <item>Ocultar completadas</item>
+    </string-array>
+
+</resources>
