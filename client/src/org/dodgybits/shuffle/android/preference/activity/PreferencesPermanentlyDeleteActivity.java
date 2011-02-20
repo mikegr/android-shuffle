@@ -44,18 +44,18 @@ public class PreferencesPermanentlyDeleteActivity extends PreferencesDeleteActiv
         setProgressBarIndeterminate(true);
         
         mDeleteButton.setText(R.string.menu_delete);
-        mText.setText(R.string.emptyTrashWarning);
+        mText.setText(R.string.warning_empty_trash);
     }
     
 	@Override
 	protected void onDelete() {
         Ln.d("Cleaning the slate");
-        int count = mTaskPersister.emptyTrash() +
-            mContextPersister.emptyTrash() +
-            mProjectPersister.emptyTrash();
+        int taskCount = mTaskPersister.emptyTrash();
+        int contextCount = mContextPersister.emptyTrash();
+        int projectCount = mProjectPersister.emptyTrash();
 
-        Ln.d("Permanently deleted " + count + " entities.");
-        CharSequence message = getString(R.string.emptyTrashToast, new Object[] {count});
+        Ln.i("Permanently deleted %s tasks, %s contexts and %s projects", taskCount, contextCount, projectCount);
+        CharSequence message = getString(R.string.toast_empty_trash, new Object[] {taskCount, contextCount, projectCount});
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     	finish();
 	}

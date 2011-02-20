@@ -12,7 +12,10 @@
 	-->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.dodgybits.android.shuffle" android:versionName="1.7.0" android:versionCode="27">
+	package="org.dodgybits.android.shuffle"
+    android:versionName="1.7.0"
+    android:versionCode="27"
+        >
 
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -26,7 +29,9 @@
 
 	<application android:theme="@style/ShuffleTheme"
 		android:icon="@drawable/shuffle_icon" android:label="@string/app_name"
-		android:name="org.dodgybits.shuffle.android.core.ShuffleApplication">
+		android:name="org.dodgybits.shuffle.android.core.ShuffleApplication"
+        android:debuggable="true"
+            >
 
 		<!--  core -->
 
