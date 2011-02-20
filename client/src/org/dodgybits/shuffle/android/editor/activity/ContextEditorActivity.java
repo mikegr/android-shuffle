@@ -89,6 +89,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
             setTitle(R.string.title_new_context);
             mDeletedEntry.setVisibility(View.GONE);
             mDeletedCheckBox.setChecked(false);
+            mActiveCheckBox.setChecked(true);
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
         }
@@ -322,7 +323,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
 	private void updatePreview() {
 		String name = mNameWidget.getText().toString();
 		if (TextUtils.isEmpty(name) || mColourIndex == -1) {
-			mContext.setVisibility(View.GONE);
+			mContext.setVisibility(View.INVISIBLE);
 		} else {
 			mContext.updateView(createItemFromUI());
 			mContext.setVisibility(View.VISIBLE);

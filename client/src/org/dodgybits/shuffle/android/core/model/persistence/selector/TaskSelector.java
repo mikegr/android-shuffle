@@ -152,7 +152,8 @@ public class TaskSelector extends AbstractEntitySelector {
                 break;
                 
             case tickler:
-                result = "((complete = 0) AND (active = 0))";
+                // by default show all results (completely customizable)
+                result = "(1 == 1)";
                 break;
                 
             case dueToday:

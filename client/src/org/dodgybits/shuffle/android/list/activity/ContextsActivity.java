@@ -18,6 +18,7 @@ package org.dodgybits.shuffle.android.list.activity;
 
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.list.activity.task.ContextTasksActivity;
 import org.dodgybits.shuffle.android.list.config.ContextListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
@@ -43,18 +44,23 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
     private static final String cTag = "ContextsActivity";
 
 	@Inject ContextListConfig mListConfig;
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		Cursor cursor = getContentResolver().query(
-				ContextProvider.Contexts.CONTEXT_TASKS_CONTENT_URI,
-				ContextProvider.Contexts.FULL_TASK_PROJECTION, null, null, null);
-		mTaskCountArray = getDrilldownListConfig().getChildPersister().readCountArray(cursor);
-		cursor.close();
-	}
-	
+
+    @Override
+    protected void refreshChildCount() {
+        TaskSelector selector = TaskSelector.newBuilder()
+                .applyListPreferences(this, getListConfig().getListPreferenceSettings())
+                .build();
+
+        Cursor cursor = getContentResolver().query(
+                ContextProvider.Contexts.CONTEXT_TASKS_CONTENT_URI,
+                ContextProvider.Contexts.FULL_TASK_PROJECTION,
+                selector.getSelection(this),
+                selector.getSelectionArgs(),
+                selector.getSortOrder());
+        mTaskCountArray = getDrilldownListConfig().getChildPersister().readCountArray(cursor);
+        cursor.close();
+    }
+
 	@Override
 	protected ListConfig<Context> createListConfig() {
 	    return mListConfig;
@@ -94,7 +100,7 @@ public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
     /**
      * Return the intent generated when a list item is clicked.
      * 
-     * @param url type of data selected
+     * @param uri type of data selected
      */ 
 	@Override
     protected Intent getClickIntent(Uri uri) {

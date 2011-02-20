@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -82,7 +83,13 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
         
 		// register self as swipe listener
 		SwipeListItemWrapper wrapper = (SwipeListItemWrapper) findViewById(R.id.swipe_wrapper);
-		wrapper.setSwipeListItemListener(this);        
+		wrapper.setSwipeListItemListener(this);
+
+        mButtonBar.getOtherButton().setText(getListConfig().getGroupName(this));
+        Drawable addIcon = getResources().getDrawable(android.R.drawable.ic_menu_add);
+        addIcon.setBounds(0, 0, 24, 24);
+        mButtonBar.getOtherButton().setCompoundDrawables(addIcon, null, null, null);
+        mButtonBar.getOtherButton().setVisibility(View.VISIBLE);
 	}
 	
 	@Override
@@ -323,10 +330,11 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     }
 
     protected void onAddItem( @Observes ButtonBar.AddItemButtonClickEvent event ) {
-        insertItem(getListConfig().getGroupPersister().getContentUri());
+        insertItem(getListConfig().getChildPersister().getContentUri());
     }
 
     protected void onOther( @Observes ButtonBar.OtherButtonClickEvent event ) {
+        insertItem(getListConfig().getGroupPersister().getContentUri());
     }
 
     protected void onFilter( @Observes ButtonBar.FilterButtonClickEvent event ) {

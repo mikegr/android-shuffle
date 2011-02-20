@@ -45,10 +45,6 @@ public class ButtonBar extends LinearLayout implements View.OnClickListener {
         mAddItemButton.setOnClickListener(this);
 
         mOtherButton = (Button)findViewById(R.id.other_button);
-        Drawable deleteIcon = getResources().getDrawable(android.R.drawable.ic_menu_delete);
-        deleteIcon.setBounds(0, 0, 24, 24);
-        mOtherButton.setCompoundDrawables(deleteIcon, null, null, null);
-        mOtherButton.setVisibility(View.VISIBLE);
         mOtherButton.setOnClickListener(this);
 
         mFilterButton = (ImageButton)findViewById(R.id.filter_button);

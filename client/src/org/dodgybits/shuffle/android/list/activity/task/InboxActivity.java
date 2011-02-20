@@ -50,7 +50,7 @@ public class InboxActivity extends AbstractTaskListActivity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		
+
 		mButtonBar.getOtherButton().setText(R.string.clean_inbox_button_title);
 		Drawable cleanIcon = getResources().getDrawable(R.drawable.edit_clear);
 		cleanIcon.setBounds(0, 0, 24, 24);

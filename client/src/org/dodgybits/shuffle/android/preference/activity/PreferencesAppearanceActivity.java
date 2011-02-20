@@ -45,10 +45,9 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TableRow.LayoutParams;
+import roboguice.util.Ln;
 
 public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
-    private static final String cTag = "PreferencesAppearanceActivity";
-	
     private TaskView mTaskView;
     private Task mSampleTask;
     private Project mSampleProject;
@@ -129,7 +128,6 @@ public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
 	
     @Override
 	protected void onResume() {
-        Log.d(cTag, "onResume+");
 		super.onResume();
 		
         readPrefs();
@@ -137,7 +135,6 @@ public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
 
 	@Override
     protected void onPause() {
-        Log.d(cTag, "onPause+");
         super.onPause();
 
         if (!mSaveChanges) {
@@ -146,7 +143,7 @@ public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
     }
     
 	private void readPrefs() {
-		Log.d(cTag, "Settings prefs controls");
+		Ln.d("Settings prefs controls");
 		mDisplayIcon = Preferences.displayContextIcon(this);
 		mDisplayContext = Preferences.displayContextName(this);
 		mDisplayDueDate = Preferences.displayDueDate(this);
@@ -161,7 +158,7 @@ public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
 	}
 	
 	private void revertPrefs() {
-		Log.d(cTag, "Reverting prefs");
+		Ln.d("Reverting prefs");
 		SharedPreferences.Editor ed = Preferences.getEditor(this);
 		ed.putBoolean(DISPLAY_CONTEXT_ICON_KEY, mDisplayIcon);
 		ed.putBoolean(DISPLAY_CONTEXT_NAME_KEY, mDisplayContext);
@@ -172,7 +169,7 @@ public class PreferencesAppearanceActivity extends FlurryEnabledActivity  {
 	}
 	
 	private void savePrefs() {
-		Log.d(cTag, "Saving prefs");
+		Ln.d("Saving prefs");
 		SharedPreferences.Editor ed = Preferences.getEditor(this);
 		ed.putBoolean(DISPLAY_CONTEXT_ICON_KEY, mDisplayIconCheckbox.isChecked());
 		ed.putBoolean(DISPLAY_CONTEXT_NAME_KEY, mDisplayContextCheckbox.isChecked());

@@ -68,7 +68,11 @@ public class ShuffleModule extends AbstractAndroidModule {
                 new ListPreferenceSettings("inbox"));
 
         bind(ListPreferenceSettings.class).annotatedWith(TopTasks.class).toInstance(
-                new ListPreferenceSettings("next_tasks").setDefaultCompleted(Flag.no));
+                new ListPreferenceSettings("next_tasks")
+                    .setDefaultCompleted(Flag.no)
+                    .disableCompleted()
+                    .disableDeleted()
+                    .disableActive());
 
         ListPreferenceSettings projectSettings = new ListPreferenceSettings("project");
         bind(ListPreferenceSettings.class).annotatedWith(ProjectTasks.class).toInstance(projectSettings);
@@ -84,7 +88,9 @@ public class ShuffleModule extends AbstractAndroidModule {
             new ListPreferenceSettings("due_tasks").setDefaultCompleted(Flag.no));
 
         bind(ListPreferenceSettings.class).annotatedWith(Tickler.class).toInstance(
-            new ListPreferenceSettings("tickler").setDefaultCompleted(Flag.no));
+            new ListPreferenceSettings("tickler")
+                    .setDefaultCompleted(Flag.no)
+                    .setDefaultActive(Flag.no));
 
     }
 

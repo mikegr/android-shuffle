@@ -17,6 +17,7 @@
 package org.dodgybits.shuffle.android.list.activity;
 
 import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.list.activity.task.ProjectTasksActivity;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.ProjectListConfig;
@@ -37,22 +38,23 @@ import com.google.inject.Inject;
  * Display list of projects with task children.
  */
 public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
-
-	@SuppressWarnings("unused")
-    private static final String cTag = "ProjectsActivity";
-
     @Inject ProjectListConfig mListConfig;
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		Cursor cursor = getContentResolver().query(
-				ProjectProvider.Projects.PROJECT_TASKS_CONTENT_URI, 
-				ProjectProvider.Projects.FULL_TASK_PROJECTION, null, null, null);
+
+    @Override
+    protected void refreshChildCount() {
+        TaskSelector selector = TaskSelector.newBuilder()
+                .applyListPreferences(this, getListConfig().getListPreferenceSettings())
+                .build();
+
+        Cursor cursor = getContentResolver().query(
+                ProjectProvider.Projects.PROJECT_TASKS_CONTENT_URI,
+                ProjectProvider.Projects.FULL_TASK_PROJECTION,
+                selector.getSelection(this),
+                selector.getSelectionArgs(),
+                selector.getSortOrder());
         mTaskCountArray = getDrilldownListConfig().getChildPersister().readCountArray(cursor);
-		cursor.close();
-	}
+        cursor.close();
+    }
 
 	@Override
 	protected ListConfig<Project> createListConfig() {
@@ -88,7 +90,7 @@ public class ProjectsActivity extends AbstractDrilldownListActivity<Project> {
     /**
      * Return the intent generated when a list item is clicked.
      * 
-     * @param url type of data selected
+     * @param uri type of data selected
      */ 
 	@Override
     protected Intent getClickIntent(Uri uri) {

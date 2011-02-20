@@ -36,28 +36,36 @@ public class ListPreferenceActivity extends PreferenceActivity implements Prefer
                 R.string.active_items_title,
                 settings.getActive(this).name(),
                 ListPreferenceSettings.LIST_FILTER_ACTIVE,
-                settings.getDefaultActive().name()));
+                settings.getDefaultActive().name(),
+                settings.isActiveEnabled()
+        ));
 
         screen.addPreference(createList(
                 R.array.list_preferences_pending_labels,
                 R.string.pending_items_title,
                 settings.getPending(this).name(),
                 ListPreferenceSettings.LIST_FILTER_PENDING,
-                settings.getDefaultPending().name()));
+                settings.getDefaultPending().name(),
+                settings.isPendingEnabled()
+        ));
 
         screen.addPreference(createList(
                 R.array.list_preferences_completed_labels,
                 R.string.completed_items_title,
                 settings.getCompleted(this).name(),
                 ListPreferenceSettings.LIST_FILTER_COMPLETED,
-                settings.getDefaultCompleted().name()));
+                settings.getDefaultCompleted().name(),
+                settings.isCompletedEnabled()
+        ));
 
         screen.addPreference(createList(
                 R.array.list_preferences_deleted_labels,
                 R.string.deleted_items_title,
                 settings.getDeleted(this).name(),
                 ListPreferenceSettings.LIST_FILTER_DELETED,
-                settings.getDefaultDeleted().name()));
+                settings.getDefaultDeleted().name(),
+                settings.isDeletedEnabled()
+        ));
 
         setPreferenceScreen(screen);
     }
@@ -66,7 +74,7 @@ public class ListPreferenceActivity extends PreferenceActivity implements Prefer
         return getResources().getIdentifier(id, Constants.cStringType, Constants.cPackage);
     }
 
-    private ListPreference createList(int entries, int title, String value, String keySuffix, Object defaultValue) {
+    private ListPreference createList(int entries, int title, String value, String keySuffix, Object defaultValue, boolean enabled) {
         ListPreference listPreference = new ListPreference(this);
         listPreference.setEntryValues(R.array.list_preferences_flag_values);
         listPreference.setEntries(entries);
@@ -75,6 +83,7 @@ public class ListPreferenceActivity extends PreferenceActivity implements Prefer
         listPreference.setKey(key);
         listPreference.setDefaultValue(defaultValue);
         listPreference.setOnPreferenceChangeListener(this);
+        listPreference.setEnabled(enabled);
 
         CharSequence[] entryStrings = listPreference.getEntries();
         int index = listPreference.findIndexOfValue(value);

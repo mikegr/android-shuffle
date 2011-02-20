@@ -17,6 +17,7 @@
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
@@ -47,7 +49,7 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 	
     @Inject ContextExpandableListConfig mListConfig;
 	@Inject Provider<ExpandableTaskView> mTaskViewProvider;
-	
+
     @Override
     protected ExpandableListConfig<Context> getListConfig() {
         return mListConfig;

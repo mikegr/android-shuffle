@@ -85,6 +85,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
             setTitle(R.string.title_new_project);
             mDeletedEntry.setVisibility(View.GONE);
             mDeletedCheckBox.setChecked(false);
+            mActiveCheckBox.setChecked(true);
             Bundle extras = getIntent().getExtras();
             updateUIFromExtras(extras);
         }

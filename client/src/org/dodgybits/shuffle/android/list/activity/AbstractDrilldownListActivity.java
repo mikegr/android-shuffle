@@ -16,6 +16,12 @@
 
 package org.dodgybits.shuffle.android.list.activity;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.View;
+import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
@@ -25,6 +31,9 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.util.Log;
 import android.util.SparseIntArray;
+import org.dodgybits.shuffle.android.list.view.ButtonBar;
+import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
+import roboguice.event.Observes;
 
 /**
  * A list whose items represent groups that lead to other list.
@@ -43,7 +52,22 @@ public abstract class AbstractDrilldownListActivity<G extends Entity> extends Ab
 	{
 		return (DrilldownListConfig<G>)getListConfig();
 	}
-    
+
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+
+        mButtonBar.getAddItemButton().setText(getDrilldownListConfig().getItemName(this));
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        refreshChildCount();
+    }
+
     /**
      * Permanently delete the selected item.
      */
@@ -67,5 +91,7 @@ public abstract class AbstractDrilldownListActivity<G extends Entity> extends Ab
 			super.deleteItem(groupId);
 		}
     }
+
+    abstract void refreshChildCount();
 
 }
