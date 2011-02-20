@@ -16,12 +16,14 @@
 
 package org.dodgybits.shuffle.android.list.activity;
 
+import android.widget.*;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledListActivity;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
+import org.dodgybits.shuffle.android.list.view.ButtonBar;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
 import android.app.Activity;
@@ -37,11 +39,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
-import android.widget.CursorAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import roboguice.event.Observes;
+import roboguice.inject.InjectView;
 
 public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabledListActivity {
 
@@ -49,11 +48,17 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
 
 	private static final String cTag = "AbstractListActivity";
 
+
 	protected final int NEW_ITEM = 1;
+    protected static final int FILTER_CONFIG = 600;
+
 	// after a new item is added, select it
 	private Long mItemIdToSelect = null;
 
 	private ListConfig<T> mConfig;
+
+    @InjectView(R.id.button_bar)
+    protected ButtonBar mButtonBar;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -121,6 +126,12 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
 				}
 			}
 			break;
+
+        case FILTER_CONFIG:
+            Log.d(cTag, "Got result " + resultCode);
+            updateCursor();
+            break;
+
 		default:
 			Log.e(cTag, "Unknown requestCode: " + requestCode);
 		}
@@ -264,7 +275,24 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
 	{
 		return mConfig;
 	}
-		
+
+
+    protected void updateCursor() {
+        SimpleCursorAdapter adapter = (SimpleCursorAdapter)getListAdapter();
+        Cursor oldCursor = adapter.getCursor();
+        if (oldCursor != null) {
+            // changeCursor always closes the cursor,
+            // so need to stop managing the old one first
+            stopManagingCursor(oldCursor);
+            oldCursor.close();
+        }
+
+        Cursor cursor = getListConfig().createQuery(this);
+        adapter.changeCursor(cursor);
+        setTitle(getListConfig().createTitle(this));
+    }
+
+
 	/**
 	 * Permanently delete the given list item.
 	 */
@@ -293,11 +321,25 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
 	/**
 	 * Return the intent generated when a list item is clicked.
 	 * 
-	 * @param url
+	 * @param uri
 	 *            type of data selected
 	 */
 	protected Intent getClickIntent(Uri uri) {
 		return new Intent(Intent.ACTION_EDIT, uri);
 	}
+
+    protected void onAddItem( @Observes ButtonBar.AddItemButtonClickEvent event ) {
+        startActivityForResult(getInsertIntent(), NEW_ITEM);
+    }
+
+    protected void onOther( @Observes ButtonBar.OtherButtonClickEvent event ) {
+    }
+
+    protected void onFilter( @Observes ButtonBar.FilterButtonClickEvent event ) {
+        Intent intent = new Intent(this, ListPreferenceActivity.class);
+        getListConfig().getListPreferenceSettings().addToIntent(intent);
+        startActivityForResult(intent, FILTER_CONFIG);
+    }
+
 	
 }

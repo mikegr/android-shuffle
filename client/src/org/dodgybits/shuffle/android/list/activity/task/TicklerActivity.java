@@ -21,9 +21,12 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.annotation.Inbox;
+import org.dodgybits.shuffle.android.list.annotation.Tickler;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
+import org.dodgybits.shuffle.android.list.config.TaskListConfig;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 import android.content.ContextWrapper;
@@ -38,67 +41,24 @@ public class TicklerActivity extends AbstractTaskListActivity {
 
     @Inject private TaskPersister mTaskPersister;
 
+    @Inject @Tickler
+    private TaskListConfig mTaskListConfig;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        
-        mOtherButton.setText(R.string.permanently_delete_button_title);
-        Drawable cleanIcon = getResources().getDrawable(R.drawable.edit_clear);
-        cleanIcon.setBounds(0, 0, 24, 24);
-        mOtherButton.setCompoundDrawables(cleanIcon, null, null, null);
-        mOtherButton.setVisibility(View.VISIBLE);
     }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuUtils.addCleanInboxMenuItem(menu);
         super.onCreateOptionsMenu(menu);
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//        case MenuUtils.CLEAN_INBOX_ID:
-//            doCleanup();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @Override
     protected ListConfig<Task> createListConfig()
-    {
-        ListPreferenceSettings settings = new ListPreferenceSettings("tickler");
-        return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
+	{
+        return mTaskListConfig;
+	}
 
-            public int getCurrentViewMenuId() {
-                return MenuUtils.INBOX_ID;
-            }
-            
-            public String createTitle(ContextWrapper context)
-            {
-                return context.getString(R.string.title_tickler);
-            }
-            
-        };
-    }
-
-    private TaskSelector createTaskQuery() {
-        return StandardTaskQueries.getQuery(StandardTaskQueries.cTickler);
-    }
-
-    @Override
-    protected void onOtherButtonClicked() {
-        deletePermanently();
-    }
-    
-    private void deletePermanently() {
-//        Preferences.cleanUpInbox(this);
-//        Toast.makeText(this, R.string.clean_inbox_message, Toast.LENGTH_SHORT).show();
-//        // need to restart the activity since the query has changed
-//        // mCursor.requery() not enough
-//        startActivity(new Intent(this, InboxActivity.class));
-//        finish();
-    }
 }

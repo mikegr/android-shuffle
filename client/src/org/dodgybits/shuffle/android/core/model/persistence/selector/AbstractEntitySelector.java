@@ -138,6 +138,7 @@ public abstract class AbstractEntitySelector implements EntitySelector {
             return this;
         }
 
+        @Override
         public AbstractBuilder<E> applyListPreferences(android.content.Context context, ListPreferenceSettings settings) {
             setActive(settings.getActive(context));
             setDeleted(settings.getDeleted(context));

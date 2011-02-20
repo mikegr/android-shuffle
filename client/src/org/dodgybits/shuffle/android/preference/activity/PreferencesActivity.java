@@ -16,6 +16,7 @@
 
 package org.dodgybits.shuffle.android.preference.activity;
 
+import android.widget.ListView;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledPreferenceActivity;
 import org.dodgybits.shuffle.android.core.util.OSUtils;
@@ -59,10 +60,9 @@ public class PreferencesActivity extends FlurryEnabledPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // Load the preferences from an XML resource
+
         addPreferencesFromResource(R.xml.preferences);
-        
+
         setCalendarPreferenceEntries();
     }
 

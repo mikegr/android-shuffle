@@ -12,5 +12,8 @@ public interface TaskListConfig extends ListConfig<Task> {
     TaskSelector getTaskSelector();
     void setTaskSelector(TaskSelector query);
 
-    ListPreferenceSettings getListPreferenceSettings();
+    boolean showTaskContext();
+    boolean showTaskProject();
+
+
 }

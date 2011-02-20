@@ -11,8 +11,7 @@ public class ContextProvider extends AbstractCollectionProvider {
 	private static final String AUTHORITY = Shuffle.PACKAGE + ".contextprovider";
 
 	static final int CONTEXT_TASKS = 103;
-	static final int ACTIVE_CONTEXTS = 104;
-	
+
     private static final String URL_COLLECTION_NAME = "contexts";
 
 	public ContextProvider() {
@@ -37,15 +36,11 @@ public class ContextProvider extends AbstractCollectionProvider {
 		uriMatcher.addURI(AUTHORITY, "contextTasks", CONTEXT_TASKS);
 		restrictionBuilders.put(CONTEXT_TASKS, 
 		        new CustomElementFilterRestrictionBuilder(
-		                "context c, task t", "t.contextId = c._id and t.deleted = 0", "c._id"));
+		                "context c, task t", "t.contextId = c._id", "c._id"));
         groupByBuilders.put(CONTEXT_TASKS, 
                 new StandardGroupByBuilder("c._id"));
         elementInserters.put(COLLECTION_MATCH_ID, new ContextInserter());
 		setDefaultSortOrder(Contexts.DEFAULT_SORT_ORDER);
-		uriMatcher.addURI(AUTHORITY, "activeContexts", ACTIVE_CONTEXTS);
-		
-		restrictionBuilders.put(ACTIVE_CONTEXTS, new CustomElementFilterRestrictionBuilder("context c", "c.deleted = 0", "c._id"));
-		
 	}
 
 

@@ -16,9 +16,24 @@
 
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
+import android.database.Cursor;
+import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseIntArray;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.config.ExpandableListConfig;
 import org.dodgybits.shuffle.android.list.config.ProjectExpandableListConfig;
@@ -29,20 +44,7 @@ import org.dodgybits.shuffle.android.list.view.TaskView;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
-import android.database.Cursor;
-import android.os.Bundle;
-import android.util.Log;
-import android.util.SparseIntArray;
-import android.view.ContextMenu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import java.util.Arrays;
 
 public class ExpandableProjectsActivity extends AbstractExpandableActivity<Project> {
 	private static final String cTag = "ExpandableProjectsActivity";
@@ -70,10 +72,15 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 		
 	@Override
 	protected Cursor createGroupQuery() {
-		Cursor cursor = managedQuery(ProjectProvider.Projects.CONTENT_URI, ProjectProvider.Projects.FULL_PROJECTION,
-				ProjectProvider.Projects.DELETED + " = 0", 
-				null, 
-				ProjectProvider.Projects.NAME + " ASC");
+        EntitySelector selector = getListConfig().getGroupSelector().builderFrom().
+                applyListPreferences(this, getListConfig().getListPreferenceSettings()).build();
+
+		Cursor cursor = managedQuery(
+                selector.getContentUri(),
+                ProjectProvider.Projects.FULL_PROJECTION,
+				selector.getSelection(this),
+				selector.getSelectionArgs(),
+                selector.getSortOrder());
 		mGroupIdColumnIndex = cursor.getColumnIndex(ProjectProvider.Projects._ID);
 		return cursor;
 	}
@@ -90,9 +97,15 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 
 	@Override
 	protected Cursor createChildQuery(long groupId) {
-		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.FULL_PROJECTION,
-				TaskProvider.Tasks.PROJECT_ID +  " = ? AND " + TaskProvider.Tasks.DELETED + "=0", new String[] {String.valueOf(groupId)}, 
-				TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC");
+        TaskSelector selector = getListConfig().getChildSelector().builderFrom()
+                .setProjects(Arrays.asList(new Id[]{Id.create(groupId)})).build();
+
+		Cursor cursor = managedQuery(
+                selector.getContentUri(),
+                TaskProvider.Tasks.FULL_PROJECTION,
+				selector.getSelection(this),
+				selector.getSelectionArgs(),
+                selector.getSortOrder());
 		mChildIdColumnIndex = cursor.getColumnIndex(TaskProvider.Tasks._ID);
 		return cursor;		
 	}

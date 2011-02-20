@@ -46,7 +46,6 @@ public class TabbedDueActionsActivity extends AbstractTaskListActivity {
     @Inject @DueTasks
     private DueActionsListConfig mListConfig;
 
-
 	public static final String DUE_MODE = "mode";
 	
     @Inject private TaskPersister mTaskPersister;

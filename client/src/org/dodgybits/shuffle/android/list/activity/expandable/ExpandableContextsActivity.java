@@ -16,8 +16,19 @@
 
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
+import android.database.Cursor;
+import android.os.Bundle;
+import android.util.SparseIntArray;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ExpandableListAdapter;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import org.dodgybits.shuffle.android.core.model.Context;
+import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.list.config.ContextExpandableListConfig;
 import org.dodgybits.shuffle.android.list.config.ExpandableListConfig;
 import org.dodgybits.shuffle.android.list.view.ContextView;
@@ -27,15 +38,7 @@ import org.dodgybits.shuffle.android.list.view.TaskView;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
-import android.database.Cursor;
-import android.os.Bundle;
-import android.util.SparseIntArray;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ExpandableListAdapter;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import java.util.Arrays;
 
 public class ExpandableContextsActivity extends AbstractExpandableActivity<Context> {
     private int mChildIdColumnIndex; 
@@ -58,14 +61,21 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
         mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
-	
-	@Override
-	protected Cursor createGroupQuery() {
-		Cursor cursor = managedQuery(ContextProvider.Contexts.CONTENT_URI, ContextProvider.Contexts.FULL_PROJECTION,
-				ContextProvider.Contexts.DELETED + " = 0", null, ContextProvider.Contexts.NAME + " ASC");
-		mGroupIdColumnIndex = cursor.getColumnIndex(ContextProvider.Contexts._ID);
-		return cursor;
-	}
+
+    @Override
+    protected Cursor createGroupQuery() {
+        EntitySelector selector = getListConfig().getGroupSelector().builderFrom().
+                applyListPreferences(this, getListConfig().getListPreferenceSettings()).build();
+
+        Cursor cursor = managedQuery(
+                selector.getContentUri(),
+                ContextProvider.Contexts.FULL_PROJECTION,
+                selector.getSelection(this),
+                selector.getSelectionArgs(),
+                selector.getSortOrder());
+        mGroupIdColumnIndex = cursor.getColumnIndex(ContextProvider.Contexts._ID);
+        return cursor;
+    }
 
 	@Override
 	protected int getGroupIdColumnIndex() {
@@ -77,15 +87,20 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 		return mChildIdColumnIndex;
 	}
 
-	@Override
-	protected Cursor createChildQuery(long groupId) {
-		Cursor cursor = managedQuery(TaskProvider.Tasks.CONTENT_URI, TaskProvider.Tasks.FULL_PROJECTION,
-				TaskProvider.Tasks.CONTEXT_ID + " = ? AND " + TaskProvider.Tasks.DELETED + "=0", 
-				new String[] {String.valueOf(groupId)}, 
-				TaskProvider.Tasks.CREATED_DATE + " ASC");
-		mChildIdColumnIndex = cursor.getColumnIndex(TaskProvider.Tasks._ID);
-		return cursor;
-	}
+    @Override
+    protected Cursor createChildQuery(long groupId) {
+        TaskSelector selector = getListConfig().getChildSelector().builderFrom()
+                .setContexts(Arrays.asList(new Id[]{Id.create(groupId)})).build();
+
+        Cursor cursor = managedQuery(
+                selector.getContentUri(),
+                TaskProvider.Tasks.FULL_PROJECTION,
+                selector.getSelection(this),
+                selector.getSelectionArgs(),
+                selector.getSortOrder());
+        mChildIdColumnIndex = cursor.getColumnIndex(TaskProvider.Tasks._ID);
+        return cursor;
+    }
 
 	@Override
 	protected void updateInsertExtras(Bundle extras, Context context) {

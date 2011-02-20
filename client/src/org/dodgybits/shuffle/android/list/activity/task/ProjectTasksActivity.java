@@ -38,8 +38,12 @@ import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.annotation.ContextTasks;
+import org.dodgybits.shuffle.android.list.annotation.ProjectTasks;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
+import org.dodgybits.shuffle.android.list.config.ContextTasksListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
+import org.dodgybits.shuffle.android.list.config.ProjectTasksListConfig;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
@@ -54,6 +58,9 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	private Id mProjectId;
 	private Project mProject;
 
+    @Inject @ProjectTasks
+    private ProjectTasksListConfig mTaskListConfig;
+
     @Inject private EntityPersister<Project> mPersister;
     @Inject private TaskPersister mTaskPersister;
     
@@ -67,30 +74,10 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 	@Override
     protected ListConfig<Task> createListConfig()
 	{
-        ListPreferenceSettings settings = new ListPreferenceSettings("project");
-        return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister,settings) {
-
-		    public int getCurrentViewMenuId() {
-		    	return 0;
-		    }
-		    
-		    public String createTitle(ContextWrapper context)
-		    {
-		    	return context.getString(R.string.title_project_tasks, mProject.getName());
-		    }
-			
-		};
-	}
-
-    private TaskSelector createTaskQuery() {
-        List<Id> ids = Arrays.asList(new Id[] {mProjectId});
-        TaskSelector query = TaskSelector.newBuilder()
-            .setProjects(new ArrayList<Id>(ids))
-            .setDeleted(Flag.no)
-            .setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC")
-            .build();
-        return query;
+        mTaskListConfig.setProjectId(mProjectId);
+        return mTaskListConfig;
     }
+
 
 	@Override
 	protected void onResume() {
@@ -99,6 +86,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
 				ProjectProvider.Projects._ID + " = ? ", new String[] {String.valueOf(mProjectId)}, null);
 		if (cursor.moveToNext()) {
 			mProject = mPersister.read(cursor);
+            mTaskListConfig.setProject(mProject);
 		}
 		cursor.close();
 		
@@ -136,11 +124,6 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     	return intent;
     }
 
-    @Override
-	protected boolean showTaskProject() {
-		return false;
-	}
-    
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
     	super.onCreateContextMenu(menu, view, menuInfo);

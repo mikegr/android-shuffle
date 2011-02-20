@@ -1,6 +1,8 @@
 package org.dodgybits.shuffle.android.core.model.persistence.selector;
 
+import android.net.Uri;
 import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 
 import java.util.List;
 
@@ -9,6 +11,11 @@ public class ContextSelector extends AbstractEntitySelector {
 
     private ContextSelector() {
 
+    }
+
+    @Override
+    public Uri getContentUri() {
+        return ContextProvider.Contexts.CONTENT_URI;
     }
 
     @Override
@@ -32,6 +39,11 @@ public class ContextSelector extends AbstractEntitySelector {
                 mSortOrder, mActive, mDeleted);
     }
 
+    @Override
+    public Builder builderFrom() {
+        return newBuilder().mergeFrom(this);
+    }
+
     public static Builder newBuilder() {
         return Builder.create();
     }
@@ -47,6 +59,11 @@ public class ContextSelector extends AbstractEntitySelector {
             builder.mResult = new ContextSelector();
             return builder;
         }
+        public Builder mergeFrom(ContextSelector query) {
+            super.mergeFrom(query);
+            return this;
+        }
+
 
     }
 }

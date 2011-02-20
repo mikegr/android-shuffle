@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sun.source.util.TaskListener;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.Id;
@@ -29,8 +30,11 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
+import org.dodgybits.shuffle.android.list.annotation.ContextTasks;
 import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
+import org.dodgybits.shuffle.android.list.config.ContextTasksListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
+import org.dodgybits.shuffle.android.list.config.TaskListConfig;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
@@ -53,7 +57,10 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	
     @Inject private EntityPersister<Context> mContextPersister;
     @Inject private TaskPersister mTaskPersister;
-	
+
+    @Inject @ContextTasks
+    private ContextTasksListConfig mTaskListConfig;
+
 	@Override
     public void onCreate(Bundle icicle) {
 		Uri contextUri = getIntent().getData();
@@ -62,38 +69,12 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 	}
 
 	@Override
-	protected boolean showTaskContext() {
-		return false;
-	}
-
-	@Override
     protected ListConfig<Task> createListConfig()
 	{
-        ListPreferenceSettings settings = new ListPreferenceSettings("context");
-		return new AbstractTaskListConfig(createTaskQuery(), mTaskPersister, settings) {
-
-		    public int getCurrentViewMenuId() {
-		    	return 0;
-		    }
-		    
-		    public String createTitle(ContextWrapper context)
-		    {
-		    	return context.getString(R.string.title_context_tasks, mContext.getName());
-		    }
-
-
-		};
+        mTaskListConfig.setContextId(mContextId);
+        return mTaskListConfig;
 	}
 
-    private TaskSelector createTaskQuery() {
-        List<Id> ids = Arrays.asList(new Id[] {mContextId});
-        TaskSelector query = TaskSelector.newBuilder()
-            .setContexts(new ArrayList<Id>(ids))
-            .setDeleted(no)
-            .setSortOrder(TaskProvider.Tasks.CREATED_DATE + " ASC")
-            .build();
-        return query;
-    }
 
 	@Override
 	protected void onResume() {
@@ -102,6 +83,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
 				ContextProvider.Contexts._ID + " = ? ", new String[] {String.valueOf(mContextId)}, null);
 		if (cursor.moveToNext()) {
 			mContext = mContextPersister.read(cursor);
+            mTaskListConfig.setContext(mContext);
 		}
 		cursor.close();
 		
@@ -111,7 +93,7 @@ public class ContextTasksActivity extends AbstractTaskListActivity {
     /**
      * Return the intent generated when a list item is clicked.
      * 
-     * @param url type of data selected
+     * @param uri type of data selected
      */ 
     @Override
     protected Intent getClickIntent(Uri uri) {

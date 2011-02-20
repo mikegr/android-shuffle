@@ -111,6 +111,17 @@
         </PreferenceScreen>
 
         <PreferenceScreen
+                android:title="@string/title_permanently_delete_preference"
+                android:summary="@string/summary_permanently_delete_preference"
+                >
+
+            <intent android:action="android.intent.action.MAIN"
+                android:targetPackage="org.dodgybits.android.shuffle"
+            	android:targetClass="org.dodgybits.shuffle.android.preference.activity.PreferencesPermanentlyDeleteActivity" />
+        </PreferenceScreen>
+
+
+        <PreferenceScreen
                 android:title="@string/title_delete_all_preference"
                 android:summary="@string/summary_delete_all_preference">
 

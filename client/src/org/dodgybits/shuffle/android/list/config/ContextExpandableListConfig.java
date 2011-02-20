@@ -21,21 +21,46 @@ import org.dodgybits.shuffle.android.core.model.Context;
 import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.ContextSelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.ProjectSelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.annotation.ExpandableContexts;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.content.ContextWrapper;
 
 import com.google.inject.Inject;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class ContextExpandableListConfig implements ExpandableListConfig<Context> {
     private ContextPersister mGroupPersister;
     private TaskPersister mChildPersister;
-    
+    private ListPreferenceSettings mSettings;
+    private TaskSelector mTaskSelector;
+    private ContextSelector mContextSelector;
+
+
     @Inject
-    public ContextExpandableListConfig(ContextPersister contextPersister, TaskPersister taskPersister) {
+    public ContextExpandableListConfig(ContextPersister contextPersister,
+                                       TaskPersister taskPersister,
+                                       @ExpandableContexts ListPreferenceSettings settings) {
         mGroupPersister = contextPersister;
         mChildPersister = taskPersister;
+        mSettings = settings;
+        mTaskSelector = TaskSelector.newBuilder().build();
+        mContextSelector = ContextSelector.newBuilder().build();
+    }
+
+    @Override
+    public EntitySelector getGroupSelector() {
+        return mContextSelector;
+    }
+
+    @Override
+    public TaskSelector getChildSelector() {
+        return mTaskSelector;
     }
 
     @Override
@@ -72,4 +97,11 @@ public class ContextExpandableListConfig implements ExpandableListConfig<Context
     public EntityPersister<Context> getGroupPersister() {
         return mGroupPersister;
     }
+
+    @Override
+    public ListPreferenceSettings getListPreferenceSettings() {
+        return mSettings;
+    }
+
+
 }

@@ -24,11 +24,13 @@ import org.dodgybits.shuffle.android.core.view.MenuUtils;
 import org.dodgybits.shuffle.android.list.activity.AbstractListActivity;
 import org.dodgybits.shuffle.android.list.activity.ListPreferenceActivity;
 import org.dodgybits.shuffle.android.list.config.TaskListConfig;
+import org.dodgybits.shuffle.android.list.view.ButtonBar;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemListener;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
 import org.dodgybits.shuffle.android.list.view.TaskView;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
+import roboguice.event.Observes;
 import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.database.Cursor;
@@ -53,17 +55,12 @@ import com.google.inject.Provider;
 import com.google.inject.internal.Nullable;
 
 public abstract class AbstractTaskListActivity extends AbstractListActivity<Task> 
-	implements SwipeListItemListener, View.OnClickListener {
+	implements SwipeListItemListener {
 
 	private static final String cTag = "AbstractTaskListActivity";
-	private static final int cFilterConfig = 676;
 
     @Inject Provider<TaskView> mTaskViewProvider;
 	
-	@InjectView(R.id.add_task_button) @Nullable Button mAddTaskButton;
-	protected Button mOtherButton;
-	protected ImageButton mFilterButton;
-
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -71,25 +68,6 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 		// register self as swipe listener
 		SwipeListItemWrapper wrapper = (SwipeListItemWrapper) findViewById(R.id.swipe_wrapper);
 		wrapper.setSwipeListItemListener(this);
-		
-		// lookup and setup icons in icon_bar (if present)
-		if (mAddTaskButton != null) {
-			Drawable addIcon = getResources().getDrawable(android.R.drawable.ic_menu_add);
-			addIcon.setBounds(0, 0, 24, 24);
-			mAddTaskButton.setCompoundDrawables(addIcon, null, null, null);
-			mAddTaskButton.setOnClickListener(this);
-	
-			mOtherButton = (Button) findViewById(R.id.other_button);
-			mOtherButton.setText(R.string.title_delete_completed_preference);
-			Drawable deleteIcon = getResources().getDrawable(android.R.drawable.ic_menu_delete);
-			deleteIcon.setBounds(0, 0, 24, 24);
-			mOtherButton.setCompoundDrawables(deleteIcon, null, null, null);
-			mOtherButton.setVisibility(View.VISIBLE);
-			mOtherButton.setOnClickListener(this);
-
-            mFilterButton = (ImageButton) findViewById(R.id.filter_button);
-            mFilterButton.setOnClickListener(this);
-		}
 	}
 	
     @Override
@@ -118,48 +96,8 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
         return super.onContextItemSelected(item);
     }	
     
-    public void onClick(View v) {
-        switch (v.getId()) {
-
-            case R.id.add_task_button:
-				startActivityForResult(getInsertIntent(), NEW_ITEM);
-                break;
-
-            case R.id.other_button:
-            	onOtherButtonClicked();
-                break;
-
-            case R.id.filter_button:
-                onFilterButtonClicked();
-                break;
-        }
-    }
-    
     protected TaskPersister getTaskPersister() {
-        return ((TaskListConfig)getListConfig()).getTaskPersister();
-    }
-    
-    protected void onOtherButtonClicked() {
-        int deletedTasks = getTaskPersister().deleteCompletedTasks();
-		CharSequence message = getString(R.string.clean_task_message, new Object[] {deletedTasks});
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    protected void onFilterButtonClicked() {
-        Intent intent = new Intent(this, ListPreferenceActivity.class);
-        ((TaskListConfig)getListConfig()).getListPreferenceSettings().addToIntent(intent);
-        startActivityForResult(intent, cFilterConfig);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == cFilterConfig) {
-            Log.d(cTag, "Got result " + resultCode);
-            updateCursor();
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
+        return getTaskListConfig().getTaskPersister();
     }
 
     @Override
@@ -185,8 +123,8 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 				} else {
                     taskView = mTaskViewProvider.get();
 				}
-				taskView.setShowContext(showTaskContext());
-				taskView.setShowProject(showTaskProject());
+				taskView.setShowContext(getTaskListConfig().showTaskContext());
+				taskView.setShowProject(getTaskListConfig().showTaskProject());
 				taskView.updateView(task);
 				return taskView;
 			}
@@ -215,29 +153,12 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
         return (TaskListConfig)getListConfig();
     }
 
-    protected void updateCursor() {
-        SimpleCursorAdapter adapter = (SimpleCursorAdapter)getListAdapter();
-        Cursor oldCursor = adapter.getCursor();
-        if (oldCursor != null) {
-            // changeCursor always closes the cursor,
-            // so need to stop managing the old one first
-            stopManagingCursor(oldCursor);
-        }
-
-        Cursor cursor = getListConfig().createQuery(this);
-        adapter.changeCursor(cursor);
-        setTitle(getListConfig().createTitle(this));
+    @Override
+    protected void onOther( @Observes ButtonBar.OtherButtonClickEvent event ) {
+        int deletedTasks = getTaskPersister().deleteCompletedTasks();
+		CharSequence message = getString(R.string.clean_task_message, new Object[] {deletedTasks});
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-	protected boolean showTaskContext() {
-		return true;
-	}
-	
-	protected boolean showTaskProject() {
-		return true;
-	}
-	
-	
-	
 }
     

@@ -1,9 +1,8 @@
 package org.dodgybits.shuffle.android.core.activity.flurry;
 
-import roboguice.service.RoboService;
 import android.content.Intent;
-
 import com.google.inject.Inject;
+import roboguice.service.RoboService;
 
 public abstract class FlurryEnabledService extends RoboService {
 

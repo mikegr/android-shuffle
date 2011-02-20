@@ -34,7 +34,6 @@
         <item>Projects</item>
         <item>Contexts</item>
         <item>Tickler</item>
-        <item>Trash</item>
     </array>
     <array name="view_types">
         <item>Expandable list</item>

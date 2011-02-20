@@ -1,10 +1,9 @@
 package org.dodgybits.shuffle.android.core.activity.flurry;
 
-import roboguice.activity.GuiceActivity;
-
 import com.google.inject.Inject;
+import roboguice.activity.RoboActivity;
 
-public abstract class FlurryEnabledActivity extends GuiceActivity {
+public abstract class FlurryEnabledActivity extends RoboActivity {
 
     @Inject protected Analytics mAnalytics;
     

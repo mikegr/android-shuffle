@@ -1,10 +1,9 @@
 package org.dodgybits.shuffle.android.core.activity.flurry;
 
 import com.google.inject.Inject;
+import roboguice.activity.RoboExpandableListActivity;
 
-import roboguice.activity.GuiceExpandableListActivity;
-
-public abstract class FlurryEnabledExpandableListActivity extends GuiceExpandableListActivity {
+public abstract class FlurryEnabledExpandableListActivity extends RoboExpandableListActivity {
 
     @Inject protected Analytics mAnalytics;
     

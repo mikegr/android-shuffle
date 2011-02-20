@@ -245,7 +245,10 @@ allow that, you can turn it off under Settings.</string>
 
 	<string name="dialog_title_cleanup_preference">Delete completed actions</string>
 
-	<string name="title_delete_completed_preference">Delete completed actions</string>
+    <string name="title_delete_completed_preference">Delete completed actions</string>
+
+    <string name="title_permanently_delete_preference">Permanently remove deleted</string>
+    <string name="summary_permanently_delete_preference">Remove all deleted actions, projects and contexts.</string>
 
 	<string name="title_delete_all_preference">Delete everything!</string>
 	<string name="summary_delete_all_preference">Remove all actions, projects and custom contexts.</string>

@@ -16,28 +16,52 @@
 
 package org.dodgybits.shuffle.android.list.config;
 
+import android.content.ContextWrapper;
+import com.google.inject.Inject;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.ProjectSelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.annotation.ExpandableProjects;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
-
-import android.content.ContextWrapper;
-
-import com.google.inject.Inject;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class ProjectExpandableListConfig implements ExpandableListConfig<Project> {
     private ProjectPersister mGroupPersister;
     private TaskPersister mChildPersister;
-    
+    private ListPreferenceSettings mSettings;
+    private TaskSelector mTaskSelector;
+    private ProjectSelector mProjectSelector;
+
     @Inject
-    public ProjectExpandableListConfig(ProjectPersister projectPersister, TaskPersister taskPersister) {
+    public ProjectExpandableListConfig(ProjectPersister projectPersister,
+                                       TaskPersister taskPersister,
+                                       @ExpandableProjects ListPreferenceSettings settings) {
         mGroupPersister = projectPersister;
         mChildPersister = taskPersister;
+        mSettings = settings;
+        mTaskSelector = TaskSelector.newBuilder().
+                setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC").build();
+        mProjectSelector = ProjectSelector.newBuilder().
+                setSortOrder(ProjectProvider.Projects.NAME + " ASC").build();
     }
-    
+
+    @Override
+    public EntitySelector getGroupSelector() {
+        return mProjectSelector;
+    }
+
+    @Override
+    public TaskSelector getChildSelector() {
+        return mTaskSelector;
+    }
+
     @Override
 	public String getChildName(ContextWrapper context) {
 		return context.getString(R.string.task_name);
@@ -72,5 +96,10 @@ public class ProjectExpandableListConfig implements ExpandableListConfig<Project
     public EntityPersister<Project> getGroupPersister() {
         return mGroupPersister;
     }
-	
+
+    @Override
+    public ListPreferenceSettings getListPreferenceSettings() {
+        return mSettings;
+    }
+
 }

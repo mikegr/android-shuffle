@@ -19,18 +19,14 @@ package org.dodgybits.shuffle.android.core.activity;
 import com.google.inject.Inject;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledListActivity;
-import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
 import org.dodgybits.shuffle.android.core.util.Constants;
 import org.dodgybits.shuffle.android.core.view.IconArrayAdapter;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
-import org.dodgybits.shuffle.android.list.annotation.DueTasks;
-import org.dodgybits.shuffle.android.list.annotation.Inbox;
-import org.dodgybits.shuffle.android.list.annotation.TopTasks;
+import org.dodgybits.shuffle.android.list.annotation.*;
 import org.dodgybits.shuffle.android.list.config.DueActionsListConfig;
-import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
+import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.TaskListConfig;
-import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
-import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
@@ -65,9 +61,8 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
     private static final int PROJECTS = 3;
     private static final int CONTEXTS = 4;
     private static final int TICKLER = 5;
-    private static final int TRASH = 6;
-    
-    private static final int ITEM_COUNT = 7;
+
+    private static final int ITEM_COUNT = 6;
     
     private static final String[] cProjection = new String[]{"_id"};
 
@@ -79,6 +74,10 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
     @Inject @Inbox private TaskListConfig mInboxConfig;
     @Inject @DueTasks private DueActionsListConfig mDueTasksConfig;
     @Inject @TopTasks private TaskListConfig mTopTasksConfig;
+    @Inject @Tickler private TaskListConfig mTicklerConfig;
+    @Inject @Projects private ListConfig mProjectsConfig;
+    @Inject @Contexts private ListConfig mContextsConfig;
+
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -116,13 +115,12 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
         super.onResume();
 
         CursorGenerator[] generators = new CursorGenerator[ITEM_COUNT];
-        generators[INBOX] = new TaskCursorGenerator(mInboxConfig);
-        generators[DUE_TASKS] = new TaskCursorGenerator(mDueTasksConfig);
-        generators[TOP_TASKS] = new TaskCursorGenerator(mTopTasksConfig);
-        generators[PROJECTS] = new UriCursorGenerator(ProjectProvider.Projects.ACTIVE_PROJECTS);
-        generators[CONTEXTS] = new UriCursorGenerator(ContextProvider.Contexts.ACTIVE_CONTEXTS);
-        generators[TICKLER] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cTickler));
-        generators[TRASH] = new TaskCursorGenerator(StandardTaskQueries.getQuery(StandardTaskQueries.cTrash));
+        generators[INBOX] = new EntityCursorGenerator(mInboxConfig);
+        generators[DUE_TASKS] = new EntityCursorGenerator(mDueTasksConfig);
+        generators[TOP_TASKS] = new EntityCursorGenerator(mTopTasksConfig);
+        generators[PROJECTS] = new EntityCursorGenerator(mProjectsConfig);
+        generators[CONTEXTS] = new EntityCursorGenerator(mContextsConfig);
+        generators[TICKLER] = new EntityCursorGenerator(mTicklerConfig);
 
         mIconIds[INBOX] = R.drawable.inbox;
         mIconIds[DUE_TASKS] = R.drawable.due_actions;
@@ -130,7 +128,6 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
         mIconIds[PROJECTS] = R.drawable.projects;
         mIconIds[CONTEXTS] = R.drawable.contexts;
         mIconIds[TICKLER] = R.drawable.ic_media_pause;
-        mIconIds[TRASH] = R.drawable.user_trash;
 
         mTask = new CalculateCountTask().execute(generators);
 
@@ -181,26 +178,23 @@ public class TopLevelActivity extends FlurryEnabledListActivity {
         Cursor generate();
     }
     
-    private class TaskCursorGenerator implements CursorGenerator {
-        private TaskSelector mTaskSelector;
+    private class EntityCursorGenerator implements CursorGenerator {
+        private EntitySelector mEntitySelector;
 
-        public TaskCursorGenerator(TaskListConfig config) {
-            mTaskSelector = TaskSelector.newBuilder().mergeFrom(config.getTaskSelector())
+        public EntityCursorGenerator(ListConfig config) {
+            mEntitySelector = config.getEntitySelector();
+            mEntitySelector = mEntitySelector.builderFrom()
                 .applyListPreferences(TopLevelActivity.this, config.getListPreferenceSettings())
                 .build();
         }
 
-        public TaskCursorGenerator(TaskSelector query) {
-            mTaskSelector = query;
-        }
-        
         public Cursor generate() {
             return getContentResolver().query(
-                    TaskProvider.Tasks.CONTENT_URI, 
+                    mEntitySelector.getContentUri(),
                     cProjection, 
-                    mTaskSelector.getSelection(TopLevelActivity.this), 
-                    mTaskSelector.getSelectionArgs(), 
-                    mTaskSelector.getSortOrder());
+                    mEntitySelector.getSelection(TopLevelActivity.this),
+                    mEntitySelector.getSelectionArgs(),
+                    mEntitySelector.getSortOrder());
         }
     }
      

@@ -22,8 +22,10 @@ import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.ContextSelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.annotation.ContextTasks;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 
 import android.app.Activity;
@@ -37,11 +39,15 @@ import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 public class ContextListConfig implements DrilldownListConfig<Context> {
     private ContextPersister mGroupPersister;
     private TaskPersister mChildPersister;
-    
+    private ListPreferenceSettings mSettings;
+    private EntitySelector mSelector;
+
     @Inject
-    public ContextListConfig(ContextPersister contextPersister, TaskPersister taskPersister) {
+    public ContextListConfig(ContextPersister contextPersister, TaskPersister taskPersister, @ContextTasks ListPreferenceSettings settings) {
         mGroupPersister = contextPersister;
         mChildPersister = taskPersister;
+        mSettings = settings;
+        mSelector = ContextSelector.newBuilder().setSortOrder(ContextProvider.Contexts.NAME + " ASC").build();
     }
     
     @Override
@@ -73,12 +79,17 @@ public class ContextListConfig implements DrilldownListConfig<Context> {
 	public EntityPersister<Context> getPersister() {
 	    return mGroupPersister;
 	}
-	
-	@Override
+
+    @Override
 	public TaskPersister getChildPersister() {
 	    return mChildPersister;
 	}
-	
+
+    @Override
+    public EntitySelector getEntitySelector() {
+        return mSelector;
+    }
+
     @Override
 	public boolean supportsViewAction() {
 		return false;
@@ -91,10 +102,8 @@ public class ContextListConfig implements DrilldownListConfig<Context> {
 
     @Override
     public Cursor createQuery(Activity activity) {
-        ListPreferenceSettings settings = new ListPreferenceSettings("context");
-        ContextSelector selector = ContextSelector.newBuilder()
-                .setSortOrder(ContextProvider.Contexts.NAME + " ASC")
-                .applyListPreferences(activity, settings).build();
+        EntitySelector selector = getEntitySelector().builderFrom().
+                applyListPreferences(activity, getListPreferenceSettings()).build();
 
         return activity.managedQuery(
                 getPersister().getContentUri(),
@@ -102,5 +111,10 @@ public class ContextListConfig implements DrilldownListConfig<Context> {
                 selector.getSelection(activity),
                 selector.getSelectionArgs(),
                 selector.getSortOrder());
+    }
+
+    @Override
+    public ListPreferenceSettings getListPreferenceSettings() {
+        return mSettings;
     }
 }

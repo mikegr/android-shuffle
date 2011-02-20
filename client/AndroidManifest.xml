@@ -237,10 +237,6 @@
 		</activity>
 		
         <activity
-            android:name="org.dodgybits.shuffle.android.list.activity.task.TrashActivity">
-        </activity>
-
-        <activity
             android:name="org.dodgybits.shuffle.android.list.activity.task.TicklerActivity">
         </activity>
 
@@ -356,6 +352,15 @@
 				<action android:name="android.intent.action.MAIN" />
 			</intent-filter>
 		</activity>
+
+        <activity
+            android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesPermanentlyDeleteActivity"
+            android:theme="@android:style/Theme.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
 
 		<activity
 			android:name="org.dodgybits.shuffle.android.preference.activity.PreferencesDeleteAllActivity"

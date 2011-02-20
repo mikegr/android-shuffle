@@ -22,6 +22,8 @@ import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import android.app.Activity;
 import android.content.ContextWrapper;
 import android.database.Cursor;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public interface ListConfig<T extends Entity> {
 
@@ -35,7 +37,9 @@ public interface ListConfig<T extends Entity> {
 	int getContentViewResId();
 
 	EntityPersister<T> getPersister();
-	
+
+    EntitySelector getEntitySelector();
+
 	int getCurrentViewMenuId();
 	
 	boolean supportsViewAction();
@@ -44,4 +48,6 @@ public interface ListConfig<T extends Entity> {
 	
 	Cursor createQuery(Activity activity);
 		
+    ListPreferenceSettings getListPreferenceSettings();
+
 }

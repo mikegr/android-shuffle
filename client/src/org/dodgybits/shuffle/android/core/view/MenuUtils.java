@@ -16,22 +16,6 @@
 
 package org.dodgybits.shuffle.android.core.view;
 
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.shuffle.android.core.activity.HelpActivity;
-import org.dodgybits.shuffle.android.list.activity.ContextsActivity;
-import org.dodgybits.shuffle.android.list.activity.ProjectsActivity;
-import org.dodgybits.shuffle.android.list.activity.State;
-import org.dodgybits.shuffle.android.list.activity.expandable.ExpandableContextsActivity;
-import org.dodgybits.shuffle.android.list.activity.expandable.ExpandableProjectsActivity;
-import org.dodgybits.shuffle.android.list.activity.task.InboxActivity;
-import org.dodgybits.shuffle.android.list.activity.task.TabbedDueActionsActivity;
-import org.dodgybits.shuffle.android.list.activity.task.TicklerActivity;
-import org.dodgybits.shuffle.android.list.activity.task.TopTasksActivity;
-import org.dodgybits.shuffle.android.list.activity.task.TrashActivity;
-import org.dodgybits.shuffle.android.preference.activity.PreferencesActivity;
-import org.dodgybits.shuffle.android.preference.model.Preferences;
-import org.dodgybits.shuffle.android.synchronisation.tracks.activity.SynchronizeActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +24,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.activity.HelpActivity;
+import org.dodgybits.shuffle.android.list.activity.ContextsActivity;
+import org.dodgybits.shuffle.android.list.activity.ProjectsActivity;
+import org.dodgybits.shuffle.android.list.activity.State;
+import org.dodgybits.shuffle.android.list.activity.expandable.ExpandableContextsActivity;
+import org.dodgybits.shuffle.android.list.activity.expandable.ExpandableProjectsActivity;
+import org.dodgybits.shuffle.android.list.activity.task.*;
+import org.dodgybits.shuffle.android.preference.activity.PreferencesActivity;
+import org.dodgybits.shuffle.android.preference.model.Preferences;
+import org.dodgybits.shuffle.android.synchronisation.tracks.activity.SynchronizeActivity;
 
 public class MenuUtils {
 	private static final String cTag = "MenuUtils";
@@ -65,8 +60,7 @@ public class MenuUtils {
     public static final int PROJECT_ID = Menu.FIRST + 13;
     public static final int CONTEXT_ID = Menu.FIRST + 14;
     public static final int TICKLER_ID = Menu.FIRST + 15;
-    public static final int TRASH_ID = Menu.FIRST + 16;
-    
+
     public static final int PREFERENCE_ID = Menu.FIRST + 20;
     public static final int HELP_ID = Menu.FIRST + 21;
     public static final int SYNC_ID = Menu.FIRST + 22;
@@ -142,8 +136,6 @@ public class MenuUtils {
         	.setChecked(CONTEXT_ID == currentViewMenuId);
         viewMenu.add(Menu.NONE, TICKLER_ID, 5, R.string.title_context)
             .setChecked(TICKLER_ID == currentViewMenuId);
-        viewMenu.add(Menu.NONE, TRASH_ID, 6, R.string.title_context)
-            .setChecked(TRASH_ID == currentViewMenuId);
 	}
 	
 	public static void addEditorMenuItems(Menu menu, int state) {
@@ -307,11 +299,7 @@ public class MenuUtils {
             Log.d(cTag, "Switching to tickler list");
             activity.startActivity(new Intent(activity, TicklerActivity.class));
             return true;
-        case TRASH_ID:
-            Log.d(cTag, "Bringing up trash");
-            activity.startActivity(new Intent(activity, TrashActivity.class));
-            return true;
-        	
+
         case PREFERENCE_ID:
         	Log.d(cTag, "Bringing up preferences");
         	activity.startActivity(new Intent(activity, PreferencesActivity.class));

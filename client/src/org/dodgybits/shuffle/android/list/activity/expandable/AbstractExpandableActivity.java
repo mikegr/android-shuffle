@@ -16,6 +16,22 @@
 
 package org.dodgybits.shuffle.android.list.activity.expandable;
 
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.*;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.SimpleCursorTreeAdapter;
+import android.widget.Toast;
+import com.google.inject.Inject;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledExpandableListActivity;
 import org.dodgybits.shuffle.android.core.model.Entity;
@@ -26,42 +42,29 @@ import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.activity.ListPreferenceActivity;
 import org.dodgybits.shuffle.android.list.config.ExpandableListConfig;
+import org.dodgybits.shuffle.android.list.view.ButtonBar;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemListener;
 import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
-
-import android.content.ContentUris;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.SimpleCursorTreeAdapter;
-import android.widget.Toast;
-
-import com.google.inject.Inject;
+import roboguice.event.Observes;
+import roboguice.inject.InjectView;
 
 public abstract class AbstractExpandableActivity<G extends Entity> extends FlurryEnabledExpandableListActivity 
 	implements SwipeListItemListener {
 	
 	private static final String cTag = "AbstractExpandableActivity";
 
+    protected static final int FILTER_CONFIG = 600;
+
 	protected ExpandableListAdapter mAdapter;
 	@Inject protected EntityCache<org.dodgybits.shuffle.android.core.model.Context> mContextCache;
 	@Inject protected EntityCache<Project> mProjectCache;
-	
+
+    @InjectView(R.id.button_bar)
+    protected ButtonBar mButtonBar;
+
 	@Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -319,7 +322,47 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     	return selectedUri;
     }
 
+    protected void onAddItem( @Observes ButtonBar.AddItemButtonClickEvent event ) {
+        insertItem(getListConfig().getGroupPersister().getContentUri());
+    }
 
+    protected void onOther( @Observes ButtonBar.OtherButtonClickEvent event ) {
+    }
+
+    protected void onFilter( @Observes ButtonBar.FilterButtonClickEvent event ) {
+        Intent intent = new Intent(this, ListPreferenceActivity.class);
+        getListConfig().getListPreferenceSettings().addToIntent(intent);
+        startActivityForResult(intent, FILTER_CONFIG);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+            Intent data) {
+        Log.d(cTag, "Got resultCode " + resultCode + " with data " + data);
+        switch (requestCode) {
+        case FILTER_CONFIG:
+            Log.d(cTag, "Got result " + resultCode);
+            updateCursor();
+            break;
+
+        default:
+            Log.e(cTag, "Unknown requestCode: " + requestCode);
+        }
+    }
+
+    protected void updateCursor() {
+        SimpleCursorTreeAdapter adapter = (SimpleCursorTreeAdapter)getExpandableListAdapter();
+        Cursor oldCursor = adapter.getCursor();
+        if (oldCursor != null) {
+            // changeCursor always closes the cursor,
+            // so need to stop managing the old one first
+            stopManagingCursor(oldCursor);
+            oldCursor.close();
+        }
+
+        Cursor cursor = createGroupQuery();
+        adapter.changeCursor(cursor);
+    }
 
 	/**
 	 * Return the intent generated when a list item is clicked.

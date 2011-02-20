@@ -25,19 +25,26 @@ import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.ProjectSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.annotation.ProjectTasks;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class ProjectListConfig implements DrilldownListConfig<Project> {
     private ProjectPersister mGroupPersister;
     private TaskPersister mChildPersister;
-    
+    private ListPreferenceSettings mSettings;
+    private EntitySelector mSelector;
+
     @Inject
-    public ProjectListConfig(ProjectPersister projectPersister, TaskPersister taskPersister) {
+    public ProjectListConfig(ProjectPersister projectPersister, TaskPersister taskPersister,
+                             @ProjectTasks ListPreferenceSettings settings) {
         mGroupPersister = projectPersister;
         mChildPersister = taskPersister;
+        mSettings = settings;
+        mSelector = ProjectSelector.newBuilder().setSortOrder(ProjectProvider.Projects.NAME + " ASC").build();
     }
 
     @Override
@@ -84,13 +91,17 @@ public class ProjectListConfig implements DrilldownListConfig<Project> {
 	public TaskPersister getChildPersister() {
 	    return mChildPersister;
 	}
-	
+
+    @Override
+    public EntitySelector getEntitySelector() {
+        return mSelector;
+    }
+
 	@Override
 	public Cursor createQuery(Activity activity) {
-        ListPreferenceSettings settings = new ListPreferenceSettings("project");
-        ProjectSelector selector = ProjectSelector.newBuilder()
-                .setSortOrder(ProjectProvider.Projects.NAME + " ASC")
-                .applyListPreferences(activity, settings).build();
+        EntitySelector selector = getEntitySelector().builderFrom().
+                applyListPreferences(activity, getListPreferenceSettings()).build();
+
 
         return activity.managedQuery(
                 getPersister().getContentUri(),
@@ -99,5 +110,10 @@ public class ProjectListConfig implements DrilldownListConfig<Project> {
                 selector.getSelectionArgs(),
                 selector.getSortOrder());
 	}
+
+    @Override
+    public ListPreferenceSettings getListPreferenceSettings() {
+        return mSettings;
+    }
 
 }

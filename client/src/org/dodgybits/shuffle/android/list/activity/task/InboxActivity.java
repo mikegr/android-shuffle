@@ -35,8 +35,10 @@ import org.dodgybits.shuffle.android.list.config.AbstractTaskListConfig;
 import org.dodgybits.shuffle.android.list.config.ListConfig;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.list.config.TaskListConfig;
+import org.dodgybits.shuffle.android.list.view.ButtonBar;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
+import roboguice.event.Observes;
 
 public class InboxActivity extends AbstractTaskListActivity {
 
@@ -49,11 +51,11 @@ public class InboxActivity extends AbstractTaskListActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-		mOtherButton.setText(R.string.clean_inbox_button_title);
+		mButtonBar.getOtherButton().setText(R.string.clean_inbox_button_title);
 		Drawable cleanIcon = getResources().getDrawable(R.drawable.edit_clear);
 		cleanIcon.setBounds(0, 0, 24, 24);
-		mOtherButton.setCompoundDrawables(cleanIcon, null, null, null);
-		mOtherButton.setVisibility(View.VISIBLE);
+		mButtonBar.getOtherButton().setCompoundDrawables(cleanIcon, null, null, null);
+		mButtonBar.getOtherButton().setVisibility(View.VISIBLE);
 	}
 	
 	@Override
@@ -80,7 +82,7 @@ public class InboxActivity extends AbstractTaskListActivity {
 	}
 
 	@Override
-	protected void onOtherButtonClicked() {
+    protected void onOther( @Observes ButtonBar.OtherButtonClickEvent event ) {
 		doCleanup();
 	}
 	

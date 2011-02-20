@@ -7,6 +7,7 @@ import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.view.MenuUtils;
+import org.dodgybits.shuffle.android.list.annotation.DueTasks;
 import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public class DueActionsListConfig extends AbstractTaskListConfig {
@@ -14,12 +15,11 @@ public class DueActionsListConfig extends AbstractTaskListConfig {
     private TaskSelector.PredefinedQuery mMode = TaskSelector.PredefinedQuery.dueToday;
 
     @Inject
-    public DueActionsListConfig(TaskPersister persister) {
-
+    public DueActionsListConfig(TaskPersister persister, @DueTasks ListPreferenceSettings settings) {
         super(
                 createSelector(TaskSelector.PredefinedQuery.dueToday),
                 persister,
-                new ListPreferenceSettings("due_tasks").setDefaultCompleted(Flag.no));
+                settings);
     }
 
     public TaskSelector.PredefinedQuery getMode() {

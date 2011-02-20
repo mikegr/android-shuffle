@@ -1,6 +1,8 @@
 package org.dodgybits.shuffle.android.core.model.persistence.selector;
 
+import android.net.Uri;
 import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider;
+import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 
 import java.util.List;
 
@@ -9,6 +11,12 @@ public class ProjectSelector extends AbstractEntitySelector {
 
     private ProjectSelector() {
     }
+
+    @Override
+    public Uri getContentUri() {
+        return ProjectProvider.Projects.CONTENT_URI;
+    }
+
 
     @Override
     protected List<String> getSelectionExpressions(android.content.Context context) {
@@ -22,6 +30,11 @@ public class ProjectSelector extends AbstractEntitySelector {
 
     public final String[] getSelectionArgs() {
         return null;
+    }
+
+    @Override
+    public Builder builderFrom() {
+        return newBuilder().mergeFrom(this);
     }
 
     @Override
@@ -47,5 +60,9 @@ public class ProjectSelector extends AbstractEntitySelector {
             return builder;
         }
 
+        public Builder mergeFrom(ProjectSelector query) {
+            super.mergeFrom(query);
+            return this;
+        }
     }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import android.net.Uri;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.util.StringUtils;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
@@ -47,6 +48,11 @@ public class TaskSelector extends AbstractEntitySelector {
 
     public final Flag getPending() {
         return mPending;
+    }
+
+    @Override
+    public Uri getContentUri() {
+        return TaskProvider.Tasks.CONTENT_URI;
     }
 
     public final String getSelection(android.content.Context context) {
@@ -149,15 +155,19 @@ public class TaskSelector extends AbstractEntitySelector {
                 result = "((complete = 0) AND (active = 0))";
                 break;
                 
-            default:
+            case dueToday:
+            case dueNextWeek:
+            case dueNextMonth:
                 long startMS = 0L;
                 long endOfToday = getEndDate();
                 long endOfTomorrow = endOfToday + DateUtils.DAY_IN_MILLIS;
-                result = "(complete = 0" +
-                    " AND (due > " + startMS + ")" +
+                result = "(due > " + startMS + ")" +
                     " AND ( (due < " + endOfToday + ") OR" +
-                    "( allDay = 1 AND due < " + endOfTomorrow + " ) ))";
+                    "( allDay = 1 AND due < " + endOfTomorrow + " ))";
                 break;
+
+            default:
+                throw new RuntimeException("Unknown predefined selection " + mPredefined);
         }
         
         return result;
@@ -199,7 +209,12 @@ public class TaskSelector extends AbstractEntitySelector {
         Log.d(cTag,args.toString());
         return args.size() > 0 ? args.toArray(new String[0]): null;
     }
-        
+
+    @Override
+    public Builder builderFrom() {
+        return newBuilder().mergeFrom(this);
+    }
+
     @Override
     public final String toString() {
         return String.format(

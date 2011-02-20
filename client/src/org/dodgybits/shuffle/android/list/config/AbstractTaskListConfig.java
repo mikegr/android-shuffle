@@ -20,6 +20,7 @@ import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
@@ -34,10 +35,10 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     private TaskSelector mTaskSelector;
     private ListPreferenceSettings mSettings;
 
-    public AbstractTaskListConfig(TaskSelector query, TaskPersister persister, ListPreferenceSettings settings) {
+    public AbstractTaskListConfig(TaskSelector selector, TaskPersister persister, ListPreferenceSettings settings) {
+        mTaskSelector = selector;
         mPersister = persister;
         mSettings = settings;
-        mTaskSelector = query;
     }
     
     @Override
@@ -73,6 +74,11 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     public TaskSelector getTaskSelector() {
         return mTaskSelector;
     }
+
+    @Override
+    public EntitySelector getEntitySelector() {
+        return mTaskSelector;
+    }
     
     @Override
     public void setTaskSelector(TaskSelector query) {
@@ -81,12 +87,11 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     
     @Override
     public Cursor createQuery(Activity activity) {
-        TaskSelector selector = TaskSelector.newBuilder().
-                mergeFrom(mTaskSelector).
+        EntitySelector selector = getEntitySelector().builderFrom().
                 applyListPreferences(activity, getListPreferenceSettings()).build();
 
         return activity.managedQuery(
-                getTaskPersister().getContentUri(), 
+                selector.getContentUri(),
                 TaskProvider.Tasks.FULL_PROJECTION, 
                 selector.getSelection(activity),
                 selector.getSelectionArgs(),
@@ -97,4 +102,16 @@ public abstract class AbstractTaskListConfig implements TaskListConfig {
     public ListPreferenceSettings getListPreferenceSettings() {
         return mSettings;
     }
+
+    @Override
+    public boolean showTaskContext() {
+        return true;
+    }
+
+    @Override
+    public boolean showTaskProject() {
+        return true;
+    }
+
+
 }

@@ -21,6 +21,9 @@ import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
 
 import android.content.ContextWrapper;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.EntitySelector;
+import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 
 public interface ExpandableListConfig<G extends Entity> {
 
@@ -38,9 +41,13 @@ public interface ExpandableListConfig<G extends Entity> {
      * @return the name of the database column holding the key from the child to the parent
      */
     String getGroupIdColumnName();
-    
+
+    EntitySelector getGroupSelector();
+    TaskSelector getChildSelector();
+
     EntityPersister<G> getGroupPersister();
     TaskPersister getChildPersister();
 
-    
+    ListPreferenceSettings getListPreferenceSettings();
+
 }

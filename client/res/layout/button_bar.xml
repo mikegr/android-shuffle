@@ -18,10 +18,12 @@
 	xmlns:android="http://schemas.android.com/apk/res/android" 
     android:orientation="horizontal"
     android:paddingTop="3dip"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
     >
     
     <Button
-    	android:id="@+id/add_task_button"
+    	android:id="@+id/add_item_button"
     	android:layout_width="wrap_content"
 	    android:layout_height="fill_parent"
     	android:layout_weight="10"
@@ -33,7 +35,6 @@
     	android:layout_width="wrap_content"
 	    android:layout_height="fill_parent"
     	android:layout_weight="10"
-    	android:visibility="gone"
     	/>
 
     <ImageButton android:id="@+id/filter_button"
