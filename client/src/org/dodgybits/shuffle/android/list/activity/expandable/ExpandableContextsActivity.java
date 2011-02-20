@@ -55,9 +55,16 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
 	
 	@Override
 	protected void refreshChildCount() {
+        TaskSelector selector = getListConfig().getChildSelector().builderFrom()
+                .applyListPreferences(this, getListConfig().getListPreferenceSettings())
+                .build();
+
 		Cursor cursor = getContentResolver().query(
-				ContextProvider.Contexts.CONTEXT_TASKS_CONTENT_URI, 
-				ContextProvider.Contexts.FULL_TASK_PROJECTION, null, null, null);
+				ContextProvider.Contexts.CONTEXT_TASKS_CONTENT_URI,
+				ContextProvider.Contexts.FULL_TASK_PROJECTION,
+                selector.getSelection(this),
+                selector.getSelectionArgs(),
+                selector.getSortOrder());
         mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
@@ -90,7 +97,9 @@ public class ExpandableContextsActivity extends AbstractExpandableActivity<Conte
     @Override
     protected Cursor createChildQuery(long groupId) {
         TaskSelector selector = getListConfig().getChildSelector().builderFrom()
-                .setContexts(Arrays.asList(new Id[]{Id.create(groupId)})).build();
+                .setContexts(Arrays.asList(new Id[]{Id.create(groupId)}))
+                .applyListPreferences(this, getListConfig().getListPreferenceSettings())
+                .build();
 
         Cursor cursor = managedQuery(
                 selector.getContentUri(),

@@ -38,15 +38,15 @@ public class ProjectProvider extends AbstractCollectionProvider {
 	    
 		makeSearchable(Projects._ID, Projects.NAME, Projects.NAME, Projects.NAME);
 		uriMatcher.addURI(AUTHORITY, "projectTasks", PROJECT_TASKS);
-		String idField = "p._id";
-		String tables = "project p, task t";
-		String restrictions = "t.projectId = p._id";
+		String idField = "project._id";
+		String tables = "project, task";
+		String restrictions = "task.projectId = project._id";
 
 		restrictionBuilders.put(PROJECT_TASKS, 
 		        new CustomElementFilterRestrictionBuilder(
 		                tables, restrictions, idField));
 		groupByBuilders.put(PROJECT_TASKS, 
-		        new StandardGroupByBuilder("p._id"));
+		        new StandardGroupByBuilder("project._id"));
         elementInserters.put(COLLECTION_MATCH_ID, new ProjectInserter());
 		setDefaultSortOrder(Projects.DEFAULT_SORT_ORDER);
 	}

@@ -63,10 +63,17 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
     
 	@Override
 	protected void refreshChildCount() {
+        TaskSelector selector = getListConfig().getChildSelector().builderFrom()
+                .applyListPreferences(this, getListConfig().getListPreferenceSettings())
+                .build();
+
 		Cursor cursor = getContentResolver().query(
-				ProjectProvider.Projects.PROJECT_TASKS_CONTENT_URI, 
-				ProjectProvider.Projects.FULL_TASK_PROJECTION, null, null, null);
-		mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
+                ProjectProvider.Projects.PROJECT_TASKS_CONTENT_URI,
+                ProjectProvider.Projects.FULL_TASK_PROJECTION,
+                selector.getSelection(this),
+                selector.getSelectionArgs(),
+                selector.getSortOrder());
+        mTaskCountArray = getListConfig().getChildPersister().readCountArray(cursor);
 		cursor.close();
 	}
 		
@@ -98,7 +105,9 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	@Override
 	protected Cursor createChildQuery(long groupId) {
         TaskSelector selector = getListConfig().getChildSelector().builderFrom()
-                .setProjects(Arrays.asList(new Id[]{Id.create(groupId)})).build();
+                .setProjects(Arrays.asList(new Id[]{Id.create(groupId)}))
+                .applyListPreferences(this, getListConfig().getListPreferenceSettings())
+                .build();
 
 		Cursor cursor = managedQuery(
                 selector.getContentUri(),
