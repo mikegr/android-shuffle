@@ -205,6 +205,7 @@
     <string name="changeSynchronizationSettings">Synchronisationseinstellungen ändern</string>
     <string name="tracks_url">Installation von Tracks</string>
     <string name="tracks_url_settings">http://my.gtdify.com</string>
+    <string name="self_signed_cert">Selbst signiertes https Zertifikat (Sicherheitslücke)</string>
     <string name="tracks_user">Bentuzername</string>
     <string name="tracks_pass">Passwort</string>
     <string name="readingRemoteTasks">Lese Handlungen per Fernzugriff</string>

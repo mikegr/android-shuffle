@@ -53,6 +53,7 @@ public class Preferences {
     public static final String TRACKS_URL = "tracks_url";
     public static final String TRACKS_USER = "tracks_user";
     public static final String TRACKS_PASSWORD = "tracks_password";
+    public static final String TRACKS_SELF_SIGNED_CERT = "tracks_self_signed_cert";
     public static final String TRACKS_INTERVAL = "tracks_interval";
 
     public static final String WIDGET_QUERY_PREFIX = "widget_query_";
@@ -102,6 +103,10 @@ public class Preferences {
     public static String getTracksPassword(Context context) {
         return getSharedPreferences(context).getString(TRACKS_PASSWORD, "");
     }
+    
+	public static Boolean isTracksSelfSignedCert(Context context) {
+		return getSharedPreferences(context).getBoolean(TRACKS_SELF_SIGNED_CERT, false);
+	}
 	
 	public static String getDeleteCompletedPeriod(Context context) {
 		return getSharedPreferences(context).getString(DELETE_COMPLETED_PERIOD_KEY, DeleteCompletedPeriod.never.name());
@@ -125,6 +130,7 @@ public class Preferences {
 	public static Boolean isProjectViewExpandable(Context context) {
 		return !getSharedPreferences(context).getBoolean(PROJECT_VIEW_KEY, false);
 	}
+	
 
 	public static Boolean isContextViewExpandable(Context context) {
 		return !getSharedPreferences(context).getBoolean(CONTEXT_VIEW_KEY, true);

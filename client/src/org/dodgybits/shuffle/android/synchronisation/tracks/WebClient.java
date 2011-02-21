@@ -19,8 +19,17 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.dodgybits.shuffle.android.synchronisation.tracks.ssl.TrustedSSLSocketFactory;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -38,10 +47,12 @@ public class WebClient {
     private final String tracksUser;
     private final String tracksPassword;
     private final String cTag = "WebClient";
+    private final boolean selfSignedCert;
 
-    public WebClient(Context context, String tracksUser, String tracksPassword) throws ApiException {
+    public WebClient(Context context, String tracksUser, String tracksPassword, boolean selfSignedCert) throws ApiException {
         this.tracksUser = tracksUser;
         this.tracksPassword = tracksPassword;
+        this.selfSignedCert = selfSignedCert;
         PackageManager manager = context.getPackageManager();
         PackageInfo info = null;
         try {
@@ -81,7 +92,22 @@ public class WebClient {
     }
 
     private HttpClient CreateClient() {
-        DefaultHttpClient client = new DefaultHttpClient();
+        DefaultHttpClient client;
+        if (selfSignedCert) {
+            HttpParams params = new BasicHttpParams();
+            SchemeRegistry sr = new SchemeRegistry();
+            sr.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+            try {
+                sr.register(new Scheme("https", new TrustedSSLSocketFactory(), 443));
+            } catch (Exception e) {
+                Log.v("Shuffle", e.toString() + "");
+                sr.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+            }
+            ClientConnectionManager cm = new SingleClientConnManager(params, sr);            
+            client = new DefaultHttpClient(cm, params);
+        } else {
+            client = new DefaultHttpClient(); 
+        }
         client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(tracksUser, tracksPassword));
         return client;
     }
@@ -108,7 +134,7 @@ public class WebClient {
             StatusLine status = response.getStatusLine();
             Log.i(cTag, "get with response " + status.toString());
             if (status.getStatusCode() != HttpStatus.SC_OK) {
-            	return new WebResult(status, null);
+                return new WebResult(status, null);
      
             }
 
@@ -235,6 +261,7 @@ public class WebClient {
             throw new ApiException("Problem communicating with API", e);
         }
     }
+
 
 
 }

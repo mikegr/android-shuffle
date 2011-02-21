@@ -280,6 +280,7 @@ allow that, you can turn it off under Settings.</string>
     <string name="tracksInstallation">Target installation</string>
     <string name="tracks_url">Tracks installation</string>
     <string name="tracks_url_settings">http://my.gtdify.com</string>
+    <string name="self_signed_cert">Self-signed https certificate (security hole)</string>
     <string name="tracks_user">User</string>
     <string name="tracks_pass">Password</string>
     <string name="readingRemoteTasks">Reading remote tasks</string>

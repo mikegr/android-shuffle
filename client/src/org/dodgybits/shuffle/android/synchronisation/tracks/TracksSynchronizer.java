@@ -61,7 +61,7 @@ public class TracksSynchronizer extends AsyncTask<String, Progress, Void> {
             synchronizer = new TracksSynchronizer(
                     context, analytics,
                     new WebClient(context, Preferences.getTracksUser(context), 
-                            Preferences.getTracksPassword(context)), 
+                            Preferences.getTracksPassword(context), Preferences.isTracksSelfSignedCert(context)), 
                     Preferences.getTracksUrl(context)
                     );
         }

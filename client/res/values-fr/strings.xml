@@ -208,6 +208,7 @@
     <string name="changeSynchronizationSettings">Change synchronization settings</string>
     <string name="tracks_url">Tracks installation</string>
     <string name="tracks_url_settings">http://my.gtdify.com</string>
+    <string name="self_signed_cert">Certificat https Auto-signé (trou de sécurité)</string>
     <string name="tracks_user">User</string>
     <string name="tracks_pass">Password</string>
     <string name="readingRemoteTasks">Reading remote tasks</string>

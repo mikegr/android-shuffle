@@ -4,6 +4,7 @@ import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_
 import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_PASSWORD;
 import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_URL;
 import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_USER;
+import static org.dodgybits.shuffle.android.preference.model.Preferences.TRACKS_SELF_SIGNED_CERT;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,10 +21,12 @@ import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -38,6 +41,7 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
     @InjectView(R.id.pass) EditText mPassTextbox;
     @InjectView(R.id.checkSettings) Button mCheckSettings;
     @InjectView(R.id.sync_interval) Spinner mInterval;
+    @InjectView(R.id.tracks_self_signed_cert) CheckBox mSelfSignedCertCheckBox;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,7 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
         
         mUserTextbox.setText(Preferences.getTracksUser(this));
         mPassTextbox.setText(Preferences.getTracksPassword(this));
+        mSelfSignedCertCheckBox.setChecked(Preferences.isTracksSelfSignedCert(this));
 
         CompoundButton.OnClickListener checkSettings = new CompoundButton.OnClickListener() {
 			
@@ -159,7 +164,7 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
             ed.putInt(TRACKS_INTERVAL, mInterval.getSelectedItemPosition());
             ed.putString(TRACKS_USER, mUserTextbox.getText().toString());
             ed.putString(TRACKS_PASSWORD, mPassTextbox.getText().toString());
-
+            ed.putBoolean(TRACKS_SELF_SIGNED_CERT, mSelfSignedCertCheckBox.isChecked());            
             ed.commit();
             return true;
     }
@@ -174,7 +179,7 @@ public class SynchronizationSettingsActivity extends FlurryEnabledActivity {
 
         try {
             WebClient client = new WebClient(this, mUserTextbox.getText()
-                    .toString(), mPassTextbox.getText().toString());
+                    .toString(), mPassTextbox.getText().toString(), mSelfSignedCertCheckBox.isChecked());
 
             if (uri != null && uri.isAbsolute()) {
                 WebResult result = client.getUrlContent(uri.toString() + "/contexts.xml");
