@@ -16,12 +16,7 @@
 
 package org.dodgybits.shuffle.android.list.activity;
 
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
-import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.view.AlertUtils;
@@ -31,9 +26,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.util.Log;
 import android.util.SparseIntArray;
-import org.dodgybits.shuffle.android.list.view.ButtonBar;
-import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
-import roboguice.event.Observes;
 
 /**
  * A list whose items represent groups that lead to other list.
@@ -69,17 +61,19 @@ public abstract class AbstractDrilldownListActivity<G extends Entity> extends Ab
     }
 
     /**
-     * Permanently delete the selected item.
+     * Mark selected item for delete.
+     * Provide warning for items that have children.
      */
 	@Override
-    protected void deleteItem(final Id groupId) {
+    protected void toggleDeleted(final G entity) {
+        final Id groupId = entity.getLocalId();
     	int childCount = getChildCount(groupId);
-		if (childCount > 0) {
+		if (childCount > 0 && !entity.isDeleted()) {
     		OnClickListener buttonListener = new OnClickListener() {
     			public void onClick(DialogInterface dialog, int which) {
     				if (which == DialogInterface.BUTTON1) {
     			    	Log.i(cTag, "Deleting group id " + groupId);
-    			    	AbstractDrilldownListActivity.super.deleteItem(groupId);
+    			    	AbstractDrilldownListActivity.super.toggleDeleted(entity);
     				} else {
     					Log.d(cTag, "Hit Cancel button. Do nothing.");
     				}
@@ -88,7 +82,7 @@ public abstract class AbstractDrilldownListActivity<G extends Entity> extends Ab
 			AlertUtils.showDeleteGroupWarning(this, getDrilldownListConfig().getItemName(this), 
 					getDrilldownListConfig().getChildName(this), childCount, buttonListener);
 		} else {
-			super.deleteItem(groupId);
+			super.toggleDeleted(entity);
 		}
     }
 

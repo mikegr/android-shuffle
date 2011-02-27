@@ -69,31 +69,21 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
 		SwipeListItemWrapper wrapper = (SwipeListItemWrapper) findViewById(R.id.swipe_wrapper);
 		wrapper.setSwipeListItemListener(this);
 	}
-	
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    	super.onCreateContextMenu(menu, view, menuInfo);
 
+    @Override
+    protected void OnCreateEntityContextMenu(ContextMenu menu, int position, Task task) {
 		// ... add complete command.
-    	MenuUtils.addCompleteMenuItem(menu);
+    	MenuUtils.addCompleteMenuItem(menu, task.isComplete());
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info;
-        try {
-             info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        } catch (ClassCastException e) {
-            Log.e(cTag, "bad menuInfo", e);
-            return false;
-        }
-
+    protected boolean onContextEntitySelected(MenuItem item, int position, Task task) {
         switch (item.getItemId()) {
 	        case MenuUtils.COMPLETE_ID:
-	            toggleComplete(info.position);
+	            toggleComplete(task);
 	            return true;
         }
-        return super.onContextItemSelected(item);
+        return super.onContextEntitySelected(item, position, task);
     }	
     
     protected TaskPersister getTaskPersister() {
@@ -141,11 +131,20 @@ public abstract class AbstractTaskListActivity extends AbstractListActivity<Task
     	toggleComplete(getSelectedItemPosition());
     }
 
+
     protected final void toggleComplete(int position) {
     	if (position >= 0 && position < getItemCount())
     	{
 	    	Cursor c = (Cursor) getListAdapter().getItem(position);
-	    	getTaskPersister().toggleTaskComplete(c);
+            Task task = getTaskPersister().read(c);
+	    	toggleComplete(task);
+    	}
+    }
+
+    protected final void toggleComplete(Task task) {
+    	if (task != null)
+    	{
+	    	getTaskPersister().updateCompleteFlag(task.getLocalId(), !task.isComplete());
     	}
     }
 

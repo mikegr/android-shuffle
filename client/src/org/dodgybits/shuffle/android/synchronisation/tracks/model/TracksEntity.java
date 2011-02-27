@@ -6,7 +6,5 @@ import org.dodgybits.shuffle.android.core.model.Id;
 public interface TracksEntity extends Entity {
 
     Id getTracksId();
-    
-    String getLocalName();
-    
+
 }

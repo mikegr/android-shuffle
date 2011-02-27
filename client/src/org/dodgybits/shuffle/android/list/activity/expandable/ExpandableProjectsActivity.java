@@ -173,25 +173,10 @@ public class ExpandableProjectsActivity extends AbstractExpandableActivity<Proje
 	}
 	
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    	super.onCreateContextMenu(menu, view, menuInfo);
-
-    	ExpandableListView.ExpandableListContextMenuInfo info;
-        try {
-             info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
-        } catch (ClassCastException e) {
-            Log.e(cTag, "bad menuInfo", e);
-            return;
-        }
-        long packedPosition = info.packedPosition;
-        int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
-        int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
-        boolean isChild = isChild(packedPosition); 
-        if (isChild) {
-	    	MenuUtils.addMoveMenuItems(menu, 
-	    			moveUpPermitted(groupPosition, childPosition), 
-	    			moveDownPermitted(groupPosition, childPosition));
-        }
+    protected void onCreateChildContextMenu(ContextMenu menu, int groupPosition, int childPosition, Task task) {
+        MenuUtils.addMoveMenuItems(menu,
+                moveUpPermitted(groupPosition, childPosition),
+                moveDownPermitted(groupPosition, childPosition));
     }
 
     @Override

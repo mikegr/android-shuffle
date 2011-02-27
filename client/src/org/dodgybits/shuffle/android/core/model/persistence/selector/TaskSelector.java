@@ -20,12 +20,16 @@ import android.util.Log;
 
 public class TaskSelector extends AbstractEntitySelector {
     private static final String cTag = "TaskSelector";
+    private static final String[] cUndefinedArgs = new String[] {};
 
     private PredefinedQuery mPredefined; 
     private List<Id> mProjects;
     private List<Id> mContexts;
     private Flag mComplete = ignored;
     private Flag mPending = ignored;
+
+    private String mSelection = null;
+    private String[] mSelectionArgs = cUndefinedArgs;
 
     private TaskSelector() {
     }
@@ -56,10 +60,12 @@ public class TaskSelector extends AbstractEntitySelector {
     }
 
     public final String getSelection(android.content.Context context) {
-        List<String> expressions = getSelectionExpressions(context);
-        String selection = StringUtils.join(expressions, " AND ");
-        Log.d(cTag, selection);
-        return selection;
+        if (mSelection == null) {
+            List<String> expressions = getSelectionExpressions(context);
+            mSelection = StringUtils.join(expressions, " AND ");
+            Log.d(cTag, mSelection);
+        }
+        return mSelection;
     }
 
     @Override
@@ -203,12 +209,15 @@ public class TaskSelector extends AbstractEntitySelector {
     
 
     public final String[] getSelectionArgs() {
-        List<String> args = new ArrayList<String>();
-        addIdListArgs(args, mProjects);
-        addIdListArgs(args, mContexts);
-        
-        Log.d(cTag,args.toString());
-        return args.size() > 0 ? args.toArray(new String[0]): null;
+        if (mSelectionArgs == cUndefinedArgs) {
+            List<String> args = new ArrayList<String>();
+            addIdListArgs(args, mProjects);
+            addIdListArgs(args, mContexts);
+
+            Log.d(cTag,args.toString());
+            mSelectionArgs = args.size() > 0 ? args.toArray(new String[0]): null;
+        }
+        return mSelectionArgs;
     }
 
     @Override

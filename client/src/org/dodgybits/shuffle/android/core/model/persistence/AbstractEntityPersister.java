@@ -99,26 +99,19 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
     }
 
     @Override
-    public boolean moveToTrash(Id id) {
+    public boolean updateDeletedFlag(Id id, boolean isDeleted) {
         ContentValues values = new ContentValues();
-        values.put(ShuffleTable.DELETED, true);
+        writeBoolean(values, ShuffleTable.DELETED, isDeleted);
         values.put(ShuffleTable.MODIFIED_DATE, System.currentTimeMillis());
         return (mResolver.update(getUri(id), values, null, null) == 1);
     }
     
     @Override
-    public int moveToTrash(String selection, String[] selectionArgs) {
+    public int updateDeletedFlag(String selection, String[] selectionArgs, boolean isDeleted) {
         ContentValues values = new ContentValues();
-        values.put(ShuffleTable.DELETED, true);
+        writeBoolean(values, ShuffleTable.DELETED, isDeleted);
         values.put(ShuffleTable.MODIFIED_DATE, System.currentTimeMillis());
         return mResolver.update(getContentUri(), values, selection, selectionArgs);
-    }
-    
-    public boolean putBack(Id id) {
-        ContentValues values = new ContentValues();
-        values.put(ShuffleTable.DELETED, false);
-        values.put(ShuffleTable.MODIFIED_DATE, System.currentTimeMillis());
-        return (mResolver.update(getUri(id), values, null, null) == 1);
     }
     
     @Override
@@ -153,11 +146,11 @@ public abstract class AbstractEntityPersister<E extends Entity> implements Entit
         }
     }
     
-    private Uri getUri(E e) {
+    protected Uri getUri(E e) {
         return getUri(e.getLocalId());
     }
 
-    private Uri getUri(Id localId) {
+    protected Uri getUri(Id localId) {
         return ContentUris.appendId(
                 getContentUri().buildUpon(), localId.getId()).build();
     }

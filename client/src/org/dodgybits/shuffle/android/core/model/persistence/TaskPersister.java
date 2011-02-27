@@ -162,7 +162,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     }
 
     public int deleteCompletedTasks() {
-        int deletedRows = moveToTrash(TaskProvider.Tasks.COMPLETE + " = 1", null);
+        int deletedRows = updateDeletedFlag(TaskProvider.Tasks.COMPLETE + " = 1", null, true);
         Log.d(cTag, "Deleting " + deletedRows + " completed tasks.");
         
         Map<String, String> params = new HashMap<String,String>(mFlurryParams);
@@ -173,25 +173,14 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
     }
 
 
-    /**
-     * Toggle whether the task at the given cursor position is complete.
-     * The cursor is committed and re-queried after the update.
-     *
-     * @param cursor cursor positioned at task to update
-     * @return new value of task completeness
-     */
-    public boolean toggleTaskComplete(Cursor cursor) {
-        Id taskId = readId(cursor, ID_INDEX);
-        boolean isComplete = !readBoolean(cursor, COMPLETE_INDEX);
+    public void updateCompleteFlag(Id id, boolean isComplete) {
         ContentValues values = new ContentValues();
         writeBoolean(values, COMPLETE, isComplete);
         values.put(MODIFIED_DATE, System.currentTimeMillis());
-        mResolver.update(getContentUri(), values,
-                TaskProvider.Tasks._ID + "=?", new String[] { String.valueOf(taskId) });
+        mResolver.update(getUri(id), values, null, null);
         if (isComplete) {
             mAnalytics.onEvent(cFlurryCompleteTaskEvent);
         }
-        return isComplete;
     }
 
 

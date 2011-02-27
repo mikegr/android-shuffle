@@ -39,10 +39,6 @@ import com.google.inject.Inject;
  * Display list of contexts with task children.
  */
 public class ContextsActivity extends AbstractDrilldownListActivity<Context> {
-
-	@SuppressWarnings("unused")
-    private static final String cTag = "ContextsActivity";
-
 	@Inject ContextListConfig mListConfig;
 
     @Override

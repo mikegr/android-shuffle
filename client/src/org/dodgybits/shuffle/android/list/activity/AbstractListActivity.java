@@ -185,7 +185,7 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
 
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+    public final void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info;
         try {
              info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -200,18 +200,26 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
             return;
         }
 
+        T entity = getListConfig().getPersister().read(cursor);
+
         // Setup the menu header
-        menu.setHeaderTitle(cursor.getString(1));
+        menu.setHeaderTitle(entity.getLocalName());
 
     	Uri selectedUri = ContentUris.withAppendedId(getListConfig().getPersister().getContentUri(), info.id);
         MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
         
 		// ... and ends with the delete command.
-		MenuUtils.addDeleteMenuItem(menu);
+		MenuUtils.addDeleteMenuItem(menu, entity.isDeleted());
+
+        OnCreateEntityContextMenu(menu, info.position, entity);
     }
+
+    protected void OnCreateEntityContextMenu(ContextMenu menu, int position, T entity) {
+    }
+
         
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public final boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info;
         try {
              info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
@@ -220,15 +228,27 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
             return false;
         }
 
+        Cursor cursor = (Cursor) getListAdapter().getItem(info.position);
+        if (cursor == null) {
+            // For some reason the requested item isn't available, do nothing
+            return false;
+        }
+
+        T entity = getListConfig().getPersister().read(cursor);
+
         switch (item.getItemId()) {
             case MenuUtils.DELETE_ID: {
                 // Delete the item that the context menu is for
-    			deleteItem(Id.create(info.id));
+    			toggleDeleted(entity);
                 return true;
             }
         }
-        return false;
+        return onContextEntitySelected(item, info.position, entity);
     }	
+
+    protected boolean onContextEntitySelected(MenuItem item, int position, T entity) {
+        return false;
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -294,13 +314,15 @@ public abstract class AbstractListActivity<T extends Entity> extends FlurryEnabl
 
 
 	/**
-	 * Permanently delete the given list item.
+	 * Make the given item as deleted
 	 */
-	protected void deleteItem(Id id) {
-	    getListConfig().getPersister().moveToTrash(id);
-    	String text = getResources().getString(
-    			R.string.itemDeletedToast, getListConfig().getItemName(this));
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();        
+	protected void toggleDeleted(T entity) {
+        getListConfig().getPersister().updateDeletedFlag(entity.getLocalId(), !entity.isDeleted()) ;
+        if (!entity.isDeleted()) {
+            String text = getResources().getString(
+                    R.string.itemDeletedToast, getListConfig().getItemName(this));
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        }
 	}
 
 	/**

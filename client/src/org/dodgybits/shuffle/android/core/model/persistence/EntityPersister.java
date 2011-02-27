@@ -23,12 +23,39 @@ public interface EntityPersister<E extends Entity> {
     void bulkInsert(Collection<E> entities);
     
     void update(E e);
-    
-    boolean moveToTrash(Id id);
-    int moveToTrash(String selection, String[] selectionArgs);
 
+    /**
+     * Set deleted flag entity with the given id to isDeleted.
+     *
+     * @param id entity id
+     * @param isDeleted flag to set deleted flag to
+     * @return whether the operation succeeded
+     */
+    boolean updateDeletedFlag(Id id, boolean isDeleted);
+
+
+    /**
+     * Set deleted flag for entities that match the criteria to isDeleted.
+     *
+     * @param selection where clause
+     * @param selectionArgs parameter values from where clause
+     * @param isDeleted flag to set deleted flag to
+     * @return number of entities updates
+     */
+    int updateDeletedFlag(String selection, String[] selectionArgs, boolean isDeleted);
+
+    /**
+     * Permanently delete all items that currently flagged as deleted.
+     *
+     * @return number of entities removed
+     */
     int emptyTrash();
 
+    /**
+     * Permanently delete entity with the given id.
+     *
+     * @return whether the operation succeeded
+     */
 	boolean deletePermanently(Id id);
     
 }

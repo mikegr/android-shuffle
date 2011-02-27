@@ -18,5 +18,7 @@ public interface Entity {
     boolean isDeleted();
     
     boolean isValid();
+
+    String getLocalName();
     
 }

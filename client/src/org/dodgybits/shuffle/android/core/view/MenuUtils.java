@@ -207,13 +207,15 @@ public class MenuUtils {
 	    menu.add(Menu.CATEGORY_ALTERNATIVE, PUT_BACK_ID, PUT_BACK_ORDER, R.string.menu_put_back);
 	}
 	
-	public static void addCompleteMenuItem(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, COMPLETE_ORDER, R.string.menu_complete)
+	public static void addCompleteMenuItem(Menu menu, boolean isComplete) {
+        int labelId = isComplete ? R.string.menu_incomplete : R.string.menu_complete;
+        menu.add(Menu.CATEGORY_ALTERNATIVE, COMPLETE_ID, COMPLETE_ORDER, labelId)
         	.setIcon(R.drawable.btn_check_on).setAlphabeticShortcut('x');
     }
 
-	public static void addDeleteMenuItem(Menu menu) {
-        menu.add(Menu.CATEGORY_ALTERNATIVE, DELETE_ID, DELETE_ORDER, R.string.menu_delete)
+	public static void addDeleteMenuItem(Menu menu, boolean isDeleted) {
+        int labelId = isDeleted ? R.string.menu_undelete : R.string.menu_delete;
+        menu.add(Menu.CATEGORY_ALTERNATIVE, DELETE_ID, DELETE_ORDER, labelId)
         	.setIcon(android.R.drawable.ic_menu_delete).setAlphabeticShortcut('d');
     }
 

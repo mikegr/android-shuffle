@@ -38,6 +38,7 @@ import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledExpandabl
 import org.dodgybits.shuffle.android.core.model.Entity;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
@@ -51,12 +52,11 @@ import org.dodgybits.shuffle.android.list.view.SwipeListItemWrapper;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import roboguice.event.Observes;
 import roboguice.inject.InjectView;
+import roboguice.util.Ln;
 
 public abstract class AbstractExpandableActivity<G extends Entity> extends FlurryEnabledExpandableListActivity 
 	implements SwipeListItemListener {
 	
-	private static final String cTag = "AbstractExpandableActivity";
-
     protected static final int FILTER_CONFIG = 600;
 
 	protected ExpandableListAdapter mAdapter;
@@ -175,12 +175,12 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     }
     
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+    public final void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
     	ExpandableListView.ExpandableListContextMenuInfo info;
         try {
              info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
         } catch (ClassCastException e) {
-            Log.e(cTag, "bad menuInfo", e);
+            Ln.e(e, "bad menuInfo");
             return;
         }
         long packedPosition = info.packedPosition;
@@ -206,26 +206,45 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
         	long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
             Uri selectedUri = ContentUris.withAppendedId(getListConfig().getChildPersister().getContentUri(), childId);
             MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
-        	MenuUtils.addCompleteMenuItem(menu);
+
+            Cursor c = (Cursor)getExpandableListAdapter().getChild(groupPosition, childPosition);
+            Task task = getListConfig().getChildPersister().read(c);
+
+        	MenuUtils.addCompleteMenuItem(menu, task.isComplete());
+            MenuUtils.addDeleteMenuItem(menu, task.isDeleted());
+
+            onCreateChildContextMenu(menu, groupPosition, childPosition, task);
         }
         else
         {
         	long groupId = getExpandableListAdapter().getGroupId(groupPosition);
             Uri selectedUri = ContentUris.withAppendedId(getListConfig().getGroupPersister().getContentUri(), groupId);
             MenuUtils.addSelectedAlternativeMenuItems(menu, selectedUri, false);
+
+            Cursor c = (Cursor)getExpandableListAdapter().getGroup(groupPosition);
+            G group = getListConfig().getGroupPersister().read(c);
+
             MenuUtils.addInsertMenuItems(menu, getListConfig().getChildName(this), true, this);
+            MenuUtils.addDeleteMenuItem(menu, group.isDeleted());
+
+            onCreateGroupContextMenu(menu, groupPosition, group);
         }
-		// ... and ends with the delete command.
-		MenuUtils.addDeleteMenuItem(menu);
     }
-        
+
+    protected void onCreateChildContextMenu(ContextMenu menu, int groupPosition, int childPosition, Task task) {
+    }
+
+    protected void onCreateGroupContextMenu(ContextMenu menu, int groupPosition, G group) {
+    }
+
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
     	ExpandableListView.ExpandableListContextMenuInfo info;
         try {
              info = (ExpandableListView.ExpandableListContextMenuInfo) item.getMenuInfo();
         } catch (ClassCastException e) {
-            Log.e(cTag, "bad menuInfo", e);
+            Ln.e(e, "bad menuInfo");
             return false;
         }
 
@@ -278,7 +297,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
         @Override
         protected Cursor getChildrenCursor(Cursor groupCursor) {
         	long groupId = groupCursor.getLong(getGroupIdColumnIndex());
-        	Log.d(cTag, "getChildrenCursor for groupId " + groupId);
+        	Ln.d("getChildrenCursor for groupId %s", groupId);
     		return createChildQuery(groupId);
         }
 
@@ -298,7 +317,9 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
         int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
         int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
     	Cursor c = (Cursor) getExpandableListAdapter().getChild(groupPosition, childPosition);
-    	getListConfig().getChildPersister().toggleTaskComplete(c);
+        Task task = getListConfig().getChildPersister().read(c);
+
+    	getListConfig().getChildPersister().updateCompleteFlag(task.getLocalId(), !task.isComplete());
     }
     
 
@@ -346,15 +367,15 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
             Intent data) {
-        Log.d(cTag, "Got resultCode " + resultCode + " with data " + data);
+        Ln.d("Got resultCode %s with data %s", resultCode, data);
         switch (requestCode) {
         case FILTER_CONFIG:
-            Log.d(cTag, "Got result " + resultCode);
+            Ln.d("Got result ", resultCode);
             updateCursor();
             break;
 
         default:
-            Log.e(cTag, "Unknown requestCode: " + requestCode);
+            Ln.e("Unknown requestCode: ", requestCode);
         }
     }
 
@@ -397,41 +418,44 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
         
     	switch (type) {
 	    	case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
-	        	Log.d(cTag, "Deleting child at position " + groupPosition + "," + childPosition);
-				final long childId = getExpandableListAdapter().getChildId(groupPosition, childPosition);
-		    	Log.i(cTag, "Deleting child id " + childId);
-		    	childPersister.moveToTrash(Id.create(childId));
-		        showItemsDeletedToast(false);
+	        	Ln.d("Toggling delete flag for child at position %s, %s", groupPosition, childPosition);
+				Cursor childCursor = (Cursor) getExpandableListAdapter().getChild(groupPosition, childPosition);
+                Task task = childPersister.read(childCursor);
+		    	Ln.i("Setting delete flag to %s for child id %s", !task.isDeleted(), task.getLocalId());
+                childPersister.updateDeletedFlag(task.getLocalId(), !task.isDeleted());
+                if (!task.isDeleted()) {
+		            showItemsDeletedToast(false);
+                }
 		        refreshChildCount();
 		        getExpandableListView().invalidate();
 	    		break;
 	    		
 	    	case ExpandableListView.PACKED_POSITION_TYPE_GROUP:
-	        	Log.d(cTag, "Deleting parent at position " + groupPosition);
+	        	Ln.d("Toggling delete on parent at position ", groupPosition);
 	        	// first check if there's any children...
-	    		int childCount = getExpandableListAdapter().getChildrenCount(groupPosition);
-	    		if (childCount > 0) {
-		    		OnClickListener buttonListener = new OnClickListener() {
-		    			public void onClick(DialogInterface dialog, int which) {
-		    				if (which == DialogInterface.BUTTON1) {
-		    					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
-		    			    	Log.i(cTag, "Deleting group id " + groupId);
-		    			    	groupPersister.moveToTrash(Id.create(groupId));
-		    			        showItemsDeletedToast(true);
-		    				} else {
-		    					Log.d(cTag, "Hit Cancel button. Do nothing.");
-		    				}
-		    			}
-		    		};
-	    			AlertUtils.showDeleteGroupWarning(this, getListConfig().getGroupName(this), 
-	    					getListConfig().getChildName(this), childCount, buttonListener);    		
-	    		} else {
-			    	Log.i(cTag, "Deleting childless group at position " + groupPosition);
-					final long groupId = getExpandableListAdapter().getGroupId(groupPosition);
-			    	Log.i(cTag, "Deleting group id " + groupId);
-                    groupPersister.moveToTrash(Id.create(groupId));
-			        showItemsDeletedToast(true);
-	    		}
+                Cursor groupCursor = (Cursor)getExpandableListAdapter().getGroup(groupPosition);
+                final G group = groupPersister.read(groupCursor);
+                int childCount = getExpandableListAdapter().getChildrenCount(groupPosition);
+                if (group.isDeleted() || childCount == 0) {
+                    Ln.i("Setting group %s delete flag to %s at position %s",
+                            group.getLocalId(), !group.isDeleted(), groupPosition);
+                    groupPersister.updateDeletedFlag(group.getLocalId(), !group.isDeleted());
+                    if (!group.isDeleted()) showItemsDeletedToast(true);
+                } else {
+                    OnClickListener buttonListener = new OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == DialogInterface.BUTTON1) {
+                                Ln.i("Deleting group id ", group.getLocalId());
+                                groupPersister.updateDeletedFlag(group.getLocalId(), true);
+                                showItemsDeletedToast(true);
+                            } else {
+                                Ln.d("Hit Cancel button. Do nothing.");
+                            }
+                        }
+                    };
+                    AlertUtils.showDeleteGroupWarning(this, getListConfig().getGroupName(this),
+                            getListConfig().getChildName(this), childCount, buttonListener);
+                }
 	        	break;
     	}
     }

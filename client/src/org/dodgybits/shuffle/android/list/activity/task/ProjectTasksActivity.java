@@ -125,34 +125,22 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    	super.onCreateContextMenu(menu, view, menuInfo);
-
-    	AdapterView.AdapterContextMenuInfo info = 
-    			(AdapterView.AdapterContextMenuInfo) menuInfo;
-    	MenuUtils.addMoveMenuItems(menu, 
-    			moveUpPermitted(info.position), moveDownPermitted(info.position));
+    protected void OnCreateEntityContextMenu(ContextMenu menu, int position, Task task) {
+    	MenuUtils.addMoveMenuItems(menu,
+    			moveUpPermitted(position), moveDownPermitted(position));
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info;
-        try {
-             info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        } catch (ClassCastException e) {
-            Log.e(cTag, "bad menuInfo", e);
-            return false;
-        }
-
+    protected boolean onContextEntitySelected(MenuItem item, int position, Task task) {
         switch (item.getItemId()) {
 	        case MenuUtils.MOVE_UP_ID:
-	            moveUp(info.position);
+	            moveUp(position);
 	            return true;
 	        case MenuUtils.MOVE_DOWN_ID:
-	            moveDown(info.position);
+	            moveDown(position);
 	            return true;
         }
-        return super.onContextItemSelected(item);
+        return super.onContextEntitySelected(item, position, task);
     }	
     
     private boolean moveUpPermitted(int selection) {

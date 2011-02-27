@@ -55,8 +55,9 @@
     <string name="menu_save">Save</string>
     <string name="menu_save_and_add">Save and New</string>
     <string name="menu_delete">Delete</string>
-    <string name="menu_put_back">Put back</string>
-    <string name="menu_complete">Toggle complete</string>
+    <string name="menu_undelete">Undelete</string>
+    <string name="menu_complete">Mark complete</string>
+    <string name="menu_incomplete">Mark incomplete</string>
     <string name="menu_move_up">Move up</string>
     <string name="menu_move_down">Move down</string>
     <string name="menu_insert">Add %s</string>
