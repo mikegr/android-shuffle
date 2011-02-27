@@ -42,14 +42,9 @@ public class BootstrapActivity extends FlurryEnabledActivity {
         	activityClass = TopLevelActivity.class;
 		}
         
-        // start the cleaning service
-//		TaskCleaner.getInstance(this).schedule();
         startService(new Intent(this, SynchronizationService.class));
         startActivity(new Intent(this, activityClass));
 
-        // dump layouts
-    	//Test.dumpResources(this, "com.google.android.contacts", R.layout.activity_list_item);
-        
         finish();
 	}
 	

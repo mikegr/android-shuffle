@@ -112,6 +112,18 @@
 <string name="whats_new_dialog_title">Shuffle</string>
 <string name="whats_new_dialog_message">Thanks for downloading Shuffle.\n\n
 <b>New in this version:</b>\n
+\t• View filters, customisable in each view.\n
+\t• Active flags on contexts and projects.\n
+\t• Deleted items are now recoverable.\n
+\t• Toolbar added to list views.\n
+\t• New 4x4 widget.\n
+\t• Tickler view for inactive actions.\n
+\t• Support for Tracks sites with self signed certificates.\n
+\t• Tracks synching improvements.\n
+\t• Fixed calendar selection bug on Android 2.2.\n
+\t• Spanish translation
+\n
+<b>New in version 1.6.2:</b>\n
 \t• Fix task editing compatibility with Android 1.5.\n
 \n
 <b>New in version 1.6.2:</b>\n
