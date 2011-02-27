@@ -99,7 +99,7 @@ public final class ProjectSynchronizer extends Synchronizer<Project> {
                 serializer.startTag("", "default-context-id").attribute("", "type", "integer").text(contextId.toString()).endTag("", "default-context-id");
             }
             serializer.startTag("", "name").text(project.getName()).endTag("", "name");
-            serializer.startTag("", "state").text(project.isDeleted() ? "hidden": "active").endTag("", "state");
+            serializer.startTag("", "state").text(project.isActive() ? "active" : "hidden").endTag("", "state");
             serializer.startTag("", "updated-at").attribute("", "type", "datetime").text(now).endTag("", "updated-at");
             serializer.endTag("", "project");
 

@@ -17,7 +17,7 @@ public class ParseResult<T> {
 	public T getResult() {
 		return mResult;
 	}
-	public boolean IsSuccess(){
+	public boolean isSuccess(){
 		return mSuccess;
 	}
 	

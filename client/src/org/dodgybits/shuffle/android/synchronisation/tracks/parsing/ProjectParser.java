@@ -36,14 +36,14 @@ public class ProjectParser extends Parser<Project> {
 					public boolean apply(String value) {
 						
 						String v = value.toLowerCase();
-						
+                        Log.d("projectparser",v);
+
 						if(v.equals("completed")) {
-							Log.d("projectparser",v);
-							specificBuilder.setDeleted(true);
+                            // ignore completed for now?
+//							specificBuilder.setDeleted(true);
 							return true;
 						}
 						
-						// TODO convert hidden to new status field when added
 						if(v.equals("hidden")) {
 							specificBuilder.setActive(false);
 							return true;

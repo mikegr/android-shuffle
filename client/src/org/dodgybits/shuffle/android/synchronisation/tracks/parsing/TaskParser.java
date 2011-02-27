@@ -12,6 +12,7 @@ import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
 
 import android.text.TextUtils;
+import roboguice.util.Ln;
 
 public class TaskParser extends Parser<Task> {
 
@@ -27,8 +28,11 @@ public class TaskParser extends Parser<Task> {
 		appliers.put("state", new Applier() {
 			@Override
 			public boolean apply(String value) {
-				if( value.equals("completed"))
-				specificBuilder.setComplete(true);
+                Ln.d("Got status %s", value);
+
+				if( value.equals("completed")) {
+				    specificBuilder.setComplete(true);
+                }
 				return true;
 			}
 		});

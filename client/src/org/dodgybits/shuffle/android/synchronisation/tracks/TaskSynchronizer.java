@@ -15,7 +15,6 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
 import org.dodgybits.shuffle.android.core.util.DateUtils;
-import org.dodgybits.shuffle.android.synchronisation.tracks.ApiException;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.ParseResult;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.Parser;
 import org.dodgybits.shuffle.android.synchronisation.tracks.parsing.TaskParser;
@@ -210,7 +209,7 @@ public final class TaskSynchronizer extends Synchronizer<Task> {
         ParseResult<Task> parseResult = getEntityParser().parseSingle(parser);
         
 		
-		if(parseResult.IsSuccess() && parseResult.getResult().isComplete()){
+		if(parseResult.isSuccess() && parseResult.getResult().isComplete()){
 			Task task = Task.newBuilder().mergeFrom(t).mergeFrom(parseResult.getResult()).build();
 			mPersister.update(task);
 			return true;

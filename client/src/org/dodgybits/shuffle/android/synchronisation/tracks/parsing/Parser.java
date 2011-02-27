@@ -49,7 +49,7 @@ public abstract class Parser<E extends TracksEntity> {
                     logTracksError(e);
                     errorFree = false;
                 }
-                if(!result.IsSuccess()) {
+                if(!result.isSuccess()) {
                 	errorFree = false;
                 }
                 

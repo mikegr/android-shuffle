@@ -92,7 +92,7 @@ public class ContextSynchronizer extends Synchronizer<Context> {
             String now = DateUtils.formatIso8601Date(System.currentTimeMillis());
             serializer.startTag("", "context");
             serializer.startTag("", "created-at").attribute("", "type", "datetime").text(now).endTag("", "created-at");
-            serializer.startTag("", "hide").attribute("", "type", "boolean").text("false").endTag("", "hide");
+            serializer.startTag("", "hide").attribute("", "type", "boolean").text(String.valueOf(!localContext.isActive())).endTag("", "hide");
             serializer.startTag("", "name").text(localContext.getName()).endTag("", "name");
             serializer.startTag("", "position").attribute("", "type", "integer").text("12").endTag("", "position");
             serializer.startTag("", "state").text(localContext.isDeleted() ? "hidden" : "active").endTag("", "state");
