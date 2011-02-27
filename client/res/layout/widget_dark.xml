@@ -1,0 +1,201 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingLeft="8dip"
+	android:paddingRight="8dip" android:paddingTop="6dip" android:paddingBottom="4dip"
+>
+
+
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingLeft="0dip"
+		android:paddingRight="0dip" android:paddingTop="0dip" android:layout_marginBottom="28dip"
+		android:background="@drawable/widget_background_black"
+	>
+
+		<TextView android:id="@+id/title" android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_alignParentTop="true" android:paddingLeft="8dip" android:paddingTop="5dip" 
+			android:paddingBottom="5dip" style="@style/widget_title" />
+
+		<RelativeLayout android:id="@+id/entry_1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_below="@+id/title" android:layout_marginLeft="0dp"
+			android:focusable="false" android:clickable="true"
+			android:background="@android:drawable/list_selector_background"
+			android:paddingTop="4dp" android:paddingBottom="4dp"
+		>
+
+			<ImageView android:id="@+id/contextColour_1" android:layout_width="5dp" android:layout_height="40dp"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true" />
+
+			<TextView android:id="@+id/description_1" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_toRightOf="@+id/contextColour_1"
+				android:paddingLeft="10dip" android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true" android:duplicateParentState="true" style="@style/dark_widget_description" />
+
+			<TextView android:id="@+id/project_1" android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/contextColour_1" android:layout_below="@+id/description_1" android:paddingLeft="10dip"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true"
+				style="@style/dark_widget_project" />
+
+		</RelativeLayout>
+
+		<ImageView android:id="@+id/divider_1" android:layout_width="fill_parent" android:layout_height="1dip"
+			android:src="@drawable/divider_horizontal_bright" android:layout_below="@+id/entry_1" />
+
+		<RelativeLayout android:id="@+id/entry_2" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_below="@+id/divider_1" android:layout_marginLeft="0dp"
+			android:focusable="false" android:clickable="true" android:background="@android:drawable/list_selector_background"
+			android:paddingTop="4dp" android:paddingBottom="4dp"
+		>
+
+			<ImageView android:id="@+id/contextColour_2" android:layout_width="5dp" android:layout_height="40dp"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true" />
+
+			<TextView android:id="@+id/description_2" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_toRightOf="@+id/contextColour_2"
+				android:paddingLeft="10dip" android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true" android:duplicateParentState="true" style="@style/dark_widget_description" />
+
+			<TextView android:id="@+id/project_2" android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/contextColour_2" android:layout_below="@+id/description_2" android:paddingLeft="10dip"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true"
+				style="@style/dark_widget_project" />
+
+		</RelativeLayout>
+
+		<ImageView android:id="@+id/divider_2" android:layout_width="fill_parent" android:layout_height="1dip"
+			android:src="@drawable/divider_horizontal_bright" android:layout_below="@+id/entry_2" />
+
+		<RelativeLayout android:id="@+id/entry_3" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_below="@+id/divider_2" android:layout_marginLeft="0dp"
+			android:focusable="false" android:clickable="true" android:background="@android:drawable/list_selector_background"
+			android:paddingTop="4dp" android:paddingBottom="4dp"
+		>
+
+			<ImageView android:id="@+id/contextColour_3" android:layout_width="5dp" android:layout_height="40dp"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true" />
+
+			<TextView android:id="@+id/description_3" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_toRightOf="@+id/contextColour_3"
+				android:paddingLeft="10dip" android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true" android:duplicateParentState="true" style="@style/dark_widget_description" />
+
+			<TextView android:id="@+id/project_3" android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/contextColour_3" android:layout_below="@+id/description_3" android:paddingLeft="10dip"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true"
+				style="@style/dark_widget_project" />
+
+		</RelativeLayout>
+
+		<ImageView android:id="@+id/divider_3" android:layout_width="fill_parent" android:layout_height="1dip"
+			android:src="@drawable/divider_horizontal_bright" android:layout_below="@+id/entry_3" />
+
+		<RelativeLayout android:id="@+id/entry_4" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_below="@+id/divider_3" android:layout_marginLeft="0dp"
+			android:focusable="false" android:clickable="true" android:background="@android:drawable/list_selector_background"
+			android:paddingTop="4dp" android:paddingBottom="4dp"
+		>
+
+			<ImageView android:id="@+id/contextColour_4" android:layout_width="5dp" android:layout_height="40dp"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true" />
+
+			<TextView android:id="@+id/description_4" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_toRightOf="@+id/contextColour_4"
+				android:paddingLeft="10dip" android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true" android:duplicateParentState="true" style="@style/dark_widget_description" />
+
+			<TextView android:id="@+id/project_4" android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/contextColour_4" android:layout_below="@+id/description_4" android:paddingLeft="10dip"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true"
+				style="@style/dark_widget_project" />
+
+		</RelativeLayout>
+
+		<ImageView android:id="@+id/divider_4" android:layout_width="fill_parent" android:layout_height="1dip"
+			android:src="@drawable/divider_horizontal_bright" android:layout_below="@+id/entry_4" />
+
+		<RelativeLayout android:id="@+id/entry_5" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_below="@+id/divider_4" android:layout_marginLeft="0dp"
+			android:focusable="false" android:clickable="true" android:background="@android:drawable/list_selector_background"
+			android:paddingTop="4dp" android:paddingBottom="4dp"
+		>
+
+			<ImageView android:id="@+id/contextColour_5" android:layout_width="5dp" android:layout_height="40dp"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true" />
+
+			<TextView android:id="@+id/description_5" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_toRightOf="@+id/contextColour_5"
+				android:paddingLeft="10dip" android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true" android:duplicateParentState="true" style="@style/dark_widget_description" />
+
+			<TextView android:id="@+id/project_5" android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/contextColour_5" android:layout_below="@+id/description_5" android:paddingLeft="10dip"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true"
+				style="@style/dark_widget_project" />
+
+		</RelativeLayout>
+
+		<ImageView android:id="@+id/divider_5" android:layout_width="fill_parent" android:layout_height="1dip"
+			android:src="@drawable/divider_horizontal_bright" android:layout_below="@+id/entry_5" />
+
+		<RelativeLayout android:id="@+id/entry_6" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_below="@+id/divider_5" android:layout_marginLeft="0dp"
+			android:focusable="false" android:clickable="true" android:background="@android:drawable/list_selector_background"
+			android:paddingTop="4dp" android:paddingBottom="4dp"
+		>
+
+			<ImageView android:id="@+id/contextColour_6" android:layout_width="5dp" android:layout_height="40dp"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true" />
+
+			<TextView android:id="@+id/description_6" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_toRightOf="@+id/contextColour_6"
+				android:paddingLeft="10dip" android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true" android:duplicateParentState="true" style="@style/dark_widget_description" />
+
+			<TextView android:id="@+id/project_6" android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/contextColour_6" android:layout_below="@+id/description_6" android:paddingLeft="10dip"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true"
+				style="@style/dark_widget_project" />
+
+		</RelativeLayout>
+
+		<ImageView android:id="@+id/divider_6" android:layout_width="fill_parent" android:layout_height="1dip"
+			android:src="@drawable/divider_horizontal_bright" android:layout_below="@+id/entry_6" />
+
+		<RelativeLayout android:id="@+id/entry_7" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_below="@+id/divider_6" android:layout_marginLeft="0dp"
+			android:focusable="false" android:clickable="true" android:background="@android:drawable/list_selector_background"
+			android:paddingTop="4dp" android:paddingBottom="4dp"
+		>
+
+			<ImageView android:id="@+id/contextColour_7" android:layout_width="5dp" android:layout_height="40dp"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true" />
+
+			<TextView android:id="@+id/description_7" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_toRightOf="@+id/contextColour_7"
+				android:paddingLeft="10dip" android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true" android:duplicateParentState="true" style="@style/dark_widget_description" />
+
+			<TextView android:id="@+id/project_7" android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/contextColour_7" android:layout_below="@+id/description_7" android:paddingLeft="10dip"
+				android:layout_alignParentLeft="true" android:duplicateParentState="true"
+				style="@style/dark_widget_project" />
+
+		</RelativeLayout>
+
+
+	</RelativeLayout>
+
+
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true" android:orientation="horizontal" android:gravity="center"
+		android:focusable="false" android:clickable="false" android:paddingBottom="12dip"
+	>
+
+		<ImageButton android:id="@+id/add_task" style="@style/WidgetButtonLeft" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:focusable="false" />
+
+		<ImageButton android:id="@+id/all_tasks" style="@style/WidgetButtonRight" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:focusable="false" />
+	
+	</LinearLayout>
+
+
+</RelativeLayout>

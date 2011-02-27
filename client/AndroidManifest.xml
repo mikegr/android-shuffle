@@ -391,7 +391,9 @@
 
 		<!--  app widget -->
 
-		<receiver android:name="org.dodgybits.shuffle.android.widget.WidgetProvider">
+		<receiver android:name="org.dodgybits.shuffle.android.widget.LightWidgetProvider"
+                  android:label="@string/title_shuffle_2x2"
+                >
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/appwidget_provider" />
 			<intent-filter>
@@ -404,6 +406,23 @@
                 <action android:name="org.dodgybits.shuffle.android.CLEAN_INBOX" />
             </intent-filter>
 		</receiver>
+
+        <receiver android:name="org.dodgybits.shuffle.android.widget.DarkWidgetProvider"
+                  android:label="@string/title_shuffle_4x4"
+                >
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/appwidget_provider_4x4" />
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.dodgybits.shuffle.android.TASK_UPDATE" />
+                <action android:name="org.dodgybits.shuffle.android.PROJECT_UPDATE" />
+                <action android:name="org.dodgybits.shuffle.android.CONTEXT_UPDATE" />
+                <action android:name="org.dodgybits.shuffle.android.CLEAN_INBOX" />
+            </intent-filter>
+        </receiver>
 
 		<activity android:name="org.dodgybits.shuffle.android.widget.WidgetConfigure">
 			<intent-filter>

@@ -23,6 +23,8 @@
     <drawable name="project">#0063be</drawable>
     <drawable name="description">#000000</drawable>
     <drawable name="details">#002663</drawable>
+    <drawable name="project_widget">#aaaaaa</drawable>
+    <drawable name="description_widget">#fafafa</drawable>
     
 	<drawable name="pale_yellow">#f8f7df</drawable>
 	<drawable name="pale_weak_cyan">#e5dff8</drawable>

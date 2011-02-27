@@ -133,7 +133,13 @@
         <item name="android:lines">1</item>
         <item name="android:clickable">true</item>
     </style>
-	
+
+    <style name="dark_widget_project" parent="widget_project">
+        <item name="android:textColor">@drawable/project_widget</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 	<style name="widget_description" parent="list_text">
         <item name="android:textColor">@drawable/description</item>
         <item name="android:typeface">sans</item>
@@ -144,6 +150,12 @@
         <item name="android:ellipsize">marquee</item>
         <item name="android:clickable">true</item>
 	</style>
+
+    <style name="dark_widget_description" parent="widget_description">
+        <item name="android:textColor">@drawable/description_widget</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">5dip</item>
+    </style>
 
 	<style name="list_sub_text_2" parent="list_text">
         <item name="android:textColor">@drawable/details</item>
@@ -207,6 +219,15 @@
         <item name="android:background">@drawable/btn_circle</item>
         <item name="android:src">@drawable/ic_btn_round_less</item>
     </style>
-    
-        
+
+    <style name="WidgetButtonLeft">
+        <item name="android:background">@drawable/widget_button_left</item>
+        <item name="android:src">@drawable/widget_plus</item>
+    </style>
+    <style name="WidgetButtonRight">
+        <item name="android:background">@drawable/widget_button_right</item>
+        <item name="android:src">@drawable/widget_list</item>
+    </style>
+
+            
 </resources>
