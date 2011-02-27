@@ -10,6 +10,9 @@ import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
 import roboguice.util.Ln;
 
 public class ListPreferenceSettings {
+
+    public static final String LIST_PREFERENCES_UPDATED = "org.dodgybits.shuffle.android.LIST_PREFERENCES_UPDATE";
+
     public static final String LIST_FILTER_ACTIVE = ".list_active";
     public static final String LIST_FILTER_COMPLETED = ".list_completed";
     public static final String LIST_FILTER_DELETED = ".list_deleted";

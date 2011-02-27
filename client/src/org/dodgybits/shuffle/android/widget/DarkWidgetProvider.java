@@ -16,48 +16,20 @@
 
 package org.dodgybits.shuffle.android.widget;
 
-import static org.dodgybits.shuffle.android.core.util.Constants.cIdType;
-import static org.dodgybits.shuffle.android.core.util.Constants.cPackage;
-import static org.dodgybits.shuffle.android.core.util.Constants.cStringType;
-
 import java.util.HashMap;
 
 import org.dodgybits.android.shuffle.R;
-import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Context;
-import org.dodgybits.shuffle.android.core.model.Project;
-import org.dodgybits.shuffle.android.core.model.Task;
-import org.dodgybits.shuffle.android.core.model.persistence.ContextPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.DefaultEntityCache;
-import org.dodgybits.shuffle.android.core.model.persistence.EntityCache;
-import org.dodgybits.shuffle.android.core.model.persistence.ProjectPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
-import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.util.TextColours;
 import org.dodgybits.shuffle.android.core.view.DrawableUtils;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
-import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
-import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
-import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
-import org.dodgybits.shuffle.android.preference.model.Preferences;
 
-import roboguice.inject.ContentResolverProvider;
 import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
-import android.net.Uri;
-import android.util.Log;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 
@@ -68,10 +40,10 @@ import android.widget.RemoteViews;
  * update then too.
  */
 public class DarkWidgetProvider extends AbstractWidgetProvider {
+    private static final Bitmap sEmptyBitmap = Bitmap.createBitmap(8, 40, Bitmap.Config.ARGB_8888);
 
-    private HashMap<Integer, Bitmap> gradientCache;
-    private final Bitmap emptyBitmap = Bitmap.createBitmap(8, 40, Bitmap.Config.ARGB_8888);
-    private TextColours colours;
+    private HashMap<Integer, Bitmap> mGradientCache;
+    private TextColours mColours;
 
     @Override
     protected int getWidgetLayoutId() {
@@ -84,11 +56,11 @@ public class DarkWidgetProvider extends AbstractWidgetProvider {
     }
 
     @Override
-    protected void setupDependencies(final android.content.Context androidContext) {
-        super.setupDependencies(androidContext);
+    public void handleReceive(android.content.Context context, Intent intent) {
+        mColours = TextColours.getInstance(context);
+        mGradientCache = new HashMap<Integer, Bitmap>(mColours.getNumColours());
 
-        colours = TextColours.getInstance(androidContext);
-        if (gradientCache == null) gradientCache = new HashMap<Integer, Bitmap>(colours.getNumColours());
+        super.handleReceive(context, intent);
     }
 
     @Override
@@ -105,9 +77,9 @@ public class DarkWidgetProvider extends AbstractWidgetProvider {
         Bitmap gradientBitmap = null;
         if (context != null) {
             int colourIndex = context.getColourIndex();
-            gradientBitmap = gradientCache.get(colourIndex);
+            gradientBitmap = mGradientCache.get(colourIndex);
             if (gradientBitmap == null) {
-                int colour = colours.getBackgroundColour(colourIndex);
+                int colour = mColours.getBackgroundColour(colourIndex);
                 GradientDrawable drawable = DrawableUtils.createGradient(colour, Orientation.TOP_BOTTOM);
                 drawable.setCornerRadius(6.0f);
 
@@ -118,10 +90,10 @@ public class DarkWidgetProvider extends AbstractWidgetProvider {
                 l.layout(0, 0, 16, 80);
                 l.draw(canvas);
                 gradientBitmap = Bitmap.createBitmap(bitmap, 6, 0, 10, 80);
-                gradientCache.put(colourIndex, gradientBitmap);
+                mGradientCache.put(colourIndex, gradientBitmap);
             }
         }
-        views.setImageViewBitmap(getIdIdentifier(androidContext, "contextColour_" + taskCount), gradientBitmap == null ? emptyBitmap : gradientBitmap);
+        views.setImageViewBitmap(getIdIdentifier(androidContext, "contextColour_" + taskCount), gradientBitmap == null ? sEmptyBitmap : gradientBitmap);
 
         return 0;
     }

@@ -1,70 +1,85 @@
 package org.dodgybits.shuffle.android.list.activity;
 
-import org.dodgybits.android.shuffle.R;
-import org.dodgybits.shuffle.android.core.util.Constants;
-import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
-import android.util.Log;
+import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.util.Constants;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
+import roboguice.util.Ln;
 
 public class ListPreferenceActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
-    private static final String cTag = "ListPreferenceActivity";
+    private ListPreferenceSettings mSettings;
+    private boolean mPrefsChanged;
 
-    private ListPreferenceSettings settings;
-
-
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        settings = ListPreferenceSettings.fromIntent(getIntent());
+        mSettings = ListPreferenceSettings.fromIntent(getIntent());
 
         setupScreen();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mPrefsChanged = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mPrefsChanged) {
+            sendBroadcast(new Intent(ListPreferenceSettings.LIST_PREFERENCES_UPDATED));
+        }
+    }
+
     private void setupScreen() {
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(this);
-        int screenId = getStringId("title_" + settings.getPrefix());
+        int screenId = getStringId("title_" + mSettings.getPrefix());
         String title = getString(screenId) + " " + getString(R.string.list_settings_title);
         screen.setTitle(title);
 
         screen.addPreference(createList(
                 R.array.list_preferences_active_labels,
                 R.string.active_items_title,
-                settings.getActive(this).name(),
+                mSettings.getActive(this).name(),
                 ListPreferenceSettings.LIST_FILTER_ACTIVE,
-                settings.getDefaultActive().name(),
-                settings.isActiveEnabled()
+                mSettings.getDefaultActive().name(),
+                mSettings.isActiveEnabled()
         ));
 
         screen.addPreference(createList(
                 R.array.list_preferences_pending_labels,
                 R.string.pending_items_title,
-                settings.getPending(this).name(),
+                mSettings.getPending(this).name(),
                 ListPreferenceSettings.LIST_FILTER_PENDING,
-                settings.getDefaultPending().name(),
-                settings.isPendingEnabled()
+                mSettings.getDefaultPending().name(),
+                mSettings.isPendingEnabled()
         ));
 
         screen.addPreference(createList(
                 R.array.list_preferences_completed_labels,
                 R.string.completed_items_title,
-                settings.getCompleted(this).name(),
+                mSettings.getCompleted(this).name(),
                 ListPreferenceSettings.LIST_FILTER_COMPLETED,
-                settings.getDefaultCompleted().name(),
-                settings.isCompletedEnabled()
+                mSettings.getDefaultCompleted().name(),
+                mSettings.isCompletedEnabled()
         ));
 
         screen.addPreference(createList(
                 R.array.list_preferences_deleted_labels,
                 R.string.deleted_items_title,
-                settings.getDeleted(this).name(),
+                mSettings.getDeleted(this).name(),
                 ListPreferenceSettings.LIST_FILTER_DELETED,
-                settings.getDefaultDeleted().name(),
-                settings.isDeletedEnabled()
+                mSettings.getDefaultDeleted().name(),
+                mSettings.isDeletedEnabled()
         ));
 
         setPreferenceScreen(screen);
@@ -79,7 +94,7 @@ public class ListPreferenceActivity extends PreferenceActivity implements Prefer
         listPreference.setEntryValues(R.array.list_preferences_flag_values);
         listPreference.setEntries(entries);
         listPreference.setTitle(title);
-        String key = settings.getPrefix() + keySuffix;
+        String key = mSettings.getPrefix() + keySuffix;
         listPreference.setKey(key);
         listPreference.setDefaultValue(defaultValue);
         listPreference.setOnPreferenceChangeListener(this);
@@ -91,7 +106,7 @@ public class ListPreferenceActivity extends PreferenceActivity implements Prefer
             listPreference.setSummary(entryStrings[index]);
         }
 
-        Log.d(cTag, "Creating list perference key=" + key + " value=" + value + " default=" + defaultValue + " title=" + title);
+        Ln.d("Creating list preference key=%s value=%s default=%s title=%s", key, value, defaultValue, title);
 
         return listPreference;
     }
@@ -101,6 +116,7 @@ public class ListPreferenceActivity extends PreferenceActivity implements Prefer
         ListPreference listPreference = (ListPreference)preference;
         int index = listPreference.findIndexOfValue((String)o);
         preference.setSummary(listPreference.getEntries()[index]);
+        mPrefsChanged = true;
         return true;
     }
 

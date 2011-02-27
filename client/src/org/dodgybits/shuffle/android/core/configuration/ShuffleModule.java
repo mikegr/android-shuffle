@@ -65,30 +65,30 @@ public class ShuffleModule extends AbstractAndroidModule {
 
     private void addListPreferenceSettings() {
         bind(ListPreferenceSettings.class).annotatedWith(Inbox.class).toInstance(
-                new ListPreferenceSettings("inbox"));
+                new ListPreferenceSettings(StandardTaskQueries.cInbox));
 
         bind(ListPreferenceSettings.class).annotatedWith(TopTasks.class).toInstance(
-                new ListPreferenceSettings("next_tasks")
+                new ListPreferenceSettings(StandardTaskQueries.cNextTasks)
                     .setDefaultCompleted(Flag.no)
                     .disableCompleted()
                     .disableDeleted()
                     .disableActive());
 
-        ListPreferenceSettings projectSettings = new ListPreferenceSettings("project");
+        ListPreferenceSettings projectSettings = new ListPreferenceSettings(StandardTaskQueries.cProjectFilterPrefs);
         bind(ListPreferenceSettings.class).annotatedWith(ProjectTasks.class).toInstance(projectSettings);
         bind(ListPreferenceSettings.class).annotatedWith(Projects.class).toInstance(projectSettings);
         bind(ListPreferenceSettings.class).annotatedWith(ExpandableProjects.class).toInstance(projectSettings);
 
-        ListPreferenceSettings contextSettings = new ListPreferenceSettings("context");
+        ListPreferenceSettings contextSettings = new ListPreferenceSettings(StandardTaskQueries.cContextFilterPrefs);
         bind(ListPreferenceSettings.class).annotatedWith(ContextTasks.class).toInstance(contextSettings);
         bind(ListPreferenceSettings.class).annotatedWith(Contexts.class).toInstance(contextSettings);
         bind(ListPreferenceSettings.class).annotatedWith(ExpandableContexts.class).toInstance(contextSettings);
 
         bind(ListPreferenceSettings.class).annotatedWith(DueTasks.class).toInstance(
-            new ListPreferenceSettings("due_tasks").setDefaultCompleted(Flag.no));
+            new ListPreferenceSettings(StandardTaskQueries.cDueTasksFilterPrefs).setDefaultCompleted(Flag.no));
 
         bind(ListPreferenceSettings.class).annotatedWith(Tickler.class).toInstance(
-            new ListPreferenceSettings("tickler")
+            new ListPreferenceSettings(StandardTaskQueries.cTickler)
                     .setDefaultCompleted(Flag.no)
                     .setDefaultActive(Flag.no));
 

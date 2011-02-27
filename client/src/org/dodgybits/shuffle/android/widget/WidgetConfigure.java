@@ -26,7 +26,8 @@ public class WidgetConfigure extends RoboListActivity {
     private static final int DUE_NEXT_WEEK = 2;
     private static final int DUE_NEXT_MONTH = 3;
     private static final int INBOX = 4;
-    
+    private static final int TICKLER = 5;
+
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private List<String> mLabels;
 
@@ -65,16 +66,18 @@ public class WidgetConfigure extends RoboListActivity {
         mLabels.add("  " + getString(R.string.title_due_next_week));
         mLabels.add("  " + getString(R.string.title_due_next_month));
         mLabels.add("  " + getString(R.string.title_inbox));
-        
+        mLabels.add("  " + getString(R.string.title_tickler));
+
         setTitle(R.string.title_widget_picker);
         
-        Integer[] iconIds = new Integer[5];
+        Integer[] iconIds = new Integer[6];
         iconIds[NEXT_TASKS] = R.drawable.next_actions;
         iconIds[DUE_TODAY] = R.drawable.due_actions;
         iconIds[DUE_NEXT_WEEK] = R.drawable.due_actions;
         iconIds[DUE_NEXT_MONTH] = R.drawable.due_actions;
         iconIds[INBOX] = R.drawable.inbox;
-        
+        iconIds[TICKLER] = R.drawable.ic_media_pause;
+
         ArrayAdapter<CharSequence> adapter = new IconArrayAdapter(
                 this, R.layout.text_item_view, R.id.name, mLabels.toArray(new String[0]), iconIds);
         setListAdapter(adapter);
@@ -122,6 +125,10 @@ public class WidgetConfigure extends RoboListActivity {
                 
             case DUE_NEXT_MONTH:
                 result = StandardTaskQueries.cDueNextMonth;
+                break;
+
+            case TICKLER:
+                result = StandardTaskQueries.cTickler;
                 break;
         }
         return result;

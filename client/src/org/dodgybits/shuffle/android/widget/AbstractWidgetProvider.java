@@ -2,14 +2,12 @@ package org.dodgybits.shuffle.android.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
 import android.content.*;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import com.google.inject.Inject;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.Analytics;
 import org.dodgybits.shuffle.android.core.model.Context;
@@ -17,12 +15,11 @@ import org.dodgybits.shuffle.android.core.model.Project;
 import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.persistence.*;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
-import org.dodgybits.shuffle.android.core.util.TextColours;
-import org.dodgybits.shuffle.android.core.view.ContextIcon;
 import org.dodgybits.shuffle.android.list.config.StandardTaskQueries;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
+import org.dodgybits.shuffle.android.preference.model.ListPreferenceSettings;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 import roboguice.inject.ContentResolverProvider;
 import roboguice.util.Ln;
@@ -33,25 +30,25 @@ import static org.dodgybits.shuffle.android.core.util.Constants.cIdType;
 import static org.dodgybits.shuffle.android.core.util.Constants.cPackage;
 import static org.dodgybits.shuffle.android.core.util.Constants.cStringType;
 
-public abstract class AbstractWidgetProvider extends AppWidgetProvider {
+public abstract class AbstractWidgetProvider extends RoboAppWidgetProvider {
     private static final HashMap<String,Integer> sIdCache = new HashMap<String,Integer>();
 
-    TaskPersister taskPersister;
-    ProjectPersister projectPersister;
-    EntityCache<Project> projectCache;
-    ContextPersister contextPersister;
-    EntityCache<Context> contextCache;
-
+    @Inject TaskPersister mTaskPersister;
+    @Inject ProjectPersister mProjectPersister;
+    @Inject EntityCache<Project> mProjectCache;
+    @Inject ContextPersister mContextPersister;
+    @Inject EntityCache<Context> mContextCache;
 
     @Override
-    public void onReceive(android.content.Context context, Intent intent) {
-        super.onReceive(context, intent);
+    public void handleReceive(android.content.Context context, Intent intent) {
+        super.handleReceive(context, intent);
 
         String action = intent.getAction();
         if (TaskProvider.UPDATE_INTENT.equals(action) ||
                 ProjectProvider.UPDATE_INTENT.equals(action) ||
                 ContextProvider.UPDATE_INTENT.equals(action) ||
-                Preferences.CLEAN_INBOX_INTENT.equals(action)) {
+                Preferences.CLEAN_INBOX_INTENT.equals(action) ||
+                ListPreferenceSettings.LIST_PREFERENCES_UPDATED.equals(action)) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             // Retrieve the identifiers for each instance of your chosen widget.
             ComponentName thisWidget = new ComponentName(context, getClass());
@@ -108,40 +105,28 @@ public abstract class AbstractWidgetProvider extends AppWidgetProvider {
             int appWidgetId, String queryName) {
         Ln.d("updateAppWidget appWidgetId=%s queryName=%s provider=%s", appWidgetId, queryName, getClass());
 
-        setupDependencies(androidContext);
-
         RemoteViews views = new RemoteViews(androidContext.getPackageName(), getWidgetLayoutId());
 
-        TaskSelector query = StandardTaskQueries.getQuery(queryName);
-        if (query == null) return;
+        Cursor taskCursor = createCursor(androidContext, queryName);
+        if (taskCursor == null) return;
 
         int titleId = getIdentifier(androidContext, "title_" + queryName, cStringType);
-        views.setTextViewText(R.id.title, androidContext.getString(titleId));
+        views.setTextViewText(R.id.title, androidContext.getString(titleId) + " (" + taskCursor.getCount() + ")");
 
         setupFrameClickIntents(androidContext, views, queryName);
 
-        Cursor taskCursor = androidContext.getContentResolver().query(
-                TaskProvider.Tasks.CONTENT_URI,
-                TaskProvider.Tasks.FULL_PROJECTION,
-                query.getSelection(androidContext),
-                query.getSelectionArgs(),
-                query.getSortOrder());
-
-
         int totalEntries = getTotalEntries();
-        for (int taskCount = 1; taskCount < totalEntries; taskCount++) {
+        for (int taskCount = 1; taskCount <= totalEntries; taskCount++) {
             Task task = null;
             Project project = null;
             Context context = null;
             if (taskCursor.moveToNext()) {
-                task = taskPersister.read(taskCursor);
-                project = projectCache.findById(task.getProjectId());
-                context = contextCache.findById(task.getContextId());
+                task = mTaskPersister.read(taskCursor);
+                project = mProjectCache.findById(task.getProjectId());
+                context = mContextCache.findById(task.getContextId());
             }
 
             int descriptionViewId = updateDescription(androidContext, views, task, taskCount);
-            if (descriptionViewId == 0) break;
-
             int projectViewId = updateProject(androidContext, views, project, taskCount);
             int contextIconId = updateContext(androidContext, views, context, taskCount);
 
@@ -167,26 +152,25 @@ public abstract class AbstractWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
+    protected Cursor createCursor(android.content.Context androidContext, String queryName) {
+        TaskSelector query = StandardTaskQueries.getQuery(queryName);
+        if (query == null) return null;
+
+        String key = StandardTaskQueries.getFilterPrefsKey(queryName);
+        ListPreferenceSettings settings = new ListPreferenceSettings(key);
+        query = query.builderFrom().applyListPreferences(androidContext, settings).build();
+
+        return androidContext.getContentResolver().query(
+                TaskProvider.Tasks.CONTENT_URI,
+                TaskProvider.Tasks.FULL_PROJECTION,
+                query.getSelection(androidContext),
+                query.getSelectionArgs(),
+                query.getSortOrder());
+    }
+
     abstract int getWidgetLayoutId();
 
     abstract int getTotalEntries();
-
-    protected void setupDependencies(final android.content.Context androidContext) {
-        // TODO inject
-        ContentResolverProvider provider = new ContentResolverProvider() {
-            @Override
-            public ContentResolver get() {
-                return androidContext.getContentResolver();
-            }
-        };
-        Analytics analytics = new Analytics(androidContext);
-
-        taskPersister = new TaskPersister(provider, analytics);
-        projectPersister = new ProjectPersister(provider, analytics);
-        projectCache = new DefaultEntityCache<Project>(projectPersister);
-        contextPersister = new ContextPersister(provider, analytics);
-        contextCache = new DefaultEntityCache<Context>(contextPersister);
-    }
 
     protected void setupFrameClickIntents(android.content.Context androidContext, RemoteViews views, String queryName){
         Intent intent = StandardTaskQueries.getActivityIntent(androidContext, queryName);

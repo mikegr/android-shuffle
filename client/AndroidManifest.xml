@@ -404,6 +404,7 @@
                 <action android:name="org.dodgybits.shuffle.android.PROJECT_UPDATE" />
                 <action android:name="org.dodgybits.shuffle.android.CONTEXT_UPDATE" />
                 <action android:name="org.dodgybits.shuffle.android.CLEAN_INBOX" />
+                <action android:name="org.dodgybits.shuffle.android.LIST_PREFERENCES_UPDATE"/>
             </intent-filter>
 		</receiver>
 
@@ -421,6 +422,7 @@
                 <action android:name="org.dodgybits.shuffle.android.PROJECT_UPDATE" />
                 <action android:name="org.dodgybits.shuffle.android.CONTEXT_UPDATE" />
                 <action android:name="org.dodgybits.shuffle.android.CLEAN_INBOX" />
+                <action android:name="org.dodgybits.shuffle.android.LIST_PREFERENCES_UPDATE"/>
             </intent-filter>
         </receiver>
 

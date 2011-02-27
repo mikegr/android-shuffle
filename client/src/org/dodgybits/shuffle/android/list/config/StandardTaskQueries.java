@@ -8,6 +8,7 @@ import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelecto
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector.PredefinedQuery;
 import org.dodgybits.shuffle.android.list.activity.task.InboxActivity;
 import org.dodgybits.shuffle.android.list.activity.task.TabbedDueActionsActivity;
+import org.dodgybits.shuffle.android.list.activity.task.TicklerActivity;
 import org.dodgybits.shuffle.android.list.activity.task.TopTasksActivity;
 
 import android.content.Context;
@@ -21,6 +22,11 @@ public class StandardTaskQueries {
     public static final String cDueNextMonth = "due_next_month";
     public static final String cNextTasks = "next_tasks";
     public static final String cTickler = "tickler";
+
+
+    public static final String cDueTasksFilterPrefs = "due_tasks";
+    public static final String cProjectFilterPrefs = "project";
+    public static final String cContextFilterPrefs = "context";
 
     private static final TaskSelector cInboxQuery = 
         TaskSelector.newBuilder().setPredefined(PredefinedQuery.inbox).build();
@@ -50,20 +56,36 @@ public class StandardTaskQueries {
         cQueryMap.put(cNextTasks, cNextTasksQuery);
         cQueryMap.put(cTickler, cTicklerQuery);
     }
-    
+
+    private static final HashMap<String,String> cFilterPrefsMap = new HashMap<String,String>();
+    static {
+        cFilterPrefsMap.put(cInbox, cInbox);
+        cFilterPrefsMap.put(cDueToday, cDueTasksFilterPrefs);
+        cFilterPrefsMap.put(cDueNextWeek, cDueTasksFilterPrefs);
+        cFilterPrefsMap.put(cDueNextMonth, cDueTasksFilterPrefs);
+        cFilterPrefsMap.put(cNextTasks, cNextTasks);
+        cFilterPrefsMap.put(cTickler, cTickler);
+    }
+
     public static TaskSelector getQuery(String name) {
         return cQueryMap.get(name);
     }
-    
+
+    public static String getFilterPrefsKey(String name) {
+        return cFilterPrefsMap.get(name);
+    }
+
     public static Intent getActivityIntent(Context context, String name) {
         if (cInbox.equals(name)) {
             return new Intent(context, InboxActivity.class);
         }
-        
         if (cNextTasks.equals(name)) {
             return new Intent(context, TopTasksActivity.class);
         }
-        
+        if (cTickler.equals(name)) {
+            return new Intent(context, TicklerActivity.class);
+        }
+
         PredefinedQuery query = PredefinedQuery.dueToday;
         if (cDueNextWeek.equals(name)) {
             query = PredefinedQuery.dueNextWeek;
