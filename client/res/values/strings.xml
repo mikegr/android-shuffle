@@ -127,9 +127,10 @@
 \t• Tickler view for inactive actions.\n
 \t• Support for Tracks sites with self signed certificates.\n
 \t• Fixed calendar selection bug on Android 2.2.\n
-\t• Spanish translation.\n
+\t• Fixed action reordering in projects and Next Actions.\n
+\t• Spanish and Japanese translations.\n
 \n
-<b>New in version 1.6.2:</b>\n
+<b>New in version 1.6.3:</b>\n
 \t• Fix task editing compatibility with Android 1.5.\n
 \n
 <b>New in version 1.6.2:</b>\n
