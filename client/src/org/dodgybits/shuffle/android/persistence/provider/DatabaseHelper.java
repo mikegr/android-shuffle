@@ -7,15 +7,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.dodgybits.shuffle.android.persistence.migrations.Migration;
-import org.dodgybits.shuffle.android.persistence.migrations.V10Migration;
-import org.dodgybits.shuffle.android.persistence.migrations.V11Migration;
-import org.dodgybits.shuffle.android.persistence.migrations.V12Migration;
-import org.dodgybits.shuffle.android.persistence.migrations.V13Migration;
-import org.dodgybits.shuffle.android.persistence.migrations.V14Migration;
-import org.dodgybits.shuffle.android.persistence.migrations.V15Migration;
-import org.dodgybits.shuffle.android.persistence.migrations.V1Migration;
-import org.dodgybits.shuffle.android.persistence.migrations.V9Migration;
+import org.dodgybits.shuffle.android.persistence.migrations.*;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,10 +26,14 @@ class DatabaseHelper extends SQLiteOpenHelper {
 		ALL_MIGRATIONS.put(13, new V13Migration());
 		ALL_MIGRATIONS.put(14, new V14Migration());
 		ALL_MIGRATIONS.put(15, new V15Migration());
+		ALL_MIGRATIONS.put(16, new V16Migration());
 	}
+
+    private Context mContext;
 
 	DatabaseHelper(Context context) {
 		super(context, AbstractCollectionProvider.cDatabaseName, null, AbstractCollectionProvider.cDatabaseVersion);
+        mContext = context;
 	}
 
 	@Override
@@ -50,6 +46,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
 			Set<Integer> migrationVersions) {
 		for (Integer version : migrationVersions) {
 			Log.i(AbstractCollectionProvider.cTag, "Migrating to version " + version);
+
 			ALL_MIGRATIONS.get(version).migrate(db);
 		}
 	}

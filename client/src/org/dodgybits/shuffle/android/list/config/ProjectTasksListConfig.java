@@ -59,7 +59,7 @@ public class ProjectTasksListConfig extends AbstractTaskListConfig {
         List<Id> ids = Arrays.asList(new Id[]{mProjectId});
         TaskSelector query = TaskSelector.newBuilder()
             .setProjects(ids)
-            .setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC")
+            .setSortOrder(TaskProvider.Tasks.DISPLAY_ORDER + " ASC")
             .build();
         return query;
     }

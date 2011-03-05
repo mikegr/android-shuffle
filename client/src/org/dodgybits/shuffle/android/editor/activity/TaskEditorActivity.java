@@ -16,10 +16,9 @@
 
 package org.dodgybits.shuffle.android.editor.activity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.TimeZone;
+import java.util.*;
 
+import android.provider.BaseColumns;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.model.Id;
 import org.dodgybits.shuffle.android.core.model.Task;
@@ -70,6 +69,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.inject.Inject;
+import roboguice.util.Ln;
+
+import static org.dodgybits.shuffle.android.persistence.provider.TaskProvider.Tasks.DISPLAY_ORDER;
 
 /**
  * A generic activity for editing a task in the database.  This can be used
@@ -347,7 +349,6 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         final boolean allDay = mAllDayCheckBox.isChecked();
         final boolean complete = mCompletedCheckBox.isChecked();
         final boolean hasAlarms = !mReminderItems.isEmpty();
-        final int order = calculateTaskOrder(projectId);
         final boolean deleted = mDeletedCheckBox.isChecked();
         final boolean active = true;
         
@@ -361,8 +362,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             .setComplete(complete)
             .setDeleted(deleted)
             .setActive(active)
-            .setHasAlarm(hasAlarms)
-            .setOrder(order);
+            .setHasAlarm(hasAlarms);
 
         // If we are creating a new task, set the creation date
         if (mState == State.STATE_INSERT) {
@@ -414,12 +414,16 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
                 }
             }
         }
+
+        final int order = calculateTaskOrder(projectId, dueMillis);
+
         
         builder
             .setTimezone(timezone)
             .setStartDate(startMillis)
-            .setDueDate(dueMillis);
-        
+            .setDueDate(dueMillis)
+            .setOrder(order);
+
         
         Id eventId = mOriginalItem == null ? Id.NONE : mOriginalItem.getCalendarEventId();
         final boolean updateCalendar = mUpdateCalendarCheckBox.isChecked();
@@ -999,29 +1003,52 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     /**
      * Calculate where this task should appear on the list for the given project.
      * If no project is defined, order is meaningless, so return -1.
-     * New tasks go on the end of the list, so the highest current order
-     * value for tasks for this project and add one to this.
+     *
+     * New tasks go on the end of the list if no due date is defined.
+     * If due date is defined, add either to the start, or after the task
+     * closest to the end of the list with an earlier due date.
+     *
      * For existing tasks, check if the project changed, and if so
      * treat like a new task, otherwise leave the order as is.
      * 
      * @param projectId the project selected for this task
+     * @param dueMillis due date of this task (or 0L if not defined)
      * @return 0-indexed order of task when displayed in the project view
      */
-    private Integer calculateTaskOrder(Id projectId) {
+    private int calculateTaskOrder(Id projectId, long dueMillis) {
     	if (!projectId.isInitialised()) return -1;
     	int order;
     	if (mState == State.STATE_INSERT || !projectId.equals(mOriginalItem.getProjectId())) {
     		// get current highest order value    		
     		Cursor cursor =  getContentResolver().query(
     				TaskProvider.Tasks.CONTENT_URI, 
-    				new String[] {TaskProvider.Tasks.PROJECT_ID, TaskProvider.Tasks.DISPLAY_ORDER}, 
+    				new String[] {BaseColumns._ID, TaskProvider.Tasks.DISPLAY_ORDER, TaskProvider.Tasks.DUE_DATE},
     				TaskProvider.Tasks.PROJECT_ID + " = ?", 
     				new String[] {String.valueOf(projectId.getId())}, 
     				TaskProvider.Tasks.DISPLAY_ORDER + " desc");
     		if (cursor.moveToFirst()) {
-    			// first entry is current highest value
-    			int highest = cursor.getInt(1);
-    			order =  highest + 1;
+                if (dueMillis > 0L) {
+                    Ln.d("Due date defined - finding best place to insert in project task list");
+                    Map<Long,Integer> updateValues = new HashMap<Long,Integer>();
+                    do {
+                        long previousId = cursor.getLong(0);
+                        int previousOrder = cursor.getInt(1);
+                        long previousDueDate = cursor.getLong(2);
+                        if (previousDueDate > 0L && previousDueDate < dueMillis) {
+                            order = previousOrder + 1;
+                            Ln.d("Placing after task %d with earlier due date", previousId);
+                            break;
+                        }
+                        updateValues.put(previousId, previousOrder + 1);
+                        order = previousOrder;
+                    } while (cursor.moveToNext());
+                    moveFollowingTasks(updateValues);
+                } else {
+                    // no due date so put at end of list
+                    int highestOrder = cursor.getInt(1);
+                    order =  highestOrder + 1;
+                }
+
     		} else {
     			// no tasks in the project yet.
     			order = 0;
@@ -1032,7 +1059,20 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     	}
     	return order;
     }
-    
+
+    private void moveFollowingTasks(Map<Long,Integer> updateValues) {
+        Set<Long> ids = updateValues.keySet();
+        ContentValues values = new ContentValues();
+        ContentResolver resolver = getContentResolver();
+
+        for (long id : ids) {
+            values.clear();
+            values.put(DISPLAY_ORDER, updateValues.get(id));
+            Uri uri = ContentUris.withAppendedId(TaskProvider.Tasks.CONTENT_URI, id);
+            resolver.update(uri, values, null, null);
+        }
+    }
+
     static void addMinutesToList(android.content.Context context, ArrayList<Integer> values,
             ArrayList<String> labels, int minutes) {
         int index = values.indexOf(minutes);

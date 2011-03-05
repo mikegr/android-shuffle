@@ -1,5 +1,6 @@
 package org.dodgybits.shuffle.android.persistence.migrations;
 
+import android.content.Context;
 import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
@@ -7,7 +8,7 @@ import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class V1Migration extends AbstractMigration {
+public class V1Migration implements Migration {
 
 	@Override
 	public void migrate(SQLiteDatabase db) {

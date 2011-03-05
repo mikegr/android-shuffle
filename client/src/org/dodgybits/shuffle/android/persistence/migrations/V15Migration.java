@@ -1,5 +1,6 @@
 package org.dodgybits.shuffle.android.persistence.migrations;
 
+import android.content.Context;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;

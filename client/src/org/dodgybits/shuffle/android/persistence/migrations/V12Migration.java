@@ -1,13 +1,14 @@
 package org.dodgybits.shuffle.android.persistence.migrations;
 
 
+import android.content.Context;
 import org.dodgybits.shuffle.android.persistence.provider.ContextProvider;
 import org.dodgybits.shuffle.android.persistence.provider.ProjectProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 
 import android.database.sqlite.SQLiteDatabase;
 
-public class V12Migration extends AbstractMigration {
+public class V12Migration implements Migration {
 
 	@Override
 	public void migrate(SQLiteDatabase db) {

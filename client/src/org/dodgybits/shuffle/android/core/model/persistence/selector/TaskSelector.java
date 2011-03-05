@@ -147,7 +147,7 @@ public class TaskSelector extends AbstractEntitySelector {
                     "   (projectId IN (select p._id from project p where p.parallel = 1)) OR " +
                     "   (task._id = (select t2._id FROM task t2 WHERE " +
                     "      t2.projectId = task.projectId AND t2.complete = 0 " +
-                    "      ORDER BY due ASC, displayOrder ASC limit 1))" +
+                    "      ORDER BY displayOrder ASC limit 1))" +
                     "))";
                 break;
                 

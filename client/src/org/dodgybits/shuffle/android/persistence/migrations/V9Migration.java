@@ -1,9 +1,11 @@
 package org.dodgybits.shuffle.android.persistence.migrations;
 
 import static org.dodgybits.shuffle.android.persistence.provider.ContextProvider.CONTEXT_TABLE_NAME;
+
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-public class V9Migration extends AbstractMigration {
+public class V9Migration implements Migration {
 
 	@Override
 	public void migrate(SQLiteDatabase db) {

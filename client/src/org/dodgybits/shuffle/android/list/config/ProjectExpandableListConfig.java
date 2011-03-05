@@ -47,7 +47,7 @@ public class ProjectExpandableListConfig implements ExpandableListConfig<Project
         mChildPersister = taskPersister;
         mSettings = settings;
         mTaskSelector = TaskSelector.newBuilder().
-                setSortOrder(TaskProvider.Tasks.DUE_DATE + " ASC," + TaskProvider.Tasks.DISPLAY_ORDER + " ASC").build();
+                setSortOrder(TaskProvider.Tasks.DISPLAY_ORDER + " ASC").build();
         mProjectSelector = ProjectSelector.newBuilder().
                 setSortOrder(ProjectProvider.Projects.NAME + " ASC").build();
     }

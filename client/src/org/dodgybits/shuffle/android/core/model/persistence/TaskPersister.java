@@ -202,7 +202,7 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         mResolver.update(uri, values, null, null);
 
         uri = ContentUris.withAppendedId(getContentUri(), id2.getId());
-        values = new ContentValues();
+        values.clear();
         values.put(DISPLAY_ORDER, positionValue1);
         mResolver.update(uri, values, null, null);
         mAnalytics.onEvent(cFlurryReorderTasksEvent);
