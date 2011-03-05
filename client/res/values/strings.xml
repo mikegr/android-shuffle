@@ -100,10 +100,17 @@
 
     
     <!--  search -->
-    <string name="search_label">Shuffle</string>
-    <string name="search_hint">Search by description or details</string>
-    <string name="search_settings_description">Descriptions and details of actions</string>
-    
+    <string name="search_label_action">Shuffle actions</string>
+    <string name="search_hint_action">Search actions by description or details</string>
+    <string name="search_settings_description_action">Descriptions and details of actions</string>
+    <string name="search_label_context">Shuffle contexts</string>
+    <string name="search_hint_context">Search context by name</string>
+    <string name="search_settings_description_context">Names of contexts</string>
+    <string name="search_label_project">Shuffle projects</string>
+    <string name="search_hint_project">Search project by name</string>
+    <string name="search_settings_description_project">Names of projects</string>
+
+
     <!--  Welcome screen -->
     <string name="sample_data_title">Demonstration</string>
     <string name="clean_slate_title">Clean slate</string>
@@ -119,9 +126,8 @@
 \t• New 4x4 widget.\n
 \t• Tickler view for inactive actions.\n
 \t• Support for Tracks sites with self signed certificates.\n
-\t• Tracks synching improvements.\n
 \t• Fixed calendar selection bug on Android 2.2.\n
-\t• Spanish translation
+\t• Spanish translation.\n
 \n
 <b>New in version 1.6.2:</b>\n
 \t• Fix task editing compatibility with Android 1.5.\n

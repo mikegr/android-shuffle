@@ -15,10 +15,10 @@
 -->
 
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-    android:label="@string/search_label"
-    android:hint="@string/search_hint"
+    android:label="@string/search_label_action"
+    android:hint="@string/search_hint_action"
     android:icon="@android:drawable/ic_menu_search"
-    android:searchSettingsDescription="@string/search_settings_description"
+    android:searchSettingsDescription="@string/search_settings_description_action"
     android:includeInGlobalSearch="true"
     android:searchSuggestAuthority="org.dodgybits.android.shuffle.provider.taskprovider"
     android:searchSuggestIntentAction="android.intent.action.EDIT"
