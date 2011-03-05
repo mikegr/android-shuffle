@@ -141,7 +141,7 @@ public final class Task implements TracksEntity {
     public final String toString() {
         return String.format(
                 "[Task id=%8$s description='%1$s' detail='%2$s' contextId=%3$s projectId=%4$s " +
-                "order=%5$s complete=%6$s tracksId='%7$s' deleted=%8$s active=%9$s]",
+                "order=%5$s complete=%6$s tracksId='%7$s' deleted=%9$s active=%10$s]",
                 mDescription, mDetails, mContextId, mProjectId,
                 mOrder, mComplete, mTracksId, mLocalId, mDeleted, mActive);
     }
