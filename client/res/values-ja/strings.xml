@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 Android Shuffle Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+	<!--  Activity titles -->
+    <string name="app_name">Shuffle</string>
+    <string name="title_inbox">インボックス</string>
+    <string name="title_project">プロジェクト</string>
+    <string name="title_context">コンテキスト</string>
+    <string name="title_next_tasks">次のアクション</string>
+    <string name="title_due_tasks">期限ありアクション</string>
+    <string name="title_due_today">今日中</string>
+    <string name="title_due_next_week">来週までに</string>
+    <string name="title_due_next_month">来月までに</string>
+    <string name="title_tickler">通知</string>
+    <string name="title_trash">ゴミ箱</string>
+    <string name="title_new_task">新規アクション</string>
+    <string name="title_edit_task">アクションを編集</string>
+    <string name="title_view_task">アクションを表示</string>
+    <string name="title_new_project">新規プロジェクト</string>
+    <string name="title_edit_project">プロジェクトを編集</string>
+    <string name="title_new_context">新規コンテキスト</string>
+    <string name="title_edit_context">コンテキストを編集</string>
+    <string name="title_task_extras">その他のアクション</string>
+    <string name="title_preferences">一般設定</string>
+    <string name="title_preferences_appearance">一般設定 > アクションの表示形式</string>
+    <string name="title_preferences_clean">一般設定 > 初期設定に戻す</string>
+    <string name="title_preferences_create_backup">バックアップ</string>
+    <string name="title_preferences_restore_backup">バックアップからの復元</string>
+    <string name="title_help">ヘルプ</string>
+    <string name="title_icon_picker">アイコン選択</string>
+    <string name="title_colour_picker">色選択</string>
+    <string name="title_calendar">アクション期限 %s</string>
+    <string name="title_project_tasks">プロジェクト > %s</string>
+    <string name="title_context_tasks">コンテキスト > %s</string>
+    <string name="title_shortcut_picker">ショートカット選択</string>
+    <string name="title_shuffle_2x2">Shuffle (2x2)</string>
+    <string name="title_shuffle_4x4">Shuffle (4x4)</string>
+    <string name="title_widget_picker">ウィジェット内容選択</string>
+
+	<!--  Option menu -->
+    <string name="menu_save">保存</string>
+    <string name="menu_save_and_add">保存して新規作成</string>
+    <string name="menu_delete">削除</string>
+    <string name="menu_undelete">元に戻す(削除)</string>
+    <string name="menu_complete">完了にする</string>
+    <string name="menu_incomplete">未完了にする</string>
+    <string name="menu_move_up">上に</string>
+    <string name="menu_move_down">下に</string>
+    <string name="menu_insert">%sを追加</string>
+    <string name="menu_revert">前に戻す</string>
+    <string name="menu_discard">破棄</string>
+    <string name="menu_view">全体像</string>
+    <string name="menu_preferences">設定</string>
+    <string name="menu_sync">同期</string>
+    <string name="menu_search">検索</string>
+    <string name="menu_help">ヘルプ</string>
+
+    <!--  general purpose -->
+    <string name="project_title">プロジェクト</string>
+    <string name="context_title">コンテキスト</string>
+    <string name="details_title">詳細</string>
+    <string name="set_button_title">設定</string>
+    <string name="clear_button_title">消去</string>
+    <string name="edit_button_title">編集</string>
+    <string name="extras_button_title">詳細を追加...</string>
+    <string name="save_button_title">保存</string>
+    <string name="ok_button_title">実行</string>
+    <string name="cancel_button_title">キャンセル</string>
+    <string name="replace_button_title">置き換え</string>
+	<string name="warning_title">注意</string>
+	<string name="info_title">情報</string>
+    <string name="task_name">アクション</string>
+    <string name="project_name">プロジェクト</string>
+    <string name="context_name">コンテキスト</string>
+    <string name="nothing"></string>
+    <string name="deleted">削除済み</string>
+    <string name="inactive">無効</string>
+    <string name="from_context">(コンテキストから)</string>
+    <string name="from_project">(プロジェクトから)</string>
+    <string name="none_empty">なし</string>
+    <string name="undefined">なし</string>
+    <string name="today">今日</string>
+    <string name="yesterday">機能</string>
+    <string name="previous_button_title">前</string>
+    <string name="next_button_title">次</string>
+
+
+    <!--  search -->
+    <string name="search_label">Shuffle</string>
+    <string name="search_hint">説明や詳細から検索</string>
+    <string name="search_settings_description">アクションの説明と詳細</string>
+
+    <!--  Welcome screen -->
+    <string name="sample_data_title">サンプルデータ</string>
+    <string name="clean_slate_title">全て消す</string>
+
+    <!--  What's new dialog -->
+<string name="whats_new_dialog_title">Shuffle</string>
+<string name="whats_new_dialog_message">Shuffleをインストールしていただきありがとうございます。\n\n
+<b>New in this version:</b>\n
+\t• View filters, customisable in each view.\n
+\t• Active flags on contexts and projects.\n
+\t• Deleted items are now recoverable.\n
+\t• Toolbar added to list views.\n
+\t• New 4x4 widget.\n
+\t• Tickler view for inactive actions.\n
+\t• Support for Tracks sites with self signed certificates.\n
+\t• Tracks synching improvements.\n
+\t• Fixed calendar selection bug on Android 2.2.\n
+\t• Spanish translation
+\n
+
+注意：このアプリケーションは、使用統計を匿名でサーバーに送信するようになっています。この機能を停止
+したい場合は、設定にて機能をOffにしてください。
+
+<b>New in version 1.6.3:</b>\n
+\t• Fix task editing compatibility with Android 1.5.\n
+\n
+<b>New in version 1.6.2:</b>\n
+\t• Fix bug where can\'t remove context or project from action.\n
+\n
+<b>New in version 1.6.1:</b>\n
+\t• Fixed Tracks sync bug.\n
+\t• Reverted Inbox behavior.\n
+\n
+<b>New in version 1.6.0:</b>\n
+\t• <b>Widget</b> for your favorite list.\n
+\t• Fixed Google Calendar creation on Android 2.2.\n
+\t• Big code rewrite to improve reliability and simplify addition of new features.\n
+\n
+<b>New in version 1.5.1:</b>\n
+\t• Patch for Tracks synch bugs.\n
+\n
+<b>New in version 1.5.0:</b>\n
+\t• Search actions (including in quick search box)\n
+\t• Enable removable of action scheduling\n
+\t• Remove actions from Inbox if project or context set\n
+\t• Add actions without projects to Next actions\n
+\t• Enable parallel execute of actions within a project\n
+\t• For Tracks synch, don\'t set all day flag unless a date is set\n
+\t• Show both start and due date in task lists\n
+\t• Updated Help screens\n
+\n
+\n
+</string>
+
+	<!--  edit screens -->
+    <string name="menu_done">保存</string>
+    <string name="menu_doNotSave">変更を破棄する</string>
+
+	<!--  task edit screen -->
+    <string name="description_title">説明</string>
+    <string name="scheduling_title">スケジュール</string>
+    <string name="scheduling_collapsed">スケジュールオプションを見るにはクリックしてください</string>
+    <string name="scheduling_expanded">スケジュールオプションを隠すにはクリックしてください</string>
+    <string name="start_title">開始</string>
+    <string name="due_title">期限</string>
+    <string name="all_day_title">終日</string>
+    <string name="reminders_title">リマインダー</string>
+    <string name="add_to_gcal_title">Googleカレンダーに追加</string>
+    <string name="add_to_gcal_detail_disabled">期日を追加してオプションを有効にする</string>
+    <string name="add_to_gcal_detail">新規の項目は保存後に読み込まれます</string>
+    <string name="update_gcal_title">Googleカレンダーを更新</string>
+    <string name="update_gcal_detail">更新した項目は保存後に読み込まれます</string>
+    <string name="completed_title">完了</string>
+    <string name="active_title">アクティブ</string>
+    <string name="deleted_title">削除済み</string>
+    <string name="clear_title">期日を消去</string>
+
+	<!--  project & context edit screens -->
+    <string name="colour_title">色</string>
+    <string name="archived_title">アーカイブ</string>
+    <string name="icon_title">アイコン</string>
+    <string name="name_title">名前</string>
+    <string name="sequence_title">順に処理されるアクション</string>
+    <string name="parallel_title">並行して処理されるアクション</string>
+    <string name="default_context_title">既定のコンテキスト</string>
+    <string name="preview_title">プレビュー</string>
+    <string name="context_errands">用事</string>
+	<string name="context_online">ネット</string>
+    <string name="context_athome">自宅</string>
+    <string name="context_atwork">仕事</string>
+	<string name="context_contact">連絡</string>
+	<string name="context_read">確認</string>
+
+	<!--  Calendar screen -->
+    <string name="day_button_title">今日</string>
+    <string name="week_button_title">来週</string>
+    <string name="month_button_title">来月</string>
+
+	<!--  preferences screen -->
+    <string name="display_task_list_title">アクションリストに表示</string>
+    <string name="context_icon_title">コンテキストのアイコン</string>
+    <string name="context_name_title">コンテキスト名</string>
+    <string name="due_date_title">期日</string>
+
+
+    <string name="general_preferences">Google設定</string>
+
+    <string name="title_calendar_preference">カレンダー選択</string>
+    <string name="summary_calendar_preference">新しいカレンダーを作成</string>
+
+    <string name="title_send_analytics_preference">使用状況をサーバーに送る</string>
+    <string name="summary_send_analytics_preference">バグ発見や必要な機能の調査に使う匿名のデータです。</string>
+
+	<string name="layout_preferences">レイアウト設定</string>
+
+	<string name="title_project_view_preference">プロジェクトビュー</string>
+	<string name="summary_project_view_preference">プロジェクトのアクションを別々の画面に表示する。</string>
+
+	<string name="title_context_view_preference">コンテキストビュー</string>
+	<string name="summary_context_view_preference">プロジェクトのアクションを別々の画面に表示する。</string>
+
+	<string name="title_action_appearance_preference">アクション表示形式</string>
+	<string name="summary_action_appearance_preference">リスト中のアクションの表示形式をカスタマイズする。</string>
+
+
+    <string name="sync_preferences">同期設定</string>
+
+    <string name="changeSynchronizationSettings">Tracksの設定</string>
+
+
+	<string name="backup_preferences">バックアップ</string>
+
+	<string name="title_create_backup_preference">SDカードにバックアップ</string>
+	<string name="summary_create_backup_preference">全てのアクションとプロジェクト・コンテキストをバックアップする。</string>
+
+    <string name="filename_title">バックアップファイル</string>
+	<string name="backup_progress">%1$s %2$s に書き込み中</string>
+	<string name="toast_backup_saved">%1$s に書き込みました。</string>
+
+	<string name="title_restore_backup_preference">SDカードから復元</string>
+	<string name="summary_restore_backup_preference">バックアップからデータを復元します。</string>
+	<string name="toast_backup_restored">%1$s のデータを復元しました。</string>
+	<string name="restore_progress">%1$s %2$s を読み込み中</string>
+	<string name="restore_button_title">復元</string>
+
+    <string name="warning_filename_empty">ファイル名を指定してください。</string>
+	<string name="warning_filename_exists">%1$s はすでに存在しています。</string>
+	<string name="warning_media_not_mounted">%1$s がありません。</string>
+	<string name="warning_backup_failed">バックアップ失敗 : %1$s</string>
+    <string name="warning_no_files">表示するファイルがありません。</string>
+	<string name="warning_restore_failed">復元失敗 : %1$s</string>
+    <string name="status_checking_media">メディアの状態確認中</string>
+    <string name="status_creating_backup">バックアップファイル作成中</string>
+    <string name="status_backup_complete">バックアップ完了</string>
+    <string name="status_reading_backup">バックアップファイル読み込み中</string>
+    <string name="status_restore_complete">復元完了</string>
+
+	<string name="cleanup_preferences">データ消去</string>
+
+	<string name="dialog_title_cleanup_preference">完了したアクションを消去</string>
+
+    <string name="title_delete_completed_preference">完了したアクションを消去します。</string>
+
+    <string name="title_permanently_delete_preference">削除されたアクションを消去</string>
+    <string name="summary_permanently_delete_preference">全ての削除されたアクション・プロジェクト・コンテキストを完全に消去します。</string>
+
+	<string name="title_delete_all_preference">全て消去!!</string>
+	<string name="summary_delete_all_preference">全てのアクション・プロジェクト・コンテキストを完全に消去します。</string>
+
+    <string name="delete_completed_button_title">削除</string>
+    <string name="clean_inbox_button_title">インポックスをきれいにする</string>
+    <string name="clean_slate_button_title">削除</string>
+
+    <string name="permanently_delete_button_title">完全に消去</string>
+
+    <!-- Toast displayed when an item is created -->
+    <string name="itemCreatedToast">%1$s を作成しました。</string>
+
+    <string name="warning_empty_trash">削除されたアイテムを完全に消去しますか？</string>
+    <string name="toast_empty_trash">%1$s 個のアクション、%2$s 個のコンテキスト、%3$s 個のプロジェクトを消去しました </string>
+
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemSavedToast">%1$s を保存しました。</string>
+
+    <!-- Toast displayed when an item is saved -->
+    <string name="itemDeletedToast">%1$s を削除しました。</string>
+
+
+   <!-- synchronization-->
+    <string name="synchronizing">Tracksと同期しています。</string>
+    <string name="tracksUser">ユーザー</string>
+    <string name="tracksInstallation">Tracksの場所</string>
+    <string name="tracks_url">Tracksの場所</string>
+    <string name="tracks_url_settings">http://my.gtdify.com</string>
+    <string name="self_signed_cert">自サイン https 認証 (セキュリティーホール)</string>
+    <string name="tracks_user">ユーザー</string>
+    <string name="tracks_pass">バスワード</string>
+    <string name="readingRemoteTasks">リモートからタスクを読んでいます。</string>
+    <string name="processingTasks">タスクの処理中</string>
+    <string name="readingLocalTasks">ローカルのタスクを読んでいます。</string>
+    <string name="doneWithTasks">タスク処理終了</string>
+    <string name="cannotSyncTasksWithoutContext">コテキストに関連していないアクションはTracksに表示されません。</string>
+    <string name="readingRemoteContexts">リモートからコンテキストを読んでいます。</string>
+    <string name="processingContexts">コンテキストの処理中</string>
+    <string name="readingLocalContexts">ローカルのコンテキストを読んでいます。</string>
+    <string name="doneWithContexts">コンテキスト処理終了</string>
+    <string name="readingRemoteProjects">リモートからプロジェクトを読んでいます。</string>
+    <string name="processingProjects">プロジェクトの処理中</string>
+    <string name="readingLocalProjects">ローカルのプロジェクトを読んでいます。</string>
+    <string name="doneWithProjects">プロジェクト処理終了</string>
+    <string name="tracks_failed_to_check_url">コンテキストの設定に問題があったため、読み込みに失敗しました。</string>
+    <string name="tracks_background_sync">バックグラウンド同期の間隔</string>
+    <string name="tracks_check_settings">設定の確認</string>
+    <string name="tracks_settings_valid">設定に問題ありません</string>
+    <string name="sync_interval_none">同期しない</string>
+    <string name="sync_interval_30min">30 分</string>
+    <string name="sync_interval_1h">1 時間</string>
+    <string name="sync_interval_2h">2 時間</string>
+    <string name="sync_interval_3h">3 時間</string>
+
+    <!-- list filter preferences -->
+    <string name="list_settings_title">設定</string>
+    <string name="active_items_title">アクティブなアイテム</string>
+    <string name="deleted_items_title">削除したアイテム</string>
+    <string name="pending_items_title">開始していないアクション</string>
+    <string name="completed_items_title">完了したアクション</string>
+
+
+	<!--  messages -->
+    <string name="no_due_date">期限なし</string>
+    <string name="no_icon">アイコンなし</string>
+    <string name="no_tasks">アクションがありません。始めるには、メニューから「アクションの追加」を選択してください。</string>
+    <string name="no_due_tasks">もうすぐのアイテムはありません。</string>
+    <string name="no_projects">プロジェクトがありません。 始めるには、アクションをインボックスに追加してプロジェクトを設定してください。</string>
+    <string name="no_contexts">コンテキストがありません。始めるには、 アクションをインボックスに追加してコンテキストを設定してください。</string>
+    <string name="delete_warning">本当に %1$s とその %2$d %3$s を削除しますか?</string>
+    <string name="delete_completed_warning">全ての完了したタスクを削除しますか？</string>
+    <string name="clean_slate_warning"><i>全て</i> のアクションとプロジェクト・追加したコンテキストを削除しますか？</string>
+    <string name="clean_task_message">%1$d 個の完了したアクションを削除しました。</string>
+    <string name="clean_inbox_message">インボックスから、プロジェクトやコンテキストが設定されているアクションを消しました。</string>
+    <string name="clean_slate_message">全てのアクションとプロジェクト・追加したコンテキストを削除しました。</string>
+   	<string name="error_title">エラー</string>
+	<string name="error_message">アクションの読み込みでエラーが発生しました。</string>
+	<string name="web_error_message">Tracksに接続できません。</string>
+    <string name="welcome1">
+Shuffleを使っていただきありがとうございます。Shuffleは、「Getting Things Done(GTD)」に刺激を受けて作った個人情報管理ツールです。
+「サンプルデータ」のボタンを押すとサンプルのプロジェクトやアクションを読み込むことができて、Shuffleをどんな風に使ったらいいのかについて
+試してみることができます。
+読み込んだデータは、設定メニューの「全て削除」を選択すれば削除することができます。
+    </string>
+    <string name="welcome2">
+デフォルトのコンテキスト以外何も入っていない、まっさらな状態から始めることもできます。
+    </string>
+    <string name="welcome3">
+詳しいせつめいやヒントなどは、ヘルプに入っています。
+    </string>
+    <string name="help0">
+Shuffleは、「Getting Things Done(GTD)」に刺激を受けて作った個人情報管理ツールです。
+種類分けされた「アクション(作業)」を追加して、それを5通りの表示方法で表示しながら、好きな方法でそれをやっつけることができます。
+\n
+シンプルでエレガントな方法で、アクションをプロジェクト(仕事)に追加したりコンテキスト(種別)を付けることもできます。
+こうすれば厄介なプロジェクトを個々の手頃な作業に分解することができます。\n
+プロジェクトが進行してきたら、古い処理済みのアクションを消しましょう。そして、新しいアクションを追加して
+その時の状況によって優先順位を付け変えます。
+    </string>
+    <string name="help1">
+ここにアクションを追加しましょう。
+<b>インボックス</b>はとりかかる前のアクションを置いておく場所です。
+定期的にインボックスの中を確認してそれぞれのアクションを調べたり削除したり、それを片づけてしまったり、
+プロジェクトに入れたり、コンテキストを付けたりします。\n
+一通り中身を確認したら、メニューの「インボックスをきれいにする」を実行して種類分けの終ったアクションをインボックスから
+外します。
+    </string>
+    <string name="help2">
+<b>プロジェクト</b>のページには全てのプロジェクトが表示されていて、ここからそれぞれのプロジェクトを掘り下げていって
+個々のアクションを見ることができます。アクションの追加だけでなく、編集したり削除したりすることができます。
+また、処理する順序を思いのままに変更することもできます。
+\n
+プロジェクトによっては、アクションを処理すべき順番が決っていることがあります。アクションを処理する順序に
+特に制約がなくどんな順でやってもいい場合もあります。このような動作はプロジェクトの作成時や編集時に設定することができます。
+\n
+プロジェクトは、コンテキストのように、2つの方法、掘り下げリストと展開リスト、で表示することができます。
+掘り下げモードでは、プロジェクトをタップすると、新しい画面にそのプロジェクトのアクションが表示されます。
+展開モードでは、同じ画面にプロジェクトのアクションが表示されます。
+    </string>
+    <string name="help3">
+<b>コンテキスト</b>は、そのアクションを処理するときの状況を示すものです。
+Shuffleには始めから、自宅・仕事・ネット・用事・連絡・確認のコンテキストが設定されています。\n
+これらを修正したり削除したりしてもいいですし、使いやすいものを新しく追加するのもいいでしょう。\n
+\n
+プロジェクトページのように、コンテキストも掘り下げリストと展開リストのどちらかで表示することができます。
+これは設定で変更できます。
+    </string>
+    <string name="help4">
+<b>次のアクション</b>は、やらなければならないことを決めるのに最適の場所です。\n
+この画面には、\n
+- プロジェクトに含まれていないもの\n
+- 順処理プロジェクトの最初のアクション\n
+- 並列処理プロジェクトの全てのアクション\n
+が表示されます。\n
+すぐに始めるべきアクションのリストということです。
+    </string>
+    <string name="help5">
+<b>期限ありアクション</b>は、期限が設定されているアクションを管理するための場所です。
+ここには3つの画面があります。<i>今日中</i>・<i>今週中</i>・<i>今月中</i>で、それぞれの期間に期限が
+あるアクションを表示します。 期限切れのアクションは全ての画面に表示されます。
+    </string>
+    <string name="help6">
+Shuffleの機能はカスタマイズ可能です。メニューから画面ごとの<b>設定</b>メニューを開くことができます。\n
+<b>カレンダー</b> - Googleカレンダーと統合するときにカレンダーを選択します。\n
+<b>プロジェクト/コンテキスト表示</b> - プロジェクトやコンテキストで内容を別画面で表示(掘り下げリスト)するか、展開するかを指定します。\n
+<b>アクション表示方法</b> - その場所のアクションのリストにどの項目を表示するかを指定します。\n
+<b>Tracks設定</b> - Tracksサーバーとの同期の設定をします。\n
+<b>SDカードにバックアップ</b> - 全てのアクション・コンテキスト・プロジェクトをSDカードに保存します。これをPCに保管することもできます。\n
+<b>SDカードから復元</b> - バックアップからデータを復元します。すでに実行済みでも再実行することができてしまうので、
+データを全て削除したあとに実行した方がいいでしょう。\n
+<b>完了したアクションを削除する</b> - 完了したアクションを完全に削除します。\n
+<b>全て削除!</b> - 全てのアクション・プロジェクト・追加/変更したコンテキストを完全に削除します。\n
+    </string>
+    <string name="help7">
+あまり知られていない便利な機能。\n
+1) リストの表示で、項目をロングタップするとオプションメニューが表示されます。\n
+2) 戻るボタンを押すと保存してから閉じます。\n
+3) いくつかのアクションを一度に入力するときは、<i>保存して新規作成</i>メニューが使えます。\n
+4) リストの項目をスワイプすると完了にすることができます。\n
+5) ホームスクリーン上に画面やアクションのショートカット(ウィジェット)が作れます。\n
+6) Android(OS1.6以上)のクイックサーチの設定にShuffleを加えれば、アクションを検索対象にすることができます。\n
+    </string>
+    <string name="help8">
+Thanks to the team behind the Tango Desktop Project, an open source collection of icons used in Shuffle.
+Thanks also to David Gibb for providing some great feedback on the design, Morten Nielson for the Tracks synch work,
+and to Gudrun for tolerating my nights and weekends spent tinkering with Android.\n
+\n
+For feedback or bug reports, please check http://code.google.com/p/android-shuffle/issues/list or email me at andy@dodgybits.org
+    </string>
+
+
+    <!-- Reminder format strings -->
+    <plurals name="Nminutes">
+        <!-- This is the label for a 1-minute reminder. -->
+        <item quantity="one">1 分</item>
+        <!-- This is the label for 2 or more minutes. The actual number of
+             minutes is a parameter. -->
+        <item quantity="other">%1$d 分</item>
+    </plurals>
+    <!-- We use the abbreviation "mins" instead of "minutes" to keep the string short.
+         This is the number of minutes displayed for a calendar reminder.  For example,
+         a reminder of 10 minutes would be displayed as '10 mins'.  The translation
+         should use the shortest acceptable abbreviation to save space. -->
+    <plurals name="Nmins">
+        <!-- This is the label for a 1-minute reminder. -->
+        <item quantity="one">1 分</item>
+        <!-- This is the label for 2 or more minutes. The actual number of
+             minutes is a parameter. -->
+        <item quantity="other">%1$d 分</item>
+    </plurals>
+    <!-- This is the number of hours displayed for a calendar reminder.  For example,
+         a reminder of 1 hour would be displayed as '1 hour'.  The translation
+         should use the shortest acceptable abbreviation of 'hour' to save space. -->
+    <plurals name="Nhours">
+        <!-- This is the label for a 1-hour reminder. -->
+        <item quantity="one">1 時間</item>
+        <!-- This is the label for a reminder of 2 or more hours. The actual number of
+             hours is a parameter. -->
+        <item quantity="other">%1$d 時間</item>
+    </plurals>
+    <!-- This is the number of days displayed for a calendar reminder.  For example,
+         a reminder of 2 days would be displayed as '2 days'.  The translation
+         should use the shortest acceptable abbreviation of 'day' to save space. -->
+    <plurals name="Ndays">
+        <!-- This is the label for a reminder of 1 day. -->
+        <item quantity="one">1 日</item>
+        <!-- This is the label for a reminder of 2 or more days. The actual number of
+             days is a parameter. -->
+        <item quantity="other">%1$d 日</item>
+    </plurals>
+
+
+
+</resources>
