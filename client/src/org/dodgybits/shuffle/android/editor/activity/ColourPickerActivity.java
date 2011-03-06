@@ -36,9 +36,6 @@ import android.widget.AdapterView.OnItemClickListener;
 public class ColourPickerActivity extends FlurryEnabledActivity implements
 		OnItemClickListener {
 
-	@SuppressWarnings("unused")
-	private static final String cTag = "ColourPicker";
-
 	public static final String TYPE = "vnd.android.cursor.dir/vnd.dodgybits.colours";
 
 	@InjectView(R.id.colourGrid) GridView mGrid;

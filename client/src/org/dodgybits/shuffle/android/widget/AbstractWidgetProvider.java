@@ -134,7 +134,7 @@ public abstract class AbstractWidgetProvider extends RoboAppWidgetProvider {
                 Uri.Builder builder = TaskProvider.Tasks.CONTENT_URI.buildUpon();
                 ContentUris.appendId(builder, task.getLocalId().getId());
                 Uri taskUri = builder.build();
-                Intent intent = new Intent(Intent.ACTION_EDIT, taskUri);
+                Intent intent = new Intent(Intent.ACTION_VIEW, taskUri);
                 Ln.d("Adding pending event for viewing uri %s", taskUri);
                 int entryId = getIdIdentifier(androidContext, "entry_" + taskCount);
                 PendingIntent pendingIntent = PendingIntent.getActivity(androidContext, 0, intent, 0);

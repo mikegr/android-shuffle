@@ -25,6 +25,8 @@ import org.dodgybits.shuffle.android.core.model.Task;
 import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.encoding.EntityEncoder;
 import org.dodgybits.shuffle.android.core.model.persistence.EntityPersister;
+import org.dodgybits.shuffle.android.core.model.persistence.TaskPersister;
+import org.dodgybits.shuffle.android.core.util.CalendarUtils;
 import org.dodgybits.shuffle.android.core.util.Constants;
 import org.dodgybits.shuffle.android.core.util.OSUtils;
 import org.dodgybits.shuffle.android.list.activity.State;
@@ -150,7 +152,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     private ArrayList<Integer> mOriginalMinutes = new ArrayList<Integer>();
     private ArrayList<LinearLayout> mReminderItems = new ArrayList<LinearLayout>(0);
     
-    @Inject private EntityPersister<Task> mPersister;
+    @Inject private TaskPersister mPersister;
     @Inject private EntityEncoder<Task> mEncoder;
     
     @Override
@@ -335,7 +337,7 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
     }
     
     @Override
-    protected Task createItemFromUI() {
+    protected Task createItemFromUI(boolean commitValues) {
         Builder builder = Task.newBuilder();
         if (mOriginalItem != null) {
             builder.mergeFrom(mOriginalItem);
@@ -415,9 +417,10 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
             }
         }
 
-        final int order = calculateTaskOrder(projectId, dueMillis);
+        final int order = commitValues ?
+                mPersister.calculateTaskOrder(mOriginalItem, projectId, dueMillis) :
+                mOriginalItem.getOrder();
 
-        
         builder
             .setTimezone(timezone)
             .setStartDate(startMillis)
@@ -491,16 +494,9 @@ public class TaskEditorActivity extends AbstractEditorActivity<Task>
         	values.put("eventLocation", contextName);
         }
         
-        Uri baseUri;
-        if (OSUtils.osAtLeastFroyo()) {
-            baseUri = Uri.parse("content://com.android.calendar/events");
-        } else {
-            baseUri = Uri.parse("content://calendar/events"); 
-        };
-        
         Uri eventUri = null;
         try {
-            eventUri = addCalendarEntry(values, calEventId, baseUri);
+            eventUri = addCalendarEntry(values, calEventId, CalendarUtils.getEventContentUri());
         } catch (Exception e) {
             Log.e(cTag, "Attempt failed to create calendar entry", e);
             mAnalytics.onError(Constants.cFlurryCalendarUpdateError, e.getMessage(), getClass().getName());

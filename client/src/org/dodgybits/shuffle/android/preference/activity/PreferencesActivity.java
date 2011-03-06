@@ -19,6 +19,7 @@ package org.dodgybits.shuffle.android.preference.activity;
 import android.widget.ListView;
 import org.dodgybits.android.shuffle.R;
 import org.dodgybits.shuffle.android.core.activity.flurry.FlurryEnabledPreferenceActivity;
+import org.dodgybits.shuffle.android.core.util.CalendarUtils;
 import org.dodgybits.shuffle.android.core.util.OSUtils;
 import org.dodgybits.shuffle.android.preference.model.Preferences;
 
@@ -33,14 +34,6 @@ import android.util.Log;
 public class PreferencesActivity extends FlurryEnabledPreferenceActivity {
     private static final String cTag = "PreferencesActivity";
 
-    // We can't use the constants from the provider since it's not a public portion of the SDK.
-    // Also need to gracefully handle case when calendars are not available (e.g. emulators)
-    
-    private static final Uri CALENDAR_CONTENT_URI =
-        Uri.parse("content://calendar/calendars"); // Calendars.CONTENT_URI
-    private static final Uri CALENDAR_CONTENT_URI_FROYO_PLUS =
-        Uri.parse("content://com.android.calendar/calendars"); // Calendars.CONTENT_URI
-    
     private static final String[] CALENDARS_PROJECTION = new String[] {
         "_id", // Calendars._ID,
         "displayName" //Calendars.DISPLAY_NAME
@@ -66,16 +59,7 @@ public class PreferencesActivity extends FlurryEnabledPreferenceActivity {
         setCalendarPreferenceEntries();
     }
 
-    private Uri getCalendarContentUri() {
-        Uri uri;
-        if(OSUtils.osAtLeastFroyo()) {
-            uri = CALENDAR_CONTENT_URI_FROYO_PLUS;
-        } else {
-            uri = CALENDAR_CONTENT_URI;
-        }
-        return uri;
-    }
-            
+
     
     private void setCalendarPreferenceEntries() {
         mPreference = (ListPreference)findPreference(Preferences.CALENDAR_ID_KEY);
@@ -85,7 +69,7 @@ public class PreferencesActivity extends FlurryEnabledPreferenceActivity {
         // Start a query in the background to read the list of calendars
         
         mQueryHandler = new QueryHandler(getContentResolver());
-        mQueryHandler.startQuery(0, null, getCalendarContentUri(), CALENDARS_PROJECTION,
+        mQueryHandler.startQuery(0, null, CalendarUtils.getCalendarContentUri(), CALENDARS_PROJECTION,
                 CALENDARS_WHERE, null /* selection args */, CALENDARS_SORT);
     }
     

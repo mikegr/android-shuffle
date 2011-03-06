@@ -103,7 +103,7 @@ public class ContextView extends ItemView<Context> {
 
     private void updateStatus(Context context) {
         if (mStatus != null) {
-            mStatus.updateStatus(context.isActive(), context.isDeleted());
+            mStatus.updateStatus(context.isActive(), context.isDeleted(), false);
         }
     }
 

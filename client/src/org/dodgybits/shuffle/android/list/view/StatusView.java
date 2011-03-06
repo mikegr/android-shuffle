@@ -9,6 +9,8 @@ import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import org.dodgybits.android.shuffle.R;
+import org.dodgybits.shuffle.android.core.model.Project;
+import org.dodgybits.shuffle.android.core.model.Task;
 
 public class StatusView extends TextView {
 
@@ -21,6 +23,7 @@ public class StatusView extends TextView {
     private SpannableString mDeletedFromContext;
     private SpannableString mDeletedFromProject;
 
+    private SpannableString mActive;
     private SpannableString mInactive;
     private SpannableString mInactiveFromContext;
     private SpannableString mInactiveFromProject;
@@ -51,6 +54,7 @@ public class StatusView extends TextView {
         ParcelableSpan inactiveColorSpan = new ForegroundColorSpan(inactiveColour);
 
         String deleted = getResources().getString(R.string.deleted);
+        String active = getResources().getString(R.string.active);
         String inactive = getResources().getString(R.string.inactive);
         String fromContext =  getResources().getString(R.string.from_context);
         String fromProject =  getResources().getString(R.string.from_project);
@@ -62,6 +66,7 @@ public class StatusView extends TextView {
         mDeletedFromProject = new SpannableString(deleted + " " + fromProject);
         mDeletedFromProject.setSpan(deletedColorSpan, 0, mDeletedFromProject.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
+        mActive = new SpannableString(active);
         mInactive = new SpannableString(inactive);
         mInactive.setSpan(inactiveColorSpan, 0, mInactive.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mInactiveFromContext = new SpannableString(inactive + " " + fromContext);
@@ -70,12 +75,49 @@ public class StatusView extends TextView {
         mInactiveFromProject.setSpan(inactiveColorSpan, 0, mInactiveFromProject.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
     }
 
-    public void updateStatus(boolean active, boolean deleted) {
-        updateStatus(active ? StatusView.Status.yes : StatusView.Status.no,
-                deleted ? StatusView.Status.yes : StatusView.Status.no);
+    public void updateStatus(Task task, org.dodgybits.shuffle.android.core.model.Context context, Project project, boolean showSomething) {
+        updateStatus(
+                activeStatus(task, context, project),
+                deletedStatus(task, context, project),
+                showSomething);
     }
 
-    public void updateStatus(Status active, Status deleted) {
+    private Status activeStatus(Task task, org.dodgybits.shuffle.android.core.model.Context context, Project project) {
+        Status status = Status.no;
+        if (task.isActive()) {
+            if (context != null && !context.isActive()) {
+                status = Status.fromContext;
+            } else if (project != null && !project.isActive()) {
+                status = Status.fromProject;
+            } else {
+                status = Status.yes;
+            }
+        }
+        return status;
+    }
+
+    private Status deletedStatus(Task task, org.dodgybits.shuffle.android.core.model.Context context, Project project) {
+        Status status = Status.yes;
+        if (!task.isDeleted()) {
+            if (context != null && context.isDeleted()) {
+                status = Status.fromContext;
+            } else if (project != null && project.isDeleted()) {
+                status = Status.fromProject;
+            } else {
+                status = Status.no;
+            }
+        }
+        return status;
+    }
+
+    public void updateStatus(boolean active, boolean deleted, boolean showSomething) {
+        updateStatus(
+                active ? Status.yes : Status.no,
+                deleted ? Status.yes : Status.no,
+                showSomething);
+    }
+
+    public void updateStatus(Status active, Status deleted, boolean showSomething) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
         switch (deleted) {
@@ -95,6 +137,10 @@ public class StatusView extends TextView {
         builder.append(" ");
 
         switch (active) {
+            case yes:
+                if (showSomething && deleted == Status.no) builder.append(mActive);
+                break;
+
             case no:
                 builder.append(mInactive);
                 break;
@@ -111,4 +157,6 @@ public class StatusView extends TextView {
         setText(builder);
     }
 
+
 }
+

@@ -101,7 +101,7 @@ public class ProjectTasksActivity extends AbstractTaskListActivity {
     protected Intent getClickIntent(Uri uri) {
     	long taskId = ContentUris.parseId(uri);
     	Uri taskUri = ContentUris.appendId(TaskProvider.Tasks.CONTENT_URI.buildUpon(), taskId).build();
-    	return new Intent(Intent.ACTION_EDIT, taskUri);
+    	return new Intent(Intent.ACTION_VIEW, taskUri);
     }
     
     /**

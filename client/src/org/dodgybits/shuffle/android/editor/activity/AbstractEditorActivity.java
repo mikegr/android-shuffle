@@ -90,7 +90,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+		super.onPrepareOptionsMenu(menu);
 		MenuItem item = menu.findItem(MenuUtils.SYNC_ID);
 		if (item != null) {
 			item.setVisible(Preferences.validateTracksSettings(this));
@@ -140,7 +140,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		E item = createItemFromUI();
+		E item = createItemFromUI(false);
 		saveItem(outState, item);
 	}
 
@@ -151,6 +151,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends
 		updateUIFromItem(item);
 	}
 
+    @Override
 	public void onFocusChange(View v, boolean hasFocus) {
 		// Because we're emulating a ListView, we need to setSelected() for
 		// views as they are focused.
@@ -247,7 +248,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends
 	protected Uri create() {
 		Uri uri = null;
 		if (isValid()) {
-			E item = createItemFromUI();
+			E item = createItemFromUI(true);
 			uri = getPersister().insert(item);
 			showSaveToast();
 		}
@@ -257,7 +258,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends
 	protected Uri save() {
 		Uri uri = null;
 		if (isValid()) {
-			E item = createItemFromUI();
+			E item = createItemFromUI(true);
 			getPersister().update(item);
 			showSaveToast();
 			uri = mUri;
@@ -278,7 +279,7 @@ public abstract class AbstractEditorActivity<E extends Entity> extends
 	 */
 	abstract protected int getContentViewResId();
 
-	abstract protected E createItemFromUI();
+	abstract protected E createItemFromUI(boolean commitValues);
 
 	abstract protected void updateUIFromItem(E item);
 

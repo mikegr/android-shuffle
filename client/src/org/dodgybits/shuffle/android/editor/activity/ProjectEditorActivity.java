@@ -134,7 +134,7 @@ public class ProjectEditorActivity extends AbstractEditorActivity<Project> {
     }
         
     @Override
-    protected Project createItemFromUI() {
+    protected Project createItemFromUI(boolean commitValues) {
         Builder builder = Project.newBuilder();
         if (mOriginalItem != null) {
             builder.mergeFrom(mOriginalItem);

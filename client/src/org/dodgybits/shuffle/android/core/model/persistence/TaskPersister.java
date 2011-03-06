@@ -1,5 +1,6 @@
 package org.dodgybits.shuffle.android.core.model.persistence;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import org.dodgybits.shuffle.android.core.model.Task.Builder;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.Flag;
 import org.dodgybits.shuffle.android.core.model.persistence.selector.TaskSelector;
 import org.dodgybits.shuffle.android.core.util.StringUtils;
+import org.dodgybits.shuffle.android.list.activity.State;
 import org.dodgybits.shuffle.android.persistence.provider.AbstractCollectionProvider;
 import org.dodgybits.shuffle.android.persistence.provider.TaskProvider;
 import roboguice.inject.ContentResolverProvider;
@@ -183,6 +185,78 @@ public class TaskPersister extends AbstractEntityPersister<Task> {
         }
     }
 
+    /**
+     * Calculate where this task should appear on the list for the given project.
+     * If no project is defined, order is meaningless, so return -1.
+     *
+     * New tasks go on the end of the list if no due date is defined.
+     * If due date is defined, add either to the start, or after the task
+     * closest to the end of the list with an earlier due date.
+     *
+     * For existing tasks, check if the project changed, and if so
+     * treat like a new task, otherwise leave the order as is.
+     *
+     * @param originalTask the task before any changes or null if this is a new task
+     * @param newProjectId the project selected for this task
+     * @param dueMillis due date of this task (or 0L if not defined)
+     * @return 0-indexed order of task when displayed in the project view
+     */
+    public int calculateTaskOrder(Task originalTask, Id newProjectId, long dueMillis) {
+    	if (!newProjectId.isInitialised()) return -1;
+    	int order;
+    	if (originalTask == null || !originalTask.getProjectId().equals(newProjectId)) {
+    		// get current highest order value
+    		Cursor cursor =  mResolver.query(
+    				TaskProvider.Tasks.CONTENT_URI,
+    				new String[] {BaseColumns._ID, TaskProvider.Tasks.DISPLAY_ORDER, TaskProvider.Tasks.DUE_DATE},
+    				TaskProvider.Tasks.PROJECT_ID + " = ?",
+    				new String[] {String.valueOf(newProjectId.getId())},
+    				TaskProvider.Tasks.DISPLAY_ORDER + " desc");
+    		if (cursor.moveToFirst()) {
+                if (dueMillis > 0L) {
+                    Ln.d("Due date defined - finding best place to insert in project task list");
+                    Map<Long,Integer> updateValues = new HashMap<Long,Integer>();
+                    do {
+                        long previousId = cursor.getLong(0);
+                        int previousOrder = cursor.getInt(1);
+                        long previousDueDate = cursor.getLong(2);
+                        if (previousDueDate > 0L && previousDueDate < dueMillis) {
+                            order = previousOrder + 1;
+                            Ln.d("Placing after task %d with earlier due date", previousId);
+                            break;
+                        }
+                        updateValues.put(previousId, previousOrder + 1);
+                        order = previousOrder;
+                    } while (cursor.moveToNext());
+                    moveFollowingTasks(updateValues);
+                } else {
+                    // no due date so put at end of list
+                    int highestOrder = cursor.getInt(1);
+                    order =  highestOrder + 1;
+                }
+
+    		} else {
+    			// no tasks in the project yet.
+    			order = 0;
+    		}
+    		cursor.close();
+    	} else {
+    		order = originalTask.getOrder();
+    	}
+    	return order;
+    }
+
+    private void moveFollowingTasks(Map<Long,Integer> updateValues) {
+        Set<Long> ids = updateValues.keySet();
+        ContentValues values = new ContentValues();
+
+        for (long id : ids) {
+            values.clear();
+            values.put(DISPLAY_ORDER, updateValues.get(id));
+            Uri uri = ContentUris.withAppendedId(TaskProvider.Tasks.CONTENT_URI, id);
+            mResolver.update(uri, values, null, null);
+        }
+    }
 
     /**
      * Swap the display order of two tasks at the given cursor positions.

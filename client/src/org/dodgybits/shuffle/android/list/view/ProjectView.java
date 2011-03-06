@@ -84,7 +84,7 @@ public class ProjectView extends ItemView<Project> {
     }
 
     private void updateStatus(Project project) {
-        mStatus.updateStatus(project.isActive(), project.isDeleted());
+        mStatus.updateStatus(project.isActive(), project.isDeleted(), false);
     }
 
     private void updateParallelIcon(Project project) {

@@ -158,7 +158,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
     }
     
     @Override
-    protected Context createItemFromUI() {
+    protected Context createItemFromUI(boolean commitValues) {
         Builder builder = Context.newBuilder();
         if (mOriginalItem != null) {
             builder.mergeFrom(mOriginalItem);
@@ -325,7 +325,7 @@ public class ContextEditorActivity extends AbstractEditorActivity<Context> imple
 		if (TextUtils.isEmpty(name) || mColourIndex == -1) {
 			mContext.setVisibility(View.INVISIBLE);
 		} else {
-			mContext.updateView(createItemFromUI());
+			mContext.updateView(createItemFromUI(false));
 			mContext.setVisibility(View.VISIBLE);
 		}				
 	}

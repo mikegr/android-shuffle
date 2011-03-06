@@ -174,37 +174,7 @@ public class TaskView extends ItemView<Task> {
     }
 
     private void updateStatus(Task task, Context context, Project project) {
-        mStatus.updateStatus(
-                activeStatus(task, context, project),
-                deletedStatus(task, context, project));
-    }
-
-    private StatusView.Status activeStatus(Task task, Context context, Project project) {
-        StatusView.Status status = StatusView.Status.no;
-        if (task.isActive()) {
-            if (context != null && !context.isActive()) {
-                status = StatusView.Status.fromContext;
-            } else if (project != null && !project.isActive()) {
-                status = StatusView.Status.fromProject;
-            } else {
-                status = StatusView.Status.yes;
-            }
-        }
-        return status;
-    }
-
-    private StatusView.Status deletedStatus(Task task, Context context, Project project) {
-        StatusView.Status status = StatusView.Status.yes;
-        if (!task.isDeleted()) {
-            if (context != null && context.isDeleted()) {
-                status = StatusView.Status.fromContext;
-            } else if (project != null && project.isDeleted()) {
-                status = StatusView.Status.fromProject;
-            } else {
-                status = StatusView.Status.no;
-            }
-        }
-        return status;
+        mStatus.updateStatus(task, context, project, false);
     }
 
 }

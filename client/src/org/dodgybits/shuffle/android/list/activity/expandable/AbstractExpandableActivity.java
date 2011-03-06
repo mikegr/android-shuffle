@@ -399,7 +399,7 @@ public abstract class AbstractExpandableActivity<G extends Entity> extends Flurr
 	 * @param uri type of data selected
 	 */
 	protected Intent getClickIntent(Uri uri) {
-		return new Intent(Intent.ACTION_EDIT, uri);
+		return new Intent(Intent.ACTION_VIEW, uri);
 	}
 	
     /**

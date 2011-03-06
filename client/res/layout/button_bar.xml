@@ -39,7 +39,7 @@
     	/>
 
     <ImageButton android:id="@+id/filter_button"
-        android:src="@drawable/ic_menu_view"
+        android:src="@drawable/ic_menu_manage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          />
