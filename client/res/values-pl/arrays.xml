@@ -33,6 +33,7 @@
         <item>Natępne działania</item>
         <item>Projekty</item>
         <item>Konteksty</item>
+        <item>Przypomnienie</item>
     </array>
     <array name="view_types">
         <item>Lista rozszerzalna</item>

@@ -188,12 +188,6 @@
         <item>"10080"</item>
     </string-array>
 
-    <string-array name="list_preferences_flag_values" translatable="false">
-        <item>無視</item>
-        <item>はい</item>
-        <item>いいえ</item>
-    </string-array>
-
     <string-array name="list_preferences_active_labels" translatable="false">
         <item>全て表示</item>
         <item>アクティブな物だけ表示</item>

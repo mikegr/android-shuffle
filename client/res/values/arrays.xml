@@ -188,31 +188,32 @@
         <item>"10080"</item>
     </string-array>
 
+    <!-- don't translate these key values -->
     <string-array name="list_preferences_flag_values" translatable="false">
         <item>ignored</item>
         <item>yes</item>
         <item>no</item>
     </string-array>
 
-    <string-array name="list_preferences_active_labels" translatable="false">
+    <string-array name="list_preferences_active_labels">
         <item>Show All</item>
         <item>Show Active Only</item>
         <item>Hide Active</item>
     </string-array>
 
-    <string-array name="list_preferences_deleted_labels" translatable="false">
+    <string-array name="list_preferences_deleted_labels">
         <item>Show All</item>
         <item>Show Deleted Only</item>
         <item>Hide Deleted</item>
     </string-array>
 
-    <string-array name="list_preferences_pending_labels" translatable="false">
+    <string-array name="list_preferences_pending_labels">
         <item>Show All</item>
         <item>Show Pending Only</item>
         <item>Hide Pending</item>
     </string-array>
 
-    <string-array name="list_preferences_completed_labels" translatable="false">
+    <string-array name="list_preferences_completed_labels">
         <item>Show All</item>
         <item>Show Completed Only</item>
         <item>Hide Completed</item>

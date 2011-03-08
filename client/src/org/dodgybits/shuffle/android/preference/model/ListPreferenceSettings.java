@@ -170,7 +170,13 @@ public class ListPreferenceSettings {
     }
 
     private Flag getValue(Context context, String setting, Flag defaultValue) {
-        Flag value = Flag.valueOf(getSharedPreferences(context).getString(mPrefix + setting, defaultValue.name()));
+        String valueStr = getSharedPreferences(context).getString(mPrefix + setting, defaultValue.name());
+        Flag value = defaultValue;
+        try {
+            value = Flag.valueOf(valueStr);
+        } catch (IllegalArgumentException e) {
+            Ln.e("Unrecognized flag setting %s for settings %s using default %s", valueStr, setting, defaultValue);
+        }
         Ln.d("Got value %s for settings %s%s with default %s", value, mPrefix, setting, defaultValue);
         return value;
     }

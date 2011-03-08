@@ -134,7 +134,7 @@ public class MenuUtils {
         	.setChecked(PROJECT_ID == currentViewMenuId);
         viewMenu.add(Menu.NONE, CONTEXT_ID, 4, R.string.title_context)
         	.setChecked(CONTEXT_ID == currentViewMenuId);
-        viewMenu.add(Menu.NONE, TICKLER_ID, 5, R.string.title_context)
+        viewMenu.add(Menu.NONE, TICKLER_ID, 5, R.string.title_tickler)
             .setChecked(TICKLER_ID == currentViewMenuId);
 	}
 	

@@ -34,7 +34,6 @@
         <item>Proyectos</item>
         <item>Contextos</item>
         <item>Recordatorio</item>
-        <item>Papelera</item>
     </array>
     <array name="view_types">
         <item>Pantalla actual</item>
@@ -187,12 +186,6 @@
         <item>"1440"</item>
         <item>"2880"</item>
         <item>"10080"</item>
-    </string-array>
-
-    <string-array name="list_preferences_flag_values" translatable="false">
-        <item>ignorado</item>
-        <item>si</item>
-        <item>no</item>
     </string-array>
 
     <string-array name="list_preferences_active_labels" translatable="false">

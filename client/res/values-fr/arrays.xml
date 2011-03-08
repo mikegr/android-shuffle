@@ -33,6 +33,7 @@
         <item>Tâches suivantes</item>
         <item>Projets</item>
         <item>Contextes</item>
+        <item>Rappel</item>
     </array>
     <array name="view_types">
         <item>Liste expansible</item>

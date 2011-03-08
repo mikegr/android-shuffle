@@ -33,6 +33,7 @@
         <item>臨近活動</item>
         <item>內容</item>
         <item>情景</item>
+        <item>提醒</item>
     </array>
     <array name="view_types">
         <item>可收縮清單</item>
